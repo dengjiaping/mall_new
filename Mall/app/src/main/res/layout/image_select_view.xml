@@ -1,0 +1,194 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/txt_container"
+    style="@style/fill_wrap"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_row1"
+        style="@style/fill_wrap"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            style="@style/fill_wrap">
+
+            <ImageView
+                android:id="@+id/image1"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete1"
+                style="@style/be_star_delete" />
+
+            <TextView
+                android:id="@+id/txt1"
+                style="@style/be_star_txt" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl2"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image2"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete2"
+                style="@style/be_star_delete" />
+
+            <TextView
+                android:id="@+id/txt2"
+                style="@style/be_star_txt" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl3"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image3"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete3"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_row2"
+        style="@style/fill_wrap"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl4"
+            style="@style/fill_wrap"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image4"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete4"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl5"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image5"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete5"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl6"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image6"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete6"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_row3"
+        style="@style/fill_wrap"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl7"
+            style="@style/fill_wrap"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image7"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete7"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl8"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image8"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete8"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl9"
+            style="@style/fill_wrap"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image9"
+                style="@style/fill_wrap"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_addpic_focused" />
+
+            <ImageView
+                android:id="@+id/delete9"
+                style="@style/be_star_delete" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

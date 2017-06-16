@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
+
+    <color name="color_030303">#030303</color>
+    <color name="color_9c9c9c">#9c9c9c</color>
+    <color name="color_4d4d4d">#4d4d4d</color>
+    <color name="color_282828">#282828</color>
+    <color name="color_3bbbbe">#3bbbbe</color>
+    <color name="color_8254e8">#8254e8</color>
+    <color name="color_7a378b">#7a378b</color>
+
+    <color name="color_00b5d9">#00b5d9</color>
+    <color name="color_00a0a4">#00a0a4</color>
+    <color name="color_00a9ac">#00a9ac</color>
+    <color name="color_008488">#008488</color>
+    <color name="color_e5e5e5">#e5e5e5</color>
+    <color name="color_9b9b9b">#9b9b9b</color>
+    <color name="color_dfe1e0">#dfe1e0</color>
+    <color name="color_d1d1d1">#d1d1d1</color>
+    <color name="color_ffc80b">#ffc80b</color>
+
+    <color name="color_textcolor">#bb666666</color>
+    <color name="color_fe2851">#fe2851</color>
+    <color name="e7e7e7">#E7E7E7</color>
+
+    <color name="title_color">#00ADB2</color>
+    <color name="default_top_title_text">#333333</color>
+    <color name="gray">#c8c8c8</color>
+    <color name="green">#009933</color>
+    <color name="transparent_bg">#88838B8B</color>
+    <color name="default_line">#e8e8e8</color>
+    <color name="top_bar_bg">#ffffff</color>
+    <color name="orange">#ff7a01</color>
+    <color name="color_ff5900">#ff5900</color>
+    <color name="color_9d0013">#9d0013</color>
+    <color name="blue">#047cff</color>
+
+    <color name="color_979797">#979797</color>
+    <color name="color_e9fafb">#e9fafb</color>
+    <color name="color_cccccc">#cccccc</color>
+    <color name="color_e8e8e8">#e8e8e8</color>
+    <color name="color_eeeeee">#eeeeee</color>
+    <color name="color_009933">#009933</color>
+    <color name="color_f8f8f8">#f8f8f8</color>
+    <color name="color_f5f5f5">#f5f5f5</color>
+    <color name="color_fff3bb">#fff3bb</color>
+    <color name="color_d8d8d8">#d8d8d8</color>
+    <color name="color_00c2c7">#00c2c7</color>
+    <color name="color_f0ffff">#f0ffff</color>
+    <color name="color_71ebee">#71ebee</color>
+    <color name="color_007376">#007376</color>
+    <color name="color_00bfc5">#00bfc5</color>
+    <color name="color_00b5d8">#00b5d8</color>
+    <color name="color_f4b800">#f4b800</color>
+    <color name="color_a17b06">#a17b06</color>
+    <color name="color_00adb2">#00adb2</color>
+    <color name="transparent_color_00adb2">#8000adb2</color>
+    <color name="color_4a4a4a">#4a4a4a</color>
+    <color name="color_e3e3e3">#e3e3e3</color>
+    <color name="color_333333">#333333</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_fed723">#fed723</color>
+    <color name="color_343434">#343434</color>
+    <color name="color_777777">#777777</color>
+    <color name="color_c3c3c3">#c3c3c3</color>
+    <color name="color_e1f1f2">#e1f1f2</color>
+    <color name="color_adb0b4">#adb0b4</color>
+    <color name="color_656565">#656565</color>
+
+    <color name="background_title">#f5f5f5</color>
+    <!--所有EditText默认颜色-->
+    <color name="color_edittext">@color/color_c3c3c3</color>
+
+
+    //app所有页面的灰色背景色
+    <color name="default_layoutxml_bg">@color/color_f5f5f5</color>
+    <color name="color_f43530">#f43530</color>
+    <color name="pull_refresh_header_tc">#8B8B8B</color>
+    <!-- 分割线的颜色 -->
+    <color name="line_bg">#DDDDDD</color>
+    <color name="default_divide_line">@color/line_bg</color>
+    <color name="android_default_dialog_title">@color/title_color</color>
+    <color name="bg_line">#E7E7E7</color>
+
+    <!--lockpattern-->
+    <color name="grey_b2b2b2">#B2B2B2</color>
+    <color name="red_f3323b">#F3323B</color>
+    <color name="grey_f6f6f6">#f6f6f6</color>
+    <color name="grey_a5a5a5">#A5A5A5</color>
+    <color name="grey_dde1e7">#DDE1E7</color>
+    <color name="red_f4333c">#F4333C</color>
+    <!--lockpattern-->
+
+</resources>

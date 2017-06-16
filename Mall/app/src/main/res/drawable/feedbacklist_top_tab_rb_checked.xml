@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 不带圆角 白色背景 灰色边框 无下边框 长方体 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape>
+            <solid android:color="#FFFFFF" />
+
+            <stroke
+                android:width="@dimen/feedbacklist_top_tab_rb_checked_bottom"
+                android:color="@color/color_00adb2" />
+        </shape>
+    </item>
+    <item
+        android:bottom="@dimen/feedbacklist_top_tab_rb_checked_bottom"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+
+            <stroke
+                android:width="@dimen/feedbacklist_top_tab_rb_checked_bottom"
+                android:color="#ffffffff" />
+        </shape>
+    </item>
+
+
+    <item
+        android:bottom="15dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="15dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+
+            <stroke
+                android:width="1px"
+                android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+     <item
+        android:bottom="@dimen/feedbacklist_top_tab_rb_checked_bottom"
+        android:left="0dp"
+        android:right="1px"
+        android:top="0dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+
+            <stroke
+                android:width="1px"
+                android:color="#ffffffff" />
+        </shape>
+    </item>
+
+
+</layer-list>

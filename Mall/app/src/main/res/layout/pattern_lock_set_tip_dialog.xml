@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="@drawable/bg_custom_dialog_viewmode1"
+              android:gravity="center"
+              android:paddingLeft="20dp"
+              android:paddingRight="20dp"
+              android:paddingTop="30dp"
+    >
+
+    <ImageView
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_pattern_set_tip_1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_20"
+        android:text="开启手势密码"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_12"
+        android:text="保障客户信息资料安全"
+        />
+    <TextView
+        android:id="@+id/tv_set"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_18"
+        android:text="立即设置"
+        android:gravity="center"
+        android:background="@drawable/shape_pattern_lock_set_tip"
+        />
+    <TextView
+        android:id="@+id/tv_not_set"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="100dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="@color/color_9b9b9b"
+        android:textSize="@dimen/ts_14"
+        android:text="暂不"
+        />
+
+</LinearLayout>

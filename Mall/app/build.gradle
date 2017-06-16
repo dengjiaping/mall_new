@@ -1,0 +1,158 @@
+apply plugin: 'com.android.application'
+def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+8"))
+}
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
+
+
+    useLibrary 'org.apache.http.legacy'
+//Android 6.0不再支持 Apache HTTP client try to use okhttp to replace it
+    dexOptions { javaMaxHeapSize "2g" }
+    lintOptions {
+        abortOnError false
+    }
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+
+
+    defaultConfig {
+        applicationId project.APPLICATION_ID
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : project.APPLICATION_ID,
+                JPUSH_CHANNEL : "3COrder" //用户渠道统计的渠道名称
+        ]
+//        externalNativeBuild {
+//            cmake {
+//                cppFlags ""
+//            }
+//        }
+
+        ndk { abiFilters "armeabi" }
+        configurations {
+            compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
+        }
+    }
+
+    signingConfigs {
+        debug {
+            // No debug config
+        }
+        release {
+            storeFile file("keystore/shoppingmall.jks")
+            storePassword "dfjr&shoppingmall&20170527"
+            keyAlias "shoppingmall"
+            keyPassword "dfjr&shoppingmall&20170527"
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+
+            minifyEnabled false
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+
+            // 是否进行混淆
+            minifyEnabled false
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为jyfq_2015_01_15_wandoujia.apk
+                        def fileName = "corder_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    // 友盟多渠道打包
+    productFlavors {
+        official_offline {
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY : "b64d5a0ca0016d26ba61d8de"]//开发环境
+        }
+        official_online {
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY : "b5e4f8517ab6f247c796db74"]//正式环境
+        }
+
+    }
+
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+//    externalNativeBuild {
+//        cmake {
+//            path "CMakeLists.txt"
+//        }
+//    }
+
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project.supportV7
+    testCompile 'junit:junit:4.12'
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'com.github.k0shk0sh:PermissionHelper:1.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile files('libs/bugly_crash_release.jar')
+    compile files('libs/Android_Map3D_SDK_V4.1.3_20161208.jar')
+    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'com.android.support:design:25.2.0'
+    compile files('libs/umeng-analytics-v6.1.0.jar')
+    compile project(':cropimage_library')
+    //极光推送
+    compile 'cn.jiguang.sdk:jpush:3.0.5'
+    // 此处以JPush 3.0.5 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.2'
+    // 此处以JCore 1.1.2 版本为例。
+    compile project(':FingerprintIdentifyLib')
+}

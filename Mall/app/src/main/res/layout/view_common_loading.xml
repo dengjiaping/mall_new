@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/fill_fill"
+    >
+
+    <!-- loading -->
+
+    <LinearLayout
+        android:id="@+id/ll_loading"
+        style="@style/fill_fill"
+        android:layout_gravity="center"
+        android:background="@color/default_layoutxml_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_empty"
+        style="@style/wrap_wrap"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/icon_state"
+            android:layout_width="180dp"
+            android:layout_height="110dp"
+            android:scaleType="centerInside"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/base_empty_default_icon" />
+
+        <TextView
+            android:id="@+id/txt_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon_state"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="#A7A7A7"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/txt_message_samll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_message"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:textColor="#A7A7A7"
+            android:textSize="@dimen/ts_14" />
+
+        <!--错误页面的操作按钮-->
+        <TextView
+            android:id="@+id/tv_refresh"
+            style="@style/me_bt"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/txt_message_samll"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_btn_change_blue"
+            android:text="刷新"
+            android:visibility="gone"
+            />
+        <!--空页面下面的操作按钮-->
+        <TextView
+            android:id="@+id/tv_empty_next"
+            style="@style/me_bt"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/txt_message_samll"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_btn_change_blue"
+            android:text="下一步"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

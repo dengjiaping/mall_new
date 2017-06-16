@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">即有商城</string>
+    <string name="tip_nodata">暂无数据</string>
+    <string name="tips_exit">再按一次退出程序</string>
+    <!-- 上拉刷新Just use standard Pull Down String when pulling up. These can be set for languages which require it -->
+    <string name="pull_to_refresh_from_bottom_pull_label">加载更多</string>
+    <string name="pull_to_refresh_from_bottom_release_label">放开载入更多</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">正在载入...</string>
+    <!-- 下拉刷新 -->
+    <string name="pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="pull_to_refresh_release_label">放开以刷新</string>
+    <string name="pull_to_refresh_refreshing_label">正在载入...</string>
+
+
+    <!-- Gesture login activity -->
+    <string name="gesture_default">请输入手势密码</string>
+    <string name="gesture_and_finger">请输入指纹或手势密码</string>
+    <string name="finger_error">指纹不匹配</string>
+    <string name="gesture_error">手势密码输入错误</string>
+    <string name="gesture_correct">输入正确</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_activity">CreateGestureActivity</string>
+    <string name="create_gesture_default">绘制解锁图案</string>
+    <string name="create_gesture_correct">再次绘制解锁图案</string>
+    <string name="create_gesture_less_error">至少连接4个点，请重新输入</string>
+    <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
+    <string name="create_gesture_confirm_correct">设置成功</string>
+    <string name="create_gesture_reset">重新设置</string>
+
+</resources>

@@ -1,0 +1,2 @@
+include ':app', ':cropimage_library', ':FingerprintIdentifyLib'
+

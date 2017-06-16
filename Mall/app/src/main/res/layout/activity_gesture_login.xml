@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rl_root"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+    <TextView
+        android:layout_above="@+id/tv_message"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="xx"
+        android:textSize="@dimen/ts_16"
+        android:textColor="@color/color_4a4a4a"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_pattern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <com.giveu.shoppingmall.view.lockpattern.LockPatternView
+            android:id="@+id/lockPatternView"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/tv_forget_gesture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/color_00adb2"
+        android:text="忘记手势?"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="@dimen/ts_14" />
+
+    <TextView
+        android:layout_marginBottom="20dp"
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="xx"
+        android:textColor="@color/color_9b9b9b"
+        android:textSize="@dimen/ts_16"
+        android:layout_above="@+id/ll_pattern"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

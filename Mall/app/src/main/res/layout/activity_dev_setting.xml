@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+            xmlns:mv="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前应用配置信息："
+            />
+        <TextView
+            android:id="@+id/tv_app_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="xxx"
+            android:textIsSelectable="true"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/red"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你可以修改如下参数："
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="开启日志"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_15" />
+
+            <com.giveu.shoppingmall.view.IosSwitch
+                android:id="@+id/switch_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置接口环境："
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/rg">
+
+            <RadioButton
+                android:id="@+id/rb_api_dev"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textIsSelectable="true"
+                android:text="开发"
+                />
+            <RadioButton
+                android:id="@+id/rb_api_test"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textIsSelectable="true"
+                android:text="测试"/>
+            <RadioButton
+                android:id="@+id/rb_api_online"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textIsSelectable="true"
+                android:text="正式"/>
+
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我要手动输入接口域名："
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:id="@+id/et_my_api"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="请输入域名，参考上面的格式"/>
+        <TextView
+            android:id="@+id/tv_confirm_api"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定输入"
+            android:background="@color/color_00adb2"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+</ScrollView>

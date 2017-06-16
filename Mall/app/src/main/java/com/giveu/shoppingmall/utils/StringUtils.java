@@ -1,0 +1,263 @@
+package com.giveu.shoppingmall.utils;
+
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.web.BaseWebViewActivity;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * 字符串工具类
+ */
+public class StringUtils {
+
+
+
+    /**
+     * @param string
+     * @return
+     */
+    public static boolean isNotNull(String string) {
+        if (null != string && !"".equals(string.trim())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string
+     * @return
+     */
+    public static boolean isNull(String string) {
+        if (null == string || "".equals(string.trim())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 验证是否是11位数字
+     *
+     * @param phoneNum
+     * @return
+     */
+    public static boolean checkPhoneNumberAndTipError(String phoneNum) {
+        if (!Validator.isMobile(phoneNum)){
+            ToastUtils.showShortToast("请输入正确的手机号码");
+            return false;
+       }
+
+        return true;
+    }
+
+    /**
+     * 验证是否是19位数字
+     *
+     * @param password
+     * @return
+     */
+    public static boolean isCardNum(String password) {
+        Pattern p = Pattern.compile("^0?\\d{19}$");
+        Matcher m = p.matcher(password);
+        return m.matches();
+    }
+
+    /**
+     * 验证邮箱格式是否正确
+     *
+     * @param email
+     * @return
+     */
+    public static boolean isEmail(String email) {
+        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        Pattern p = Pattern.compile(str);
+        Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    public static SpannableString getColorSpannable(CharSequence str1, final String str2, int str1ColorId, final int str2ColorId) {
+        String str3 = str1 + str2;
+        SpannableString msp = new SpannableString(str3);
+        msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str1ColorId)), 0, str1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str2ColorId)), str1.length(), str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return msp;
+    }
+
+    public static SpannableString getSizeSpannable(CharSequence str1, final String str2, int str1Dip, final int str2Dip) {
+        String str3 = str1 + str2;
+        SpannableString msp = new SpannableString(str3);
+        msp.setSpan(new AbsoluteSizeSpan(str1Dip, true), 0, str1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new AbsoluteSizeSpan(str2Dip, true), str1.length(), str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return msp;
+    }
+
+	/**
+     * 保留小数
+     * @return
+     */
+    public static String format2(Float value) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return df.format(value);
+    }
+    /**
+     * 保留小数
+     * @return
+     */
+    public static String format2(String value) {
+        try{
+            double dv = Double.parseDouble(value);
+            DecimalFormat df = new DecimalFormat("0.00");
+            df.setRoundingMode(RoundingMode.HALF_UP);
+            return df.format(dv);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+    /**
+     * 昵称是否含有特殊字符
+     */
+    public static boolean checkUserNameAndTipError(String nickname) {
+        if (TextUtils.isEmpty(nickname)) {
+            ToastUtils.showShortToast("请填写姓名");
+            return false;
+        }
+        if (nickname.length() < 2 || nickname.length() > 18) {
+            ToastUtils.showShortToast("请输入不少于2位的中文姓名");
+            return false;
+        }
+        if(nickname.matches("^[A-Z|a-z]*$")){
+            ToastUtils.showShortToast("请输入中文姓名");
+            return false;
+        }else if (!nickname.matches("[\\u4e00-\\u9fa5]{1,14}[\\?•·・∙]{0,1}[\\u4e00-\\u9fa5]{1,13}+$")) {
+            ToastUtils.showShortToast("仅支持2-18个中文字符和姓名中间的圆点");
+            return false;
+        }
+        return true;
+    }
+
+	/**
+     * 检查登录密码如果不合法提示错误信息并返回false
+     * @param pwd
+     * @return
+     */
+    public static boolean checkLoginPwdAndTipError(String pwd) {
+        if (TextUtils.isEmpty(pwd)) {
+            ToastUtils.showShortToast("请输入密码");
+            return false;
+        }
+
+        if (pwd.length() < 6 || pwd.length() > 16) {
+            ToastUtils.showShortToast("请输入6~16位密码");
+            return false;
+        }
+
+        if ( !Validator.isLoginPassword(pwd)) {
+            ToastUtils.showShortToast("密码要是数字和字母的组合");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查“交易密码”如果不合法提示错误信息并返回false
+     * @param pwd
+     * @return
+     */
+    public static boolean checkTransactionPwdAndTipError(String pwd) {
+        if (TextUtils.isEmpty(pwd)) {
+            ToastUtils.showShortToast("请输入交易密码");
+            return false;
+        }
+        if ( !Validator.isTransactionPassword(pwd)) {
+            ToastUtils.showShortToast("请输入6位数字的交易密码");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean checkIdCardAndTipError(String idcard) {
+        if (TextUtils.isEmpty(idcard)) {
+            ToastUtils.showShortToast("请输入身份证");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 解析 输入的文字里有无url
+     *
+     * @param rawUrl
+     * @return
+     */
+    public static String getReloveUrl(String rawUrl) {
+        String includeUrl = null;
+        if (!rawUrl.contains("://")) {
+            rawUrl = "http://" + rawUrl;
+        }
+        Pattern urlPattern = Pattern.compile(BaseWebViewActivity.urlRegularExpression, Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = urlPattern.matcher(rawUrl);
+        while (urlMatcher.find()) {
+            includeUrl = rawUrl.subSequence(urlMatcher.start(), urlMatcher.end()).toString();
+            /**
+             * 最后有表情 [] 过滤掉
+             */
+            if (StringUtils.isNotNull(includeUrl) && includeUrl.length() > 1) {
+                String lastChar = includeUrl.charAt(includeUrl.length() - 1) + "";
+                if ("[".equals(lastChar)) {
+                    includeUrl = includeUrl.substring(0, includeUrl.length() - 1);
+                }
+            }
+        }
+        return includeUrl;
+    }
+
+    /**
+     * 将null转成“”
+     */
+    public static String nullToEmptyString(String str) {
+        return str == null ? "" : str;
+    }
+
+
+    public static String getTextFromView(EditText etName) {
+        return etName == null ? "" : etName.getText().toString().trim();
+    }
+    public static String getTextFromView(TextView etName) {
+        return etName == null ? "" : etName.getText().toString().trim();
+    }
+
+	/**
+     * 将"2016-11-26T00:00:00"变成2016/11/26
+     * @return
+     */
+    public static String billFormatDate(String promiseRepayDate) {
+		String result = "";
+		if (isNotNull(promiseRepayDate)){
+			String[] ts = promiseRepayDate.split("T");
+			if (ts.length == 2){
+				String[] split = ts[0].split("-");
+				if (split.length == 3){
+					result = split[0]+"/"+split[1]+"/"+split[2];
+				}
+			}
+		}
+		return result;
+	}
+
+
+
+
+}

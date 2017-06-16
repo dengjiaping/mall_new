@@ -1,0 +1,50 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="default_text_size">18sp</dimen>
+    <dimen name="default_padding_left_large">20dip</dimen>
+    <dimen name="default_padding_right_large">20dip</dimen>
+    <dimen name="title_bar_height">50dip</dimen>
+    <dimen name="custom_webview_progressbar_height">5dp</dimen>
+    <dimen name="ts_base_layout_title">17sp</dimen>
+    <dimen name="ts_pull_footer">15sp</dimen>
+
+    <dimen name="ts_10">10sp</dimen>
+    <dimen name="ts_11">11sp</dimen>
+    <dimen name="ts_12">12sp</dimen>
+    <dimen name="ts_13">13sp</dimen>
+    <dimen name="ts_14">14sp</dimen>
+    <dimen name="ts_15">15sp</dimen>
+    <dimen name="ts_16">16sp</dimen>
+    <dimen name="ts_17">17sp</dimen>
+    <dimen name="ts_18">18sp</dimen>
+    <dimen name="ts_19">19sp</dimen>
+    <dimen name="ts_20">20sp</dimen>
+    <dimen name="ts_21">21sp</dimen>
+    <dimen name="ts_22">22sp</dimen>
+    <dimen name="ts_33">33sp</dimen>
+    <dimen name="ts_35">35sp</dimen>
+    <dimen name="ts_47">47sp</dimen>
+    <dimen name="ts_40">40sp</dimen>
+
+    <dimen name="divider_size">@dimen/default_line_height</dimen>
+
+    <!-- pulltorefresh -->
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+
+    <dimen name="default_line_height">1px</dimen>
+    <dimen name="copy_delete_dialog_paddingleft">30dp</dimen>
+    <dimen name="feedbacklist_top_tab_rb_checked_bottom">5px</dimen>
+    <dimen name="default_layout_screen_gap">15dp</dimen><!--layout与手机屏幕边缘的间距-->
+
+    <dimen name="header_height">60dp</dimen>
+    <dimen name="footer_height">90dp</dimen>
+    <dimen name="footer_padding">10dp</dimen>
+
+
+</resources>
