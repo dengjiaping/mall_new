@@ -1,4 +1,4 @@
-package com.giveu.shoppingmall.riskcontrol.fragment;
+package com.giveu.shoppingmall.repay.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
