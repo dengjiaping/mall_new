@@ -1,7 +1,7 @@
 package com.giveu.shoppingmall.utils.sharePref;
 
 /**
- * 只在{@link com.giveu.shoppingmall.me.activity.DevSettingActivity 用来保存设置信息}
+ * 只在{@link com.giveu.shoppingmall.me.view.activity.DevSettingActivity 用来保存设置信息}
  */
 public class DevSettingSharePref extends AbsSharePref {
 

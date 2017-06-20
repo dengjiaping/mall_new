@@ -16,9 +16,9 @@ import com.giveu.shoppingmall.index.activity.AdSplashActivity;
 import com.giveu.shoppingmall.index.activity.MainActivity;
 import com.giveu.shoppingmall.index.activity.SplashActivity;
 import com.giveu.shoppingmall.index.activity.WelcomeActivity;
-import com.giveu.shoppingmall.me.activity.CreateGestureActivity;
-import com.giveu.shoppingmall.me.activity.GestureLoginActivity;
-import com.giveu.shoppingmall.me.activity.VerifyPwdActivity;
+import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
+import com.giveu.shoppingmall.me.view.activity.GestureLoginActivity;
+import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -34,12 +34,11 @@ import java.util.Set;
 import butterknife.ButterKnife;
 
 
-public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements OnClickListener, IView {
+public abstract class BaseActivity extends FragmentActivity implements OnClickListener, IView {
     public BaseLayout baseLayout;
     public BaseActivity mBaseContext;
     private Set<BasePresenter> mAllPresenters = new HashSet<>(1);
     protected Bundle mSavedInstanceState;
-    protected T presenter;
 
     /**
      * 当使用mvp模式时实现这个方法
@@ -47,9 +46,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends FragmentActi
     protected BasePresenter[] initPresenters() {
         return null;
     }
-
-    //只有一个presenter时使用这个
-    public abstract T createPresenter();
 
     private void addPresenters() {
         BasePresenter[] presenters = initPresenters();
@@ -348,9 +344,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends FragmentActi
         notifyIPresenter(LifeStyle.onDestroy);
         //关闭软键盘
         CommonUtils.closeSoftKeyBoard(this);
-        if (presenter != null) {
-            presenter.onDestroy();
-        }
         super.onDestroy();
     }
 

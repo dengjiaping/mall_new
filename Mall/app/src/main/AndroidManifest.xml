@@ -117,25 +117,25 @@
 
         <!--个人中心-->
         <activity
-            android:name=".me.activity.LoginActivity"
+            android:name=".me.view.activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="登录"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".me.activity.RegisterActivity"
+            android:name=".me.view.activity.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="注册"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".me.activity.SetPasswordActivity"
+            android:name=".me.view.activity.SetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="设置密码或重置密码"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".me.activity.RequestPasswordActivity"
+            android:name=".me.view.activity.RequestPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="找回密码"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -162,7 +162,7 @@
 
         <!--创建图案锁-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.CreateGestureActivity"
+            android:name=".me.view.activity.CreateGestureActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -170,7 +170,7 @@
 
         <!--图案锁登录-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.GestureLoginActivity"
+            android:name=".me.view.activity.GestureLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -178,7 +178,7 @@
 
         <!--锁屏验证密码-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.VerifyPwdActivity"
+            android:name=".me.view.activity.VerifyPwdActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -187,7 +187,7 @@
 
         <!--开发人员调试界面-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.DevSettingActivity"
+            android:name=".me.view.activity.DevSettingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -208,7 +208,7 @@
 
         <!-- User defined. 用户自定义的广播接收器-->
         <receiver
-            android:name="com.giveu.shoppingmall.me.activity.CustomerPushReceiver"
+            android:name=".me.view.activity.CustomerPushReceiver"
             android:enabled="true">
             <intent-filter>
                 <!--Required 用户注册SDK的intent-->

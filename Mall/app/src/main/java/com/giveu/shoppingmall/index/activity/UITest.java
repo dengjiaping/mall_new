@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
-import com.giveu.shoppingmall.me.activity.LoginActivity;
+import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 
 /**
  * Created by 508632 on 2016/12/22.

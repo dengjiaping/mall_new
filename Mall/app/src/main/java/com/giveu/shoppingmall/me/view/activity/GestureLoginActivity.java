@@ -1,4 +1,4 @@
-package com.giveu.shoppingmall.me.activity;
+package com.giveu.shoppingmall.me.view.activity;
 
 import android.app.Activity;
 import android.content.Context;

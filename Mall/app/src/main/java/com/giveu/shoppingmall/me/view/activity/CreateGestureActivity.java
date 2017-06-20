@@ -1,4 +1,4 @@
-package com.giveu.shoppingmall.me.activity;
+package com.giveu.shoppingmall.me.view.activity;
 
 import android.os.Bundle;
 import android.text.SpannableString;
