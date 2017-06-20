@@ -1,5 +1,5 @@
 
-package com.giveu.shoppingmall.ordercreate.fragment;
+package com.giveu.shoppingmall.shopping.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
