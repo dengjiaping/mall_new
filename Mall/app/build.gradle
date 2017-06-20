@@ -155,4 +155,5 @@ dependencies {
     compile 'cn.jiguang.sdk:jcore:1.1.2'
     // 此处以JCore 1.1.2 版本为例。
     compile project(':FingerprintIdentifyLib')
+    compile project(':shareLibrary')
 }

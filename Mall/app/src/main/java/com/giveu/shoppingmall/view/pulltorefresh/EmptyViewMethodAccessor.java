@@ -28,7 +28,7 @@ public interface EmptyViewMethodAccessor {
 	/**
 	 * Calls upto AdapterView.setEmptyView()
 	 * 
-	 * @param emptyView - to set as Empty View
+	 * @param emptyView - to set as Empty LoginView
 	 */
 	public void setEmptyViewInternal(View emptyView);
 
@@ -36,7 +36,7 @@ public interface EmptyViewMethodAccessor {
 	 * Should call PullToRefreshBase.setEmptyView() which will then
 	 * automatically call through to setEmptyViewInternal()
 	 * 
-	 * @param emptyView - to set as Empty View
+	 * @param emptyView - to set as Empty LoginView
 	 */
 	public void setEmptyView(View emptyView);
 

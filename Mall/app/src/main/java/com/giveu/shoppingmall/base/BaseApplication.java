@@ -41,6 +41,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.ShareSDK;
 
 
 /**
@@ -65,6 +66,11 @@ public class BaseApplication extends MultiDexApplication {
 
         initTokenDaemon();
         initProvinceList();
+        initShareSDK();
+    }
+
+    private void initShareSDK() {
+        ShareSDK.initSDK(this);
     }
 
 

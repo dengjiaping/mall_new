@@ -235,7 +235,7 @@ public class ImagesSelectView extends LinearLayout {
                 ImageView delete = (ImageView) imageList.get(x).getTag(R.id.select_image_delete);
                 if (x < list.size()) {
                     rl.setVisibility(View.VISIBLE);
-//                    delete.setVisibility(View.VISIBLE);
+//                    delete.setVisibility(LoginView.VISIBLE);
                     delete.setVisibility(View.GONE);
                     ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, list.get(x).imagePath, imageList.get(x));
                 } else if (x == list.size()) {

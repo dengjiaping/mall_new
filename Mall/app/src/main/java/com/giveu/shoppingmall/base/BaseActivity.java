@@ -16,9 +16,9 @@ import com.giveu.shoppingmall.index.activity.AdSplashActivity;
 import com.giveu.shoppingmall.index.activity.MainActivity;
 import com.giveu.shoppingmall.index.activity.SplashActivity;
 import com.giveu.shoppingmall.index.activity.WelcomeActivity;
-import com.giveu.shoppingmall.me.activity.CreateGestureActivity;
-import com.giveu.shoppingmall.me.activity.GestureLoginActivity;
-import com.giveu.shoppingmall.me.activity.VerifyPwdActivity;
+import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
+import com.giveu.shoppingmall.me.view.activity.GestureLoginActivity;
+import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -221,13 +221,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         super.onResume();
     }
 
-    interface LifeStyle{
-        String  onCreate = "onCreate";
-        String  onStart = "onStart";
-        String  onResume = "onResume";
-        String  onStop = "onStop";
-        String  onPause = "onPause";
-        String  onDestroy = "onDestroy";
+    interface LifeStyle {
+        String onCreate = "onCreate";
+        String onStart = "onStart";
+        String onResume = "onResume";
+        String onStop = "onStop";
+        String onPause = "onPause";
+        String onDestroy = "onDestroy";
     }
 
     private void notifyIPresenter(String methodName) {
@@ -344,13 +344,15 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         notifyIPresenter(LifeStyle.onDestroy);
         //关闭软键盘
         CommonUtils.closeSoftKeyBoard(this);
-
         super.onDestroy();
     }
 
     @Override
     public void onClick(View view) {
-
+        //防止快速点击
+        if (CommonUtils.isFastDoubleClick(view.getId())) {
+            return;
+        }
     }
 
     /**
@@ -360,8 +362,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     public Activity getAct() {
         return mBaseContext;
     }
-
-
 
 
 }

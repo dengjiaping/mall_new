@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Fernando Cejas Open Source Project
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,33 +15,33 @@
  */
 package com.giveu.shoppingmall.base;
 
-import java.lang.ref.SoftReference;
-
 public abstract class BasePresenter<T extends IView> {
-  private SoftReference<T> mSoftRefIView;//防止强引用activity的实例造成内存泄漏
-  boolean isDestroy = false;
+    private T view;
 
-  protected BasePresenter(T view){
-    mSoftRefIView = new SoftReference<T>(view);
-  }
+    protected BasePresenter(T view) {
+        this.view = view;
+    }
 
-  public T getViewProxy(){
-    return mSoftRefIView.get();
-  }
+    public T getView() {
+        return view;
+    }
 
-  protected void onStart(){}
+    protected void onStart() {
+    }
 
-  protected void onResume(){}
+    protected void onResume() {
+    }
 
-  protected void onPause(){}
+    protected void onPause() {
+    }
 
-  protected void onStop(){}
+    protected void onStop() {
+    }
 
-  protected void onDestroy(){
-    isDestroy = true;
-  }
-
-
+    protected void onDestroy() {
+        //防止强引用activity的实例造成内存泄漏
+        view = null;
+    }
 
 
 }

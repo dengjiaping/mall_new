@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="ActivityInOutAnimation" parent="android:Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+</resources>

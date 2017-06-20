@@ -96,6 +96,8 @@ public class BaseLayout extends LinearLayout {
         ll_baselayout_content = (LinearLayout) base_layout.findViewById(R.id.ll_baselayout_content);
         clv = (CommonLoadingView) base_layout.findViewById(R.id.clv);
         super.addView(base_layout);
+        //默认为白色背景
+        setWhiteBlackStyle();
     }
 
     /**
@@ -285,7 +287,7 @@ public class BaseLayout extends LinearLayout {
         }
     }
 
-	/**
+    /**
      * 设置背景白色，文字黑色，返回图标黑色
      */
     public void setWhiteBlackStyle() {
@@ -293,6 +295,17 @@ public class BaseLayout extends LinearLayout {
         top_tab_center_title.setTextColor(color);
         top_tab_right_text.setTextColor(color);
         setBackImage(R.drawable.back_press);
+        setTopBarBgDrawble(R.drawable.shape_topbar_bg_bottom_line);
+    }
+
+    /**
+     * 设置背景白色，文字黑色，返回图标浅蓝色
+     */
+    public void setWhiteBlueStyle() {
+        int color = getResources().getColor(R.color.color_4a4a4a);
+        top_tab_center_title.setTextColor(color);
+        top_tab_right_text.setTextColor(color);
+        setBackImage(R.drawable.back_blue);
         setTopBarBgDrawble(R.drawable.shape_topbar_bg_bottom_line);
     }
 

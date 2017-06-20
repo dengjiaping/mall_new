@@ -26,8 +26,10 @@
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
@@ -49,9 +51,9 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--指纹权限-->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER"/>
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER" />
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <!-- Optional. Required for location feature -->
     <!-- jpush 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
@@ -78,6 +80,7 @@
             android:value="339b5c960c56a8890957f6cfee5bb32f" />
 
         <service android:name="com.amap.api.location.APSService" />
+
         <activity
             android:name="com.giveu.shoppingmall.index.activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -94,11 +97,10 @@
         <activity
             android:name="com.giveu.shoppingmall.index.activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="首次安装引导页"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="首次安装引导页"
-            />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
             android:name="com.giveu.shoppingmall.index.activity.MainActivity"
@@ -111,9 +113,32 @@
             android:name="com.giveu.shoppingmall.index.activity.AdSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <!--个人中心-->
+        <activity
+            android:name=".me.view.activity.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="登录"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.RegisterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="注册"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.SetPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="设置密码或重置密码"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.RequestPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="找回密码"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <!--图片选择列出所有图片-->
         <activity
@@ -127,8 +152,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.giveu.shoppingmall.view.imageselect.Act_ImageSelectPreActivity"
-            android:screenOrientation="portrait"
-            android:label="选择图片控件图片预览"/>
+            android:label="选择图片控件图片预览"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.soundcloud.android.crop.CropImageActivity"
@@ -137,7 +162,7 @@
 
         <!--创建图案锁-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.CreateGestureActivity"
+            android:name=".me.view.activity.CreateGestureActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -145,7 +170,7 @@
 
         <!--图案锁登录-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.GestureLoginActivity"
+            android:name=".me.view.activity.GestureLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -153,7 +178,7 @@
 
         <!--锁屏验证密码-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.VerifyPwdActivity"
+            android:name=".me.view.activity.VerifyPwdActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -162,7 +187,7 @@
 
         <!--开发人员调试界面-->
         <activity
-            android:name="com.giveu.shoppingmall.me.activity.DevSettingActivity"
+            android:name=".me.view.activity.DevSettingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -189,7 +214,7 @@
 
         <!-- User defined. 用户自定义的广播接收器-->
         <receiver
-            android:name="com.giveu.shoppingmall.me.activity.CustomerPushReceiver"
+            android:name=".me.view.activity.CustomerPushReceiver"
             android:enabled="true">
             <intent-filter>
                 <!--Required 用户注册SDK的intent-->

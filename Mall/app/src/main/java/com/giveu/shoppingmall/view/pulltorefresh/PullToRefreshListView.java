@@ -121,14 +121,14 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
                 break;
         }
 
-        // Hide our original Loading View
+        // Hide our original Loading LoginView
         origLoadingView.reset();
         origLoadingView.hideAllViews();
 
         // Make sure the opposite end is hidden too
         oppositeListViewLoadingView.setVisibility(GONE);
 
-        // Show the ListView Loading View and set it to refresh.
+        // Show the ListView Loading LoginView and set it to refresh.
         listViewLoadingView.setVisibility(VISIBLE);
         listViewLoadingView.refreshing();
 
@@ -258,7 +258,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
             setFooter(context, this);
 
-            // Add the Footer View at the last possible moment
+            // Add the Footer LoginView at the last possible moment
             if (null != mLvFooterLoadingFrame && !mAddedLvFooter) {
                 addFooterView(mLvFooterLoadingFrame, null, false);
                 mAddedLvFooter = true;
@@ -316,14 +316,14 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
         // flip so that the original one is showing instead
         if (listViewLoadingLayout.getVisibility() == VISIBLE) {
 
-            // Set our Original View to Visible
+            // Set our Original LoginView to Visible
             originalLoadingLayout.showInvisibleViews();
 
             // Hide the ListView Header/Footer
             listViewLoadingLayout.setVisibility(GONE);
 
             /**
-             * Scroll so the View is at the same Y as the ListView
+             * Scroll so the LoginView is at the same Y as the ListView
              * header/footer, but only scroll if: we've pulled to refresh, it's
              * positioned correctly
              */

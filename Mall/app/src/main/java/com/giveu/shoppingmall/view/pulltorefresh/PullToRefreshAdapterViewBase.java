@@ -85,9 +85,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
     }
 
     /**
-     * Gets whether an indicator graphic should be displayed when the View is in
+     * Gets whether an indicator graphic should be displayed when the LoginView is in
      * a state where a Pull-to-Refresh can happen. An example of this state is
-     * when the Adapter View is scrolled to the top and the mode is set to
+     * when the Adapter LoginView is scrolled to the top and the mode is set to
      * {@link Mode#PULL_FROM_START}. The default value is <var>true</var> if
      * {@link PullToRefreshBase#isPullToRefreshOverScrollEnabled()
      * isPullToRefreshOverScrollEnabled()} returns false.
@@ -153,17 +153,17 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
     }
 
     /**
-     * Sets the Empty View to be used by the Adapter View.
+     * Sets the Empty LoginView to be used by the Adapter LoginView.
      * <p/>
      * We need it handle it ourselves so that we can Pull-to-Refresh when the
-     * Empty View is shown.
+     * Empty LoginView is shown.
      * <p/>
      * Please note, you do <strong>not</strong> usually need to call this method
      * yourself. Calling setEmptyView on the AdapterView will automatically call
      * this method and set everything up. This includes when the Android
-     * Framework automatically sets the Empty View based on it's ID.
+     * Framework automatically sets the Empty LoginView based on it's ID.
      *
-     * @param newEmptyView - Empty View to be used
+     * @param newEmptyView - Empty LoginView to be used
      */
     public final void setEmptyView(View newEmptyView) {
         LinearLayout refreshableViewWrapper = getRefreshableViewWrapper();
@@ -221,9 +221,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
     }
 
     /**
-     * Sets whether an indicator graphic should be displayed when the View is in
+     * Sets whether an indicator graphic should be displayed when the LoginView is in
      * a state where a Pull-to-Refresh can happen. An example of this state is
-     * when the Adapter View is scrolled to the top and the mode is set to
+     * when the Adapter LoginView is scrolled to the top and the mode is set to
      * {@link Mode#PULL_FROM_START}
      *
      * @param showIndicator - true if the indicators should be shown.
@@ -345,7 +345,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
             refreshableViewWrapper.addView(mIndicatorIvTop, params);
 
         } else if (!mode.showHeaderLoadingLayout() && null != mIndicatorIvTop) {
-            // If we can't pull down, but have a View then remove it
+            // If we can't pull down, but have a LoginView then remove it
             refreshableViewWrapper.removeView(mIndicatorIvTop);
             mIndicatorIvTop = null;
         }
@@ -360,7 +360,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
             refreshableViewWrapper.addView(mIndicatorIvBottom, params);
 
         } else if (!mode.showFooterLoadingLayout() && null != mIndicatorIvBottom) {
-            // If we can't pull down, but have a View then remove it
+            // If we can't pull down, but have a LoginView then remove it
             refreshableViewWrapper.removeView(mIndicatorIvBottom);
             mIndicatorIvBottom = null;
         }
@@ -375,7 +375,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
         if (null == adapter) {
             if (DEBUG) {
-                Log.d(LOG_TAG, "isFirstItemVisible. Empty View.");
+                Log.d(LOG_TAG, "isFirstItemVisible. Empty LoginView.");
             }
             return true;
         } else {
@@ -406,7 +406,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
         if (null == adapter) {
             if (DEBUG) {
-                Log.d(LOG_TAG, "isLastItemVisible. Empty View.");
+                Log.d(LOG_TAG, "isLastItemVisible. Empty LoginView.");
             }
             return true;
         } else {
