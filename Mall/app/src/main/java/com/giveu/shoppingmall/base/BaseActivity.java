@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.giveu.shoppingmall.view.dialog.LoadingDialog;
 import com.giveu.shoppingmall.view.emptyview.CommonLoadingView;
 import com.umeng.analytics.MobclickAgent;
 
@@ -263,6 +264,16 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             //判断是否需要输入手势密码
 //            dealLockPattern();
         }
+    }
+
+    @Override
+    public void showLoading() {
+        LoadingDialog.showIfNotExist(mBaseContext,false);
+    }
+
+    @Override
+    public void hideLoding() {
+        LoadingDialog.dismissIfExist();
     }
 
     @Override

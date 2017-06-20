@@ -22,4 +22,6 @@ import android.app.Activity;
  */
 public interface IView {
     Activity getAct();
+    void showLoading();
+    void hideLoding();
 }
