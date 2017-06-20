@@ -26,8 +26,10 @@
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
@@ -49,9 +51,9 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--指纹权限-->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER"/>
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER" />
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <!-- Optional. Required for location feature -->
     <!-- jpush 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
@@ -78,6 +80,7 @@
             android:value="339b5c960c56a8890957f6cfee5bb32f" />
 
         <service android:name="com.amap.api.location.APSService" />
+
         <activity
             android:name="com.giveu.shoppingmall.index.activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -94,11 +97,10 @@
         <activity
             android:name="com.giveu.shoppingmall.index.activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="首次安装引导页"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="首次安装引导页"
-            />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
             android:name="com.giveu.shoppingmall.index.activity.MainActivity"
@@ -111,9 +113,32 @@
             android:name="com.giveu.shoppingmall.index.activity.AdSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <!--个人中心-->
+        <activity
+            android:name=".me.activity.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="登录"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.activity.RegisterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="注册"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.activity.SetPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="设置密码或重置密码"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.activity.RequestPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="找回密码"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <!--图片选择列出所有图片-->
         <activity
@@ -127,8 +152,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.giveu.shoppingmall.view.imageselect.Act_ImageSelectPreActivity"
-            android:screenOrientation="portrait"
-            android:label="选择图片控件图片预览"/>
+            android:label="选择图片控件图片预览"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.soundcloud.android.crop.CropImageActivity"

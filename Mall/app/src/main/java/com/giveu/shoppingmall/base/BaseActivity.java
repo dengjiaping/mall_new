@@ -350,7 +350,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     public void onClick(View view) {
-
+        //防止快速点击
+        if (CommonUtils.isFastDoubleClick(view.getId())) {
+            return;
+        }
     }
 
     /**

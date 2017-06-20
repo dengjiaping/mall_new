@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
+import com.giveu.shoppingmall.me.activity.LoginActivity;
 
 /**
  * Created by 508632 on 2016/12/22.
@@ -17,7 +18,7 @@ public class UITest {
 			return;
 		}
 
-//		startActivity(MyFootprintActivity.class);
+		startActivity(LoginActivity.class);
 	}
 
 
