@@ -17,7 +17,7 @@ public class UITest {
 			return;
 		}
 
-//		startActivity(MyFootprintActivity.class);
+		//startActivity(WalletActivationActivity.class);
 	}
 
 
