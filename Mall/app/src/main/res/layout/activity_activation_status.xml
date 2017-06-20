@@ -5,20 +5,21 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/ic_activation_success" />
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_activation_success"
+        android:id="@+id/imageView" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="26dp"
         android:gravity="center"
         android:text="激活成功"
         android:textColor="@color/black"
-        android:textSize="@dimen/ts_18" />
+        android:textSize="@dimen/ts_21" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,27 +30,34 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="40dp"
             android:background="@color/line_bg" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="钱包总额度：13000.00元" />
+            android:text="钱包总额度：13000.00元"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_16" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="钱包总额度：13000.00元" />
+            android:text="钱包总额度：13000.00元"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_16" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="钱包总额度：13000.00元" />
+            android:text="钱包总额度：13000.00元"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_16" />
 
         <View
             android:layout_width="match_parent"
@@ -61,22 +69,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/color_9b9b9b"
             android:text="提示提示提示提示提示提示提示提示提示提示提示提示提示提示"
-            android:textSize="@dimen/ts_11" />
+            android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="11dp"
         android:gravity="center"
+        android:textSize="@dimen/ts_18"
+        android:textColor="@color/color_4a4a4a"
         android:text="您暂时不符合即有钱包的开通条件，\n请注意后续消息！"
         android:visibility="gone" />
 
     <TextView
         style="@style/me_bt"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="65dp"
         android:background="@drawable/selector_btn_change_blue"
         android:text="设置交易密码" />
 </LinearLayout>

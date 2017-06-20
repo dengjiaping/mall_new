@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.index.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.giveu.shoppingmall.R;
@@ -19,4 +21,10 @@ public class ActivationStatusActivity extends BaseActivity {
     public void setData() {
 
     }
+
+    public static void startIt(Activity mActivity){
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        mActivity.startActivity(intent);
+    }
+
 }
