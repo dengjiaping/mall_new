@@ -120,7 +120,7 @@
             android:name=".me.view.activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="登录"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name=".me.view.activity.RegisterActivity"

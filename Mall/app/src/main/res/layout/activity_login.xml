@@ -1,151 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fillViewport="true"
-    android:overScrollMode="never"
-    android:scrollbars="none">
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_welcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="69dp"
+                android:layout_marginTop="51dp"
+                android:gravity="center"
+                android:text="欢迎来到即有钱包"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_21" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                    android:text="账号"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/ts_16" />
+
+                <EditText
+                    android:id="@+id/et_account"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="请输入手机号码"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textColorHint="@color/color_d8d8d8"
+                    android:textSize="@dimen/ts_16" />
+
+                <ImageView
+                    android:id="@+id/iv_delete_account"
+                    android:layout_width="53dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_text_delete"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_layoutxml_bg" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                    android:text="密码"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/ts_16" />
+
+                <EditText
+                    android:id="@+id/et_pwd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="请输入密码"
+                    android:inputType="textPassword"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textColorHint="@color/color_d8d8d8"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_delete_pwd"
+                    android:layout_width="53dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_text_delete"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_layoutxml_bg" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:id="@+id/tv_register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/default_layout_screen_gap"
+                    android:paddingRight="@dimen/default_layout_screen_gap"
+                    android:text="快速注册"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_14" />
+
+                <TextView
+                    android:id="@+id/tv_forget_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/default_layout_screen_gap"
+                    android:paddingRight="@dimen/default_layout_screen_gap"
+                    android:text="忘记密码？"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_14" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_login"
+                style="@style/me_bt"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginRight="@dimen/default_layout_screen_gap"
+                android:layout_marginTop="41dp"
+                android:background="@drawable/selector_login"
+                android:text="登录" />
+
+
+        </LinearLayout>
+    </ScrollView>
     <LinearLayout
+        android:id="@+id/ll_third_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="51dp"
-            android:gravity="center"
-            android:text="欢迎来到即有钱包"
-            android:textColor="@color/color_4a4a4a"
-            android:textSize="@dimen/ts_21" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="69dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                android:text="账号"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_16" />
-
-            <EditText
-                android:id="@+id/et_account"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="14dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="请输入手机号码"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/color_4a4a4a"
-                android:textColorHint="@color/color_d8d8d8"
-                android:textSize="@dimen/ts_16" />
-
-            <ImageView
-                android:id="@+id/iv_delete_account"
-                android:layout_width="53dp"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_text_delete"
-                android:visibility="gone" />
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_layoutxml_bg" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                android:text="密码"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_16" />
-
-            <EditText
-                android:id="@+id/et_pwd"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="14dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="请输入密码"
-                android:inputType="textPassword"
-                android:textColor="@color/color_4a4a4a"
-                android:textColorHint="@color/color_d8d8d8"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/iv_delete_pwd"
-                android:layout_width="53dp"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_text_delete"
-                android:visibility="gone" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_layoutxml_bg" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-
-            <TextView
-                android:id="@+id/tv_register"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/default_layout_screen_gap"
-                android:paddingRight="@dimen/default_layout_screen_gap"
-                android:text="快速注册"
-                android:textColor="@color/color_00bbc0"
-                android:textSize="@dimen/ts_14" />
-
-            <TextView
-                android:id="@+id/tv_forget_pwd"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/default_layout_screen_gap"
-                android:paddingRight="@dimen/default_layout_screen_gap"
-                android:text="忘记密码？"
-                android:textColor="@color/color_00bbc0"
-                android:textSize="@dimen/ts_14" />
-
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_login"
-            style="@style/me_bt"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="41dp"
-            android:background="@drawable/selector_login"
-            android:text="登录" />
 
         <View
             android:layout_width="match_parent"
@@ -185,8 +206,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -194,7 +214,7 @@
                 android:layout_centerInParent="true">
 
                 <ImageView
-                    android:id="@+id/iv_weixin_login"
+                    android:id="@+id/iv_wechat_login"
                     android:layout_width="56dp"
                     android:layout_height="72dp"
                     android:paddingBottom="15dp"
@@ -225,4 +245,5 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>

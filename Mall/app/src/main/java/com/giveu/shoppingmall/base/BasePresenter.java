@@ -18,7 +18,7 @@ package com.giveu.shoppingmall.base;
 public abstract class BasePresenter<T extends IView> {
     private T view;
 
-    protected BasePresenter(T view) {
+    public BasePresenter(T view) {
         this.view = view;
     }
 
