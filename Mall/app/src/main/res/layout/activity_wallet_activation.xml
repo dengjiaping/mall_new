@@ -68,6 +68,7 @@
         <EditText
             android:id="@+id/et_bank_no"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="银行卡号" />
     </LinearLayout>
 
@@ -89,6 +90,7 @@
         <EditText
             android:id="@+id/et_phone"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="手机号" />
     </LinearLayout>
 
@@ -110,6 +112,7 @@
         <EditText
             android:id="@+id/et_code"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="验证码" />
 
         <com.giveu.shoppingmall.view.SendCodeTextView

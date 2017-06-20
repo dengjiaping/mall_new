@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.model.bean.response.ActivationResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.view.SendCodeTextView;
@@ -50,19 +52,23 @@ public class WalletActivationActivity extends BaseActivity {
     CheckBox cbCheck;
     @BindView(R.id.tv_send_code)
     SendCodeTextView tvSendCode;
-
+    ActivationResponse activationResponse;
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation);
+        baseLayout.setTitle("钱包激活");
     }
 
     @Override
     public void setData() {
+        //style 1:银行卡、手机号类只有1个位数限制 2:姓名范围的位数限制 3:身份证类2种位数限制
         EditListener(etName, ivName, 2, 18, 2);
         EditListener(etIdent, ivIdent, 15, 18, 3);
         EditListener(etPhone, ivPhone, 11, 0, 1);
         EditListener(etCode, ivCode, 6, 0, 1);
         EditListener(etBankNo, ivBankNo, 19, 0, 1);
+
+         activationResponse = new ActivationResponse("1","13000.00元","1000.00元","12000.00元",null,null);
     }
 
     //true 信息正确 false 信息错误
@@ -116,7 +122,7 @@ public class WalletActivationActivity extends BaseActivity {
                     case 1:
                         //银行卡、手机号类只有1个位数限制
                         if (s.length() == flag1) {
-                            editText.setTextColor(getResources().getColor(R.color.color_9b9b9b));
+                            editText.setTextColor(getResources().getColor(R.color.black));
                         } else {
                             editText.setTextColor(getResources().getColor(R.color.red));
                         }
@@ -124,7 +130,7 @@ public class WalletActivationActivity extends BaseActivity {
                     case 2:
                         //姓名范围的位数限制
                         if (s.length() >= flag1 && s.length() <= flag2) {
-                            editText.setTextColor(getResources().getColor(R.color.color_9b9b9b));
+                            editText.setTextColor(getResources().getColor(R.color.black));
                         } else {
                             editText.setTextColor(getResources().getColor(R.color.red));
                         }
@@ -132,7 +138,7 @@ public class WalletActivationActivity extends BaseActivity {
                     case 3:
                         //身份证类2种位数限制
                         if (s.length() == flag1 || s.length() == flag2) {
-                            editText.setTextColor(getResources().getColor(R.color.color_9b9b9b));
+                            editText.setTextColor(getResources().getColor(R.color.black));
                         } else {
                             editText.setTextColor(getResources().getColor(R.color.red));
                         }
@@ -146,6 +152,9 @@ public class WalletActivationActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_send_code:
+                if(CommonUtils.isFastDoubleClick(R.id.tv_send_code)){//防止重复点击
+                    return;
+                }
                 if (ErrorCheck()) {
                     tvSendCode.startCount();
                 }
@@ -158,7 +167,7 @@ public class WalletActivationActivity extends BaseActivity {
                     } else if (!cbCheck.isChecked()) {
                         ToastUtils.showShortToast("请勾选协议！");
                     } else {
-                        ActivationStatusActivity.startIt(mBaseContext);
+                        ActivationStatusActivity.startIt(mBaseContext,activationResponse.status,activationResponse.date1,activationResponse.date2,activationResponse.date3,activationResponse.bottomHint,activationResponse.midHint);
                     }
                 }
                 break;
