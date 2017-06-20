@@ -9,4 +9,5 @@ import com.giveu.shoppingmall.base.IView;
 public interface ILoginView extends IView {
     void onLoginSuccess();
     void onLoginFail();
+    void afterThirdLogin();
 }

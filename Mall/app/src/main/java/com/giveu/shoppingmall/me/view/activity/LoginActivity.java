@@ -1,26 +1,38 @@
 package com.giveu.shoppingmall.me.view.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.activity.MainActivity;
+import com.giveu.shoppingmall.me.presenter.LoginPresenter;
+import com.giveu.shoppingmall.me.view.inter.ILoginView;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 
@@ -28,7 +40,7 @@ import cn.jpush.android.api.JPushInterface;
  * Created by 513419 on 2017/6/19.
  */
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements ILoginView {
 
     @BindView(R.id.et_account)
     EditText etAccount;
@@ -38,6 +50,12 @@ public class LoginActivity extends BaseActivity {
     ImageView ivDeleteAccount;
     @BindView(R.id.iv_delete_pwd)
     ImageView ivDeletePwd;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
+    @BindView(R.id.ll_content)
+    LinearLayout llContent;
+    @BindView(R.id.ll_third_login)
+    LinearLayout llThirdLogin;
 
     private String lat;
     private String lng;
@@ -46,6 +64,9 @@ public class LoginActivity extends BaseActivity {
     //标记定位次数，如果2次定位未成功，那么提示定位失败，并不再进行登录操作
     private int initLocCounts;
     private String deviceNumber;
+    private int keyHeight = 0; //软件盘弹起后所占高度
+
+    private LoginPresenter presenter;
 
 
     @Override
@@ -54,6 +75,13 @@ public class LoginActivity extends BaseActivity {
         baseLayout.setTitle("登录");
         baseLayout.setWhiteBlueStyle();
         dealLogoutByServer();
+        keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
+        presenter = new LoginPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     private void dealLogoutByServer() {
@@ -66,7 +94,8 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.tv_login, R.id.iv_delete_account, R.id.iv_delete_pwd, R.id.tv_register,R.id.tv_forget_pwd})
+    @OnClick({R.id.tv_login, R.id.iv_delete_account, R.id.iv_delete_pwd,
+            R.id.tv_register, R.id.tv_forget_pwd, R.id.iv_wechat_login, R.id.iv_qq_login, R.id.iv_weibo_login})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -94,6 +123,21 @@ public class LoginActivity extends BaseActivity {
                 RequestPasswordActivity.startIt(mBaseContext);
                 break;
 
+            case R.id.iv_wechat_login:
+                showLoading();
+                presenter.WechatLogin();
+                break;
+
+            case R.id.iv_qq_login:
+                showLoading();
+                presenter.QQLogin();
+                break;
+
+            case R.id.iv_weibo_login:
+                showLoading();
+                presenter.SinaWeiboLogin();
+                break;
+
             default:
                 break;
         }
@@ -112,7 +156,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void onLoginSuccess() {
+    private void onLoginSuccessV() {
         ToastUtils.showLongToast("登录成功");
 //        LoginHelper.getInstance().saveLoginStatus(loginBean);
         //统计登录次数
@@ -127,6 +171,21 @@ public class LoginActivity extends BaseActivity {
         }
         MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
         finish();
+    }
+
+    @Override
+    public void onLoginSuccess() {
+
+    }
+
+    @Override
+    public void onLoginFail() {
+
+    }
+
+    @Override
+    public void afterThirdLogin() {
+        hideLoding();
     }
 
     @Override
@@ -194,6 +253,46 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
+
+
+        /**
+         * 禁止键盘弹起的时候可以滚动
+         */
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        scrollView.addOnLayoutChangeListener(new ViewGroup.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft,
+                                       int oldTop, int oldRight, int oldBottom) {
+              /* old是改变前的左上右下坐标点值，没有old的是改变后的左上右下坐标点值
+              现在认为只要控件将Activity向上推的高度超过了1/3屏幕高，就认为软键盘弹起*/
+                if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+                    int dist = llContent.getBottom() - bottom;
+                    if (dist > 0) {
+                        ObjectAnimator mAnimatorTranslateY = ObjectAnimator.ofFloat(llContent, "translationY", 0.0f, -dist);
+                        mAnimatorTranslateY.setDuration(300);
+                        mAnimatorTranslateY.setInterpolator(new LinearInterpolator());
+                        mAnimatorTranslateY.start();
+                    }
+                    llThirdLogin.setVisibility(View.INVISIBLE);
+
+                } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+                    Log.e("wenzhihao", "down------>" + (bottom - oldBottom));
+                    if ((llContent.getBottom() - oldBottom) > 0) {
+                        ObjectAnimator mAnimatorTranslateY = ObjectAnimator.ofFloat(llContent, "translationY", llContent.getTranslationY(), 0);
+                        mAnimatorTranslateY.setDuration(300);
+                        mAnimatorTranslateY.setInterpolator(new LinearInterpolator());
+                        mAnimatorTranslateY.start();
+                    }
+                    llThirdLogin.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -228,5 +327,12 @@ public class LoginActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

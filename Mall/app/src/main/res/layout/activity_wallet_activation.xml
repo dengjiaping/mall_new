@@ -6,16 +6,16 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="43dp"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/default_layout_screen_gap"
         android:text="请填写您的真实信息"
         android:textColor="@color/black"
-        android:textSize="@dimen/ts_16" />
+        android:textSize="@dimen/ts_15" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="49dp"
         android:background="@color/white">
 
         <ImageView
@@ -36,7 +36,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="49dp"
         android:background="@color/white">
 
         <ImageView
@@ -57,7 +57,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="49dp"
         android:background="@color/white">
 
         <ImageView
@@ -68,6 +68,7 @@
         <EditText
             android:id="@+id/et_bank_no"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="银行卡号" />
     </LinearLayout>
 
@@ -78,7 +79,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="49dp"
         android:background="@color/white">
 
         <ImageView
@@ -89,6 +90,7 @@
         <EditText
             android:id="@+id/et_phone"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="手机号" />
     </LinearLayout>
 
@@ -99,7 +101,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="49dp"
         android:background="@color/white">
 
         <ImageView
@@ -110,13 +112,16 @@
         <EditText
             android:id="@+id/et_code"
             style="@style/activity_wallet_activation_et_style"
+            android:inputType="number"
             android:hint="验证码" />
 
-        <TextView
+        <com.giveu.shoppingmall.view.SendCodeTextView
+            android:id="@+id/tv_send_code"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="获取验证码"
+            android:textSize="@dimen/ts_16"
             android:textColor="@color/title_color" />
     </LinearLayout>
 
@@ -127,11 +132,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:gravity="center_vertical">
 
         <CheckBox
+            android:id="@+id/cb_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_checkbox_register"
@@ -142,13 +149,13 @@
             android:layout_height="wrap_content"
             android:text="已阅读并同意《*************》"
             android:textColor="@color/title_color"
-            android:textSize="@dimen/ts_11" />
+            android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_activation"
         style="@style/me_bt"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/selector_btn_change_blue"
         android:text="立即激活" />
 
