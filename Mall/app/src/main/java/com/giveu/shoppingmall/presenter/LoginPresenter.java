@@ -15,8 +15,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> {
 
 	public void Login(String name, String password) {
 //		ApiImpl.getInstance().testRequestAgent();
-		getViewProxy().onLoginFail();
-		getViewProxy().onLoginSuccess();
+		getView().onLoginFail();
+		getView().onLoginSuccess();
 	}
 
 

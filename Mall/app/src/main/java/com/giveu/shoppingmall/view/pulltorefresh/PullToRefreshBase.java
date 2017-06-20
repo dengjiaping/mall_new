@@ -137,7 +137,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         if (refreshableView instanceof ViewGroup) {
             ((ViewGroup) refreshableView).addView(child, index, params);
         } else {
-            throw new UnsupportedOperationException("Refreshable View is not a ViewGroup so can't addView");
+            throw new UnsupportedOperationException("Refreshable LoginView is not a ViewGroup so can't addView");
         }
     }
 
@@ -583,7 +583,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
     /**
      * Used internally for adding view. Need because we override addView to
-     * pass-through to the Refreshable View
+     * pass-through to the Refreshable LoginView
      */
     protected final void addViewInternal(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
@@ -591,7 +591,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
     /**
      * Used internally for adding view. Need because we override addView to
-     * pass-through to the Refreshable View
+     * pass-through to the Refreshable LoginView
      */
     protected final void addViewInternal(View child, ViewGroup.LayoutParams params) {
         super.addView(child, -1, params);
@@ -621,8 +621,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     }
 
     /**
-     * This is implemented by derived classes to return the created View. If you
-     * need to use a custom View (such as a custom ListView), override this
+     * This is implemented by derived classes to return the created LoginView. If you
+     * need to use a custom LoginView (such as a custom ListView), override this
      * method and return an instance of your custom class.
      * <p/>
      * Be sure to set the ID of the view in this method, especially if you're
@@ -631,8 +631,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      * @param context Context to create view with
      * @param attrs   AttributeSet from wrapped class. Means that anything you
      *                include in the XML layout declaration will be routed to the
-     *                created View
-     * @return New instance of the Refreshable View
+     *                created LoginView
+     * @return New instance of the Refreshable LoginView
      */
     protected abstract T createRefreshableView(Context context, AttributeSet attrs);
 
@@ -678,19 +678,19 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     }
 
     /**
-     * Implemented by derived class to return whether the View is in a state
+     * Implemented by derived class to return whether the LoginView is in a state
      * where the user can Pull to Refresh by scrolling from the end.
      *
-     * @return true if the View is currently in the correct state (for example,
+     * @return true if the LoginView is currently in the correct state (for example,
      * bottom of a ListView)
      */
     protected abstract boolean isReadyForPullEnd();
 
     /**
-     * Implemented by derived class to return whether the View is in a state
+     * Implemented by derived class to return whether the LoginView is in a state
      * where the user can Pull to Refresh by scrolling from the start.
      *
-     * @return true if the View is currently the correct state (for example, top
+     * @return true if the LoginView is currently the correct state (for example, top
      * of a ListView)
      */
     protected abstract boolean isReadyForPullStart();
@@ -871,7 +871,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         // We need to update the header/footer when our size changes
         refreshLoadingViewsSize();
 
-        // Update the Refreshable View layout
+        // Update the Refreshable LoginView layout
         refreshRefreshableViewSize(w, h);
 
         /**
@@ -939,7 +939,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     }
 
     protected final void refreshRefreshableViewSize(int width, int height) {
-        // We need to set the Height of the Refreshable View to the same as
+        // We need to set the Height of the Refreshable LoginView to the same as
         // this layout
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mRefreshableViewWrapper.getLayoutParams();
 
@@ -983,7 +983,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         if (USE_HW_LAYERS) {
             /**
-             * Use a Hardware Layer on the Refreshable View if we've scrolled at
+             * Use a Hardware Layer on the Refreshable LoginView if we've scrolled at
              * all. We don't use them on the Header/Footer Views as they change
              * often, which would negate any HW layer performance boost.
              */
@@ -1032,7 +1032,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     }
 
     /**
-     * Updates the View State when the mode has been set. This does not do any
+     * Updates the LoginView State when the mode has been set. This does not do any
      * checking that the mode is different to current state so always updates.
      */
     protected void updateUIForMode() {
@@ -1040,7 +1040,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         // direction
         final LinearLayout.LayoutParams lp = getLoadingLayoutLayoutParams();
 
-        // Remove Header, and then add Header Loading View again if needed
+        // Remove Header, and then add Header Loading LoginView again if needed
         if (this == mHeaderLayout.getParent()) {
             removeView(mHeaderLayout);
         }
@@ -1048,7 +1048,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             addViewInternal(mHeaderLayout, 0, lp);
         }
 
-        // Remove Footer, and then add Footer Loading View again if needed
+        // Remove Footer, and then add Footer Loading LoginView again if needed
         if (this == mFooterLayout.getParent()) {
             removeView(mFooterLayout);
         }
@@ -1122,7 +1122,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             mLoadingAnimationStyle = AnimationStyle.mapIntToValue(a.getInteger(R.styleable.PullToRefresh_ptrAnimationStyle, 0));
         }
 
-        // Refreshable View
+        // Refreshable LoginView
         // By passing the attrs, we can add ListView/GridView params via XML
         mRefreshableView = createRefreshableView(context, attrs);
         addRefreshableView(context, mRefreshableView);
@@ -1386,14 +1386,14 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         DISABLED(0x0),
 
         /**
-         * Only allow the user to Pull from the start of the Refreshable View to
+         * Only allow the user to Pull from the start of the Refreshable LoginView to
          * refresh. The start is either the Top or Left, depending on the
          * scrolling direction.
          */
         PULL_FROM_START(0x1),
 
         /**
-         * Only allow the user to Pull from the end of the Refreshable View to
+         * Only allow the user to Pull from the end of the Refreshable LoginView to
          * refresh. The start is either the Bottom or Right, depending on the
          * scrolling direction.
          */
@@ -1512,8 +1512,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
          * Called when the internal state has been changed, usually by the user
          * pulling.
          *
-         * @param refreshView - View which has had it's state change.
-         * @param state       - The new state of View.
+         * @param refreshView - LoginView which has had it's state change.
+         * @param state       - The new state of LoginView.
          * @param direction   - One of {@link Mode#PULL_FROM_START} or
          *                    {@link Mode#PULL_FROM_END} depending on which direction
          *                    the user is pulling. Only useful when <var>state</var> is
@@ -1600,7 +1600,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         /**
          * When the UI is currently overscrolling, caused by a fling on the
-         * Refreshable View.
+         * Refreshable LoginView.
          */
         OVERSCROLLING(0x10);
 

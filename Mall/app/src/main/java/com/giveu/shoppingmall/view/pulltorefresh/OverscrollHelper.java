@@ -67,7 +67,7 @@ public final class OverscrollHelper {
 	 *            overScrollBy call
 	 * @param scrollY - Current Y scroll value in pixels before applying deltaY,
 	 *            passed through from from overScrollBy call
-	 * @param scrollRange - Scroll Range of the View, specifically needed for
+	 * @param scrollRange - Scroll Range of the LoginView, specifically needed for
 	 *            ScrollView
 	 * @param isTouchEvent - true if this scroll operation is the result of a
 	 *            touch event, passed through from from overScrollBy call
@@ -90,7 +90,7 @@ public final class OverscrollHelper {
 	 *            overScrollBy call
 	 * @param scrollY - Current Y scroll value in pixels before applying deltaY,
 	 *            passed through from from overScrollBy call
-	 * @param scrollRange - Scroll Range of the View, specifically needed for
+	 * @param scrollRange - Scroll Range of the LoginView, specifically needed for
 	 *            ScrollView
 	 * @param fuzzyThreshold - Threshold for which the values how fuzzy we
 	 *            should treat the other values. Needed for WebView as it
@@ -165,7 +165,7 @@ public final class OverscrollHelper {
 				}
 			} else if (isTouchEvent && State.OVERSCROLLING == view.getState()) {
 				// This condition means that we were overscrolling from a fling,
-				// but the user has touched the View and is now overscrolling
+				// but the user has touched the LoginView and is now overscrolling
 				// from touch instead. We need to just reset.
 				view.setState(State.RESET);
 			}

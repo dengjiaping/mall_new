@@ -29,7 +29,7 @@ public interface IPullToRefresh<T extends View> {
 	/**
 	 * Demos the Pull-to-Refresh functionality to the user so that they are
 	 * aware it is there. This could be useful when the user first opens your
-	 * app, etc. The animation will only happen if the Refresh View (ListView,
+	 * app, etc. The animation will only happen if the Refresh LoginView (ListView,
 	 * ScrollView, etc) is in a state where a Pull-to-Refresh could occur by a
 	 * user's touch gesture (i.e. scrolled to the top/bottom).
 	 * 
@@ -47,12 +47,12 @@ public interface IPullToRefresh<T extends View> {
 
 	/**
 	 * Returns whether the Touch Events are filtered or not. If true is
-	 * returned, then the View will only use touch events where the difference
+	 * returned, then the LoginView will only use touch events where the difference
 	 * in the Y-axis is greater than the difference in the X-axis. This means
-	 * that the View will not interfere when it is used in a horizontal
-	 * scrolling View (such as a ViewPager).
+	 * that the LoginView will not interfere when it is used in a horizontal
+	 * scrolling LoginView (such as a ViewPager).
 	 * 
-	 * @return boolean - true if the View is filtering Touch Events
+	 * @return boolean - true if the LoginView is filtering Touch Events
 	 */
 	public boolean getFilterTouchEvents();
 
@@ -94,23 +94,23 @@ public interface IPullToRefresh<T extends View> {
 	public Mode getMode();
 
 	/**
-	 * Get the Wrapped Refreshable View. Anything returned here has already been
+	 * Get the Wrapped Refreshable LoginView. Anything returned here has already been
 	 * added to the content view.
 	 * 
-	 * @return The View which is currently wrapped
+	 * @return The LoginView which is currently wrapped
 	 */
 	public T getRefreshableView();
 
 	/**
-	 * Get whether the 'Refreshing' View should be automatically shown when
+	 * Get whether the 'Refreshing' LoginView should be automatically shown when
 	 * refreshing. Returns true by default.
 	 * 
-	 * @return - true if the Refreshing View will be show
+	 * @return - true if the Refreshing LoginView will be show
 	 */
 	public boolean getShowViewWhileRefreshing();
 
 	/**
-	 * @return - The state that the View is currently in.
+	 * @return - The state that the LoginView is currently in.
 	 */
 	public State getState();
 
@@ -139,7 +139,7 @@ public interface IPullToRefresh<T extends View> {
 	public boolean isRefreshing();
 
 	/**
-	 * Returns whether the widget has enabled scrolling on the Refreshable View
+	 * Returns whether the widget has enabled scrolling on the Refreshable LoginView
 	 * while refreshing.
 	 * 
 	 * @return true if the widget has enabled scrolling while refreshing
@@ -148,17 +148,17 @@ public interface IPullToRefresh<T extends View> {
 
 	/**
 	 * Mark the current Refresh as complete. Will Reset the UI and hide the
-	 * Refreshing View
+	 * Refreshing LoginView
 	 */
 	public void onRefreshComplete();
 
 	/**
-	 * Set the Touch Events to be filtered or not. If set to true, then the View
+	 * Set the Touch Events to be filtered or not. If set to true, then the LoginView
 	 * will only use touch events where the difference in the Y-axis is greater
-	 * than the difference in the X-axis. This means that the View will not
-	 * interfere when it is used in a horizontal scrolling View (such as a
+	 * than the difference in the X-axis. This means that the LoginView will not
+	 * interfere when it is used in a horizontal scrolling LoginView (such as a
 	 * ViewPager), but will restrict which types of finger scrolls will trigger
-	 * the View.
+	 * the LoginView.
 	 * 
 	 * @param filterEvents - true if you want to filter Touch Events. Default is
 	 *            true.
@@ -168,7 +168,7 @@ public interface IPullToRefresh<T extends View> {
 	/**
 	 * Set the mode of Pull-to-Refresh that this view will use.
 	 * 
-	 * @param mode - Mode to set the View to
+	 * @param mode - Mode to set the LoginView to
 	 */
 	public void setMode(Mode mode);
 
@@ -227,7 +227,7 @@ public interface IPullToRefresh<T extends View> {
 	public void setScrollAnimationInterpolator(Interpolator interpolator);
 
 	/**
-	 * By default the Widget disables scrolling on the Refreshable View while
+	 * By default the Widget disables scrolling on the Refreshable LoginView while
 	 * refreshing. This method can change this behaviour.
 	 * 
 	 * @param scrollingWhileRefreshingEnabled - true if you want to enable
@@ -236,7 +236,7 @@ public interface IPullToRefresh<T extends View> {
 	public void setScrollingWhileRefreshingEnabled(boolean scrollingWhileRefreshingEnabled);
 
 	/**
-	 * A mutator to enable/disable whether the 'Refreshing' View should be
+	 * A mutator to enable/disable whether the 'Refreshing' LoginView should be
 	 * automatically shown when refreshing.
 	 * 
 	 * @param showView

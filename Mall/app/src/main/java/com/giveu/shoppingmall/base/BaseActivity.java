@@ -34,11 +34,12 @@ import java.util.Set;
 import butterknife.ButterKnife;
 
 
-public abstract class BaseActivity extends FragmentActivity implements OnClickListener, IView {
+public abstract class BaseActivity<T extends BasePresenter> extends FragmentActivity implements OnClickListener, IView {
     public BaseLayout baseLayout;
     public BaseActivity mBaseContext;
     private Set<BasePresenter> mAllPresenters = new HashSet<>(1);
     protected Bundle mSavedInstanceState;
+    protected T presenter;
 
     /**
      * 当使用mvp模式时实现这个方法
@@ -46,6 +47,9 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     protected BasePresenter[] initPresenters() {
         return null;
     }
+
+    //只有一个presenter时使用这个
+    public abstract T createPresenter();
 
     private void addPresenters() {
         BasePresenter[] presenters = initPresenters();
@@ -221,13 +225,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         super.onResume();
     }
 
-    interface LifeStyle{
-        String  onCreate = "onCreate";
-        String  onStart = "onStart";
-        String  onResume = "onResume";
-        String  onStop = "onStop";
-        String  onPause = "onPause";
-        String  onDestroy = "onDestroy";
+    interface LifeStyle {
+        String onCreate = "onCreate";
+        String onStart = "onStart";
+        String onResume = "onResume";
+        String onStop = "onStop";
+        String onPause = "onPause";
+        String onDestroy = "onDestroy";
     }
 
     private void notifyIPresenter(String methodName) {
@@ -344,7 +348,9 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         notifyIPresenter(LifeStyle.onDestroy);
         //关闭软键盘
         CommonUtils.closeSoftKeyBoard(this);
-
+        if (presenter != null) {
+            presenter.onDestroy();
+        }
         super.onDestroy();
     }
 
@@ -363,8 +369,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     public Activity getAct() {
         return mBaseContext;
     }
-
-
 
 
 }
