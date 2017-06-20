@@ -21,7 +21,7 @@ public interface ApiUrl {
 
     //广告页
     String activity_getImageInfo = BASE_URL + "activity/getImageInfo";
-    String token_getToken = BASE_URL + "token/getToken";
+    String token_getToken = BASE_URL + "personCenter/token/applyToken";
     //修改密码
     String sales_account_changePwd = BASE_URL + "sales/account/changePwd";
     //验证密码

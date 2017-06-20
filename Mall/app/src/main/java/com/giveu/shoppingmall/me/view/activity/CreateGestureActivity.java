@@ -71,7 +71,7 @@ public class CreateGestureActivity extends BaseActivity {
         @Override
         public void onPatternStart() {
             lockPatternView.removePostClearPatternRunnable();
-            //updateStatus(status.DEFAULT, null);
+            //updateStatus(result.DEFAULT, null);
             lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
         }
 

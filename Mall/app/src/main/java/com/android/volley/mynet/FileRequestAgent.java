@@ -90,7 +90,7 @@ public class FileRequestAgent extends BaseRequestAgent{
                 }
 
                 if (response != null) {
-                    if ("0".equals(response.status)) {
+                    if ("0".equals(response.result)) {
                         if (responseListener != null) {
                             responseListener.onSuccess(response);
                         }
@@ -114,7 +114,7 @@ public class FileRequestAgent extends BaseRequestAgent{
 
                 if (responseListener != null && error != null) {
                     BaseBean errorBean = new BaseBean();
-                    errorBean.status = VolleyErrorHelper.getVolleyErrorCode(error) + "";
+                    errorBean.result = VolleyErrorHelper.getVolleyErrorCode(error) + "";
                     errorBean.message = error.getMessage();
                     if (VolleyErrorHelper.getVolleyErrorCode(error) == 200) {
                         errorBean.message = "数据解析错误";

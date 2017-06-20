@@ -11,6 +11,7 @@ import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.Map;
@@ -31,13 +32,18 @@ public class ApiImpl {
     }
 
     public static void getAppToken(Activity context, final BaseRequestAgent.ResponseListener<TokenBean> responseListener) {
-        Map<String, String> requestParams2 = BaseRequestAgent.getRequestParams(new String[]{"deviceId"}, new String[]{SharePrefUtil.getUUId()});
-        RequestAgent.getInstance().sendGetRequest(requestParams2, ApiUrl.token_getToken, TokenBean.class, context, new BaseRequestAgent.ResponseListener<TokenBean>() {
+//        tokenType	带权限token 1 不带权限token 2
+        String tokenType = "2";
+        if (LoginHelper.getInstance().hasLogin()){
+            tokenType = "1";
+        }
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "tokenType"}, new String[]{SharePrefUtil.getUUId(), tokenType});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.token_getToken, TokenBean.class, context, new BaseRequestAgent.ResponseListener<TokenBean>() {
             @Override
             public void onSuccess(TokenBean response) {
                 try {
                     //把token存起来
-                    SharePrefUtil.setAppToken(response.data.token);
+                    SharePrefUtil.setAppToken(response.data.accessToken);
 
                     if (responseListener != null) {
                         responseListener.onSuccess(response);
