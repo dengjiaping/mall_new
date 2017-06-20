@@ -33,7 +33,7 @@ public class RequestPasswordActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.tv_get_code, R.id.tv_next, R.id.tv_unreceiver})
+    @OnClick({R.id.tv_get_code, R.id.tv_next, R.id.tv_unreceived})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -43,7 +43,7 @@ public class RequestPasswordActivity extends BaseActivity {
             case R.id.tv_next:
                 SetPasswordActivity.startIt(mBaseContext, false);
                 break;
-            case R.id.tv_unreceiver:
+            case R.id.tv_unreceived:
                 break;
         }
     }
