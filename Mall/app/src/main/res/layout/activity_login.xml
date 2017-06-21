@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollView"
@@ -57,8 +55,9 @@
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:hint="请输入手机号码"
-                    android:inputType="text"
-                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    android:inputType="number"
                     android:textColor="@color/color_4a4a4a"
                     android:textColorHint="@color/color_d8d8d8"
                     android:textSize="@dimen/ts_16" />
@@ -101,6 +100,8 @@
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:hint="请输入密码"
+                    android:maxLength="16"
+                    android:singleLine="true"
                     android:inputType="textPassword"
                     android:textColor="@color/color_4a4a4a"
                     android:textColorHint="@color/color_d8d8d8"
@@ -150,13 +151,12 @@
 
             </RelativeLayout>
 
-            <TextView
+            <com.giveu.shoppingmall.view.ClickEnabledTextView
                 android:id="@+id/tv_login"
-                style="@style/me_bt"
+                style="@style/click_enabled_bt"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
                 android:layout_marginRight="@dimen/default_layout_screen_gap"
                 android:layout_marginTop="41dp"
-                android:background="@drawable/selector_login"
                 android:text="登录" />
 
 
