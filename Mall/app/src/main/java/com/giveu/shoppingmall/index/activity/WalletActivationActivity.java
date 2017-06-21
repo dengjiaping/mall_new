@@ -2,12 +2,11 @@ package com.giveu.shoppingmall.index.activity;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
@@ -15,6 +14,8 @@ import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.model.bean.response.ActivationResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.view.ClickEnabledTextView;
 import com.giveu.shoppingmall.view.SendCodeTextView;
 
 import butterknife.BindView;
@@ -27,8 +28,7 @@ import butterknife.OnClick;
  */
 
 public class WalletActivationActivity extends BaseActivity {
-    @BindView(R.id.tv_activation)
-    TextView tvActivation;
+
     @BindView(R.id.iv_name)
     ImageView ivName;
     @BindView(R.id.iv_ident)
@@ -43,7 +43,6 @@ public class WalletActivationActivity extends BaseActivity {
     CheckBox cbCheck;
     @BindView(R.id.tv_send_code)
     SendCodeTextView tvSendCode;
-    ActivationResponse activationResponse;
     @BindView(R.id.et_name)
     EditView etName;
     @BindView(R.id.et_ident)
@@ -54,6 +53,9 @@ public class WalletActivationActivity extends BaseActivity {
     EditView etPhone;
     @BindView(R.id.et_code)
     EditView etCode;
+    @BindView(R.id.tv_activation)
+    ClickEnabledTextView tvActivation;
+    ActivationResponse activationResponse;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -74,47 +76,18 @@ public class WalletActivationActivity extends BaseActivity {
         EditListener(etCode, ivCode);
         EditListener(etBankNo, ivBankNo);
         activationResponse = new ActivationResponse("1", "13000.00元", "1000.00元", "12000.00元", null, null);
-    }
 
-    //true 信息正确 false 信息错误
-    public boolean ErrorCheck() {
-        String name = StringUtils.getTextFromView(etName);
-        String ident = StringUtils.getTextFromView(etIdent);
-        String phone = StringUtils.getTextFromView(etPhone);
-        String bankNo = StringUtils.getTextFromView(etBankNo);
-        if (StringUtils.isNull(name)) {
-            ToastUtils.showShortToast("请输入姓名！");
-            return false;
-        }
-        if (!StringUtils.checkUserNameAndTipError(name)) {
-            return false;
-        }
-        if (!StringUtils.checkIdCardAndTipError(ident)) {
-            return false;
-        }
-        if (!StringUtils.isCardNum(bankNo)) {
-            ToastUtils.showShortToast("请输入19位的银行卡号！");
-            return false;
-        }
-        if (!StringUtils.checkPhoneNumberAndTipError(phone)) {
-            return false;
-        }
-        return true;
     }
 
 
+    /**
+     * 每个输入框监听 输入字符后图标改变，未输时还原图标
+     *
+     * @param editText
+     * @param imageView
+     */
     public void EditListener(final EditText editText, final ImageView imageView) {
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        editText.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
@@ -122,9 +95,11 @@ public class WalletActivationActivity extends BaseActivity {
                 } else {
                     imageView.setImageResource(R.drawable.ic_add);
                 }
+                canClick();
             }
         });
     }
+
     @OnClick({R.id.tv_send_code, R.id.tv_activation})
     @Override
     public void onClick(View view) {
@@ -136,20 +111,84 @@ public class WalletActivationActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_activation:
-                if (ErrorCheck()) {
-                    String code = StringUtils.getTextFromView(etCode);
-                    if (StringUtils.isNull(code)) {
-                        ToastUtils.showShortToast("请输入验证码！");
-                    } else if (!cbCheck.isChecked()) {
+                String code = StringUtils.getTextFromView(etCode);
+                if (tvActivation.isClickEnabled()) {
+                    ActivationStatusActivity.startIt(mBaseContext, activationResponse.status, activationResponse.date1, activationResponse.date2, activationResponse.date3, activationResponse.bottomHint, activationResponse.midHint);
+                }else{
+                    if(!ErrorCheck()){
+                    }else if(code.length() != 6){
+                        ToastUtils.showShortToast("请输入6位验证码！");
+                    }else if (!cbCheck.isChecked()) {
                         ToastUtils.showShortToast("请勾选协议！");
-                    } else {
-                        ActivationStatusActivity.startIt(mBaseContext, activationResponse.status, activationResponse.date1, activationResponse.date2, activationResponse.date3, activationResponse.bottomHint, activationResponse.midHint);
                     }
                 }
                 break;
         }
     }
 
+    private void canClick() {
+        tvActivation.setClickEnabled(false);
+        String name = StringUtils.getTextFromView(etName);
+        String ident = StringUtils.getTextFromView(etIdent);
+        String phone = StringUtils.getTextFromView(etPhone);
+        String bankNo = StringUtils.getTextFromView(etBankNo);
+        String code = StringUtils.getTextFromView(etCode);
+//        if(StringUtils.isNull(name)){
+//            if(showToast){
+//
+//            }
+//           return;
+//        }
+//        if(){
+//
+//        }
+
+        tvActivation.setClickEnabled(true);
+        if (!StringUtils.isNull(name) && StringUtils.checkUserNameAndTipError(name,false) && StringUtils.checkIdCardAndTipError(ident,false) &&
+                StringUtils.isCardNum(bankNo) && StringUtils.checkPhoneNumberAndTipError(phone, false) && code.length() == 6 && cbCheck.isChecked()) {
+            tvActivation.setClickEnabled(true);
+
+            cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        tvActivation.setClickEnabled(true);
+                    }else{
+                        tvActivation.setClickEnabled(false);
+                    }
+                }
+            });
+        } else {
+            tvActivation.setClickEnabled(false);
+        }
+    }
+
+
+    //true 信息正确 false 信息错误
+    public boolean ErrorCheck() {
+        String name = StringUtils.getTextFromView(etName);
+        String ident = StringUtils.getTextFromView(etIdent);
+        String phone = StringUtils.getTextFromView(etPhone);
+        String bankNo = StringUtils.getTextFromView(etBankNo);
+        if (StringUtils.isNull(name)) {
+            ToastUtils.showShortToast("请输入姓名！");
+            return false;
+        }
+        if (!StringUtils.checkUserNameAndTipError(name,true)) {
+            return false;
+        }
+        if (!StringUtils.checkIdCardAndTipError(ident,true)) {
+            return false;
+        }
+        if (!StringUtils.isCardNum(bankNo)) {
+            ToastUtils.showShortToast("请输入19位的银行卡号！");
+            return false;
+        }
+        if (!StringUtils.checkPhoneNumberAndTipError(phone,true)) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     protected void onDestroy() {
@@ -158,6 +197,5 @@ public class WalletActivationActivity extends BaseActivity {
             tvSendCode.stopCount();
         }
     }
-
 
 }

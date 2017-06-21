@@ -17,7 +17,7 @@ public class UITest {
 		if ( !DebugConfig.isDev ){
 			return;
 		}
-		startActivity(AddCardFirstActivity.class);
+		startActivity(WalletActivationActivity.class);
 	}
 
 

@@ -57,7 +57,7 @@ public class AddCardFirstActivity extends BaseActivity {
     private boolean checkEditTextExceptCode() {
         String username = StringUtils.getTextFromView(etUsername);
         String bankNumber = StringUtils.getTextFromView(etBanknumber);
-        if (!StringUtils.checkUserNameAndTipError(username)) {
+        if (!StringUtils.checkUserNameAndTipError(username,true)) {
             return false;
         }
         if (StringUtils.isNull(bankNumber)) {

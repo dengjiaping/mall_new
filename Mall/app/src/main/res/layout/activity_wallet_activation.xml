@@ -26,8 +26,8 @@
         <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_name"
             style="@style/activity_wallet_activation_et_style"
-            android:maxLength="18"
-            android:hint="填写您的姓名" />
+            android:hint="填写您的姓名"
+            android:maxLength="18" />
     </LinearLayout>
 
     <View
@@ -48,8 +48,8 @@
         <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_ident"
             style="@style/activity_wallet_activation_et_style"
-            android:maxLength="18"
-            android:hint="填写您的身份证" />
+            android:hint="填写您的身份证"
+            android:maxLength="18" />
     </LinearLayout>
 
     <View
@@ -70,9 +70,9 @@
         <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_bank_no"
             style="@style/activity_wallet_activation_et_style"
+            android:hint="银行卡号"
             android:inputType="number"
-            android:maxLength="19"
-            android:hint="银行卡号" />
+            android:maxLength="19" />
     </LinearLayout>
 
     <View
@@ -93,9 +93,9 @@
         <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_phone"
             style="@style/activity_wallet_activation_et_style"
+            android:hint="手机号"
             android:inputType="number"
-            android:maxLength="11"
-            android:hint="手机号" />
+            android:maxLength="11" />
     </LinearLayout>
 
     <View
@@ -116,9 +116,9 @@
         <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_code"
             style="@style/activity_wallet_activation_et_style"
+            android:hint="验证码"
             android:inputType="number"
-            android:maxLength="6"
-            android:hint="验证码" />
+            android:maxLength="6" />
 
         <com.giveu.shoppingmall.view.SendCodeTextView
             android:id="@+id/tv_send_code"
@@ -126,8 +126,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="获取验证码"
-            android:textSize="@dimen/ts_16"
-            android:textColor="@color/title_color" />
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/ts_16" />
     </LinearLayout>
 
     <View
@@ -138,8 +138,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="19dp"
         android:gravity="center_vertical">
 
         <CheckBox
@@ -157,11 +157,9 @@
             android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
-    <TextView
+    <com.giveu.shoppingmall.view.ClickEnabledTextView
         android:id="@+id/tv_activation"
-        style="@style/me_bt"
+        style="@style/click_enabled_bt"
         android:layout_marginTop="35dp"
-        android:background="@drawable/selector_btn_change_blue"
         android:text="立即激活" />
-
 </LinearLayout>

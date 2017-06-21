@@ -127,7 +127,7 @@ public class AddCardSecondActivity extends BaseActivity {
             ToastUtils.showShortToast("请输入银行类别");
             return false;
         }
-        if (!StringUtils.checkPhoneNumberAndTipError(bankPhone)) {
+        if (!StringUtils.checkPhoneNumberAndTipError(bankPhone,true)) {
             return false;
         }
 
