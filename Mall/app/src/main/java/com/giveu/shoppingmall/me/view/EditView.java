@@ -3,11 +3,12 @@ package com.giveu.shoppingmall.me.view;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 
 
 /**
@@ -18,7 +19,8 @@ import com.giveu.shoppingmall.R;
 public class EditView extends EditText {
 
 
-    public EditText etEditView;
+    private boolean hasSetMaxLength;
+    private int maxLength;
 
 
     public EditView(Context context) {
@@ -34,8 +36,7 @@ public class EditView extends EditText {
 
 
     private void init(AttributeSet attrs) {
-   //     TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.EditView);
-          etEditView = this;
+        //     TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.EditView);
 //        tvEditView.setTextColor(attributes.getInt(R.styleable.EditView_tv_text_color_left, getContext().getResources().getColor(R.color.color_4a4a4a)));
 //        tvEditView.setText(attributes.getString(R.styleable.EditView_tv_text_left));
 //        etEditView.setHint(attributes.getString(R.styleable.EditView_et_hint));
@@ -43,34 +44,48 @@ public class EditView extends EditText {
 //        etEditView.setTextColor(attributes.getInt(R.styleable.EditView_et_text_color_right, getContext().getResources().getColor(R.color.color_4a4a4a)));
 //        etEditView.setInputType(attributes.getInt(R.styleable.EditView_android_inputType, InputType.TYPE_CLASS_TEXT));
 //        etEditView.setFocusableInTouchMode(attributes.getBoolean(R.styleable.EditView_et_editable, true));
- //       etEditView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributes.getInt(R.styleable.EditView_et_maxLength, 40))});
-    //    attributes.recycle();
+        //       etEditView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributes.getInt(R.styleable.EditView_et_maxLength, 40))});
+        //    attributes.recycle();
+    }
+
+    /**
+     * 设置输入的最大位数，这里并不是限制输入的最大位数，只做判断条件
+     *
+     * @param maxLength
+     */
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+        hasSetMaxLength = true;
     }
 
 
     /**
-     * 根据传入的位数限制检验字体显示红色还是黑色
+     * 设置为密码输入类型
+     */
+    public void setPasswordInputStyle() {
+        setKeyListener(new DigitsKeyListener() {
+            @Override
+            protected char[] getAcceptedChars() {
+                return ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789").toCharArray();
+            }
+        });
+    }
+
+    /**
+     * 根据传入的位数限制检验字体显示红色还是黑色，当输入大于等于最小长度并小于等于最大长度时显示黑色
      *
      * @param flag
      */
     public void checkFormat(final int flag) {
-        this.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+        this.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == flag) {
-                    etEditView.setTextColor(getResources().getColor(R.color.black));
+                if (hasSetMaxLength && s.length() >= flag && s.length() <= maxLength) {
+                    setTextColor(getResources().getColor(R.color.color_4a4a4a));
+                } else if (s.length() == flag) {
+                    setTextColor(getResources().getColor(R.color.color_4a4a4a));
                 } else {
-                    etEditView.setTextColor(getResources().getColor(R.color.red));
+                    setTextColor(getResources().getColor(R.color.red));
                 }
             }
         });
@@ -82,45 +97,36 @@ public class EditView extends EditText {
      * @param style 传入的类型
      */
     public void checkFormat(final String style) {
-        this.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+        this.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 switch (style) {
                     case Style.NAME://姓名2-18，不含特殊字符
                         if (checkUserNameAndTipError(s.toString())) {
-                            etEditView.setTextColor(getResources().getColor(R.color.black));
+                            setTextColor(getResources().getColor(R.color.black));
                         } else {
-                            etEditView.setTextColor(getResources().getColor(R.color.red));
+                            setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
                     case Style.IDENT://身份证15或18位
                         if (s.length() == 15 || s.length() == 18) {
-                            etEditView.setTextColor(getResources().getColor(R.color.black));
+                            setTextColor(getResources().getColor(R.color.black));
                         } else {
-                            etEditView.setTextColor(getResources().getColor(R.color.red));
+                            setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
                     case Style.BANKNAME://银行卡名中文
                         if (checkBankName(s.toString())) {
-                            etEditView.setTextColor(getResources().getColor(R.color.black));
+                            setTextColor(getResources().getColor(R.color.black));
                         } else {
-                            etEditView.setTextColor(getResources().getColor(R.color.red));
+                            setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
                 }
             }
         });
     }
+
     public interface Style {
         String NAME = "name";//姓名
         String IDENT = "ident";//身份证

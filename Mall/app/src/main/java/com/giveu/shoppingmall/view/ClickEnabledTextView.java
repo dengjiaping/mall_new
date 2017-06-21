@@ -39,7 +39,7 @@ public class ClickEnabledTextView extends TextView {
         }
         this.clickEnabled = clickEnabled;
         if (clickEnabled) {
-            setBackgroundResource(R.drawable.shape_button_enabled);
+            setBackgroundResource(R.drawable.selector_login);
         } else {
             setBackgroundResource(R.drawable.shape_button_disabled);
         }

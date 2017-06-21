@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
-import android.widget.EditText;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.view.ClickEnabledTextView;
 
@@ -21,9 +21,9 @@ import butterknife.BindView;
 public class SetPasswordActivity extends BaseActivity {
 
     @BindView(R.id.et_pwd)
-    EditText etPwd;
+    EditView etPwd;
     @BindView(R.id.et_confirm_pwd)
-    EditText etConfirmPwd;
+    EditView etConfirmPwd;
     @BindView(R.id.tv_complete)
     ClickEnabledTextView tvComplete;
     private boolean isSetPassword;
@@ -44,6 +44,12 @@ public class SetPasswordActivity extends BaseActivity {
         } else {
             baseLayout.setTitle("重置登录密码");
         }
+        etPwd.setMaxLength(16);
+        etConfirmPwd.setMaxLength(16);
+        etPwd.checkFormat(8);
+        etConfirmPwd.checkFormat(8);
+        etPwd.setPasswordInputStyle();
+        etConfirmPwd.setPasswordInputStyle();
     }
 
     @Override

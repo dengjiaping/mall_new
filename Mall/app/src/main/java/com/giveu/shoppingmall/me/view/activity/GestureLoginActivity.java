@@ -35,8 +35,8 @@ public class GestureLoginActivity extends BaseActivity {
     LockPatternView lockPatternView;
     @BindView(R.id.tv_message)
     TextView messageTv;
-    @BindView(R.id.tv_forget_gesture)
-    TextView forgetGestureBtn;
+    @BindView(R.id.tv_change_login)
+    TextView tvChangeLogin;
     @BindView(R.id.tv_userName)
     TextView tv_userName;
     @BindView(R.id.rl_root)
@@ -65,10 +65,17 @@ public class GestureLoginActivity extends BaseActivity {
                 }
             });
         } else {
-            SpannableString titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
-            baseLayout.setTitle(titleText);
+            baseLayout.setRightTextColor(R.color.color_00adb2);
+            baseLayout.setRightTextAndListener("关闭", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VerifyPwdActivity.startIt(mBaseContext, false);
+                    finish();
+                }
+            });
+//            SpannableString titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
+            baseLayout.setTitle("解锁");
             baseLayout.hideBack();
-            baseLayout.setTopBarBackgroundColor(R.color.white);
         }
 
     }
@@ -139,7 +146,7 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @OnClick(R.id.tv_forget_gesture)
+    @OnClick(R.id.tv_change_login)
     void forgetGesturePassword() {
         VerifyPwdActivity.startIt(GestureLoginActivity.this, isClosePattern);
     }

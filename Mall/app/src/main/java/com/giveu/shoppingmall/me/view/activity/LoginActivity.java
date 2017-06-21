@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -23,6 +22,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
+import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.me.view.inter.ILoginView;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -44,9 +44,9 @@ import cn.jpush.android.api.JPushInterface;
 public class LoginActivity extends BaseActivity implements ILoginView {
 
     @BindView(R.id.et_account)
-    EditText etAccount;
+    EditView etAccount;
     @BindView(R.id.et_pwd)
-    EditText etPwd;
+    EditView etPwd;
     @BindView(R.id.iv_delete_account)
     ImageView ivDeleteAccount;
     @BindView(R.id.iv_delete_pwd)
@@ -82,6 +82,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         baseLayout.setTitle("登录");
         baseLayout.setWhiteBlueStyle();
         dealLogoutByServer();
+        etAccount.checkFormat(11);
+        etPwd.setMaxLength(16);
+        etPwd.checkFormat(8);
+        etPwd.setPasswordInputStyle();
         keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
         presenter = new LoginPresenter(this);
     }
@@ -162,12 +166,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         userId = etAccount.getText().toString().trim();
         pwd = etPwd.getText().toString().trim();
         if (StringUtils.isNull(userId)) {
-            ToastUtils.showShortToast("请输入账号");
+            ToastUtils.showShortToast("请输入手机号");
             return;
         }
-        if (StringUtils.isNull(pwd)) {
-            ToastUtils.showShortToast("请输入密码");
-            return;
+        if (StringUtils.checkLoginPwdAndTipError(pwd)) {
         }
     }
 

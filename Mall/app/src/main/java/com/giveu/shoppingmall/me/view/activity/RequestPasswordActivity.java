@@ -2,7 +2,6 @@ package com.giveu.shoppingmall.me.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Gravity;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.me.view.EditView;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.view.ClickEnabledTextView;
@@ -29,7 +30,7 @@ import butterknife.OnClick;
 public class RequestPasswordActivity extends BaseActivity {
 
     @BindView(R.id.et_phone)
-    EditText etPhone;
+    EditView etPhone;
     @BindView(R.id.et_vertification_code)
     EditText etVertificationCode;
     @BindView(R.id.tv_next)
@@ -49,6 +50,7 @@ public class RequestPasswordActivity extends BaseActivity {
         setContentView(R.layout.activity_request_password);
         baseLayout.setTitle("找回登录密码");
         initCallDialog();
+        etPhone.checkFormat(11);
     }
 
     private void initCallDialog() {
@@ -58,10 +60,7 @@ public class RequestPasswordActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 callDialog.dismiss();
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + "40088888888");
-                intent.setData(data);
-                startActivity(intent);
+                CommonUtils.callPhone(mBaseContext,"40088888888");
             }
         });
     }

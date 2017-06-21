@@ -21,7 +21,7 @@ public class Validator {
 	 * 正则表达式：验证密码
 	 */
 	public static final String REGEX_TRANSACTION_PASSWORD = "^[0-9]{6}$";
-	public static final String REGEX_LOGIN_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
+	public static final String REGEX_LOGIN_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$";
 
 	/**
 	 * 正则表达式：验证手机号

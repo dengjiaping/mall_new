@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.view.ClickEnabledTextView;
@@ -27,7 +28,7 @@ public class RegisterActivity extends BaseActivity {
 
 
     @BindView(R.id.et_phone)
-    EditText etPhone;
+    EditView etPhone;
     @BindView(R.id.et_code)
     EditText etCode;
     @BindView(R.id.tv_send_code)
@@ -48,6 +49,7 @@ public class RegisterActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_register);
         baseLayout.setTitle("注册");
+        etPhone.checkFormat(11);
     }
 
     @Override

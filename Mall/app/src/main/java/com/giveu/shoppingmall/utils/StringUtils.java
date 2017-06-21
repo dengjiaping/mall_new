@@ -173,7 +173,7 @@ public class StringUtils {
         }
 
         if (pwd.length() < 6 || pwd.length() > 16) {
-            ToastUtils.showShortToast("请输入6~16位密码");
+            ToastUtils.showShortToast("请输入8~16位密码");
             return false;
         }
 
