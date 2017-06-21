@@ -1,16 +1,13 @@
 package com.giveu.shoppingmall.me.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.giveu.shoppingmall.R;
-
 
 
 /**
@@ -37,8 +34,8 @@ public class EditView extends EditText {
 
 
     private void init(AttributeSet attrs) {
-        TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.EditView);
-        etEditView = this;
+   //     TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.EditView);
+          etEditView = this;
 //        tvEditView.setTextColor(attributes.getInt(R.styleable.EditView_tv_text_color_left, getContext().getResources().getColor(R.color.color_4a4a4a)));
 //        tvEditView.setText(attributes.getString(R.styleable.EditView_tv_text_left));
 //        etEditView.setHint(attributes.getString(R.styleable.EditView_et_hint));
@@ -46,17 +43,14 @@ public class EditView extends EditText {
 //        etEditView.setTextColor(attributes.getInt(R.styleable.EditView_et_text_color_right, getContext().getResources().getColor(R.color.color_4a4a4a)));
 //        etEditView.setInputType(attributes.getInt(R.styleable.EditView_android_inputType, InputType.TYPE_CLASS_TEXT));
 //        etEditView.setFocusableInTouchMode(attributes.getBoolean(R.styleable.EditView_et_editable, true));
-        etEditView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributes.getInt(R.styleable.EditView_et_maxLength, 40))});
-        attributes.recycle();
+ //       etEditView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributes.getInt(R.styleable.EditView_et_maxLength, 40))});
+    //    attributes.recycle();
     }
 
-    public interface Style{
-        String NAME = "name";//姓名
-        String IDENT = "ident";//身份证
-    }
 
     /**
      * 根据传入的位数限制检验字体显示红色还是黑色
+     *
      * @param flag
      */
     public void checkFormat(final int flag) {
@@ -84,6 +78,7 @@ public class EditView extends EditText {
 
     /**
      * 根据传入的类型检验字体显示红色还是黑色
+     *
      * @param style 传入的类型
      */
     public void checkFormat(final String style) {
@@ -115,13 +110,26 @@ public class EditView extends EditText {
                             etEditView.setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
+                    case Style.BANKNAME://银行卡名中文
+                        if (checkBankName(s.toString())) {
+                            etEditView.setTextColor(getResources().getColor(R.color.black));
+                        } else {
+                            etEditView.setTextColor(getResources().getColor(R.color.red));
+                        }
+                        break;
                 }
             }
         });
     }
+    public interface Style {
+        String NAME = "name";//姓名
+        String IDENT = "ident";//身份证
+        String BANKNAME = "bankName";//银行卡名
+    }
 
     /**
      * 姓名格式检测
+     *
      * @param nickname
      * @return
      */
@@ -132,9 +140,26 @@ public class EditView extends EditText {
         if (nickname.length() < 2 || nickname.length() > 18) {
             return false;
         }
-        if(nickname.matches("^[A-Z|a-z]*$")){
+        if (nickname.matches("^[A-Z|a-z]*$")) {
             return false;
-        }else if (!nickname.matches("[\\u4e00-\\u9fa5]{1,14}[\\?•·・∙]{0,1}[\\u4e00-\\u9fa5]{1,13}+$")) {
+        } else if (!nickname.matches("[\\u4e00-\\u9fa5]{1,14}[\\?•·・∙]{0,1}[\\u4e00-\\u9fa5]{1,13}+$")) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * 银行卡名称格式检测
+     *
+     * @param bankName
+     * @return
+     */
+    public boolean checkBankName(String bankName) {
+        if (TextUtils.isEmpty(bankName)) {
+            return false;
+        }
+        if (!bankName.matches("[\\u4e00-\\u9fa5]+$")) {
             return false;
         }
         return true;

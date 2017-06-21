@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="45dp"
-    android:text="请填写真实的信息"
-    android:layout_marginLeft="@dimen/default_layout_screen_gap"
-    android:textSize="@dimen/ts_15"
-    android:textColor="@color/color_282828"
-    android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:gravity="center_vertical"
+        android:text="请填写真实的信息"
+        android:textColor="@color/color_282828"
+        android:textSize="@dimen/ts_15" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="49dp"
@@ -21,7 +23,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="卡类别" />
 
-        <EditText
+        <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_bank_name"
             style="@style/et_addcardinfo_styles"
             android:hint="银行卡类别" />
@@ -42,7 +44,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="手机号" />
 
-        <EditText
+        <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_bank_phone"
             style="@style/et_addcardinfo_styles"
             android:hint="银行预留手机号码"
@@ -51,23 +53,27 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_send_code"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginTop="8dp"
         android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/et_bank_code"
+        <com.giveu.shoppingmall.me.view.EditView
+            android:id="@+id/et_send_code"
             android:layout_width="0dp"
             android:layout_height="49dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@color/white"
+            android:gravity="center_vertical"
             android:hint="请填写验证码"
             android:padding="@dimen/default_layout_screen_gap"
-            android:textColor="@color/black"
+            android:textColor="@color/color_4a4a4a"
             android:textColorHint="@color/color_edittext"
-            android:textSize="@dimen/ts_15" />
+            android:textSize="@dimen/ts_15"
+            android:inputType="number"
+            android:maxLength="6" />
 
         <com.giveu.shoppingmall.view.SendCodeTextView
             android:id="@+id/tv_afresh"

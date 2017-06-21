@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_top_white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="125dp"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        android:text="  尊敬的客户，您的手机充值已消费499.00元，您已超出每月500.00元充值上限，请下个月进行充值，谢谢！"
+        android:textColor="@color/color_282828"
+        android:textSize="@dimen/ts_16" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <TextView
+        android:id="@+id/tv_ensure"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/title_color"
+        android:textSize="18sp" />
+</LinearLayout>
