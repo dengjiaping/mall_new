@@ -9,7 +9,7 @@ public class BaseBeanParent implements Serializable {
 	 */
 	private static final long serialVersionUID = -5331198215023944098L;
 	public String code = Integer.MIN_VALUE + "";
-	public String status;
+	public String result;
 	public String message;
 	public String originResultString;
 
@@ -31,7 +31,7 @@ public class BaseBeanParent implements Serializable {
 	}
 
 	public boolean isStatusSuccess(){
-		return "success".equals(status);
+		return "success".equals(result);
 	}
 
 	public boolean isStatusFail(){
@@ -42,7 +42,7 @@ public class BaseBeanParent implements Serializable {
 	public BaseBean toBaseBean() {
 		BaseBean info = new BaseBean();
 		info.code = this.code;
-		info.status = this.status;
+		info.result = this.result;
 		info.message = this.message;
 		return info;
 	}

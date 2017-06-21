@@ -24,7 +24,7 @@ public class Test {
 
 			@Override
 			public void onSuccess(TestBean response) {
-				String dString = response.message + response.status + "----" + ((TestBean) response).toString();
+				String dString = response.message + response.result + "----" + ((TestBean) response).toString();
 				Toast.makeText(BaseApplication.getInstance().getApplicationContext(), dString, Toast.LENGTH_SHORT).show();
 			}
 

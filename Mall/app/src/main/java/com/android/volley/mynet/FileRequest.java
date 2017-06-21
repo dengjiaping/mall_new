@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -13,19 +12,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -88,8 +78,8 @@ public class FileRequest extends MyRequest<BaseBean> {
             BaseBean info = (BaseBean) new Gson().fromJson(responseString, resultClzz);
             info.originResultString = responseString;
 
-            if (!isDecodeResponse && TextUtils.isEmpty(info.status)) {
-                info.status = VolleyErrorHelper.SUCCESS_STATUS;
+            if (!isDecodeResponse && TextUtils.isEmpty(info.result)) {
+                info.result = VolleyErrorHelper.SUCCESS_STATUS;
             }
 
             return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));

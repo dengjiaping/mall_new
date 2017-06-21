@@ -227,7 +227,7 @@ public class FileUpload {
 
         if (responseListener != null) {
             BaseBean baseBean = new BaseBean();
-            baseBean.status = BaseBean.STATUS.FAIL;
+            baseBean.result = BaseBean.STATUS.FAIL;
             if (e != null && !TextUtils.isEmpty( e.getMessage() ) ){
                 baseBean.message = e.getMessage();
             }

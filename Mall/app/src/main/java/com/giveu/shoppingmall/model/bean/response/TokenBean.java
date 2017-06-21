@@ -8,7 +8,7 @@ import com.android.volley.mynet.BaseBean;
 
 public class TokenBean extends BaseBean<TokenBean> {
 
-	public String token;//	token	string
+	public String accessToken;//	token	string
 
 
 }

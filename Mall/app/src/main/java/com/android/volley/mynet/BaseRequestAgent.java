@@ -259,7 +259,7 @@ public abstract class BaseRequestAgent {
 						}
 						//重新发送这个请求
 						Map params = myRequest.getParams();
-						params.put("token", tokenResponse.data.token);
+						params.put("token", tokenResponse.data.accessToken);
 						myRequest.sendCount = 2;
 						RequestAgent.getInstance().sendIt(myRequest, params, myRequest.requestUrl, mSoftActivity.get());
 					}
@@ -285,7 +285,7 @@ public abstract class BaseRequestAgent {
 
 			BaseBean errorBean = new BaseBean();
 			if (error != null) {
-				errorBean.status = VolleyErrorHelper.getVolleyErrorCode(error) + "";
+				errorBean.result = VolleyErrorHelper.getVolleyErrorCode(error) + "";
 				errorBean.message = error.getMessage();
 				if (VolleyErrorHelper.getVolleyErrorCode(error) == 200) {
 					errorBean.message = "数据解析错误";

@@ -589,7 +589,7 @@ public class LockPatternView extends View {
 	 * the display mode of the pattern
 	 */
 	public enum DisplayMode {
-		//show default pattern (the default pattern is initialize status)
+		//show default pattern (the default pattern is initialize result)
 		DEFAULT,
 		//show selected pattern normal
 		NORMAL,
@@ -705,13 +705,13 @@ public class LockPatternView extends View {
 		private int row;// the cell in which row
 		private int column;// the cell in which column
 		private int index;// the cell value
-		private int status = 0;//default status
+		private int status = 0;//default result
 
-		//default status
+		//default result
 		public static final int STATE_NORMAL = 0;
-		//checked status
+		//checked result
 		public static final int STATE_CHECK = 1;
-		//checked error status
+		//checked error result
 		public static final int STATE_CHECK_ERROR = 2;
 		
 		public Cell(){}

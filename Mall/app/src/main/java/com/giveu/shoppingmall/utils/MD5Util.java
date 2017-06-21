@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.utils;
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,47 +11,19 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class MD5Util {
-    /**
-     * 将源字符串使用MD5加密为字节数组
-     * @param source
-     * @return
+    /**利用MD5进行加密
+     * @param str  待加密的字符串
+     * @return  加密后的字符串
+     * @throws NoSuchAlgorithmException  没有这种产生消息摘要的算法
+     * @throws UnsupportedEncodingException
      */
-    public static byte[] encode2bytes(String source) {
-        byte[] result = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(source.getBytes("UTF-8"));
-            result = md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    /**
-     * 将源字符串使用MD5加密为32位16进制数
-     * @param source
-     * @return
-     */
-    public static String encode2hex(String source) {
-        byte[] data = encode2bytes(source);
-
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
-            String hex = Integer.toHexString(0xff & data[i]);
-
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-
-            hexString.append(hex);
-        }
-
-        return hexString.toString();
+    public String EncoderByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+        //确定计算方法
+        MessageDigest md5=MessageDigest.getInstance("MD5");
+        byte[] bytes = str.getBytes("utf-8");
+        //加密后的字符串
+        byte[] encode = Base64.encode(md5.digest(bytes), Base64.DEFAULT);
+        return new String(encode);
     }
 
 }

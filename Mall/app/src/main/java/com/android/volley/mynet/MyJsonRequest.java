@@ -1,5 +1,6 @@
 package com.android.volley.mynet;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
@@ -9,8 +10,11 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LogUtil;
+import com.giveu.shoppingmall.utils.MD5Util;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MyJsonRequest extends JsonRequest<BaseBean> {
@@ -57,8 +61,8 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
             }
             info.originResultString = responseString;
 
-//            if (!isDecodeResponse && TextUtils.isEmpty(info.status)) {
-//                info.status = VolleyErrorHelper.SUCCESS_STATUS;
+//            if (!isDecodeResponse && TextUtils.isEmpty(info.result)) {
+//                info.result = VolleyErrorHelper.SUCCESS_STATUS;
 //            }
 
             return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
@@ -92,6 +96,17 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         } catch (Exception e) {
             throw new RuntimeException("Encoding not supported: " + paramsEncoding, e);
         }
+    }
+
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());
+        String jsonParams = new Gson().toJson(getParams());
+//        String md5Str = MD5Util.encode2hex(jsonParams + "salt");
+        headerMap.put("sign", "ssssssssssss");
+        return headerMap;
     }
 
 

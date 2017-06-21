@@ -215,7 +215,7 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
         if (errorBean == null) {
             return;
         }
-        int resultCode = BaseBean.getResultCode(errorBean.status);
+        int resultCode = BaseBean.getResultCode(errorBean.result);
         if (isLoading) {
             try {
                 if (ExceptionMap.containsKey(resultCode)) {
@@ -246,7 +246,7 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
             if (error == null) {
                 return;
             }
-            int resultCode = BaseBean.getResultCode(error.status);
+            int resultCode = BaseBean.getResultCode(error.result);
             String message = "";
             if (ExceptionMap.containsKey(resultCode)) {
                 message = ExceptionMap.get(resultCode);
