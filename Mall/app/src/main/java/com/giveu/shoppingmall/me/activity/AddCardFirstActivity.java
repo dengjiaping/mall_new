@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -28,9 +28,10 @@ public class AddCardFirstActivity extends BaseActivity {
     @BindView(R.id.tv_banklist)
     TextView tvBanklist;
     @BindView(R.id.et_username)
-    EditText etUsername;
+    EditView etUsername;
     @BindView(R.id.et_banknumber)
-    EditText etBanknumber;
+    EditView etBanknumber;
+
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -48,13 +49,15 @@ public class AddCardFirstActivity extends BaseActivity {
 
     @Override
     public void setData() {
+        etUsername.checkFormat(EditView.Style.NAME);
+        etBanknumber.checkFormat(19);
     }
 
     //是否输入相关信息的判断
     private boolean checkEditTextExceptCode() {
         String username = StringUtils.getTextFromView(etUsername);
         String bankNumber = StringUtils.getTextFromView(etBanknumber);
-        if (!StringUtils.checkUserNameAndTipError(username)) {
+        if (!StringUtils.checkUserNameAndTipError(username,true)) {
             return false;
         }
         if (StringUtils.isNull(bankNumber)) {
@@ -76,7 +79,7 @@ public class AddCardFirstActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity mActivity){
+    public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, AddCardFirstActivity.class);
         mActivity.startActivity(intent);
     }

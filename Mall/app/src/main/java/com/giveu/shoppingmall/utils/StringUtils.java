@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
 
-
     /**
      * @param string
      * @return
@@ -51,11 +50,13 @@ public class StringUtils {
      * @param phoneNum
      * @return
      */
-    public static boolean checkPhoneNumberAndTipError(String phoneNum) {
-        if (!Validator.isMobile(phoneNum)){
-            ToastUtils.showShortToast("请输入正确的手机号码");
+    public static boolean checkPhoneNumberAndTipError(String phoneNum, boolean showToast) {
+        if (!Validator.isMobile(phoneNum)) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入正确的手机号码");
+            }
             return false;
-       }
+        }
 
         return true;
     }
@@ -101,8 +102,9 @@ public class StringUtils {
         return msp;
     }
 
-	/**
+    /**
      * 保留小数
+     *
      * @return
      */
     public static String format2(Float value) {
@@ -110,45 +112,57 @@ public class StringUtils {
         df.setRoundingMode(RoundingMode.HALF_UP);
         return df.format(value);
     }
+
     /**
      * 保留小数
+     *
      * @return
      */
     public static String format2(String value) {
-        try{
+        try {
             double dv = Double.parseDouble(value);
             DecimalFormat df = new DecimalFormat("0.00");
             df.setRoundingMode(RoundingMode.HALF_UP);
             return df.format(dv);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
+
     /**
      * 昵称是否含有特殊字符
      */
-    public static boolean checkUserNameAndTipError(String nickname) {
+    public static boolean checkUserNameAndTipError(String nickname, boolean showToast) {
         if (TextUtils.isEmpty(nickname)) {
-            ToastUtils.showShortToast("请填写姓名");
+            if (showToast) {
+                ToastUtils.showShortToast("请填写姓名");
+            }
             return false;
         }
         if (nickname.length() < 2 || nickname.length() > 18) {
-            ToastUtils.showShortToast("请输入不少于2位的中文姓名");
+            if (showToast) {
+                ToastUtils.showShortToast("请输入不少于2位的中文姓名");
+            }
             return false;
         }
-        if(nickname.matches("^[A-Z|a-z]*$")){
-            ToastUtils.showShortToast("请输入中文姓名");
+        if (nickname.matches("^[A-Z|a-z]*$")) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入中文姓名");
+            }
             return false;
-        }else if (!nickname.matches("[\\u4e00-\\u9fa5]{1,14}[\\?•·・∙]{0,1}[\\u4e00-\\u9fa5]{1,13}+$")) {
-            ToastUtils.showShortToast("仅支持2-18个中文字符和姓名中间的圆点");
+        } else if (!nickname.matches("[\\u4e00-\\u9fa5]{1,14}[\\?•·・∙]{0,1}[\\u4e00-\\u9fa5]{1,13}+$")) {
+            if (showToast) {
+                ToastUtils.showShortToast("仅支持2-18个中文字符和姓名中间的圆点");
+            }
             return false;
         }
         return true;
     }
 
-	/**
+    /**
      * 检查登录密码如果不合法提示错误信息并返回false
+     *
      * @param pwd
      * @return
      */
@@ -163,7 +177,7 @@ public class StringUtils {
             return false;
         }
 
-        if ( !Validator.isLoginPassword(pwd)) {
+        if (!Validator.isLoginPassword(pwd)) {
             ToastUtils.showShortToast("密码要是数字和字母的组合");
             return false;
         }
@@ -173,6 +187,7 @@ public class StringUtils {
 
     /**
      * 检查“交易密码”如果不合法提示错误信息并返回false
+     *
      * @param pwd
      * @return
      */
@@ -181,16 +196,18 @@ public class StringUtils {
             ToastUtils.showShortToast("请输入交易密码");
             return false;
         }
-        if ( !Validator.isTransactionPassword(pwd)) {
+        if (!Validator.isTransactionPassword(pwd)) {
             ToastUtils.showShortToast("请输入6位数字的交易密码");
             return false;
         }
         return true;
     }
 
-    public static boolean checkIdCardAndTipError(String idcard) {
+    public static boolean checkIdCardAndTipError(String idcard, boolean showToast) {
         if (TextUtils.isEmpty(idcard)) {
-            ToastUtils.showShortToast("请输入身份证");
+            if (showToast) {
+                ToastUtils.showShortToast("请输入身份证");
+            }
             return false;
         }
         return true;
@@ -235,29 +252,29 @@ public class StringUtils {
     public static String getTextFromView(EditText etName) {
         return etName == null ? "" : etName.getText().toString().trim();
     }
+
     public static String getTextFromView(TextView etName) {
         return etName == null ? "" : etName.getText().toString().trim();
     }
 
-	/**
+    /**
      * 将"2016-11-26T00:00:00"变成2016/11/26
+     *
      * @return
      */
     public static String billFormatDate(String promiseRepayDate) {
-		String result = "";
-		if (isNotNull(promiseRepayDate)){
-			String[] ts = promiseRepayDate.split("T");
-			if (ts.length == 2){
-				String[] split = ts[0].split("-");
-				if (split.length == 3){
-					result = split[0]+"/"+split[1]+"/"+split[2];
-				}
-			}
-		}
-		return result;
-	}
-
-
+        String result = "";
+        if (isNotNull(promiseRepayDate)) {
+            String[] ts = promiseRepayDate.split("T");
+            if (ts.length == 2) {
+                String[] split = ts[0].split("-");
+                if (split.length == 3) {
+                    result = split[0] + "/" + split[1] + "/" + split[2];
+                }
+            }
+        }
+        return result;
+    }
 
 
 }

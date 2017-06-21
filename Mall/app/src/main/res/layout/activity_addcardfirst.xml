@@ -23,9 +23,10 @@
             style="@style/tv_addcardinfo_styles"
             android:text="持卡人" />
 
-        <EditText
+        <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_username"
             style="@style/et_addcardinfo_styles"
+            android:maxLength="18"
             android:hint="请输入持卡人姓名" />
     </LinearLayout>
 
@@ -44,7 +45,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="卡号" />
 
-        <EditText
+        <com.giveu.shoppingmall.me.view.EditView
             android:id="@+id/et_banknumber"
             style="@style/et_addcardinfo_styles"
             android:inputType="number"

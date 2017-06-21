@@ -143,11 +143,7 @@
         <com.giveu.shoppingmall.view.ClickEnabledTextView
             android:id="@+id/tv_next"
             style="@style/click_enabled_bt"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:layout_marginTop="55dp"
-            android:gravity="center"
             android:text="下一步" />
 
     </LinearLayout>
