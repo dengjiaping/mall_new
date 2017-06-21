@@ -81,9 +81,9 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.VISIBLE);
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
-                tvDate1.setText(date1);
-                tvDate2.setText(date2);
-                tvDate3.setText(date3);
+                tvDate1.setText("0");
+                tvDate2.setText("0");
+                tvDate3.setText("0");
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
                 tvHintBottom.setText(bottomHint);
@@ -132,8 +132,11 @@ public class ActivationStatusActivity extends BaseActivity {
         mActivity.startActivity(intent);
     }
 
+
     @OnClick(R.id.tv_set_transaction_pwd)
-    public void onViewClicked() {
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
         switch (StringUtils.getTextFromView(tvSetTransactionPwd)) {
             case "设置交易密码":
                 TransactionPwdActivity.startIt(mBaseContext);
@@ -143,5 +146,4 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
         }
     }
-
 }

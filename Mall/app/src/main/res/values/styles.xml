@@ -423,4 +423,23 @@
         <item name="android:padding">9dp</item>
     </style>
 
+    <!--添加银行卡持卡人和卡号-->
+    <style name="tv_addcardinfo_styles">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/default_layout_screen_gap</item>
+        <item name="android:textSize">@dimen/ts_14</item>
+        <item name="android:textColor">@color/color_282828</item>
+    </style>
+
+
+    <style name="et_addcardinfo_styles">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColorHint">@color/color_edittext</item>
+        <item name="android:textSize">@dimen/ts_14</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>
