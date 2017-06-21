@@ -10,7 +10,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LogUtil;
-import com.giveu.shoppingmall.utils.MD5Util;
+import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
 
@@ -104,8 +104,9 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());
         String jsonParams = new Gson().toJson(getParams());
-//        String md5Str = MD5Util.encode2hex(jsonParams + "salt");
-        headerMap.put("sign", "ssssssssssss");
+        String md5Str = MD5.MD5Encode(jsonParams + "!$*6uOuop@^&%,.$*ci(hf_&]|");
+        headerMap.put("sign", md5Str);
+        LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }
 

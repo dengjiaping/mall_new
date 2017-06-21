@@ -28,18 +28,8 @@ public class CrashReportUtil {
 
 		private SceneTag(){
 			tagMap = new HashMap<>();
-			tagMap.put(ApiUrl.sales_creditApply_saveBankInfo, 46692);//保存银行卡信息
-			tagMap.put(ApiUrl.sales_creditApply_uploadOnePhoto, 46691);//上传影像证明
-			tagMap.put(ApiUrl.sales_creditApply_submitCredit, 46690);//提交合同
-			tagMap.put(ApiUrl.sales_account_saveAddressBook, 46698);//保存通讯录
-			tagMap.put(ApiUrl.sales_creditApply_createCredit, 46689);//生成订单
-			tagMap.put(ApiUrl.sales_credit_updateIMIE, 46697);//更新商品串码
 			tagMap.put(ApiUrl.token_getToken, 46688);//获取token
-			tagMap.put(ApiUrl.sales_creditApply_saveCreditLinkInfo, 46696);//保存联系人信息
 			tagMap.put(ApiUrl.sales_account_login, 46687);//登录
-			tagMap.put(ApiUrl.sales_creditApply_saveCreditBaseInfo, 46695 );//保存基本信息
-			tagMap.put(ApiUrl.sales_account_savePortrait, 46694   );//保存头像
-			tagMap.put(ApiUrl.credit_modiyBankInfo, 46693    );//银行卡补正
 		}
 
 		public static SceneTag getInstance(){
@@ -54,12 +44,10 @@ public class CrashReportUtil {
 		}
 
 		public int getApiSceneTag(String requstUrl) {
-			int tag = 0;
+			int tag = API_ERROR;
 			if (tagMap != null){
-				tag = tagMap.get(requstUrl);
-			}
-			if (tag == 0){
-				tag = API_ERROR;
+				Integer tag2 = tagMap.get(requstUrl);
+				tag = (tag2 == null ? API_ERROR : tag2);
 			}
 			return tag;
 		}

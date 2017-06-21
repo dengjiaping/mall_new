@@ -259,7 +259,6 @@ public abstract class BaseRequestAgent {
 						}
 						//重新发送这个请求
 						Map params = myRequest.getParams();
-						params.put("token", tokenResponse.data.accessToken);
 						myRequest.sendCount = 2;
 						RequestAgent.getInstance().sendIt(myRequest, params, myRequest.requestUrl, mSoftActivity.get());
 					}

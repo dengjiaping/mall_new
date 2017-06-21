@@ -23,6 +23,9 @@ import org.apache.http.HttpStatus;
 
 import android.util.Log;
 
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LogUtil;
+
 /**
  * Data and headers returned from {@link Network#performRequest(Request)}.
  */
@@ -39,7 +42,7 @@ public class NetworkResponse {
         this.statusCode = statusCode;
         this.data = data;
         if(data!=null){
-        	Log.i("NetworkResponse",new String(data));
+        	LogUtil.w(Const.LOG_TAG_HTTP, new String(data));
         }
         this.headers = headers;
         this.notModified = notModified;
