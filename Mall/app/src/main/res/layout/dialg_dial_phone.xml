@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="33dp"
+    android:layout_marginRight="33dp"
+    android:background="@drawable/bg_custom_dialog_viewmode1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="29dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="39dp"
+        android:text="若注册手机号码已停用，无法收到验证码，请拨打客服热线人工申诉：400-8888-8888"
+        android:textColor="@color/color_030303"
+        android:textSize="@dimen/ts_16" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_layoutxml_bg" />
+
+    <TextView
+        android:id="@+id/tv_dial"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="拨打电话"
+        android:textColor="@color/color_00bbc0"
+        android:textSize="@dimen/ts_18" />
+
+</LinearLayout>

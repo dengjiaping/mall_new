@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +27,8 @@ import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.view.ClickEnabledTextView;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -56,6 +56,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     LinearLayout llContent;
     @BindView(R.id.ll_third_login)
     LinearLayout llThirdLogin;
+    @BindView(R.id.tv_login)
+    ClickEnabledTextView tvLogin;
 
     private String lat;
     private String lng;
@@ -143,6 +145,14 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         }
     }
 
+    private void canClick() {
+        if (etPwd.getText().toString().length() >= 8 && etAccount.getText().toString().length() == 11) {
+            tvLogin.setClickEnabled(true);
+        } else {
+            tvLogin.setClickEnabled(false);
+        }
+    }
+
     private void turnToLogin() {
         userId = etAccount.getText().toString().trim();
         pwd = etPwd.getText().toString().trim();
@@ -201,17 +211,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 }
             }
         });
-        etAccount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        etAccount.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 0) {
@@ -219,6 +219,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 } else {
                     ivDeleteAccount.setVisibility(View.GONE);
                 }
+                canClick();
             }
         });
 
@@ -233,17 +234,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             }
         });
 
-        etPwd.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        etPwd.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 0) {
@@ -251,6 +242,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 } else {
                     ivDeletePwd.setVisibility(View.GONE);
                 }
+                canClick();
             }
         });
 
@@ -281,7 +273,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                     llThirdLogin.setVisibility(View.INVISIBLE);
 
                 } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
-                    Log.e("wenzhihao", "down------>" + (bottom - oldBottom));
                     if ((llContent.getBottom() - oldBottom) > 0) {
                         ObjectAnimator mAnimatorTranslateY = ObjectAnimator.ofFloat(llContent, "translationY", llContent.getTranslationY(), 0);
                         mAnimatorTranslateY.setDuration(300);
