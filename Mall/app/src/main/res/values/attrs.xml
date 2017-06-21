@@ -37,6 +37,8 @@
         <attr name="border_color" format="color"/>
         <attr name="dot_color" format="color"/>
     </declare-styleable>
-
+    <declare-styleable name="EditView">
+        <attr name="et_maxLength" format="integer"/>
+    </declare-styleable>
 
 </resources>
