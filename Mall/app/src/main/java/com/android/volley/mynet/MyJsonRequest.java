@@ -106,6 +106,7 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         String jsonParams = new Gson().toJson(getParams());
         String md5Str = MD5.MD5Encode(jsonParams + "!$*6uOuop@^&%,.$*ci(hf_&]|");
         headerMap.put("sign", md5Str);
+        LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }
 
