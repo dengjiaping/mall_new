@@ -196,17 +196,17 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onSucceed() {
                 hasIdentifyFail = false;
-                if (!SharePrefUtil.hasFinger()) {
+                if (!SharePrefUtil.hasFingerPrint()) {
                     tvIdentifyResult.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_9b9b9b));
                     tvIdentifyResult.setText("验证成功,指纹密码已可用");
                     ToastUtils.showShortToast("指纹解锁已可用");
-                    SharePrefUtil.setHasFinger(true);
+                    SharePrefUtil.setFingerPrint(true);
                     setFingerIdentify(true);
                 } else {
                     tvIdentifyResult.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_9b9b9b));
                     tvIdentifyResult.setText("验证成功,指纹密码已关闭");
                     ToastUtils.showShortToast("指纹密码已关闭");
-                    SharePrefUtil.setHasFinger(false);
+                    SharePrefUtil.setFingerPrint(false);
                     setFingerIdentify(false);
                 }
                 fingerDialog.dismiss();
@@ -246,7 +246,7 @@ public class SettingActivity extends BaseActivity {
         //改变toggleSwitch的ui
         setIvGestureChecked(!TextUtils.isEmpty(SharePrefUtil.getPatternPwd()));
         //设置指纹解锁开关的开始状态
-        setFingerIdentify(SharePrefUtil.hasFinger());
+        setFingerIdentify(SharePrefUtil.hasFingerPrint());
         //是否从系统设置返回
         if (hasEnterSetting) {
             //重新更新指纹是否可用的状态
@@ -257,7 +257,7 @@ public class SettingActivity extends BaseActivity {
                 }
             });
             if (mFingerprintIdentify.isFingerprintEnable()) {
-                if (!SharePrefUtil.hasFinger()) {
+                if (!SharePrefUtil.hasFingerPrint()) {
                     mFingerprintIdentify.startIdentify(10, identifyListener);
                     fingerDialog.show();
                 }
@@ -294,7 +294,7 @@ public class SettingActivity extends BaseActivity {
             setIvGestureChecked(false);
             SharePrefUtil.setPatternPwd("");
             setFingerIdentify(false);
-            SharePrefUtil.setHasFinger(false);
+            SharePrefUtil.setFingerPrint(false);
         }
     }
 

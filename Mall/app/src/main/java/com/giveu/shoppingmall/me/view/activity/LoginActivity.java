@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.me.view.activity;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,6 +71,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     private LoginPresenter presenter;
 
+    public static void startIt(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {

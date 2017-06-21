@@ -262,13 +262,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
-//            dealLockPattern();
+            dealLockPattern();
         }
     }
 
     @Override
     public void showLoading() {
-        LoadingDialog.showIfNotExist(mBaseContext,false);
+        LoadingDialog.showIfNotExist(mBaseContext, false);
     }
 
     @Override
@@ -292,7 +292,9 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             String className = getIntent().getStringExtra(MainActivity.lockPatternKey);
             if (SplashActivity.class.getName().equals(className)) {
                 //从splash页面过来的
-                if (!TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())) {
+                if (SharePrefUtil.hasFingerPrint()) {
+
+                } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                     //如果设置过密码
                     GestureLoginActivity.startIt(this);
                 } else {

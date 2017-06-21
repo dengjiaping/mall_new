@@ -13,14 +13,11 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.view.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.view.lockpattern.LockPatternUtil;
 import com.giveu.shoppingmall.view.lockpattern.LockPatternView;
-import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
-import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import java.util.List;
 
@@ -48,7 +45,6 @@ public class GestureLoginActivity extends BaseActivity {
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
     boolean isClosePattern;
-    private FingerprintIdentify mFingerprintIdentify;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -82,48 +78,7 @@ public class GestureLoginActivity extends BaseActivity {
         //得到当前用户的手势密码
         gesturePassword = SharePrefUtil.getInstance().getPatternPwd();
         lockPatternView.setOnPatternListener(patternListener);
-        mFingerprintIdentify = new FingerprintIdentify(this, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
-            @Override
-            public void onCatchException(Throwable exception) {
-            }
-        });
-        if (mFingerprintIdentify.isFingerprintEnable() && SharePrefUtil.hasFinger() && !isClosePattern) {
-            updateStatus(Status.DEFAULT_GESTURE_FINGER);
-            try {
-                mFingerprintIdentify.resumeIdentify();
-                //最多指纹解锁5次
-                mFingerprintIdentify.startIdentify(10, new BaseFingerprint.FingerprintIdentifyListener() {
-                    @Override
-                    public void onSucceed() {
-                        updateStatus(Status.CORRECT);
-                        loginGestureSuccess();
-                        mFingerprintIdentify.cancelIdentify();
-                    }
-
-                    @Override
-                    public void onNotMatch(int availableTimes) {
-                        if (availableTimes > 1) {
-                            updateStatus(Status.FINGER_ERROR);
-                        } else {
-                            messageTv.setText("指纹解锁最后可用次数为1");
-                        }
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        messageTv.setTextColor(getResources().getColor(R.color.red_f4333c));
-                        messageTv.setText("指纹解锁失败，请使用手势密码解锁");
-                        LogUtil.e("onFailed");
-                    }
-                });
-            } catch (Exception e) {
-                messageTv.setTextColor(getResources().getColor(R.color.red_f4333c));
-                messageTv.setText("指纹解锁不可用，请使用手势密码解锁");
-            }
-
-        } else {
-            updateStatus(Status.DEFAULT);
-        }
+        updateStatus(Status.DEFAULT);
     }
 
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
@@ -221,23 +176,11 @@ public class GestureLoginActivity extends BaseActivity {
         mContext.startActivityForResult(intent, 10);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFingerprintIdentify.resumeIdentify();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mFingerprintIdentify.cancelIdentify();
-    }
-
     // 返回键事件
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK&&!isClosePattern) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && !isClosePattern) {
 //            弹框确认退出应用
             final CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
             customDialogUtil.getDialogMode1("提示", "应用已锁定，请输入手势密码解锁", "取消", "忘记密码", null, new View.OnClickListener() {

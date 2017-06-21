@@ -109,11 +109,11 @@ public class SharePrefUtil extends AbsSharePref {
         getInstance().putString(SharePrefKeys.LOCK_PATTERN_PWD + LoginHelper.getInstance().getUserId(), pwd);
     }
 
-    public static void setHasFinger(boolean hasFinger) {
-        getInstance().putBoolean(SharePrefKeys.FINGER_PWD + LoginHelper.getInstance().getUserId(), hasFinger);
+    public static void setFingerPrint(boolean hasFingerPrint) {
+        getInstance().putBoolean(SharePrefKeys.FINGER_PWD + LoginHelper.getInstance().getUserId(), hasFingerPrint);
     }
 
-    public static boolean hasFinger() {
+    public static boolean hasFingerPrint() {
         return getInstance().getBoolean(SharePrefKeys.FINGER_PWD + LoginHelper.getInstance().getUserId(),false);
     }
 

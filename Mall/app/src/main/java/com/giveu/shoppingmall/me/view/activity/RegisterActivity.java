@@ -107,6 +107,9 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 是否满足条件，是的话，按钮状态变为可点击
+     */
     private void canClick() {
         if (cbAgreement.isChecked() && etCode.getText().toString().length() != 0 && etPhone.getText().toString().length() == 11) {
             tvNext.setClickEnabled(true);

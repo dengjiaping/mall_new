@@ -140,6 +140,11 @@
             android:label="找回密码"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
+        <activity android:name=".me.activity.FingerPrintActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="指纹解锁"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
         <!--图片选择列出所有图片-->
         <activity
             android:name="com.giveu.shoppingmall.view.imageselect.ImageSelectActivity"
@@ -182,7 +187,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
 
         <!--开发人员调试界面-->

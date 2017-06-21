@@ -3,7 +3,6 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.view.emptyview.CommonLoadingView;
@@ -34,13 +32,10 @@ public class VerifyPwdActivity extends BaseActivity {
 
     @BindView(R.id.et_pwd)
     EditText etPwd;
-    @BindView(R.id.tv_userName)
-    TextView tv_userName;
     @BindView(R.id.tv_userId)
     TextView tv_userId;
-    @BindView(R.id.iv_head)
-    ImageView iv_head;
-
+    @BindView(R.id.iv_avatar)
+    ImageView ivAvatar;
     private String pwd;
     boolean isForClosePattern;
 
@@ -48,18 +43,17 @@ public class VerifyPwdActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_verify_pwd);
-        isForClosePattern = getIntent().getBooleanExtra("isForClose", false);
+//        isForClosePattern = getIntent().getBooleanExtra("isForClose", false);
 
         baseLayout.hideBack();
-        baseLayout.setTopBarBackgroundColor(R.color.white);
-        SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
+/*        SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
         baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
-
+        });*/
+/*
         SpannableString titleText;
         if (isForClosePattern){
             //页面的作用是关闭手势
@@ -78,14 +72,19 @@ public class VerifyPwdActivity extends BaseActivity {
                 });
             }
             titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
-        }
-        baseLayout.setTitle(titleText);
+        }*/
+        baseLayout.setTitle("登录");
 
 //        tv_userName.setText(LoginHelper.getInstance().getUserName());
 //        tv_userId.setText(LoginHelper.getInstance().getUserId());
 //        if (StringUtils.isNotNull(LoginHelper.getInstance().getAvatar())) {
-//            ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getAvatar(), R.drawable.verify_head_default, R.drawable.verify_head_default, iv_head, DensityUtils.dip2px(30));
+//            ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getAvatar(), R.drawable.verify_head_default, R.drawable.verify_head_default, ivAvatar, DensityUtils.dip2px(30));
 //        }
+    }
+
+    @OnClick(R.id.tv_change_account)
+    public void changeAccount() {
+        LoginActivity.startIt(mBaseContext);
     }
 
 
@@ -98,7 +97,7 @@ public class VerifyPwdActivity extends BaseActivity {
         }
 
         String pwd = etPwd.getText().toString().trim();
-        if (TextUtils.isEmpty(pwd)){
+        if (TextUtils.isEmpty(pwd)) {
             ToastUtils.showShortToast("请输入密码");
             return;
         }
@@ -126,16 +125,16 @@ public class VerifyPwdActivity extends BaseActivity {
     private void onVerifySuccess() {
         //登录密码解锁成功，清除手势密码
         SharePrefUtil.setPatternPwd("");
-        SharePrefUtil.setHasFinger(false);
+        SharePrefUtil.setFingerPrint(false);
         setResult(RESULT_OK);
         finish();
     }
 
 
-	/**
+    /**
      * 是否从手势解锁页面过来的
      */
-    public static void startIt(Activity context, boolean isForClosePattern){
+    public static void startIt(Activity context, boolean isForClosePattern) {
         Intent intent = new Intent(context, VerifyPwdActivity.class);
         intent.putExtra("isForClose", isForClosePattern);
         context.startActivityForResult(intent, 10);
