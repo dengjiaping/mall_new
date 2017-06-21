@@ -34,9 +34,9 @@ public class ApiImpl {
     public static void getAppToken(Activity context, final BaseRequestAgent.ResponseListener<TokenBean> responseListener) {
 //        tokenType	带权限token 1 不带权限token 2
         String tokenType = "2";
-        if (LoginHelper.getInstance().hasLogin()){
-            tokenType = "1";
-        }
+//        if (LoginHelper.getInstance().hasLogin()){
+//            tokenType = "1";
+//        }
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "tokenType"}, new String[]{SharePrefUtil.getUUId(), tokenType});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.token_getToken, TokenBean.class, context, new BaseRequestAgent.ResponseListener<TokenBean>() {
             @Override
