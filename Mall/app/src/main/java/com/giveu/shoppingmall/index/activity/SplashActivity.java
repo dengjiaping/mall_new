@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.index.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,8 +40,8 @@ public class SplashActivity extends BaseActivity {
         baseLayout.setTitleBarAndStatusBar(false, false);
         tvSkip.setVisibility(View.GONE);
         needTurn = getIntent().getBooleanExtra(NEED_TURN_KEY, false);
-        start();
 
+        startCountTime();
     }
 
 
@@ -50,20 +51,14 @@ public class SplashActivity extends BaseActivity {
     }
 
 
-    private void start() {
-        new Thread() {
+    private void startCountTime() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                SystemClock.sleep(SPLASH_TIME);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        startViewPagerOrActivity();
-                    }
-                });
-
+                startViewPagerOrActivity();
             }
-        }.start();
+        }, SPLASH_TIME);
     }
 
 
@@ -71,16 +66,12 @@ public class SplashActivity extends BaseActivity {
 //        getAdSplashImage();
 
         if (SharePrefUtil.getNeedWelcome()) {
-            //去欢迎页面,升级之后要重新登录
-            if (LoginHelper.getInstance().hasLogin()) {
-                LoginHelper.getInstance().logout();
-            }
-            turnToWelcomeActivity();
+            WelcomeActivity.startIt(mBaseContext);
         } else {
             AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
             if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imageUrl)) {
                 //有广告
-                turnToAdSplashActivity();
+                AdSplashActivity.startIt(mBaseContext);
             } else {
                 //由于有可能极光推送点击跳转至的闪屏页，这里需要把是否需要跳转至消息列表的值传给MainActivity
                 MainActivity.startItDealLock(0, mBaseContext, SplashActivity.class.getName(), needTurn);
@@ -89,16 +80,7 @@ public class SplashActivity extends BaseActivity {
         finish();
     }
 
-    private void turnToWelcomeActivity() {
-        Intent intent = new Intent(getBaseContext(), WelcomeActivity.class);
-        startActivity(intent);
 
-    }
-
-    private void turnToAdSplashActivity() {
-        Intent intent = new Intent(getBaseContext(), AdSplashActivity.class);
-        startActivity(intent);
-    }
 
 
     @Override

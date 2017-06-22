@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.index.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.LinearLayout;
@@ -57,5 +59,9 @@ public class WelcomeActivity extends BaseActivity{
 		viewpager.setOnPageChangeListener(welcomePagerAdapter.new MyOnPageChangeListener());
 	}
 
+	public static void startIt(Activity activity){
+		Intent intent = new Intent(activity, WelcomeActivity.class);
+		activity.startActivity(intent);
+	}
 
 }
