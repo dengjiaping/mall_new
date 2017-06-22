@@ -53,8 +53,8 @@ public class SendCodeTextView extends TextView{
 
 	public void startCount(){
 		this.setEnabled(false);
-		count = MAXCOUNT;
-		handler.sendEmptyMessage(1);
+			count = MAXCOUNT;
+			handler.sendEmptyMessage(1);
 	}
 
 	public void stopCount(){

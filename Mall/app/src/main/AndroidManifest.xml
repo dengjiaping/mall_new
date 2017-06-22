@@ -199,9 +199,11 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name=".index.activity.WalletActivationActivity"
-            android:label="钱包激活" />
-
+            android:name=".index.activity.WalletActivationFirstActivity"
+            android:label="钱包激活首页" />
+        <activity
+            android:name=".index.activity.WalletActivationSecondActivity"
+            android:label="钱包激活二级页" />
         <activity
             android:name=".index.activity.ActivationStatusActivity"
             android:label="钱包激活状态" />
@@ -209,10 +211,10 @@
             android:name=".me.activity.BankActivity"
             android:label="支持银行卡列表" />
         <activity
-            android:name=".me.activity.AddCardFirstActivity"
+            android:name=".me.activity.AddBankCardFirstActivity"
             android:label="添加银行卡首页" />
         <activity
-            android:name=".me.activity.AddCardSecondActivity"
+            android:name=".me.activity.AddBankCardSecondActivity"
             android:label="添加银行卡二级页" />
 
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
