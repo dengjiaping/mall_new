@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.index.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -93,6 +95,10 @@ public class AdSplashActivity extends BaseActivity {
         }
     }
 
+    public static void startIt(Activity activity){
+        Intent intent = new Intent(activity, AdSplashActivity.class);
+        activity.startActivity(intent);
+    }
 
 
 }
