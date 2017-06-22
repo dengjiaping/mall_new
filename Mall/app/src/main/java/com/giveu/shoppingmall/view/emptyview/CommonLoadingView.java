@@ -74,11 +74,6 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
         ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_SERVERERROR_CODE, "服务器出错了!");
 
         errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE1, "客户端提交的参数有误");
-        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE2, "服务端异常");
-        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE3, "用户被禁用");
-        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE4, "调用已过期的接口");
-        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE5, "用户在其他设备登陆");
-
     }
 
     public CommonLoadingView(Context context, AttributeSet attrs) {
