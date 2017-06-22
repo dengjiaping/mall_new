@@ -92,7 +92,7 @@ android {
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
                         // 输出apk名称为jyfq_2015_01_15_wandoujia.apk
-                        def fileName = "corder_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        def fileName = "mall_${releaseTime()}_${variant.productFlavors[0].name}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }

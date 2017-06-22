@@ -82,7 +82,7 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity
-            android:name="com.giveu.shoppingmall.index.activity.SplashActivity"
+            android:name=".index.activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -95,7 +95,7 @@
 
 
         <activity
-            android:name="com.giveu.shoppingmall.index.activity.WelcomeActivity"
+            android:name=".index.activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="首次安装引导页"
             android:screenOrientation="portrait"
@@ -103,14 +103,14 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name="com.giveu.shoppingmall.index.activity.MainActivity"
+            android:name=".index.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--广告页-->
         <activity
-            android:name="com.giveu.shoppingmall.index.activity.AdSplashActivity"
+            android:name=".index.activity.AdSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -153,16 +153,16 @@
 
         <!--图片选择列出所有图片-->
         <activity
-            android:name="com.giveu.shoppingmall.view.imageselect.ImageSelectActivity"
+            android:name=".view.imageselect.ImageSelectActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <!--图片选择预览图片-->
         <activity
-            android:name="com.giveu.shoppingmall.view.imageselect.Act_ImagePreActivity"
+            android:name=".view.imageselect.Act_ImagePreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.giveu.shoppingmall.view.imageselect.Act_ImageSelectPreActivity"
+            android:name=".view.imageselect.Act_ImageSelectPreActivity"
             android:label="选择图片控件图片预览"
             android:screenOrientation="portrait" />
 
