@@ -68,6 +68,12 @@ public class WalletActivationSecondActivity extends BaseActivity {
         editTextListener(etPhone, ivPhone);
         editTextListener(etCode, ivCode);
         editTextListener(etBankNo, ivBankNo);
+        cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                buttonCanClick(false);
+            }
+        });
     }
 
     @Override
@@ -94,7 +100,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     //如果是手机号的EditText还需判断验证码是否可以点击
                     if (StringUtils.checkPhoneNumberAndTipError(s.toString(), false)) {
                         tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
-                        if(!tvSendCode.isCounting()){
+                        if (!tvSendCode.isCounting()) {
                             tvSendCode.setEnabled(true);
                         }
                         tvActivation.setClickEnabled(false);
@@ -105,17 +111,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     tvActivation.setClickEnabled(false);
                 }
                 buttonCanClick(false);
-
-                cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (cbCheck.isChecked()) {
-                            tvActivation.setClickEnabled(true);
-                        } else {
-                            tvActivation.setClickEnabled(false);
-                        }
-                    }
-                });
             }
         });
     }
@@ -126,7 +121,19 @@ public class WalletActivationSecondActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_send_code:
-                tvSendCode.startCount();
+                tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                    @Override
+                    public void onEnd() {
+                        String phone = StringUtils.getTextFromView(etPhone);
+                        if(StringUtils.checkPhoneNumberAndTipError(phone,false)){
+                            tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
+                            tvSendCode.setEnabled(true);
+                        }else{
+                            tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
+                            tvSendCode.setEnabled(false);
+                        }
+                    }
+                });
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
@@ -177,7 +184,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
             }
             return;
         }
-        if(!showToast){
+        if (!showToast) {
             tvActivation.setClickEnabled(true);
         }
     }
@@ -193,7 +200,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (tvSendCode != null) {
-            tvSendCode.stopCount();
+            tvSendCode.onDestory();
         }
     }
 

@@ -97,7 +97,7 @@ public class RequestPasswordActivity extends BaseActivity {
                 if (etPhone.length() != 11) {
                     ToastUtils.showShortToast("请输入11位的手机号");
                 } else {
-                    tvSendCode.startCount();
+                    tvSendCode.startCount(null);
                 }
                 break;
             case R.id.tv_next:

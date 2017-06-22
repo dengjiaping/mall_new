@@ -73,7 +73,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
                 } else {
                     imageView.setImageResource(R.drawable.ic_add);
                 }
-                buttonCanClick(false);
+                nextButtonCanClick(false);
             }
         });
     }
@@ -85,17 +85,17 @@ public class WalletActivationFirstActivity extends BaseActivity {
         if (tvNext.isClickEnabled()) {
             WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent));
         } else {
-            buttonCanClick(true);
+            nextButtonCanClick(true);
         }
     }
 
     /**
-     * 立即激活按钮的颜色控制
+     * 下一步按钮的颜色控制
      *
      * @param showToast
      * @return
      */
-    private void buttonCanClick(boolean showToast) {
+    private void nextButtonCanClick(boolean showToast) {
         tvNext.setClickEnabled(false);
         String name = StringUtils.getTextFromView(etName);
         String ident = StringUtils.getTextFromView(etIdent);
