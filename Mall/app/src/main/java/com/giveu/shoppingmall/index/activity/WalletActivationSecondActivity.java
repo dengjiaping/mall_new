@@ -171,7 +171,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
             }
             return;
         }
-        if(showToast){
+        if(!showToast){
             tvActivation.setClickEnabled(true);
         }
     }
