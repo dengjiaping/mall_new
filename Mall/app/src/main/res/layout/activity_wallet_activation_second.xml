@@ -81,6 +81,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:enabled="false"
             android:text="获取验证码"
             android:textColor="@color/color_d8d8d8"
             android:textSize="@dimen/ts_16" />

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.EditView;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -40,6 +41,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_first);
         baseLayout.setTitle("钱包激活");
+        CommonUtils.openSoftKeyBoard(mBaseContext);
     }
 
     @Override

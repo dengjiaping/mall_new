@@ -51,6 +51,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_addcardsecond);
+        CommonUtils.openSoftKeyBoard(mBaseContext);
         baseLayout.setTitle("添加银行卡");
         CommonUtils.setTextWithSpan(checkboxDesc, false, "我同意代扣还款并遵守合同中相关约定", "《代扣服务协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
@@ -84,9 +85,13 @@ public class AddBankCardSecondActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 if (StringUtils.checkPhoneNumberAndTipError(s.toString(), false)) {
                     tvSendCode.setBackgroundResource(R.color.title_color);
+                    if(!tvSendCode.isCounting()){
+                        tvSendCode.setEnabled(true);
+                    }
                     tvCommit.setClickEnabled(false);
                     buttonCanClick(false);
                 } else {
+                    tvSendCode.setEnabled(false);
                     tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
                 }
                 tvCommit.setClickEnabled(false);

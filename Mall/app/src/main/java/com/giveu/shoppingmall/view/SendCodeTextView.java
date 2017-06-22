@@ -11,6 +11,7 @@ import android.widget.TextView;
  */
 
 public class SendCodeTextView extends TextView{
+	private boolean isCounting;//记录验证码是否开始计时的标志
 	public SendCodeTextView(Context context) {
 		super(context);
 		init(context);
@@ -45,6 +46,7 @@ public class SendCodeTextView extends TextView{
 					SendCodeTextView.this.setEnabled(false);
 					Message msg2 = Message.obtain();
 					handler.sendMessageDelayed(msg2, 1000);
+
 				}
 			}
 		}
@@ -53,17 +55,21 @@ public class SendCodeTextView extends TextView{
 
 	public void startCount(){
 		this.setEnabled(false);
+			isCounting = true;
 			count = MAXCOUNT;
 			handler.sendEmptyMessage(1);
 	}
 
 	public void stopCount(){
 		this.setEnabled(true);
+		isCounting =false;
 		this.setText("发送验证码");
-
 		if (handler != null)
 			handler.removeCallbacksAndMessages(null);
 	}
 
-
+	//验证码是否开始计时的标志
+	public boolean isCounting(){
+		return isCounting;
+	}
 }

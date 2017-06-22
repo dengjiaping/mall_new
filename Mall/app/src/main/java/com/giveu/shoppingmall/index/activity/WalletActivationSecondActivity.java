@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.model.bean.response.ActivationResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -55,6 +56,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_second);
         baseLayout.setTitle("钱包激活");
+        CommonUtils.openSoftKeyBoard(mBaseContext);
     }
 
     @Override
@@ -92,9 +94,13 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     //如果是手机号的EditText还需判断验证码是否可以点击
                     if (StringUtils.checkPhoneNumberAndTipError(s.toString(), false)) {
                         tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
+                        if(!tvSendCode.isCounting()){
+                            tvSendCode.setEnabled(true);
+                        }
                         tvActivation.setClickEnabled(false);
                     } else {
                         tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
+                        tvSendCode.setEnabled(false);
                     }
                     tvActivation.setClickEnabled(false);
                 }
