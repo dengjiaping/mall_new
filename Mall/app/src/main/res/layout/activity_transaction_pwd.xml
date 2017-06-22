@@ -15,8 +15,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/ts_15" />
 
-    <com.giveu.shoppingmall.view.InputView
-        android:id="@+id/inputview_pwd"
+    <com.giveu.shoppingmall.view.PassWordInputView
+        android:id="@+id/input_view_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="11dp"

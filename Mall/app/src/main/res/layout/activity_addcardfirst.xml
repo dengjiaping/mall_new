@@ -63,10 +63,9 @@
         android:textColor="@color/title_color"
         android:textSize="@dimen/ts_12" />
 
-    <TextView
+    <com.giveu.shoppingmall.view.ClickEnabledTextView
         android:id="@+id/tv_next"
-        style="@style/me_bt"
+        style="@style/click_enabled_bt"
         android:layout_marginTop="39dp"
-        android:background="@drawable/selector_btn_change_blue"
         android:text="下一步" />
 </LinearLayout>

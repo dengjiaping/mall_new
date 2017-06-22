@@ -10,7 +10,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.view.InputView;
+import com.giveu.shoppingmall.view.PassWordInputView;
 
 import butterknife.BindView;
 
@@ -22,9 +22,11 @@ import butterknife.BindView;
 public class TransactionPwdActivity extends BaseActivity {
     @BindView(R.id.tv_string)
     TextView tvString;
-    @BindView(R.id.inputview_pwd)
-    InputView inputviewPwd;
+
     String firstPwd;
+    @BindView(R.id.input_view_pwd)
+    PassWordInputView inputViewPwd;
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_pwd);
@@ -38,22 +40,22 @@ public class TransactionPwdActivity extends BaseActivity {
     }
 
     public void setListener() {
-        inputviewPwd.setInputCallBack(new InputView.InputCallBack() {
+        inputViewPwd.setInputCallBack(new PassWordInputView.InputCallBack() {
             @Override
             public void onInputFinish(String result) {
                 if (result.length() == 6) {
-                    if(StringUtils.isNotNull(firstPwd)){
+                    if (StringUtils.isNotNull(firstPwd)) {
                         //第二次输入密码
-                        if(firstPwd.equals(result)){
-                            ActivationStatusActivity.startIt(mBaseContext,"100",null,null,null,null,"设置成功！请牢记你的交易密码");
+                        if (firstPwd.equals(result)) {
+                            ActivationStatusActivity.startIt(mBaseContext, "100", null, null, null, null, "设置成功！请牢记你的交易密码");
                             finish();
-                        }else{
+                        } else {
                             ToastUtils.showShortToast("两次输入的密码不一致！");
                         }
-                    }else{
+                    } else {
                         //第一次输入密码
                         firstPwd = result;
-                        inputviewPwd.clearResult();
+                        inputViewPwd.clearResult();
                         tvString.setText("请再次设置交易密码");
                     }
                 }
@@ -65,4 +67,5 @@ public class TransactionPwdActivity extends BaseActivity {
         Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
         mActivity.startActivity(intent);
     }
+
 }
