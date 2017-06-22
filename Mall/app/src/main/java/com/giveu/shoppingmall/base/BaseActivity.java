@@ -16,11 +16,13 @@ import com.giveu.shoppingmall.index.activity.AdSplashActivity;
 import com.giveu.shoppingmall.index.activity.MainActivity;
 import com.giveu.shoppingmall.index.activity.SplashActivity;
 import com.giveu.shoppingmall.index.activity.WelcomeActivity;
+import com.giveu.shoppingmall.me.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.GestureLoginActivity;
 import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.view.dialog.LoadingDialog;
@@ -262,7 +264,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
-//            dealLockPattern();
+            dealLockPattern();
         }
     }
 
@@ -290,10 +292,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     private void dealLockPattern() {
         if (this.getClass() == MainActivity.class) {
             String className = getIntent().getStringExtra(MainActivity.lockPatternKey);
-            if (SplashActivity.class.getName().equals(className)) {
+            if (SplashActivity.class.getName().equals(className)&& LoginHelper.getInstance().hasLogin()) {
                 //从splash页面过来的
                 if (SharePrefUtil.hasFingerPrint()) {
-
+                    FingerPrintActivity.startIt(mBaseContext);
                 } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                     //如果设置过密码
                     GestureLoginActivity.startIt(this);
@@ -314,8 +316,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 //            }
         }
         //如果上面页面做个处理了就不处理了
-        if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern()) {
-            if (!TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())) {
+        if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern()&&LoginHelper.getInstance().hasLogin()) {
+            if (SharePrefUtil.hasFingerPrint()) {
+                FingerPrintActivity.startIt(mBaseContext);
+            } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                 //如果设置过密码
                 GestureLoginActivity.startIt(this);
             } else {

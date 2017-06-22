@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.me.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -7,6 +9,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
+import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -21,6 +24,11 @@ import butterknife.OnClick;
 
 public class FingerPrintActivity extends BaseActivity {
     private FingerprintIdentify mFingerprintIdentify;
+
+    public static void startIt(Activity activity) {
+        Intent intent = new Intent(activity, FingerPrintActivity.class);
+        activity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {

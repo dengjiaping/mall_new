@@ -144,6 +144,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="指纹解锁"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
+        
+        <activity android:name=".me.view.activity.QuotaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="我的额度"
+            android:hardwareAccelerated="false"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <!--图片选择列出所有图片-->
         <activity

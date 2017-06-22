@@ -309,5 +309,16 @@ public class BaseLayout extends LinearLayout {
         setTopBarBgDrawble(R.drawable.shape_topbar_bg_bottom_line);
     }
 
+    /**
+     * 设置背景蓝色，文字白色，返回图标浅蓝色
+     */
+    public void setBlueWhiteStyle() {
+        int color = getResources().getColor(R.color.white);
+        top_tab_center_title.setTextColor(color);
+        top_tab_right_text.setTextColor(color);
+        setBackImage(R.drawable.selector_back);
+        setTopBarBgDrawble(R.color.title_color);
+    }
+
 
 }
