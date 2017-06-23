@@ -38,7 +38,7 @@ public class LoginHelper extends AbsSharePref {
     }
 
     public boolean hasLogin() {
-        return true;
+        return false;
     }
     public boolean hasUploadDeviceNumber() {
         return false;
