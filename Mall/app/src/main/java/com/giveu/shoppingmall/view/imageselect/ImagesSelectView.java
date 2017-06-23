@@ -163,15 +163,15 @@ public class ImagesSelectView extends LinearLayout {
 
             ImageView imageView = (ImageView) findViewById(getResId("image" + (x + 1)));
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-            params.width = (DensityUtils.getWidth() - DensityUtils.dip2px( 20) * 4) / 3;
-            params.height = params.width;
+            params.width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 4) / 3;
+            params.height = DensityUtils.dip2px(75);
             imageView.setLayoutParams(params);
 
             RelativeLayout rl = (RelativeLayout) findViewById(getResId("rl" + (x + 1)));
-            LayoutParams paramsRl = (LayoutParams) rl.getLayoutParams();
-            paramsRl.width = (DensityUtils.getWidth() - DensityUtils.dip2px( 20) * 4) / 3;
-            paramsRl.height = paramsRl.width;
-            rl.setLayoutParams(paramsRl);
+//            LayoutParams paramsRl = (LayoutParams) rl.getLayoutParams();
+//            paramsRl.width = (DensityUtils.getWidth() - DensityUtils.dip2px(25) * 4) / 3;
+//            paramsRl.height = DensityUtils.dip2px(75);
+//            rl.setLayoutParams(paramsRl);
 
             /**
              * 删除图片
@@ -235,8 +235,8 @@ public class ImagesSelectView extends LinearLayout {
                 ImageView delete = (ImageView) imageList.get(x).getTag(R.id.select_image_delete);
                 if (x < list.size()) {
                     rl.setVisibility(View.VISIBLE);
-//                    delete.setVisibility(LoginView.VISIBLE);
-                    delete.setVisibility(View.GONE);
+//                   delete.setVisibility(LoginView.VISIBLE);
+                    delete.setVisibility(View.VISIBLE);
                     ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, list.get(x).imagePath, imageList.get(x));
                 } else if (x == list.size()) {
                     rl.setVisibility(View.VISIBLE);

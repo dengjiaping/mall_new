@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_input"
+            android:layout_width="match_parent"
+            android:layout_height="213dp"
+            android:background="@color/white"
+            android:gravity="start"
+            android:padding="@dimen/default_layout_screen_gap"
+            android:text="请针对页面异常情况进行反馈，业务咨询联系客服：4008075546"
+            android:textColor="@color/color_d8d8d8"
+            android:textSize="@dimen/ts_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_bg" />
+
+        <com.giveu.shoppingmall.view.imageselect.ImagesSelectView
+            android:id="@+id/image_select"
+            style="@style/fill_wrap"
+            app:default_image="@drawable/ic_addpic_focused"
+            android:layout_marginBottom="10dp"
+            app:divide_index="0"
+            android:background="@color/white"
+            app:image_max_size="3"
+            android:padding="@dimen/default_layout_screen_gap"
+            />
+
+        <com.giveu.shoppingmall.view.ClickEnabledTextView
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="60dp"
+            android:text="立即提交" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="107dp"
+            android:textColor="@color/title_color"
+            android:text="业务咨询联系客服：4008075546"
+            android:layout_marginBottom="30dp"
+            android:textSize="@dimen/ts_12" />
+    </LinearLayout>
+</ScrollView>

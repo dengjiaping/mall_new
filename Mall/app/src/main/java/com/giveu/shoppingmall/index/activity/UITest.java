@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
-import com.giveu.shoppingmall.me.activity.CommonProblemActivity;
+import com.giveu.shoppingmall.me.activity.ProblemFeedbackActivity;
 
 /**
  * Created by 508632 on 2016/12/22.
@@ -17,7 +17,7 @@ public class UITest {
 		if ( !DebugConfig.isDev ){
 			return;
 		}
-		startActivity(CommonProblemActivity.class);
+		startActivity(ProblemFeedbackActivity.class);
 	}
 
 
