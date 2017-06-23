@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 
@@ -42,6 +43,12 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.setTitle("个人中心");
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
+        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         ButterKnife.bind(this,view);
         return view;
     }
@@ -66,6 +73,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_bill:
+                BillListActivity.startIt(mBaseContext);
                 break;
 
             case R.id.ll_help:

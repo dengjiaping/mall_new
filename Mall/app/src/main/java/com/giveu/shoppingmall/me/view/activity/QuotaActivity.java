@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+
 /**
  * Created by 513419 on 2017/6/22.
  */

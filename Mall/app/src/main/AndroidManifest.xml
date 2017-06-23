@@ -151,6 +151,12 @@
             android:hardwareAccelerated="false"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
+        <activity android:name=".me.view.activity.BillListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="账单"
+            android:hardwareAccelerated="false"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
         <!--图片选择列出所有图片-->
         <activity
             android:name=".view.imageselect.ImageSelectActivity"

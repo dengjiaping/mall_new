@@ -40,10 +40,10 @@
                 android:textSize="@dimen/ts_14" />
 
             <View
+                android:id="@+id/view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/view" />
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/ll_quota"
@@ -107,6 +107,90 @@
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_detail_grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="14dp"
+                    android:text="1000"
+                    android:textColor="#00b1b2"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="7dp"
+                    android:text=" 本期待还"
+                    android:textColor="#959595"
+                    android:textSize="@dimen/ts_12" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="14dp"
+                    android:text="5"
+                    android:textColor="#00b1b2"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="7dp"
+                    android:text=" 消费笔数"
+                    android:textColor="#959595"
+                    android:textSize="@dimen/ts_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="14dp"
+                    android:text="剩余3天"
+                    android:textColor="#00b1b2"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="7dp"
+                    android:text="还款日"
+                    android:textColor="#959595"
+                    android:textSize="@dimen/ts_12" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
