@@ -65,7 +65,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
+
             mSavedInstanceState = savedInstanceState;
             mBaseContext = this;
             BaseApplication.getInstance().addActivity(this);
@@ -78,6 +78,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             }
 
             initView(mSavedInstanceState);
+        try {
             addPresenters();
             setListener();
             setData();

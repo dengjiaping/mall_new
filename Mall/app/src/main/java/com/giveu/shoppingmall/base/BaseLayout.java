@@ -205,7 +205,14 @@ public class BaseLayout extends LinearLayout {
      * 隐藏页面的右边的图片
      */
     public void goneRightImage() {
-        top_tab_right_image.setVisibility(GONE);
+        rl_click_right.setVisibility(GONE);
+    }
+
+    /**
+     * 显示页面的右边的图片
+     */
+    public void showRightImage(){
+        rl_click_right.setVisibility(VISIBLE);
     }
 
     /**

@@ -48,6 +48,13 @@ public class BillListActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_bill_list);
         baseLayout.setTitle("账单");
+        baseLayout.setRightTextColor(R.color.color_00bbc0);
+        baseLayout.setRightTextAndListener("交易查询", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransactionSearchActivity.startIt(mBaseContext);
+            }
+        });
         fragmentList = new ArrayList<>();
         currentMonthFragment = new BillFragment();
         //传递参数

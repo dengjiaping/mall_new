@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/ll_search"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="14dp"
+        android:text="选择分类"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_15" />
+
+    <com.giveu.shoppingmall.view.flowlayout.TagFlowLayout
+        android:id="@+id/tf_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="15dp"
+
+        app:max_select="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="27dp"
+        android:text="选择状态"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_15" />
+
+    <com.giveu.shoppingmall.view.flowlayout.TagFlowLayout
+        android:id="@+id/tf_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="15dp"
+        app:max_select="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="选择时间"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:id="@+id/tv_choose_type"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="13dp"
+            android:background="@drawable/shape_blue_radius"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/ic_date_change"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="按月选择"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/tv_choose_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="2017年06月06日"
+            android:textColor="@color/color_00bbc0"
+            android:textSize="@dimen/ts_16" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_detail_grey" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="39dp"
+        android:layout_marginTop="54dp"
+        android:paddingLeft="39dp"
+        android:paddingRight="39dp">
+
+        <TextView
+            android:id="@+id/tv_reset"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_blue_line"
+            android:gravity="center"
+            android:text="重置"
+            android:textColor="@color/color_00bbc0"
+            android:textSize="@dimen/ts_16" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_blue"
+            android:gravity="center"
+            android:text="搜索"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_16" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_blank"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/default_layoutxml_bg" />
+</LinearLayout>

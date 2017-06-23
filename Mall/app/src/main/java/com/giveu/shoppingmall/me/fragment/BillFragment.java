@@ -153,7 +153,7 @@ public class BillFragment extends BaseFragment {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position - 2 < billList.size()) {
+                if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
                         transactionDetailDialog.show();
                     }

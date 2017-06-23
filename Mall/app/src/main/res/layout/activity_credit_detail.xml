@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="18dp"
+        android:paddingTop="19dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="期数"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="每期应还"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="还款日"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="还款状态"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+    </LinearLayout>
+
+    <com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/ptrlv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white" />
+</LinearLayout>
