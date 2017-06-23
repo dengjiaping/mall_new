@@ -27,18 +27,18 @@ public class ActivationStatusActivity extends BaseActivity {
     ImageView ivStatus;
     @BindView(R.id.tv_status)
     TextView tvStatus;
-    @BindView(R.id.tv_date1)
-    TextView tvDate1;
-    @BindView(R.id.tv_date2)
-    TextView tvDate2;
-    @BindView(R.id.tv_date3)
-    TextView tvDate3;
     @BindView(R.id.tv_hint_bottom)
     TextView tvHintBottom;
     @BindView(R.id.tv_hint_mid)
     TextView tvHintMid;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
+    @BindView(R.id.tv_wallet_total_amount)
+    TextView tvWalletTotalAmount;
+    @BindView(R.id.tv_withdrawals_amount)
+    TextView tvWithdrawalsAmount;
+    @BindView(R.id.tv_consume_amount)
+    TextView tvConsumeAmount;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -49,23 +49,21 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
-        String date1 = StringUtils.nullToEmptyString(getIntent().getStringExtra("date1"));
-        String date2 = StringUtils.nullToEmptyString(getIntent().getStringExtra("date2"));
-        String date3 = StringUtils.nullToEmptyString(getIntent().getStringExtra("date3"));
+        String walletTotalAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("walletTotalAmount"));
+        String withdrawalsAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("withdrawalsAmount"));
+        String consumeAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("consumeAmount"));
         String bottomHint = StringUtils.nullToEmptyString(getIntent().getStringExtra("bottomHint"));
         String midHint = StringUtils.nullToEmptyString(getIntent().getStringExtra("midHint"));
-
         switch (status) {
             //1、激活成功，有额度，不含下方提示语
-
             case "1":
                 //激活成功且有授信额度
                 tvHintBottom.setVisibility(View.GONE);
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
-                tvDate1.setText(date1);
-                tvDate2.setText(date2);
-                tvDate3.setText(date3);
+                tvWalletTotalAmount.setText(walletTotalAmount);
+                tvWithdrawalsAmount.setText(withdrawalsAmount);
+                tvConsumeAmount.setText(consumeAmount);
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
                 tvSetTransactionPwd.setText("设置交易密码");
@@ -81,9 +79,9 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.VISIBLE);
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
-                tvDate1.setText("0");
-                tvDate2.setText("0");
-                tvDate3.setText("0");
+                tvWalletTotalAmount.setText("0");
+                tvWithdrawalsAmount.setText("0");
+                tvConsumeAmount.setText("0");
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
                 tvHintBottom.setText(bottomHint);
@@ -121,12 +119,12 @@ public class ActivationStatusActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity mActivity, String status, String date1, String date2, String date3, String bottomHint, String midHint) {
+    public static void startIt(Activity mActivity, String status, String walletTotalAmount, String withdrawalsAmount, String consumeAmount, String bottomHint, String midHint) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         intent.putExtra("status", status);
-        intent.putExtra("date1", date1);
-        intent.putExtra("date2", date2);
-        intent.putExtra("date3", date3);
+        intent.putExtra("walletTotalAmount", walletTotalAmount);
+        intent.putExtra("withdrawalsAmount", withdrawalsAmount);
+        intent.putExtra("consumeAmount", consumeAmount);
         intent.putExtra("bottomHint", bottomHint);
         intent.putExtra("midHint", midHint);
         mActivity.startActivity(intent);
@@ -146,4 +144,5 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
         }
     }
+
 }

@@ -30,7 +30,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Created by 101900 on 2016/12/21.
  */
 
-public class InputView extends View {
+public class PassWordInputView extends View {
     private InputMethodManager input;//输入法管理
     private ArrayList<Integer> result;//输入结果保存
     private int count;//密码位数
@@ -44,7 +44,7 @@ public class InputView extends View {
     private float mFocusLineLength;//
     private ObjectAnimator mFocusAnim;//焦点转换动画
     Context context;
-    public InputView(Context context) {
+    public PassWordInputView(Context context) {
         super(context);
         init(null);
     }
@@ -55,12 +55,12 @@ public class InputView extends View {
         void onInputFinish(String result);
     }
 
-    public InputView(Context context, AttributeSet attrs) {
+    public PassWordInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public InputView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PassWordInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }

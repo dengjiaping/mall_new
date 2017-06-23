@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.me.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,8 @@ import com.giveu.shoppingmall.me.view.EditView;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.view.ClickEnabledTextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -22,21 +25,23 @@ import butterknife.OnClick;
  * Created by 101900 on 2017/2/22.
  */
 
-public class AddCardFirstActivity extends BaseActivity {
-    @BindView(R.id.tv_next)
-    TextView tvNext;
+public class AddBankCardFirstActivity extends BaseActivity {
+
     @BindView(R.id.tv_banklist)
     TextView tvBanklist;
     @BindView(R.id.et_username)
     EditView etUsername;
     @BindView(R.id.et_banknumber)
     EditView etBanknumber;
+    @BindView(R.id.tv_next)
+    ClickEnabledTextView tvNext;
 
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_addcardfirst);
         baseLayout.setTitle("添加银行卡");
+        CommonUtils.openSoftKeyBoard(mBaseContext);
         //查看支持银行列表
         CommonUtils.setTextWithSpan(tvBanklist, false, "查看", "支持银行", R.color.color_9b9b9b, R.color.title_color, new View.OnClickListener() {
             @Override
@@ -48,39 +53,61 @@ public class AddCardFirstActivity extends BaseActivity {
     }
 
     @Override
+    public void setListener() {
+        super.setListener();
+        etUsername.addTextChangedListener(new TextChangeListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                tvNext.setClickEnabled(false);
+                buttonCanClick(false);
+            }
+        });
+        etBanknumber.addTextChangedListener(new TextChangeListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                tvNext.setClickEnabled(false);
+                buttonCanClick(false);
+            }
+        });
+    }
+
+    @Override
     public void setData() {
         etUsername.checkFormat(EditView.Style.NAME);
         etBanknumber.checkFormat(19);
     }
 
-    //是否输入相关信息的判断
-    private boolean checkEditTextExceptCode() {
+    public void buttonCanClick(boolean showToast) {
         String username = StringUtils.getTextFromView(etUsername);
         String bankNumber = StringUtils.getTextFromView(etBanknumber);
-        if (!StringUtils.checkUserNameAndTipError(username,true)) {
-            return false;
+        if (!StringUtils.checkUserNameAndTipError(username, showToast)) {
+            return;
         }
-        if (StringUtils.isNull(bankNumber)) {
-            ToastUtils.showShortToast("请输入银行卡号");
-            return false;
-        } else if (!StringUtils.isCardNum(bankNumber)) {
-            ToastUtils.showShortToast("请输入正确的银行卡号");
-            return false;
+        if (!StringUtils.isCardNum(bankNumber)) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入正确的银行卡号");
+            }
+            return;
         }
-        return true;
+        if (!showToast) {//只在输入时判断按钮颜色，点击按钮不操作按钮颜色
+            tvNext.setClickEnabled(true);
+        }
     }
 
     @OnClick(R.id.tv_next)
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (checkEditTextExceptCode()) {
-            AddCardSecondActivity.startIt(mBaseContext);
+        if (tvNext.isClickEnabled()) {
+            AddBankCardSecondActivity.startIt(mBaseContext);
+        } else {
+            buttonCanClick(true);
         }
     }
 
     public static void startIt(Activity mActivity) {
-        Intent intent = new Intent(mActivity, AddCardFirstActivity.class);
+        Intent intent = new Intent(mActivity, AddBankCardFirstActivity.class);
         mActivity.startActivity(intent);
     }
+
 }

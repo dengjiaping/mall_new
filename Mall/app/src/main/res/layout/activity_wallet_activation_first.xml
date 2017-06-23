@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:text="请填写您的真实信息"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_name"
+            style="@style/activity_wallet_activation_iv_style"
+            android:src="@drawable/ic_add" />
+
+        <com.giveu.shoppingmall.me.view.EditView
+            android:id="@+id/et_name"
+            style="@style/activity_wallet_activation_et_style"
+            android:hint="填写您的姓名"
+            android:maxLength="18" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_ident"
+            style="@style/activity_wallet_activation_iv_style"
+            android:src="@drawable/ic_add" />
+
+        <com.giveu.shoppingmall.me.view.EditView
+            android:id="@+id/et_ident"
+            style="@style/activity_wallet_activation_et_style"
+            android:hint="填写您的身份证"
+            android:maxLength="18" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+
+
+    <com.giveu.shoppingmall.view.ClickEnabledTextView
+        android:id="@+id/tv_next"
+        style="@style/click_enabled_bt"
+        android:layout_marginTop="86dp"
+        android:text="下一步" />
+</LinearLayout>

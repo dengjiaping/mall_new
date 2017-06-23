@@ -75,26 +75,6 @@ public class RequestAgent extends BaseRequestAgent {
         });
     }
 
-    public void sendFileRequest(Map<String, Object> requestParams, Map<String, File> fileParams, String url, Class resultClzz, Activity loadingDialogContext, ResponseListener responseListener) {
-        sendFileRequest(false, requestParams, fileParams, url, resultClzz, loadingDialogContext, responseListener);
-    }
-
-    /**
-     * 上传文件请求
-     *
-     * @param isDecodeResponse     返回值是否需要解密
-     * @param requestParams        string参数map集合
-     * @param url                  完整的url地址
-     * @param resultClzz           返回值类型
-     * @param loadingDialogContext 是否需要loading框，null=不要
-     * @param responseListener     返回值监听
-     */
-    public void sendFileRequest(boolean isDecodeResponse, Map<String, Object> requestParams, Map<String, File> fileParams, String url, Class resultClzz, Activity loadingDialogContext, ResponseListener responseListener) {
-        VolleyResponseListener volleyResponseListener = new VolleyResponseListener(loadingDialogContext, responseListener);
-        FileRequest myRequest = new FileRequest(isDecodeResponse, url, fileParams, resultClzz, volleyResponseListener, volleyResponseListener);
-        sendIt(myRequest, requestParams, url, loadingDialogContext);
-    }
-
     @Override
     protected void sendIt(MyRequest myRequest, Map<String, Object> requestParams, String urlPlus, Activity loadingDialogContext) {
         super.sendIt(myRequest, requestParams, urlPlus, loadingDialogContext);

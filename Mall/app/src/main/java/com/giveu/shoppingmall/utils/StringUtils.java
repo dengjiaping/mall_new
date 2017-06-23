@@ -206,7 +206,13 @@ public class StringUtils {
     public static boolean checkIdCardAndTipError(String idcard, boolean showToast) {
         if (TextUtils.isEmpty(idcard)) {
             if (showToast) {
-                ToastUtils.showShortToast("请输入身份证");
+                ToastUtils.showShortToast("请输入身份证！");
+            }
+            return false;
+        }
+        if(idcard.length() != 15 && idcard.length() != 18){
+            if (showToast) {
+                ToastUtils.showShortToast("请输入正确位数的身份证！");
             }
             return false;
         }
