@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.index.activity.AdSplashActivity;
 import com.giveu.shoppingmall.index.activity.MainActivity;
 import com.giveu.shoppingmall.index.activity.SplashActivity;
@@ -23,6 +24,7 @@ import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.SystemBarHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.view.dialog.LoadingDialog;
@@ -74,7 +76,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             if (isTranslateStatusBar()) {
-                translateStatusBar();
+                setTranslucentStatus(this);
             }
 
             initView(mSavedInstanceState);
@@ -103,8 +105,19 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     /**
      * @return true=使用状态栏一体化，false=不使用
      */
-    protected boolean isTranslateStatusBar() {
+    private boolean isTranslateStatusBar() {
+        if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
+            return true;
+        }
         return false;
+    }
+
+	/**
+     * 子类重写此方法来控制是否状态栏一体化
+     * @return
+     */
+    protected boolean translateStatusBar() {
+        return true;
     }
 
 //    /**
@@ -134,27 +147,23 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 //    }
 
 
-    private void translateStatusBar() {
-
-        //透明状态栏
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    public static void setTranslucentStatus(Activity activity){
+        Window window = activity.getWindow();
+        // 默认主色调为白色, 如果是6.0或者是miui6、flyme4以上, 设置状态栏文字为黑色, 否则给状态栏着色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                window.setStatusBarColor(Color.TRANSPARENT);
-                window.setNavigationBarColor(Color.TRANSPARENT);
-            } else {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            }
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        //设置状态栏字体颜色
+        SystemBarHelper.setStatusBarDarkMode(activity);
     }
+
+
 
     /**
      * 重写了activity的setContentView
