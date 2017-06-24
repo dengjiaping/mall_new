@@ -11,6 +11,8 @@
     <item type="id" name="select_image_delete"/>
     <item type="id" name="select_image_txt"/>
     <item type="id" name="viewTag1"/>
+    <item type="id" name="translucent_view"/>
+    <item type="id" name="statusbar_view"/>
 
 
 

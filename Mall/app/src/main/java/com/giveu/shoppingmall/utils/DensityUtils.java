@@ -186,14 +186,14 @@ public class DensityUtils {
         /**
          * 获取状态栏高度——方法1
          * */
-        int statusBarHeight1 = dip2px(20f);
+        int statusBarHeight1 = 0;
         //获取status_bar_height资源的ID
         int resourceId = BaseApplication.getInstance().getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             //根据资源ID获取响应的尺寸值
             statusBarHeight1 = BaseApplication.getInstance().getResources().getDimensionPixelSize(resourceId);
         }
-        return statusBarHeight1;
+        return statusBarHeight1 == 0 ? dip2px(20f) : statusBarHeight1;
     }
 
 
