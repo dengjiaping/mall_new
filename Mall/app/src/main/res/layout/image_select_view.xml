@@ -2,8 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/txt_container"
     style="@style/fill_wrap"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -15,12 +13,18 @@
 
         <RelativeLayout
             android:id="@+id/rl1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
             style="@style/fill_wrap">
 
             <ImageView
                 android:id="@+id/image1"
                 style="@style/fill_wrap"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="7dp"
                 android:scaleType="centerCrop"
+                android:background="@drawable/shape_photo_frame"
                 android:src="@drawable/ic_addpic_focused" />
 
             <ImageView
@@ -35,6 +39,9 @@
         <RelativeLayout
             android:id="@+id/rl2"
             style="@style/fill_wrap"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:layout_marginLeft="10dp"
             android:visibility="gone">
 
@@ -42,6 +49,9 @@
                 android:id="@+id/image2"
                 style="@style/fill_wrap"
                 android:scaleType="centerCrop"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/shape_photo_frame"
+                android:layout_marginRight="7dp"
                 android:src="@drawable/ic_addpic_focused" />
 
             <ImageView
@@ -56,12 +66,18 @@
         <RelativeLayout
             android:id="@+id/rl3"
             style="@style/fill_wrap"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:layout_marginLeft="10dp"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/image3"
                 style="@style/fill_wrap"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/shape_photo_frame"
+                android:layout_marginRight="7dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_addpic_focused" />
 

@@ -205,7 +205,14 @@ public class BaseLayout extends LinearLayout {
      * 隐藏页面的右边的图片
      */
     public void goneRightImage() {
-        top_tab_right_image.setVisibility(GONE);
+        rl_click_right.setVisibility(GONE);
+    }
+
+    /**
+     * 显示页面的右边的图片
+     */
+    public void showRightImage(){
+        rl_click_right.setVisibility(VISIBLE);
     }
 
     /**
@@ -307,6 +314,17 @@ public class BaseLayout extends LinearLayout {
         top_tab_right_text.setTextColor(color);
         setBackImage(R.drawable.back_blue);
         setTopBarBgDrawble(R.drawable.shape_topbar_bg_bottom_line);
+    }
+
+    /**
+     * 设置背景蓝色，文字白色，返回图标浅蓝色
+     */
+    public void setBlueWhiteStyle() {
+        int color = getResources().getColor(R.color.white);
+        top_tab_center_title.setTextColor(color);
+        top_tab_right_text.setTextColor(color);
+        setBackImage(R.drawable.selector_back);
+        setTopBarBgDrawble(R.color.title_color);
     }
 
 

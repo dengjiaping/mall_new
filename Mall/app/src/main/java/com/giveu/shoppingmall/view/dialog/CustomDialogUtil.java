@@ -65,7 +65,7 @@ public class CustomDialogUtil {
             }
         });
 
-		customDialog = new CustomDialog(mActivity, view, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+		customDialog = new CustomDialog(mActivity, view, R.style.date_dialog_style, Gravity.CENTER, false);
 		if (TextUtils.isEmpty(content)) {
 			tv_content.setVisibility(View.GONE);
 		}else {

@@ -125,9 +125,15 @@ public class AddBankCardSecondActivity extends BaseActivity {
         String bankPhone = StringUtils.getTextFromView(etBankPhone);
         if (StringUtils.isNull(bankName)) {
             if (showToast) {
-                ToastUtils.showShortToast("请输入银行类别");
+                ToastUtils.showShortToast("请输入银行类别！");
             }
             return;
+        }
+        if (!bankName.matches("[\\u4e00-\\u9fa5]+$")) {
+            if(showToast){
+                ToastUtils.showShortToast("请输入正确的银行类别！");
+            }
+            return ;
         }
         if (!StringUtils.checkPhoneNumberAndTipError(bankPhone, showToast)) {
             return;
@@ -136,12 +142,12 @@ public class AddBankCardSecondActivity extends BaseActivity {
             String sendCode = StringUtils.getTextFromView(etSendCode);
             if(StringUtils.isNull(sendCode)){
                 if (showToast) {
-                    ToastUtils.showShortToast("请输入6位验证码");
+                    ToastUtils.showShortToast("请输入6位验证码！");
                 }
                 return;
             }else if(sendCode.length() != 6){
                 if (showToast) {
-                    ToastUtils.showShortToast("请输入6位验证码");
+                    ToastUtils.showShortToast("请输入6位验证码！");
                 }
                 return;
             }
@@ -149,7 +155,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
 
         if (!checkbox.isChecked()) {
             if (showToast) {
-                ToastUtils.showShortToast("请勾选代扣服务协议");
+                ToastUtils.showShortToast("请勾选代扣服务协议！");
             }
             return;
         }
@@ -162,9 +168,23 @@ public class AddBankCardSecondActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
+
         switch (view.getId()) {
             case R.id.tv_send_code:
-                    tvSendCode.startCount();
+                    tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                        @Override
+                        public void onEnd() {
+                             String bankPhone = StringUtils.getTextFromView(etBankPhone);
+                            if(StringUtils.checkPhoneNumberAndTipError(bankPhone,false)){
+                                tvSendCode.setBackgroundResource(R.color.title_color);
+                                tvSendCode.setEnabled(true);
+                            }else{
+                                tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
+                                tvSendCode.setEnabled(false);
+                            }
+
+                        }
+                    });
                 break;
             case R.id.tv_commit:
                 if (tvCommit.isClickEnabled()) {
@@ -186,7 +206,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        tvSendCode.stopCount();
+        tvSendCode.onDestory();
     }
 
 }

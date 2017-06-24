@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_00adb2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_available_credit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="39dp"
+            android:drawablePadding="3dp"
+            android:drawableRight="@drawable/ic_hint_large"
+            android:padding="15dp"
+            android:text="可用额度"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_available_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="￥4000.00"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="52dp"
+            android:background="#66ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_avaiable_withdrawals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_hint_small"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="6dp"
+                    android:text="可提现额度"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_11" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawals_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="10dp"
+                    android:text="￥2000.00"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_18" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:background="#66ffffff" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_consumable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_hint_small"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="6dp"
+                    android:text="可消费额度"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_11" />
+
+                <TextView
+                    android:id="@+id/tv_consumable_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="10dp"
+                    android:text="￥2000.00"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_18" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

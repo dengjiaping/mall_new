@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="28dp"
+    android:layout_marginRight="28dp"
+    android:background="@drawable/bg_custom_dialog_viewmode1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="授信额度详情"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_18" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_marginTop="13dp"
+        android:src="@drawable/shape_dash_line" />
+
+    <TextView
+        android:id="@+id/tv_withdrawals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="26dp"
+        android:text="取现可用额度:￥500.00\n取现总额度:￥1500.00"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_15" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="26dp" />
+
+    <TextView
+        android:id="@+id/tv_large_withdrawals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="20dp"
+        android:text="大额现金分期可用额度:￥1500.00\n大额现金分期总额度:￥3500.00"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_15" />
+
+    <TextView
+        android:id="@+id/tv_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:text="保持良好信用，有机会获得最高*万元的大额取现额度"
+        android:textColor="#4d000000"
+        android:textSize="@dimen/ts_12" />
+
+
+    <TextView
+        android:id="@+id/tv_know"
+        style="@style/me_bt"
+        android:layout_marginBottom="31dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/selector_btn_change_blue"
+        android:text="知道了" />
+</LinearLayout>

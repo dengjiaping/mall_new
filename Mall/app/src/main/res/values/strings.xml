@@ -27,5 +27,6 @@
     <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
     <string name="create_gesture_confirm_correct">设置成功</string>
     <string name="create_gesture_reset">重新设置</string>
+    <string name="customer_phone">4008075546</string>
 
 </resources>

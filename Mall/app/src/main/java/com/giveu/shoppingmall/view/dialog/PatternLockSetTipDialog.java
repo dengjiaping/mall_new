@@ -16,7 +16,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 public class PatternLockSetTipDialog extends CustomDialog {
 
     public PatternLockSetTipDialog(Activity context) {
-        super(context, R.layout.pattern_lock_set_tip_dialog, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+        super(context, R.layout.pattern_lock_set_tip_dialog, R.style.date_dialog_style, Gravity.CENTER, false);
 
     }
 

@@ -59,14 +59,14 @@ public class AddBankCardFirstActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 tvNext.setClickEnabled(false);
-                buttonCanClick(false);
+                nextButtonCanClick(false);
             }
         });
         etBanknumber.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 tvNext.setClickEnabled(false);
-                buttonCanClick(false);
+                nextButtonCanClick(false);
             }
         });
     }
@@ -77,7 +77,11 @@ public class AddBankCardFirstActivity extends BaseActivity {
         etBanknumber.checkFormat(19);
     }
 
-    public void buttonCanClick(boolean showToast) {
+    /**
+     * 用于判断下一步按钮的颜色，是否可以点击
+     * @param showToast
+     */
+    public void nextButtonCanClick(boolean showToast) {
         String username = StringUtils.getTextFromView(etUsername);
         String bankNumber = StringUtils.getTextFromView(etBanknumber);
         if (!StringUtils.checkUserNameAndTipError(username, showToast)) {
@@ -101,7 +105,7 @@ public class AddBankCardFirstActivity extends BaseActivity {
         if (tvNext.isClickEnabled()) {
             AddBankCardSecondActivity.startIt(mBaseContext);
         } else {
-            buttonCanClick(true);
+            nextButtonCanClick(true);
         }
     }
 

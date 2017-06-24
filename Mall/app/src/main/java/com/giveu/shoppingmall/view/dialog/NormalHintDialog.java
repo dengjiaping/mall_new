@@ -35,7 +35,7 @@ public class NormalHintDialog {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View contentView = inflater.inflate(R.layout.dialog_nnormal_hint, null);
         initView(contentView);
-        mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+        mDialog = new CustomDialog(mActivity, contentView, R.style.date_dialog_style, Gravity.CENTER, false);
         mDialog.setCancelable(false);
         mDialog.show();
     }

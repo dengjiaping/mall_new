@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="28dp"
+    android:layout_marginRight="28dp"
+    android:background="@drawable/bg_custom_dialog_viewmode1"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:text="还款详情"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_18" />
+
+        <ImageView
+            android:id="@+id/iv_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="10dp"
+            android:scaleType="centerInside"
+            android:paddingRight="10dp"
+            android:src="@drawable/ic_dismiss" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_marginTop="13dp"
+        android:src="@drawable/shape_dash_line" />
+
+    <TextView
+        android:id="@+id/tv_withdrawals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="14dp"
+        android:text="还款产品：小额取现\n还款金额：¥500.00"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_15" />
+
+    <TextView
+        android:id="@+id/tv_large_withdrawals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
+        android:text="实际支付：¥400.00"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_15" />
+
+
+    <TextView
+        android:id="@+id/tv_confirm"
+        style="@style/me_bt"
+        android:layout_marginBottom="35dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="53dp"
+        android:background="@drawable/selector_btn_change_blue"
+        android:text="确定" />
+</LinearLayout>

@@ -140,10 +140,37 @@
             android:label="找回密码"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".me.activity.FingerPrintActivity"
+        <activity
+            android:name=".me.activity.FingerPrintActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="指纹解锁"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.QuotaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="false"
+            android:label="我的额度"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.BillListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="false"
+            android:label="账单"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".me.view.activity.TransactionSearchActivity"
+            android:label="交易查询" />
+
+        <activity
+            android:name=".me.view.activity.TransactionDetailActivity"
+            android:label="交易详情" />
+
+        <activity
+            android:name=".me.view.activity.CreditDetailActivity"
+            android:label="分期明细" />
 
         <!--图片选择列出所有图片-->
         <activity
@@ -219,7 +246,12 @@
         <activity
             android:name=".me.activity.AddBankCardSecondActivity"
             android:label="添加银行卡二级页" />
-
+        <activity
+            android:name=".me.activity.CommonProblemActivity"
+            android:label="常见问题页" />
+        <activity
+            android:name=".me.activity.ProblemFeedbackActivity"
+            android:label="问题反馈页" />
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
         <service

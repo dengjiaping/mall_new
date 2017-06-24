@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="59dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="33dp"
+    android:paddingRight="@dimen/default_layout_screen_gap">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_layoutxml_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="05/27"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_14" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:layout_marginTop="7dp"
+                android:button="@drawable/selector_checkbox_round"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="线下商品消费"
+                android:textColor="@color/color_9b9b9b"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:button="@drawable/selector_checkbox_round"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="¥1000.00"
+                android:textColor="@color/color_9b9b9b"
+                android:textSize="@dimen/ts_18" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_detail_grey" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
