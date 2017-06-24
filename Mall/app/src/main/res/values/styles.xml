@@ -63,7 +63,7 @@
         <item name="android:cacheColorHint">@color/transparent</item>
     </style>
 
-    <style name="login_error_dialog_Style">
+    <style name="date_dialog_style">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>

@@ -23,7 +23,7 @@ public class CustomListDialog extends CustomDialog {
     ItemAdapter itemAdapter;
 
     public CustomListDialog(Activity context, AdapterView.OnItemClickListener onItemClickListener) {
-        super(context, R.layout.custom_list_dialog, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+        super(context, R.layout.custom_list_dialog, R.style.date_dialog_style, Gravity.CENTER, false);
 
         this.onItemClickListener = onItemClickListener;
     }

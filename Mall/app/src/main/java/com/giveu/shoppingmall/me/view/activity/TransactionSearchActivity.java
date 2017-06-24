@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.adapter.TransactionAdapter;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.view.dialog.DateSelectDialog;
 import com.giveu.shoppingmall.view.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.view.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.view.flowlayout.TagFlowLayout;
@@ -59,6 +60,8 @@ public class TransactionSearchActivity extends BaseActivity {
     private ObjectAnimator hideAlphaAnimator;
     private int pageIndex = 1;
     private final int pageSize = 10;
+    private DateSelectDialog dateSelectDialog;
+    private boolean currentTypeIsMonth = true;//区分是按月选择还是按日选择
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, TransactionSearchActivity.class);
@@ -122,6 +125,7 @@ public class TransactionSearchActivity extends BaseActivity {
         initAnimation();
         hideSearchView();
         llSearch.setVisibility(View.GONE);
+        dateSelectDialog = new DateSelectDialog(mBaseContext);
     }
 
     private void initAnimation() {
@@ -133,6 +137,9 @@ public class TransactionSearchActivity extends BaseActivity {
         hideAlphaAnimator = ObjectAnimator.ofFloat(llSearch, "alpha", 1f, 0f).setDuration(500);
     }
 
+    /**
+     * 显示搜索框
+     */
     private void showSearchView() {
         if (!showAnimator.isRunning()) {
             showAnimator.start();
@@ -140,6 +147,9 @@ public class TransactionSearchActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 隐藏搜索框
+     */
     private void hideSearchView() {
         if (!hideAnimator.isRunning()) {
             hideAnimator.start();
@@ -147,7 +157,7 @@ public class TransactionSearchActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.view_blank})
+    @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -155,6 +165,28 @@ public class TransactionSearchActivity extends BaseActivity {
             case R.id.view_blank:
                 hideSearchView();
                 baseLayout.showRightImage();
+                break;
+
+            case R.id.tv_choose_type:
+                currentTypeIsMonth = !currentTypeIsMonth;
+                if (currentTypeIsMonth) {
+                    tvChooseType.setText("按月选择");
+                } else {
+                    tvChooseType.setText("按日选择");
+                }
+                break;
+
+            case R.id.ll_choose_date:
+                if (currentTypeIsMonth) {
+                    dateSelectDialog.hideDay();
+                    dateSelectDialog.show();
+                } else {
+                    dateSelectDialog.showDay();
+                    dateSelectDialog.show();
+                }
+                break;
+
+            default:
                 break;
         }
     }
@@ -167,6 +199,13 @@ public class TransactionSearchActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
+        dateSelectDialog.setOnDateSelectListener(new DateSelectDialog.OnDateSelectListener() {
+            @Override
+            public void onSelectDate(String mYear, String mMonth, String mDay) {
+
+            }
+        });
+
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {

@@ -26,7 +26,7 @@ public class PwdErrorDialog {
         final View contentView = inflater.inflate(R.layout.dialog_errorpwd, null);
         initView(contentView);
 
-        mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+        mDialog = new CustomDialog(mActivity, contentView, R.style.date_dialog_style, Gravity.CENTER, false);
         mDialog.setCancelable(false);
         mDialog.show();
 
