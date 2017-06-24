@@ -172,6 +172,20 @@
             android:name=".me.view.activity.CreditDetailActivity"
             android:label="分期明细" />
 
+        <!--支付宝支付-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+
         <!--图片选择列出所有图片-->
         <activity
             android:name=".view.imageselect.ImageSelectActivity"
