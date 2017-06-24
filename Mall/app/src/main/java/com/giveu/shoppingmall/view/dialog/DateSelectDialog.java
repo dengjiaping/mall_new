@@ -31,9 +31,9 @@ public class DateSelectDialog extends CustomDialog {
     private int currentMonth;
     private int currentDay;
     private int currentSelectYear, currentSelectMonth, currentSelectDay;
-    private int minYear = 2000;
-    private int minMonth = 1;
-    private int minDay = 1;
+    private final int MIN_YEAR = 2000;
+    private final int MIN_MONTH = 1;
+    private final int MIN_DAY = 1;
     private int maxDay;
     public int mYear, mMonth;
     private boolean isShowDay = true;
@@ -48,7 +48,7 @@ public class DateSelectDialog extends CustomDialog {
         super.initView(contentView);
         DisplayMetrics metrics = new DisplayMetrics();
         mAttachActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        LogUtil.e(minYear + "");
+        LogUtil.e(MIN_YEAR + "");
         LogUtil.e(isShowDay + "");
 
         currentTime = WheelGetTimeUtil.getYMDTimezh(System.currentTimeMillis());
@@ -65,9 +65,9 @@ public class DateSelectDialog extends CustomDialog {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentSelectYear = wl_year.getCurrentItem() + minYear;//年
-                currentSelectMonth = wl_month.getCurrentItem() + minMonth;//月
-                currentSelectDay = w1_day.getCurrentItem() + minDay;//日
+                currentSelectYear = wl_year.getCurrentItem() + MIN_YEAR;//年
+                currentSelectMonth = wl_month.getCurrentItem() + MIN_MONTH;//月
+                currentSelectDay = w1_day.getCurrentItem() + MIN_DAY;//日
                 selectDate = String.valueOf(currentSelectYear) + String.format("%02d", currentSelectMonth);
                 if (currentSelectYear > currentYear) {
                     //选择的年份大于当前年份
@@ -125,30 +125,30 @@ public class DateSelectDialog extends CustomDialog {
         wl_month = (WheelView) view.findViewById(R.id.wl2);
         w1_day = (WheelView) view.findViewById(R.id.wl3);
 
-        NumericWheelAdapter numericWheelAdapterStart1 = new NumericWheelAdapter(mAttachActivity, minYear, 2030);
+        NumericWheelAdapter numericWheelAdapterStart1 = new NumericWheelAdapter(mAttachActivity, MIN_YEAR, 2030);
         numericWheelAdapterStart1.setLabel("年");
         wl_year.setViewAdapter(numericWheelAdapterStart1);
         wl_year.setCyclic(true);//是否可循环滑动
 
-        NumericWheelAdapter numericWheelAdapterStart2 = new NumericWheelAdapter(mAttachActivity, minMonth, 12, "%02d");
+        NumericWheelAdapter numericWheelAdapterStart2 = new NumericWheelAdapter(mAttachActivity, MIN_MONTH, 12, "%02d");
         numericWheelAdapterStart2.setLabel("月");
         wl_month.setViewAdapter(numericWheelAdapterStart2);
         wl_month.setCyclic(true);
 
         //初始最大天数
         updateDayWheel(currentYear, currentMonth);
-        numericWheelAdapterStart3 = new NumericWheelAdapter(mAttachActivity, minDay, maxDay, "%02d");
+        numericWheelAdapterStart3 = new NumericWheelAdapter(mAttachActivity, MIN_DAY, maxDay, "%02d");
         numericWheelAdapterStart3.setLabel("日");
         w1_day.setViewAdapter(numericWheelAdapterStart3);
         w1_day.setCyclic(true);
-        wl_year.setCurrentItem(curYear - minYear);
-        wl_month.setCurrentItem(curMonth - minMonth);
-        w1_day.setCurrentItem(curDay - minDay);
+        wl_year.setCurrentItem(curYear - MIN_YEAR);
+        wl_month.setCurrentItem(curMonth - MIN_MONTH);
+        w1_day.setCurrentItem(curDay - MIN_DAY);
         w1_day.setVisibility(View.GONE);
         wl_year.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                int year = minYear + newValue;
+                int year = MIN_YEAR + newValue;
                 mYear = year;
                 updateDayWheel(year, mMonth);
                 numericWheelAdapterStart3.setMaxValue(maxDay);
@@ -177,6 +177,10 @@ public class DateSelectDialog extends CustomDialog {
         w1_day.setVisibility(View.GONE);
     }
 
+    public String getCurrentYearAndMonth() {
+        return mYear + "年" + mMonth + "月";
+    }
+
     /**
      * 设置标题
      *
@@ -191,9 +195,9 @@ public class DateSelectDialog extends CustomDialog {
 
     public void setOriginalDate(int year, int month, int day) {
         if (wl_year != null && wl_month != null && w1_day != null) {
-            wl_year.setCurrentItem(year - minYear);
-            wl_month.setCurrentItem(month - minMonth);
-            w1_day.setCurrentItem(day - minDay);
+            wl_year.setCurrentItem(year - MIN_YEAR);
+            wl_month.setCurrentItem(month - MIN_MONTH);
+            w1_day.setCurrentItem(day - MIN_DAY);
         }
     }
 
@@ -244,6 +248,6 @@ public class DateSelectDialog extends CustomDialog {
     private OnDateSelectListener listener;
 
     public interface OnDateSelectListener {
-        void onSelectDate(String mYear, String mMonth, String mDay);
+        void onSelectDate(String year, String month, String day);
     }
 }
