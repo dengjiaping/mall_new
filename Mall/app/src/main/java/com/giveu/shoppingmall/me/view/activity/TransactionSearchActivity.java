@@ -126,6 +126,7 @@ public class TransactionSearchActivity extends BaseActivity {
         hideSearchView();
         llSearch.setVisibility(View.GONE);
         dateSelectDialog = new DateSelectDialog(mBaseContext);
+        tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth());
     }
 
     private void initAnimation() {
@@ -157,7 +158,7 @@ public class TransactionSearchActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date})
+    @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date, R.id.ll_search})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -186,6 +187,9 @@ public class TransactionSearchActivity extends BaseActivity {
                 }
                 break;
 
+            case R.id.ll_search:
+                break;
+
             default:
                 break;
         }
@@ -201,8 +205,12 @@ public class TransactionSearchActivity extends BaseActivity {
         super.setListener();
         dateSelectDialog.setOnDateSelectListener(new DateSelectDialog.OnDateSelectListener() {
             @Override
-            public void onSelectDate(String mYear, String mMonth, String mDay) {
-
+            public void onSelectDate(String year, String month, String day) {
+                if (currentTypeIsMonth) {
+                    tvChooseDate.setText(year + "年" + month + "月");
+                } else {
+                    tvChooseDate.setText(year + "年" + month + "月" + day + "日");
+                }
             }
         });
 
@@ -230,5 +238,26 @@ public class TransactionSearchActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (showAnimator != null) {
+            showAnimator.end();
+            showAnimator.cancel();
+        }
+        if (hideAnimator != null) {
+            hideAnimator.end();
+            hideAnimator.cancel();
+        }
+        if (showAlphaAnimator != null) {
+            showAlphaAnimator.end();
+            showAlphaAnimator.cancel();
+        }
+        if (hideAlphaAnimator != null) {
+            hideAlphaAnimator.end();
+            hideAlphaAnimator.cancel();
+        }
     }
 }
