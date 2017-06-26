@@ -59,6 +59,12 @@ public class MainMeFragment extends BaseFragment {
     }
 
     @Override
+    protected boolean isTranslateStatusBar() {
+        return true;
+    }
+
+
+    @Override
     public void initWithDataDelay() {
 
     }

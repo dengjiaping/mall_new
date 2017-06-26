@@ -1,73 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/default_layoutxml_bg"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
+    android:orientation="vertical">
 
 
-    <FrameLayout
-        android:id="@+id/buttom_point"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttomBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:visibility="gone">
+        android:background="@drawable/white_soild_top_gray_line"
+        >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
+            android:id="@+id/ll_recharge"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="0dip"
-                android:layout_height="0dip"
-                android:layout_weight="1"
-                android:visibility="invisible" />
+                android:id="@+id/iv_recharge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_recharge" />
 
-            <ImageView
-                android:layout_width="0dip"
-                android:layout_height="0dip"
-                android:layout_weight="1"
-                android:visibility="invisible" />
+            <TextView
+                android:id="@+id/tv_recharge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="充值"
+                android:textSize="@dimen/ts_12" />
 
-            <ImageView
-                android:layout_width="0dip"
-                android:layout_height="0dip"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <RelativeLayout
-                android:layout_width="0dip"
-                android:layout_height="20dip"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/point"
-                    android:layout_width="6dip"
-                    android:layout_height="6dip"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="8dip"
-                    android:layout_marginRight="10dip"
-                    android:src="@drawable/act_main_bottom_bar_red_tip"
-                    android:visibility="invisible" />
-            </RelativeLayout>
         </LinearLayout>
-    </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_cash"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iv_cash"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_cash" />
+
+            <TextView
+                android:id="@+id/tv_cash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="取现"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_repayment"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iv_repayment"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_repayment" />
+
+            <TextView
+                android:id="@+id/tv_repayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="还款"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_me"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iv_me"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_me" />
+
+            <TextView
+                android:id="@+id/tv_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="我的"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <RadioGroup
-        android:id="@+id/buttomBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/buttom_point"
-        android:layout_toRightOf="@+id/buttom_point"
         android:background="@drawable/white_soild_top_gray_line"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:visibility="gone">
 
         <RadioButton
             android:id="@+id/rb0"
@@ -126,8 +180,8 @@
     <com.giveu.shoppingmall.widget.NoScrollViewPager
         android:id="@+id/mainViewPager"
         android:layout_width="match_parent"
-        android:layout_above="@id/buttomBar"
         android:layout_height="match_parent"
+        android:layout_above="@id/buttomBar"
         android:background="@color/default_layoutxml_bg" />
 
 </RelativeLayout>
