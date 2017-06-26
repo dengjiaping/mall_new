@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.me.view.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +21,11 @@ import butterknife.OnClick;
 public class CustomerServicePhoneActivity extends BaseActivity {
     @BindView(R.id.tv_call_phone)
     TextView tvCallPhone;
+
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, CustomerServicePhoneActivity.class);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {

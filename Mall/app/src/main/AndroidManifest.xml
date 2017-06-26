@@ -282,8 +282,14 @@
             android:name=".me.view.activity.CommonProblemActivity"
             android:label="常见问题页" />
         <activity
+            android:name=".me.view.activity.CustomerServicePhoneActivity"
+            android:label="客服电话页" />
+        <activity
             android:name=".me.view.activity.ProblemFeedbackActivity"
             android:label="问题反馈页" />
+        <activity
+            android:name=".me.view.activity.ContactUsActivity"
+            android:label="联系我们页" />
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
         <service

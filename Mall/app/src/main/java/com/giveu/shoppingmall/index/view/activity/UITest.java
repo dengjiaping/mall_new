@@ -16,7 +16,7 @@ public class UITest {
         if (!DebugConfig.isDev) {
             return;
         }
-      //  startActivity(CashTypeActivity.class);
+     //   startActivity(ContactUsActivity.class);
     }
 
 

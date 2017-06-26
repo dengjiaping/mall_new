@@ -13,8 +13,6 @@
 
         <RelativeLayout
             android:id="@+id/rl1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:gravity="center"
             style="@style/fill_wrap">
 
@@ -39,8 +37,6 @@
         <RelativeLayout
             android:id="@+id/rl2"
             style="@style/fill_wrap"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:gravity="center"
             android:layout_marginLeft="10dp"
             android:visibility="gone">
@@ -66,8 +62,6 @@
         <RelativeLayout
             android:id="@+id/rl3"
             style="@style/fill_wrap"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:gravity="center"
             android:layout_marginLeft="10dp"
             android:visibility="gone">
