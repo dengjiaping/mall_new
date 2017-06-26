@@ -159,4 +159,5 @@ dependencies {
     compile project(':FingerprintIdentifyLib')
     compile project(':shareLibrary')
     compile files('libs/alipaySingle-20170510.jar')
+    compile project(':scaleview')
 }

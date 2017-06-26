@@ -188,6 +188,9 @@
         <activity
             android:name=".cash.view.activity.CaseRecordActivity"
             android:label="取现记录" />
+        <activity
+            android:name=".cash.view.activity.CashTypeActivity"
+            android:label="取现类型页" />
 
         <!--支付宝支付-->
         <activity
