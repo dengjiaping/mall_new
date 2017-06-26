@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
+import com.lidroid.xutils.view.annotation.ViewInject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,10 +60,9 @@ public class MainMeFragment extends BaseFragment {
     }
 
     @Override
-    protected boolean isTranslateStatusBar() {
+    protected boolean translateStatusBar() {
         return true;
     }
-
 
     @Override
     public void initWithDataDelay() {

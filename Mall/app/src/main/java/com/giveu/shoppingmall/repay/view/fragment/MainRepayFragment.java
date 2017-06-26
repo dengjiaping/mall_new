@@ -58,10 +58,6 @@ public class MainRepayFragment extends BaseFragment {
         return view;
     }
 
-    @Override
-    protected boolean isTranslateStatusBar() {
-        return true;
-    }
 
     @Override
     protected void setListener() {
@@ -160,6 +156,11 @@ public class MainRepayFragment extends BaseFragment {
                 showTotalDialog(3);
                 break;
         }
+    }
+
+    @Override
+    protected boolean translateStatusBar() {
+        return true;
     }
 
     static class ViewHolder {

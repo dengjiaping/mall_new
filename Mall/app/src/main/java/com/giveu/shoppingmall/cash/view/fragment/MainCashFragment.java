@@ -31,4 +31,11 @@ public class MainCashFragment extends BaseFragment {
     public void initWithDataDelay() {
 
     }
+
+    @Override
+    protected boolean translateStatusBar() {
+        return true;
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -74,7 +75,18 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     /**
      * @return true=使用状态栏一体化，false=不使用
      */
-    protected boolean isTranslateStatusBar() {
+    private boolean isTranslateStatusBar() {
+        if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 子类重写此方法来控制是否状态栏一体化
+     * @return
+     */
+    protected boolean translateStatusBar() {
         return false;
     }
 
