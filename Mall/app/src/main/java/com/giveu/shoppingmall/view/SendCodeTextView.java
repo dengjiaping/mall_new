@@ -3,8 +3,11 @@ package com.giveu.shoppingmall.view;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import com.giveu.shoppingmall.R;
 
 /**
  * Created by 508632 on 2017/1/11.
@@ -42,8 +45,10 @@ public class SendCodeTextView extends TextView {
             if (this != null) {
                 if (count == 0) {
                     stopCount("重发验证码");
+                    SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.color_00bbc0));
                 } else {
-                    SendCodeTextView.this.setText("重发(" + (--count) + ")");
+                    SendCodeTextView.this.setText("重新发送(" + (--count) + "s)");
+                    SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.grey_a5a5a5));
                     SendCodeTextView.this.setEnabled(false);
                     Message msg2 = Message.obtain();
                     handler.sendMessageDelayed(msg2, 1000);

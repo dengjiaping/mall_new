@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:gravity="center_vertical"
+            android:text="张超"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_16" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="18118746525"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_16" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:text="广东省深圳市福田区彩田一中地铁大厦17楼"
+        android:textColor="#686868"
+        android:textSize="@dimen/ts_13" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="26dp"
+        android:background="@color/default_layoutxml_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:button="@null"
+            android:drawableLeft="@drawable/selector_checkbox_round"
+            android:drawablePadding="8dp"
+            android:paddingLeft="@dimen/default_layout_screen_gap"
+            android:paddingRight="@dimen/default_layout_screen_gap"
+            android:text="设为默认"
+            android:textColor="#3E4246" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/ic_edit_address"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:paddingLeft="7.5dp"
+            android:paddingRight="7.5dp"
+            android:text="编辑" />
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="7.5dp"
+            android:drawableLeft="@drawable/ic_delete_address"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:paddingLeft="7.5dp"
+            android:paddingRight="7.5dp"
+            android:text="删除" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/default_layoutxml_bg" />
+</LinearLayout>

@@ -6,29 +6,27 @@ import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
-import com.giveu.shoppingmall.me.activity.ProblemFeedbackActivity;
+import com.giveu.shoppingmall.cash.activity.AddressManageActivity;
 
 /**
  * Created by 508632 on 2016/12/22.
  */
 
 public class UITest {
-	public static void test(Activity mContext){
-		if ( !DebugConfig.isDev ){
-			return;
-		}
-		startActivity(ProblemFeedbackActivity.class);
-	}
+    public static void test(Activity mContext) {
+        if (!DebugConfig.isDev) {
+            return;
+        }
+        startActivity(AddressManageActivity.class);
+    }
 
 
-	public static void startActivity(Class clzz){
-		Context appContext = BaseApplication.getInstance().getApplicationContext();
-		Intent intent = new Intent(appContext, clzz);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		appContext.startActivity(intent);
-	}
-
-
+    public static void startActivity(Class clzz) {
+        Context appContext = BaseApplication.getInstance().getApplicationContext();
+        Intent intent = new Intent(appContext, clzz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        appContext.startActivity(intent);
+    }
 
 
 }

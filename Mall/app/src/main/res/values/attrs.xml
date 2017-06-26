@@ -33,12 +33,16 @@
     </declare-styleable>
 
     <declare-styleable name="PswInputView">
-        <attr name="count" format="integer"/>
-        <attr name="border_color" format="color"/>
-        <attr name="dot_color" format="color"/>
+        <attr name="count" format="integer" />
+        <attr name="border_color" format="color" />
+        <attr name="dot_color" format="color" />
+        <attr name="pwd_style">
+            <flag name="rectangle" value="0x0" />
+            <flag name="line" value="0x1" />
+        </attr>
     </declare-styleable>
     <declare-styleable name="EditView">
-        <attr name="et_maxLength" format="integer"/>
+        <attr name="et_maxLength" format="integer" />
     </declare-styleable>
 
 </resources>

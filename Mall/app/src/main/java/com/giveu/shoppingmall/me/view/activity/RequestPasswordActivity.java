@@ -60,7 +60,7 @@ public class RequestPasswordActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 callDialog.dismiss();
-                CommonUtils.callPhone(mBaseContext,"40088888888");
+                CommonUtils.callPhone(mBaseContext, "40088888888");
             }
         });
     }
@@ -114,6 +114,14 @@ public class RequestPasswordActivity extends BaseActivity {
             case R.id.tv_unreceived:
                 callDialog.show();
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tvSendCode != null) {
+            tvSendCode.onDestory();
         }
     }
 

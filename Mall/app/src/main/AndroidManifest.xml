@@ -172,19 +172,34 @@
             android:name=".me.view.activity.CreditDetailActivity"
             android:label="分期明细" />
 
+        <activity
+            android:name=".cash.activity.AddAddressActivity"
+            android:label="添加地址" />
+
+        <activity
+            android:name=".cash.activity.AddressManageActivity"
+            android:label="收货地址管理" />
+
+        <!--取现-->
+        <activity
+            android:name=".cash.activity.VerifyActivity"
+            android:label="验证" />
+
+        <activity
+            android:name=".cash.activity.CaseRecordActivity"
+            android:label="取现记录" />
+
         <!--支付宝支付-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
+            android:screenOrientation="behind"></activity>
 
         <!--图片选择列出所有图片-->
         <activity
