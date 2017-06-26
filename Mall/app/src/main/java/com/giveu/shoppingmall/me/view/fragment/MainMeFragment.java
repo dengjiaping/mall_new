@@ -10,9 +10,9 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
+import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,6 +83,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_help:
+                ContactUsActivity.startIt(mBaseContext);
                 break;
 
             case R.id.ll_account_manage:
