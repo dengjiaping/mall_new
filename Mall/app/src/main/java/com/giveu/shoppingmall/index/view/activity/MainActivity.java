@@ -6,22 +6,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
+import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
-import com.giveu.shoppingmall.shopping.view.fragment.MainShoppingFragment;
 import com.giveu.shoppingmall.repay.view.fragment.MainRepayFragment;
+import com.giveu.shoppingmall.shopping.view.fragment.MainShoppingFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -33,6 +36,8 @@ import com.giveu.shoppingmall.widget.dialog.PatternLockSetTipDialog;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 
 import static java.lang.System.currentTimeMillis;
@@ -42,10 +47,26 @@ public class MainActivity extends BaseActivity {
     public MainCashFragment mainCashFragment;
     public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
+    @BindView(R.id.iv_recharge)
+    ImageView ivRecharge;
+    @BindView(R.id.tv_recharge)
+    TextView tvRecharge;
+    @BindView(R.id.iv_cash)
+    ImageView ivCash;
+    @BindView(R.id.tv_cash)
+    TextView tvCash;
+    @BindView(R.id.iv_repayment)
+    ImageView ivRepayment;
+    @BindView(R.id.tv_repayment)
+    TextView tvRepayment;
+    @BindView(R.id.iv_me)
+    ImageView ivMe;
+    @BindView(R.id.tv_me)
+    TextView tvMe;
 
     private FragmentManager manager;
     private int nowPosition;
-    private RadioGroup buttomBar;
+    //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
 
@@ -59,7 +80,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
+//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
         baseLayout.setTitleBarAndStatusBar(false, false);
         manager = getSupportFragmentManager();
         fragmentList = new ArrayList<>();
@@ -80,12 +101,83 @@ public class MainActivity extends BaseActivity {
 //            startActivity(intent);
         }
         UITest.test(mBaseContext);
+        selectIconAndTextColor(0);
     }
 
+    public void selectIconAndTextColor(int selectPos) {
+        switch (selectPos) {
+            case 0:
+                setImageView(ivRecharge, R.drawable.ic_recharge_select);
+                setTextColor(tvRecharge, R.color.color_00bbc0);
+                break;
+            case 1:
+                setImageView(ivCash, R.drawable.ic_cash_select);
+                setTextColor(tvCash, R.color.color_00bbc0);
+                break;
+            case 2:
+                setImageView(ivRepayment, R.drawable.ic_repayment_select);
+                setTextColor(tvRepayment, R.color.color_00bbc0);
+                break;
+            case 3:
+                setImageView(ivMe, R.drawable.ic_me_select);
+                setTextColor(tvMe, R.color.color_00bbc0);
+                break;
+        }
+    }
+
+    public void resetIconAndTextColor() {
+        setImageView(ivRecharge, R.drawable.ic_recharge);
+        setImageView(ivCash, R.drawable.ic_cash);
+        setImageView(ivRepayment, R.drawable.ic_repayment);
+        setImageView(ivMe, R.drawable.ic_me);
+        setTextColor(tvRecharge, R.color.color_4a4a4a);
+        setTextColor(tvCash, R.color.color_4a4a4a);
+        setTextColor(tvRepayment, R.color.color_4a4a4a);
+        setTextColor(tvMe, R.color.color_4a4a4a);
+    }
+
+    public void setTextColor(TextView textView, int colorId) {
+        textView.setTextColor(ContextCompat.getColor(mBaseContext, colorId));
+    }
+
+    public void setImageView(ImageView imageView, int imageId) {
+        imageView.setImageResource(imageId);
+    }
+
+    @OnClick({R.id.ll_recharge,R.id.ll_cash,R.id.ll_repayment,R.id.ll_me})
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        resetIconAndTextColor();
+        switch (view.getId()) {
+            case R.id.ll_recharge:
+                mViewPager.setCurrentItem(0, false);
+                selectIconAndTextColor(0);
+                break;
+
+            case R.id.ll_cash:
+                mViewPager.setCurrentItem(1, false);
+                selectIconAndTextColor(1);
+                break;
+
+            case R.id.ll_repayment:
+                mViewPager.setCurrentItem(2, false);
+                selectIconAndTextColor(2);
+                break;
+
+            case R.id.ll_me:
+                mViewPager.setCurrentItem(3, false);
+                selectIconAndTextColor(3);
+                break;
+
+            default:
+                break;
+        }
+    }
 
     @Override
     public void setListener() {
-        buttomBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+/*        buttomBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
                 switch (checkId) {
@@ -105,12 +197,19 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
             }
-        });
+        });*/
     }
 
     @Override
     public void setData() {
         doApkUpgrade();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
     private class MainActivityAdapter extends FragmentStatePagerAdapter {
