@@ -101,6 +101,7 @@ public class MainActivity extends BaseActivity {
 //            startActivity(intent);
         }
         UITest.test(mBaseContext);
+        resetIconAndTextColor();
         selectIconAndTextColor(0);
     }
 
@@ -130,10 +131,10 @@ public class MainActivity extends BaseActivity {
         setImageView(ivCash, R.drawable.ic_cash);
         setImageView(ivRepayment, R.drawable.ic_repayment);
         setImageView(ivMe, R.drawable.ic_me);
-        setTextColor(tvRecharge, R.color.color_4a4a4a);
-        setTextColor(tvCash, R.color.color_4a4a4a);
-        setTextColor(tvRepayment, R.color.color_4a4a4a);
-        setTextColor(tvMe, R.color.color_4a4a4a);
+        setTextColor(tvRecharge, R.color.color_9b9b9b);
+        setTextColor(tvCash, R.color.color_9b9b9b);
+        setTextColor(tvRepayment, R.color.color_9b9b9b);
+        setTextColor(tvMe, R.color.color_9b9b9b);
     }
 
     public void setTextColor(TextView textView, int colorId) {
