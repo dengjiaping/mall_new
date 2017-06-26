@@ -46,7 +46,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/ts_16" />
 
-                <com.giveu.shoppingmall.me.view.EditView
+                <com.giveu.shoppingmall.widget.EditView
                     android:id="@+id/et_account"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -91,7 +91,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/ts_16" />
 
-                <com.giveu.shoppingmall.me.view.EditView
+                <com.giveu.shoppingmall.widget.EditView
                     android:id="@+id/et_pwd"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -151,7 +151,7 @@
 
             </RelativeLayout>
 
-            <com.giveu.shoppingmall.view.ClickEnabledTextView
+            <com.giveu.shoppingmall.widget.ClickEnabledTextView
                 android:id="@+id/tv_login"
                 style="@style/click_enabled_bt"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"

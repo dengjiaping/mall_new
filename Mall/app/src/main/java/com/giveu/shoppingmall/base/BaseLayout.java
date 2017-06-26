@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.view.emptyview.CommonLoadingView;
-import com.giveu.shoppingmall.view.emptyview.EmptyType;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.emptyview.EmptyType;
 
 /**
  * Created by 508632 on 2016/12/8.

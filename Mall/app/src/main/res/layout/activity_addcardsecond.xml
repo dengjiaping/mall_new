@@ -23,7 +23,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="卡类别" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_bank_name"
             style="@style/et_addcardinfo_styles"
             android:hint="银行卡类别" />
@@ -44,7 +44,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="手机号" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_bank_phone"
             style="@style/et_addcardinfo_styles"
             android:hint="银行预留手机号码"
@@ -59,7 +59,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center_vertical">
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_send_code"
             android:layout_width="0dp"
             android:layout_height="49dp"
@@ -75,7 +75,7 @@
             android:inputType="number"
             android:maxLength="6" />
 
-        <com.giveu.shoppingmall.view.SendCodeTextView
+        <com.giveu.shoppingmall.widget.SendCodeTextView
             android:id="@+id/tv_send_code"
             android:layout_width="141dp"
             android:layout_height="49dp"
@@ -117,7 +117,7 @@
             android:textSize="@dimen/ts_11" />
     </LinearLayout>
 
-    <com.giveu.shoppingmall.view.ClickEnabledTextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_commit"
         style="@style/click_enabled_bt"
         android:layout_marginTop="42dp"

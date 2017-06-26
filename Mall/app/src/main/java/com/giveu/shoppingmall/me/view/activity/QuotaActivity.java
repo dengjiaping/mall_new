@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.me.presenter.QuotaPresenter;
+import com.giveu.shoppingmall.me.view.agent.IQuotaView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,7 +22,7 @@ import butterknife.OnClick;
  * Created by 513419 on 2017/6/22.
  */
 
-public class QuotaActivity extends BaseActivity {
+public class QuotaActivity extends BaseActivity implements IQuotaView{
     @BindView(R.id.tv_available_credit)
     TextView tvAvailableCredit;
     @BindView(R.id.tv_available_money)
@@ -37,6 +40,7 @@ public class QuotaActivity extends BaseActivity {
     private TextView tvLargeWithdrawals;
     private TextView tvHint;
     private TextView tvKnow;
+    private QuotaPresenter presenter;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, QuotaActivity.class);
@@ -48,6 +52,12 @@ public class QuotaActivity extends BaseActivity {
         setContentView(R.layout.activity_quota);
         baseLayout.setTitle("我的额度");
         baseLayout.setBlueWhiteStyle();
+        presenter = new QuotaPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override

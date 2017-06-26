@@ -123,7 +123,7 @@
             android:textSize="@dimen/ts_10" />
     </RadioGroup>
 
-    <com.giveu.shoppingmall.view.NoScrollViewPager
+    <com.giveu.shoppingmall.widget.NoScrollViewPager
         android:id="@+id/mainViewPager"
         android:layout_width="match_parent"
         android:layout_above="@id/buttomBar"

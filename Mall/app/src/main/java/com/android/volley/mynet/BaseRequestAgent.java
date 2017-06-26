@@ -17,7 +17,7 @@ import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.view.dialog.LoadingDialog;
+import com.giveu.shoppingmall.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 

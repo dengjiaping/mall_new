@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.index.activity.SplashActivity;
+import com.giveu.shoppingmall.index.view.activity.SplashActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LogUtil;

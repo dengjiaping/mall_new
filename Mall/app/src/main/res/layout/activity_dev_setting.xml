@@ -48,7 +48,7 @@
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_15" />
 
-            <com.giveu.shoppingmall.view.IosSwitch
+            <com.giveu.shoppingmall.widget.IosSwitch
                 android:id="@+id/switch_log"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

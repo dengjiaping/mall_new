@@ -25,7 +25,7 @@
             android:layout_height="1px"
             android:background="@color/line_bg" />
 
-        <com.giveu.shoppingmall.view.imageselect.ImagesSelectView
+        <com.giveu.shoppingmall.widget.imageselect.ImagesSelectView
             android:id="@+id/image_select"
             style="@style/fill_wrap"
             app:default_image="@drawable/ic_addpic_focused"
@@ -36,7 +36,7 @@
             android:padding="@dimen/default_layout_screen_gap"
             />
 
-        <com.giveu.shoppingmall.view.ClickEnabledTextView
+        <com.giveu.shoppingmall.widget.ClickEnabledTextView
             style="@style/click_enabled_bt"
             android:layout_marginTop="60dp"
             android:text="立即提交" />

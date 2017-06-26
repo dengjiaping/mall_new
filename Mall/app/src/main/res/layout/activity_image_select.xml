@@ -115,13 +115,13 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <com.giveu.shoppingmall.view.imageselect.FloderView
+    <com.giveu.shoppingmall.widget.imageselect.FloderView
         android:id="@+id/floderView"
         style="@style/fill_fill"
         android:visibility="invisible" />
 
 
-    <com.giveu.shoppingmall.view.emptyview.CommonLoadingView
+    <com.giveu.shoppingmall.widget.emptyview.CommonLoadingView
         android:id="@+id/loading"
         style="@style/fill_fill"
         android:layout_below="@+id/top_bar" />

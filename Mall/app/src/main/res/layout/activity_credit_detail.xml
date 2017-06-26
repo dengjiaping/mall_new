@@ -54,7 +54,7 @@
 
     </LinearLayout>
 
-    <com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshListView
+    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
         android:id="@+id/ptrlv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

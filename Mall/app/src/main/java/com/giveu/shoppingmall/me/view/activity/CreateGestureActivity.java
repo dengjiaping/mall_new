@@ -10,9 +10,9 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.view.lockpattern.LockPatternIndicator;
-import com.giveu.shoppingmall.view.lockpattern.LockPatternUtil;
-import com.giveu.shoppingmall.view.lockpattern.LockPatternView;
+import com.giveu.shoppingmall.widget.lockpattern.LockPatternIndicator;
+import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
+import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
 
 import java.util.ArrayList;
 import java.util.List;

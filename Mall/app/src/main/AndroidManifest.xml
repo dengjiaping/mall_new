@@ -82,7 +82,7 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity
-            android:name=".index.activity.SplashActivity"
+            android:name=".index.view.activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -95,7 +95,7 @@
 
 
         <activity
-            android:name=".index.activity.WelcomeActivity"
+            android:name=".index.view.activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="首次安装引导页"
             android:screenOrientation="portrait"
@@ -103,14 +103,14 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".index.activity.MainActivity"
+            android:name=".index.view.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--广告页-->
         <activity
-            android:name=".index.activity.AdSplashActivity"
+            android:name=".index.view.activity.AdSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -141,7 +141,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name=".me.activity.FingerPrintActivity"
+            android:name=".me.view.activity.FingerPrintActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="指纹解锁"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -173,20 +173,20 @@
             android:label="分期明细" />
 
         <activity
-            android:name=".cash.activity.AddAddressActivity"
+            android:name=".cash.view.activity.AddAddressActivity"
             android:label="添加地址" />
 
         <activity
-            android:name=".cash.activity.AddressManageActivity"
+            android:name=".cash.view.activity.AddressManageActivity"
             android:label="收货地址管理" />
 
         <!--取现-->
         <activity
-            android:name=".cash.activity.VerifyActivity"
+            android:name=".cash.view.activity.VerifyActivity"
             android:label="验证" />
 
         <activity
-            android:name=".cash.activity.CaseRecordActivity"
+            android:name=".cash.view.activity.CaseRecordActivity"
             android:label="取现记录" />
 
         <!--支付宝支付-->
@@ -203,16 +203,16 @@
 
         <!--图片选择列出所有图片-->
         <activity
-            android:name=".view.imageselect.ImageSelectActivity"
+            android:name=".widget.imageselect.ImageSelectActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <!--图片选择预览图片-->
         <activity
-            android:name=".view.imageselect.Act_ImagePreActivity"
+            android:name=".widget.imageselect.Act_ImagePreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.imageselect.Act_ImageSelectPreActivity"
+            android:name=".widget.imageselect.Act_ImageSelectPreActivity"
             android:label="选择图片控件图片预览"
             android:screenOrientation="portrait" />
 
@@ -255,31 +255,31 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name=".index.activity.WalletActivationFirstActivity"
+            android:name=".index.view.activity.WalletActivationFirstActivity"
             android:label="钱包激活首页" />
         <activity
-            android:name=".index.activity.WalletActivationSecondActivity"
+            android:name=".index.view.activity.WalletActivationSecondActivity"
             android:label="钱包激活二级页" />
         <activity
-            android:name=".index.activity.ActivationStatusActivity"
+            android:name=".index.view.activity.ActivationStatusActivity"
             android:label="钱包激活状态" />
         <activity
-            android:name=".index.activity.TransactionPwdActivity"
+            android:name=".index.view.activity.TransactionPwdActivity"
             android:label="钱包激活设置交易密码" />
         <activity
-            android:name=".me.activity.BankActivity"
+            android:name=".me.view.activity.BankActivity"
             android:label="支持银行卡列表" />
         <activity
-            android:name=".me.activity.AddBankCardFirstActivity"
+            android:name=".me.view.activity.AddBankCardFirstActivity"
             android:label="添加银行卡首页" />
         <activity
-            android:name=".me.activity.AddBankCardSecondActivity"
+            android:name=".me.view.activity.AddBankCardSecondActivity"
             android:label="添加银行卡二级页" />
         <activity
-            android:name=".me.activity.CommonProblemActivity"
+            android:name=".me.view.activity.CommonProblemActivity"
             android:label="常见问题页" />
         <activity
-            android:name=".me.activity.ProblemFeedbackActivity"
+            android:name=".me.view.activity.ProblemFeedbackActivity"
             android:label="问题反馈页" />
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->

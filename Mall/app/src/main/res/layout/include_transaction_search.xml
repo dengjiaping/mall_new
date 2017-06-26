@@ -17,7 +17,7 @@
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_15" />
 
-    <com.giveu.shoppingmall.view.flowlayout.TagFlowLayout
+    <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout
         android:id="@+id/tf_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_15" />
 
-    <com.giveu.shoppingmall.view.flowlayout.TagFlowLayout
+    <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout
         android:id="@+id/tf_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.me.view.EditView;
+import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.me.presenter.RegisterPresenter;
+import com.giveu.shoppingmall.me.view.agent.IRegisterView;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
-import com.giveu.shoppingmall.view.ClickEnabledTextView;
-import com.giveu.shoppingmall.view.SendCodeTextView;
+import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.SendCodeTextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,7 +27,7 @@ import butterknife.OnClick;
  * Created by 513419 on 2017/6/19.
  */
 
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity implements IRegisterView {
 
 
     @BindView(R.id.et_phone)
@@ -39,6 +42,7 @@ public class RegisterActivity extends BaseActivity {
     TextView tvAgreement;
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
+    private RegisterPresenter presenter;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, RegisterActivity.class);
@@ -50,6 +54,12 @@ public class RegisterActivity extends BaseActivity {
         setContentView(R.layout.activity_register);
         baseLayout.setTitle("注册");
         etPhone.checkFormat(11);
+        presenter = new RegisterPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
@@ -124,7 +134,7 @@ public class RegisterActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (tvSendCode != null) {
-          tvSendCode.onDestory();
+            tvSendCode.onDestory();
         }
     }
 }

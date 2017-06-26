@@ -62,7 +62,7 @@
 
     </RelativeLayout>
 
-    <com.giveu.shoppingmall.view.imageselect.FixedViewPager
+    <com.giveu.shoppingmall.widget.imageselect.FixedViewPager
         android:id="@+id/subViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:layout_centerInParent="true">
 
-        <com.giveu.shoppingmall.view.lockpattern.LockPatternView
+        <com.giveu.shoppingmall.widget.lockpattern.LockPatternView
             android:id="@+id/lockPatternView"
             android:layout_width="270dp"
             android:layout_height="270dp"

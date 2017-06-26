@@ -23,14 +23,14 @@
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_18" />
 
-    <com.giveu.shoppingmall.view.PassWordInputView
+    <com.giveu.shoppingmall.widget.PassWordInputView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:pwd_style="line"
         />
 
-    <com.giveu.shoppingmall.view.SendCodeTextView
+    <com.giveu.shoppingmall.widget.SendCodeTextView
         android:id="@+id/tv_send_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

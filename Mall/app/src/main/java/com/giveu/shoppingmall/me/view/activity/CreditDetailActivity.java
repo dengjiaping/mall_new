@@ -10,8 +10,8 @@ import android.widget.ListView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.adapter.CreditAdapter;
-import com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshBase;
-import com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshListView;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 

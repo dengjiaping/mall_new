@@ -7,7 +7,7 @@ import android.view.View;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.view.dialog.ConfirmDialog;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
 

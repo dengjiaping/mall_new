@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
-import com.giveu.shoppingmall.me.view.inter.ILoginView;
+import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.ToastUtils;
 

@@ -20,8 +20,8 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.view.dialog.ConfirmDialog;
-import com.giveu.shoppingmall.view.dialog.CustomDialogUtil;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
+import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 

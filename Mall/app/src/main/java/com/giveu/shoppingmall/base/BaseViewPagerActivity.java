@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.view.viewpager.PagerSlidingTabStrip;
+import com.giveu.shoppingmall.widget.viewpager.PagerSlidingTabStrip;
 
 import java.util.List;
 

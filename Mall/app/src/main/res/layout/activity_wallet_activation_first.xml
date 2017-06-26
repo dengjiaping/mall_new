@@ -23,7 +23,7 @@
             style="@style/activity_wallet_activation_iv_style"
             android:src="@drawable/ic_add" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_name"
             style="@style/activity_wallet_activation_et_style"
             android:hint="填写您的姓名"
@@ -45,7 +45,7 @@
             style="@style/activity_wallet_activation_iv_style"
             android:src="@drawable/ic_add" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_ident"
             style="@style/activity_wallet_activation_et_style"
             android:hint="填写您的身份证"
@@ -59,7 +59,7 @@
 
 
 
-    <com.giveu.shoppingmall.view.ClickEnabledTextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_next"
         style="@style/click_enabled_bt"
         android:layout_marginTop="86dp"

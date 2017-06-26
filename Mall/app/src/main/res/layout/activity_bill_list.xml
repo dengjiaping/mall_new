@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <com.giveu.shoppingmall.view.NoScrollViewPager
+    <com.giveu.shoppingmall.widget.NoScrollViewPager
         android:id="@+id/vp_bill"
         android:layout_width="match_parent"
         android:layout_height="0dp"

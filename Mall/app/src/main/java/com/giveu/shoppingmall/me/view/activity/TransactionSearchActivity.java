@@ -13,14 +13,17 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.adapter.TransactionAdapter;
+import com.giveu.shoppingmall.me.presenter.TransactionPresenter;
+import com.giveu.shoppingmall.me.view.agent.ITransactionView;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.view.dialog.DateSelectDialog;
-import com.giveu.shoppingmall.view.flowlayout.FlowLayout;
-import com.giveu.shoppingmall.view.flowlayout.TagAdapter;
-import com.giveu.shoppingmall.view.flowlayout.TagFlowLayout;
-import com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshBase;
-import com.giveu.shoppingmall.view.pulltorefresh.PullToRefreshListView;
+import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
+import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
+import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
+import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 
@@ -31,7 +34,7 @@ import butterknife.OnClick;
  * Created by 513419 on 2017/6/23.
  */
 
-public class TransactionSearchActivity extends BaseActivity {
+public class TransactionSearchActivity extends BaseActivity implements ITransactionView {
     @BindView(R.id.tf_category)
     TagFlowLayout tfCategory;
     @BindView(R.id.tf_state)
@@ -62,6 +65,7 @@ public class TransactionSearchActivity extends BaseActivity {
     private final int pageSize = 10;
     private DateSelectDialog dateSelectDialog;
     private boolean currentTypeIsMonth = true;//区分是按月选择还是按日选择
+    private TransactionPresenter presenter;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, TransactionSearchActivity.class);
@@ -127,6 +131,12 @@ public class TransactionSearchActivity extends BaseActivity {
         llSearch.setVisibility(View.GONE);
         dateSelectDialog = new DateSelectDialog(mBaseContext);
         tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth());
+        presenter = new TransactionPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     private void initAnimation() {

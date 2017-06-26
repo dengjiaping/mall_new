@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.view.dialog.CustomListDialog;
+import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
 
 
 /**

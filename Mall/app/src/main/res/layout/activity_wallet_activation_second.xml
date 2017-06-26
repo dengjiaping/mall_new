@@ -23,7 +23,7 @@
             style="@style/activity_wallet_activation_iv_style"
             android:src="@drawable/ic_add" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_bank_no"
             style="@style/activity_wallet_activation_et_style"
             android:hint="银行卡号"
@@ -46,7 +46,7 @@
             style="@style/activity_wallet_activation_iv_style"
             android:src="@drawable/ic_add" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_phone"
             style="@style/activity_wallet_activation_et_style"
             android:hint="手机号"
@@ -69,14 +69,14 @@
             style="@style/activity_wallet_activation_iv_style"
             android:src="@drawable/ic_add" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_code"
             style="@style/activity_wallet_activation_et_style"
             android:hint="验证码"
             android:inputType="number"
             android:maxLength="6" />
 
-        <com.giveu.shoppingmall.view.SendCodeTextView
+        <com.giveu.shoppingmall.widget.SendCodeTextView
             android:id="@+id/tv_send_code"
             android:layout_width="100dp"
             android:layout_height="match_parent"
@@ -114,7 +114,7 @@
             android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
-    <com.giveu.shoppingmall.view.ClickEnabledTextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_activation"
         style="@style/click_enabled_bt"
         android:layout_marginTop="35dp"

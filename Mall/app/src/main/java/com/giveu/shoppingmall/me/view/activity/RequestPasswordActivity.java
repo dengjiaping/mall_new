@@ -11,13 +11,16 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.me.view.EditView;
+import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
+import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
-import com.giveu.shoppingmall.view.ClickEnabledTextView;
-import com.giveu.shoppingmall.view.SendCodeTextView;
+import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.SendCodeTextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -27,7 +30,7 @@ import butterknife.OnClick;
  * 找回登录密码
  */
 
-public class RequestPasswordActivity extends BaseActivity {
+public class RequestPasswordActivity extends BaseActivity implements IRequestPwdView {
 
     @BindView(R.id.et_phone)
     EditView etPhone;
@@ -39,6 +42,7 @@ public class RequestPasswordActivity extends BaseActivity {
     SendCodeTextView tvSendCode;
     private CustomDialog callDialog;
     private TextView tvDial;
+    private RequestPwdPresenter presenter;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, RequestPasswordActivity.class);
@@ -51,6 +55,7 @@ public class RequestPasswordActivity extends BaseActivity {
         baseLayout.setTitle("找回登录密码");
         initCallDialog();
         etPhone.checkFormat(11);
+        presenter = new RequestPwdPresenter(this);
     }
 
     private void initCallDialog() {
@@ -63,6 +68,11 @@ public class RequestPasswordActivity extends BaseActivity {
                 CommonUtils.callPhone(mBaseContext, "40088888888");
             }
         });
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override

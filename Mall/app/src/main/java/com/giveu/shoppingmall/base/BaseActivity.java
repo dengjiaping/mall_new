@@ -12,12 +12,11 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.index.activity.AdSplashActivity;
-import com.giveu.shoppingmall.index.activity.MainActivity;
-import com.giveu.shoppingmall.index.activity.SplashActivity;
-import com.giveu.shoppingmall.index.activity.WelcomeActivity;
-import com.giveu.shoppingmall.me.activity.FingerPrintActivity;
+import com.giveu.shoppingmall.index.view.activity.AdSplashActivity;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.index.view.activity.SplashActivity;
+import com.giveu.shoppingmall.index.view.activity.WelcomeActivity;
+import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.GestureLoginActivity;
 import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
@@ -27,8 +26,8 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.SystemBarHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.view.dialog.LoadingDialog;
-import com.giveu.shoppingmall.view.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.dialog.LoadingDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Arrays;
@@ -96,7 +95,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     /**
      * 点击错误页面的刷新按钮时会调用这个方法
-     * {@link CommonLoadingView#setOnClickReloadListener(com.giveu.shoppingmall.view.emptyview.CommonLoadingView.OnClickReloadListener)}
+     * {@link CommonLoadingView#setOnClickReloadListener(com.giveu.shoppingmall.widget.emptyview.CommonLoadingView.OnClickReloadListener)}
      */
     public void onReload() {
 

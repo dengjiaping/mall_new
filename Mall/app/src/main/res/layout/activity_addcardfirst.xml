@@ -23,7 +23,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="持卡人" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_username"
             style="@style/et_addcardinfo_styles"
             android:maxLength="18"
@@ -45,7 +45,7 @@
             style="@style/tv_addcardinfo_styles"
             android:text="卡号" />
 
-        <com.giveu.shoppingmall.me.view.EditView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_banknumber"
             style="@style/et_addcardinfo_styles"
             android:inputType="number"
@@ -63,7 +63,7 @@
         android:textColor="@color/title_color"
         android:textSize="@dimen/ts_12" />
 
-    <com.giveu.shoppingmall.view.ClickEnabledTextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_next"
         style="@style/click_enabled_bt"
         android:layout_marginTop="39dp"

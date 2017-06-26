@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.me.dialog.RepaymentDetailDialog;
-import com.giveu.shoppingmall.me.dialog.RepaymentDialog;
-import com.giveu.shoppingmall.me.fragment.BillFragment;
-import com.giveu.shoppingmall.view.NoScrollViewPager;
+import com.giveu.shoppingmall.me.view.dialog.RepaymentDetailDialog;
+import com.giveu.shoppingmall.me.view.dialog.RepaymentDialog;
+import com.giveu.shoppingmall.me.view.fragment.BillFragment;
+import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
 
