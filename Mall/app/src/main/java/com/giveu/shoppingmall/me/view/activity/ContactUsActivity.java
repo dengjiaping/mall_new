@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -26,6 +30,9 @@ public class ContactUsActivity extends BaseActivity {
     LinearLayout llCommonProblem;
     @BindView(R.id.ll_problem_feedback)
     LinearLayout llProblemFeedback;
+    @BindView(R.id.tv_version_name)
+    TextView tvVersionName;
+
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, ContactUsActivity.class);
@@ -40,7 +47,10 @@ public class ContactUsActivity extends BaseActivity {
 
     @Override
     public void setData() {
-
+        String version_name = CommonUtils.getVersionName();
+        if (StringUtils.isNotNull(version_name)) {
+            tvVersionName.setText(version_name);
+        }
     }
 
     @OnClick({R.id.ll_call_phone, R.id.ll_common_problem, R.id.ll_problem_feedback})
@@ -61,5 +71,12 @@ public class ContactUsActivity extends BaseActivity {
                 ProblemFeedbackActivity.startIt(mBaseContext);
                 break;
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

@@ -57,10 +57,4 @@ public class MainCashFragment extends BaseFragment {
         return true;
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

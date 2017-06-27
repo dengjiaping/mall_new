@@ -18,6 +18,7 @@
             android:src="@drawable/ic_contact_top" />
 
         <TextView
+            android:id="@+id/tv_version_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -44,13 +45,13 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:padding="12dp"
+            android:padding="14dp"
             android:src="@drawable/ic_contact_phone" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:text="拨打热线电话"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_14" />
@@ -72,13 +73,13 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:padding="12dp"
+            android:padding="14dp"
             android:src="@drawable/ic_common_problem" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:text="常见问题"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_14" />
@@ -100,13 +101,13 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:padding="12dp"
+            android:padding="14dp"
             android:src="@drawable/ic_feedback" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:text="异常问题反馈"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_14" />

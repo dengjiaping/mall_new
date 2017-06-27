@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="57dp"
+            android:layout_margin="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_default_head" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="刘明星"
+                android:textColor="@color/color_88000000"
+                android:textSize="@dimen/ts_18" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="18276328123"
+                android:textColor="@color/color_88000000"
+                android:textSize="@dimen/ts_14" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_delivery_address"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_marginTop="11dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <ImageView
+            style="@style/iv_common_problem_style"
+            android:src="@drawable/ic_delivery_address" />
+
+        <TextView
+            style="@style/tv_common_problem_style"
+            android:text="收货地址管理" />
+
+        <ImageView style="@style/arrow_common_problem_style" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_bank_card"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <ImageView
+            style="@style/iv_common_problem_style"
+            android:src="@drawable/ic_bank_card" />
+
+        <TextView
+            style="@style/tv_common_problem_style"
+            android:text="我的银行卡" />
+
+        <ImageView style="@style/arrow_common_problem_style" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_security_center"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <ImageView
+            style="@style/iv_common_problem_style"
+            android:src="@drawable/ic_security_center" />
+
+        <TextView
+            style="@style/tv_common_problem_style"
+            android:text="安全中心" />
+
+        <ImageView style="@style/arrow_common_problem_style" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_version_update"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <ImageView
+            style="@style/iv_common_problem_style"
+            android:src="@drawable/ic_version_update" />
+
+        <TextView
+            style="@style/tv_common_problem_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="版本更新" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_update_flag" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            style="@style/arrow_common_problem_style" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_finish"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="130dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="退出登录"
+        android:textColor="@color/color_282828"
+        android:textSize="@dimen/ts_18" />
+</LinearLayout>

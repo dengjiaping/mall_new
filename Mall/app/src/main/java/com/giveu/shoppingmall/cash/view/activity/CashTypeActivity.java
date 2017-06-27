@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.index.view.activity.WalletActivationSecondActivity;
+import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 取现类型页
@@ -35,6 +37,8 @@ public class CashTypeActivity extends BaseActivity {
     EditText etInputAmount;
     @BindView(R.id.gv_staging_type)
     NoScrollGridView gvStagingType;
+    @BindView(R.id.rl_add_bank_card)
+    RelativeLayout rlAddBankCard;
     private LvCommonAdapter<String> stagingTypeAdapter;
     int amount;
 
@@ -111,10 +115,10 @@ public class CashTypeActivity extends BaseActivity {
         gvStagingType.setAdapter(stagingTypeAdapter);
     }
 
+    @OnClick(R.id.rl_add_bank_card)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    public void onClick(View view) {
+        super.onClick(view);
+        AddBankCardFirstActivity.startIt(mBaseContext);
     }
 }

@@ -447,4 +447,26 @@
         <item name="android:textColor">@color/color_282828</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+    <style name="iv_common_problem_style">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginLeft">@dimen/default_layout_screen_gap</item>
+    </style>
+
+    <style name="tv_common_problem_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">13dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/color_4a4a4a</item>
+        <item name="android:textSize">@dimen/ts_15</item>
+    </style>
+
+    <style name="arrow_common_problem_style">
+        <item name="android:layout_width">13dp</item>
+        <item name="android:layout_height">13dp</item>
+        <item name="android:layout_marginRight">@dimen/default_layout_screen_gap</item>
+        <item name="android:src">@drawable/ic_right</item>
+    </style>
 </resources>
