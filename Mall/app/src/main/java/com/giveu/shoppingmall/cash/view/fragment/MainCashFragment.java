@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 
 import butterknife.BindView;
@@ -30,9 +31,14 @@ public class MainCashFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_cash, null);
         baseLayout.setTitle("我要取现");
-        baseLayout.setRightText("取现记录");
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.hideBack();
+        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CaseRecordActivity.startIt(mBaseContext);
+            }
+        });
         ButterKnife.bind(this, view);
         return view;
     }
