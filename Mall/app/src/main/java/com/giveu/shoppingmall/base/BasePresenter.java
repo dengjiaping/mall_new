@@ -15,6 +15,8 @@
  */
 package com.giveu.shoppingmall.base;
 
+import java.util.Set;
+
 public abstract class BasePresenter<T extends IView> {
     private T view;
 
@@ -42,6 +44,42 @@ public abstract class BasePresenter<T extends IView> {
         //防止强引用activity的实例造成内存泄漏
         view = null;
     }
+
+
+    public interface LifeStyle {
+        String onCreate = "onCreate";
+        String onStart = "onStart";
+        String onResume = "onResume";
+        String onStop = "onStop";
+        String onPause = "onPause";
+        String onDestroy = "onDestroy";
+    }
+
+    public static void notifyIPresenter(String methodName, BasePresenter[] mAllPresenters) {
+        for (BasePresenter presenter : mAllPresenters) {
+            if (presenter != null) {
+                switch (methodName) {
+                    case LifeStyle.onStart:
+                        presenter.onStart();
+                        break;
+                    case LifeStyle.onResume:
+                        presenter.onResume();
+                        break;
+                    case LifeStyle.onStop:
+                        presenter.onStop();
+                        break;
+                    case LifeStyle.onPause:
+                        presenter.onPause();
+                        break;
+                    case LifeStyle.onDestroy:
+                        presenter.onDestroy();
+                        break;
+                }
+            }
+        }
+    }
+
+
 
 
 }

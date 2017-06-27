@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends FragmentActivity implements OnClickListener, IView {
     public BaseLayout baseLayout;
     public BaseActivity mBaseContext;
-    private Set<BasePresenter> mAllPresenters = new HashSet<>(1);
+    private BasePresenter[] mAllPresenters = new BasePresenter[]{};
     protected Bundle mSavedInstanceState;
 
     /**
@@ -54,11 +54,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     private void addPresenters() {
         BasePresenter[] presenters = initPresenters();
         if (presenters != null) {
-            mAllPresenters.clear();
-
-            for (int i = 0; i < presenters.length; i++) {
-                mAllPresenters.add(presenters[i]);
-            }
+            mAllPresenters = presenters;
         }
     }
 
@@ -66,7 +62,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        try {
             mSavedInstanceState = savedInstanceState;
             mBaseContext = this;
             BaseApplication.getInstance().addActivity(this);
@@ -79,7 +75,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             }
 
             initView(mSavedInstanceState);
-        try {
             addPresenters();
             setListener();
             setData();
@@ -229,46 +224,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     @Override
     protected void onResume() {
         MobclickAgent.onResume(this);
-        notifyIPresenter(LifeStyle.onResume);
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onResume, mAllPresenters);
         super.onResume();
-    }
-
-    interface LifeStyle {
-        String onCreate = "onCreate";
-        String onStart = "onStart";
-        String onResume = "onResume";
-        String onStop = "onStop";
-        String onPause = "onPause";
-        String onDestroy = "onDestroy";
-    }
-
-    private void notifyIPresenter(String methodName) {
-        for (BasePresenter presenter : mAllPresenters) {
-            if (presenter != null) {
-                switch (methodName) {
-                    case LifeStyle.onStart:
-                        presenter.onStart();
-                        break;
-                    case LifeStyle.onResume:
-                        presenter.onResume();
-                        break;
-                    case LifeStyle.onStop:
-                        presenter.onStop();
-                        break;
-                    case LifeStyle.onPause:
-                        presenter.onPause();
-                        break;
-                    case LifeStyle.onDestroy:
-                        presenter.onDestroy();
-                        break;
-                }
-            }
-        }
     }
 
     @Override
     protected void onStart() {
-        notifyIPresenter(LifeStyle.onStart);
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onStart, mAllPresenters);
         super.onStart();
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
@@ -290,7 +252,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     @Override
     protected void onPause() {
         MobclickAgent.onPause(this);
-        notifyIPresenter(LifeStyle.onPause);
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onPause, mAllPresenters);
         super.onPause();
 
     }
@@ -358,7 +320,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     protected void onStop() {
-        notifyIPresenter(LifeStyle.onStop);
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onStop, mAllPresenters);
         super.onStop();
 
         BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
@@ -367,7 +329,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     @Override
     protected void onDestroy() {
         BaseApplication.getInstance().removeActivity(this);
-        notifyIPresenter(LifeStyle.onDestroy);
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onDestroy, mAllPresenters);
         //关闭软键盘
         CommonUtils.closeSoftKeyBoard(this);
         super.onDestroy();
