@@ -31,4 +31,10 @@ public class MainShoppingFragment extends BaseFragment {
     public void initWithDataDelay() {
 
     }
+
+    @Override
+    protected boolean translateStatusBar() {
+        return true;
+    }
+
 }

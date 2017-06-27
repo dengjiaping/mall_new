@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.me.view.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,6 +30,11 @@ public class CommonProblemActivity extends BaseActivity {
     LvCommonAdapter<CommontProblemResponse.ListBean> commonAdapter;
     @BindView(R.id.lv_problem_list)
     ListView lvProblemList;
+
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, CommonProblemActivity.class);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -84,18 +91,18 @@ public class CommonProblemActivity extends BaseActivity {
                 LinearLayout ll_answer = viewHolder.getView(R.id.ll_answer);
                 ImageView iv_arrow = viewHolder.getView(R.id.iv_arrow);
 
-                if(item.problemFlag.equals("1")){
+                if (item.problemFlag.equals("1")) {
                     tv_title.setText("1.账单问题");
 
-                }else{
+                } else {
                     tv_title.setVisibility(View.VISIBLE);
                     tv_title.setText("2.还款问题");
                 }
-              if(position == 0 || position == 4){
-                  tv_title.setVisibility(View.VISIBLE);
-              }else{
-                  tv_title.setVisibility(View.GONE);
-              }
+                if (position == 0 || position == 4) {
+                    tv_title.setVisibility(View.VISIBLE);
+                } else {
+                    tv_title.setVisibility(View.GONE);
+                }
 
                 if (!item.clickFlag) {
                     ll_answer.setVisibility(View.GONE);

@@ -1,8 +1,10 @@
 package com.giveu.shoppingmall.me.view.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +14,8 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.imageselect.ImageItem;
 import com.giveu.shoppingmall.widget.imageselect.ImagesSelectView;
 
@@ -20,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 问题反馈页面
@@ -36,6 +39,13 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
     ImagesSelectView imageSelect;
     @BindView(R.id.tv_phone)
     TextView tvPhone;
+    @BindView(R.id.tv_commit)
+    ClickEnabledTextView tvCommit;
+
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, ProblemFeedbackActivity.class);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -64,6 +74,27 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
     }
 
     @Override
+    public void setListener() {
+        super.setListener();
+        etInput.addTextChangedListener(new TextChangeListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                commitButtonCanClick(false);
+            }
+        });
+        tvCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(tvCommit.isClickEnabled()){
+
+                }else {
+                    commitButtonCanClick(true);
+                }
+            }
+        });
+    }
+
+    @Override
     public void setData() {
 
     }
@@ -71,17 +102,23 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
     /**
      * 提交按钮是否可以点击的检测
      */
-    public void commitButtonCanClick(){
+    public void commitButtonCanClick(boolean showToast) {
+        tvCommit.setClickEnabled(false);
         String feedbackContent = StringUtils.getTextFromView(etInput);
         if (StringUtils.isNull(feedbackContent)) {
-            ToastUtils.showShortToast("请填写反馈内容");
+            if (showToast) {
+                ToastUtils.showShortToast("请填写反馈内容");
+            }
             return;
         }
         List<ImageItem> imageItems = imageSelect.getSelectImages();
         if (CommonUtils.isNullOrEmpty(imageItems)) {
-            ToastUtils.showShortToast("请添加截图");
+            if (showToast) {
+                ToastUtils.showShortToast("请添加截图");
+            }
             return;
         }
+        tvCommit.setClickEnabled(true);
         File file = null;
         List<String> imagePathList = new ArrayList<>();
         if (CommonUtils.isNotNullOrEmpty(imageItems)) {
@@ -107,13 +144,8 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (imageSelect != null) {
             imageSelect.doResult(requestCode, resultCode, data);
+            commitButtonCanClick(false);
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

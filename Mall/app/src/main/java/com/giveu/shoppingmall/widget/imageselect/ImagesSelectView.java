@@ -168,10 +168,10 @@ public class ImagesSelectView extends LinearLayout {
             imageView.setLayoutParams(params);
 
             RelativeLayout rl = (RelativeLayout) findViewById(getResId("rl" + (x + 1)));
-//            LayoutParams paramsRl = (LayoutParams) rl.getLayoutParams();
-//            paramsRl.width = (DensityUtils.getWidth() - DensityUtils.dip2px(25) * 4) / 3;
-//            paramsRl.height = DensityUtils.dip2px(75);
-//            rl.setLayoutParams(paramsRl);
+            LayoutParams paramsRl = (LayoutParams) rl.getLayoutParams();
+            paramsRl.width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 4) / 3;
+            paramsRl.height = DensityUtils.dip2px(75);
+            rl.setLayoutParams(paramsRl);
 
             /**
              * 删除图片

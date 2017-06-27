@@ -5,8 +5,8 @@ def releaseTime() {
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+    buildToolsVersion project.BUILD_TOOLS_VERSION
 
 
     useLibrary 'org.apache.http.legacy'
@@ -23,8 +23,8 @@ android {
 
     defaultConfig {
         applicationId project.APPLICATION_ID
-        minSdkVersion 15
-        targetSdkVersion 22
+        minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
         versionCode Integer.parseInt(project.VERSION_CODE)
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -132,7 +132,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project.supportV7
+    compile project.SUPPORT_V7
     testCompile 'junit:junit:4.12'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
@@ -159,4 +159,5 @@ dependencies {
     compile project(':FingerprintIdentifyLib')
     compile project(':shareLibrary')
     compile files('libs/alipaySingle-20170510.jar')
+    compile project(':scaleview')
 }

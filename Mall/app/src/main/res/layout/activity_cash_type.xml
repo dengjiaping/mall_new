@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:background="@color/title_color"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="33dp"
+                android:text="可用额度（元）"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3000.00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_34" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_layout_screen_gap"
+            android:text="到账金额"
+            android:textSize="@dimen/ts_11" />
+
+        <EditText
+            android:id="@+id/et_input_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@null"
+            android:inputType="number"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/ts_34"
+            tools:text="50" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_bg" />
+
+        <com.lichfaker.scaleview.HorizontalScaleScrollView
+            android:id="@+id/horizontalScale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lf_scale_view_height="8dip"
+            app:lf_scale_view_margin="5dip" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/line_bg" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginTop="20dp"
+                android:text="选择分期数"
+                android:textColor="@color/color_4a4a4a" />
+
+            <com.giveu.shoppingmall.widget.NoScrollGridView
+                android:id="@+id/gv_staging_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:gravity="center"
+                android:numColumns="4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginTop="5dp"
+                android:text="费率0.55元/天"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/ts_11" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/line_bg" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/ic_add"
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
+                android:text="添加银行卡" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/default_layout_screen_gap"
+                android:src="@drawable/ic_right" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginRight="10dp"
+                android:button="@drawable/selector_checkbox_register"
+                android:checked="true"
+                android:text=""
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_12" />
+
+            <TextView
+                android:id="@+id/checkbox_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:text="已阅读并同意《************》"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/ts_11" />
+        </LinearLayout>
+        <!--<com.lichfaker.scaleview.PointerView-->
+        <!--android:id="@+id/pv"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
+    </LinearLayout>
+
+</ScrollView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/title_color"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/ts_18"
+        android:text="确定"/>
+  </RelativeLayout>
