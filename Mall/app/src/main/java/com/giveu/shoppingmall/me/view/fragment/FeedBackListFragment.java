@@ -91,18 +91,21 @@ public class FeedBackListFragment extends BaseFragment {
 
     @Override
     public void initWithDataDelay() {
-        String state = "0";//state	记录：处理中/已处理	string	0处理中 1已处理
-        if (isSecondFrg) {
-            state = "1";
-        }
-        FeedBackListResponse response = new FeedBackListResponse();
+//        String state = "0";//state	记录：处理中/已处理	string	0处理中 1已处理
+//        if (isSecondFrg) {
+//            state = "1";
+//        }
+        FeedBackListResponse response1 = new FeedBackListResponse();
+        FeedBackListResponse response2 = new FeedBackListResponse();
+        FeedBackListResponse response3 = new FeedBackListResponse();
+        FeedBackListResponse response4= new FeedBackListResponse();
+        FeedBackListResponse response5= new FeedBackListResponse();
         List<FeedBackListResponse> data = new ArrayList();
-        data.add(response);
-        data.add(response);
-        data.add(response);
-        data.add(response);
-        data.add(response);
-        data.add(response);
+        data.add(response1);
+        data.add(response2);
+        data.add(response3);
+        data.add(response4);
+        data.add(response5);
         List<String> imgList = new ArrayList();
         imgList.add("");
         imgList.add("");

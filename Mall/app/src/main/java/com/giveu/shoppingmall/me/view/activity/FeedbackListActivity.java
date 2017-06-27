@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
@@ -28,10 +30,34 @@ public class FeedbackListActivity extends BaseActivity {
     ViewPager viewpager;
     FeedBackListFragment fragment1 = null;
     FeedBackListFragment fragment2 = null;
+    @BindView(R.id.rb_in_processed)
+    RadioButton rbInProcessed;
+    @BindView(R.id.rb_already_processed)
+    RadioButton rbAlreadyProcessed;
+    @BindView(R.id.rg_feedback)
+    RadioGroup rgFeedback;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, FeedbackListActivity.class);
         mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void setListener() {
+        super.setListener();
+        rgFeedback.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.rb_in_processed:
+                        //处理中
+                        break;
+                    case R.id.rb_already_processed:
+                        //已处理
+                        break;
+                }
+            }
+        });
     }
 
     @Override

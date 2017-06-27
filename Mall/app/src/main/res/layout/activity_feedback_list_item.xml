@@ -3,18 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:descendantFocusability="blocksDescendants"
-    android:paddingTop="10dp">
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:id="@+id/ll_no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap">
 
         <TextView
             android:id="@+id/tv_content_no"
@@ -36,7 +35,6 @@
             android:id="@+id/tv_date_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
             android:text="2016-07-07   10：30"
             android:textColor="@color/color_88343434"
             android:textSize="@dimen/ts_14" />
@@ -61,7 +59,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap">
+
+
 
             <TextView
                 android:layout_width="0dp"
@@ -69,23 +71,19 @@
                 android:layout_weight="1"
                 android:text="处理结果"
                 android:textColor="@color/color_ff5900"
-                android:textSize="@dimen/ts_14" />
-
-
+                android:textSize="@dimen/ts_14"
+                android:id="@+id/textView" />
 
             <ImageView
                 android:id="@+id/iv_apply_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_right"
-                android:layout_marginRight="5dp"
-                android:visibility="gone"/>
-
+                android:visibility="gone" />
             <ImageView
                 android:id="@+id/iv_apply_down"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
                 android:src="@drawable/ic_down" />
         </LinearLayout>
 
@@ -95,18 +93,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:text="您好！好坏我只是想记录下它···每一幅画我都会按我的想法把它记录下来···不管画中有错还是有好坏我只是想记录下它···每一幅画我都会按我的想法把它记录下来···不管画中有错还是有好·..."
             android:textColor="@color/color_ff5900"
             android:textSize="@dimen/ts_14" />
+
         <TextView
             android:id="@+id/tv_time_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:text="2016-07-07   10：30"
             android:textColor="@color/color_ff5900"
             android:textSize="@dimen/ts_14" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="@dimen/default_layout_screen_gap"
+        android:background="@color/line_bg" />
 </LinearLayout>

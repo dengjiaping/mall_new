@@ -10,7 +10,7 @@
         android:id="@+id/tv_hint_text"
         android:layout_width="wrap_content"
         android:layout_height="125dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:padding="20dp"
         android:text="  尊敬的客户，您的手机充值已消费499.00元，您已超出每月500.00元充值上限，请下个月进行充值，谢谢！"
         android:textColor="@color/color_282828"

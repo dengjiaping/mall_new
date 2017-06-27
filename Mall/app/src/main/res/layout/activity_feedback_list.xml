@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RadioGroup
+        android:id="@+id/rg_feedback"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:layout_gravity="center"
@@ -13,16 +14,19 @@
         android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/rb_in_processed"
             android:layout_width="76dp"
             android:layout_height="29dp"
             android:background="@drawable/selector_text_feedback_left"
             android:button="@null"
             android:gravity="center"
+            android:checked="true"
             android:text="处理中"
             android:textColor="@drawable/selector_text_black_white"
             android:textSize="@dimen/ts_13" />
 
         <RadioButton
+            android:id="@+id/rb_already_processed"
             android:layout_width="76dp"
             android:layout_height="29dp"
             android:background="@drawable/selector_text_feedback_right"
