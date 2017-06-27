@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.cash.view.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.widget.EditText;
@@ -9,6 +11,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.index.view.activity.WalletActivationSecondActivity;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
@@ -34,6 +37,11 @@ public class CashTypeActivity extends BaseActivity {
     NoScrollGridView gvStagingType;
     private LvCommonAdapter<String> stagingTypeAdapter;
     int amount;
+
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, CashTypeActivity.class);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
