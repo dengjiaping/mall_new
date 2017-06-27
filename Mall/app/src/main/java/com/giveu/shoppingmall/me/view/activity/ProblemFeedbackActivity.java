@@ -86,7 +86,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
             @Override
             public void onClick(View v) {
                 if(tvCommit.isClickEnabled()){
-
+                    FeedbackListActivity.startIt(mBaseContext);
                 }else {
                     commitButtonCanClick(true);
                 }

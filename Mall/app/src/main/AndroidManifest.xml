@@ -282,6 +282,9 @@
             android:name=".me.view.activity.CommonProblemActivity"
             android:label="常见问题页" />
         <activity
+            android:name=".me.view.activity.FeedbackListActivity"
+            android:label="处理记录页" />
+        <activity
             android:name=".me.view.activity.CustomerServicePhoneActivity"
             android:label="客服电话页" />
         <activity
