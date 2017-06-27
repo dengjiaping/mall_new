@@ -24,7 +24,7 @@ import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.repay.view.fragment.MainRepayFragment;
-import com.giveu.shoppingmall.shopping.view.fragment.MainShoppingFragment;
+import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -43,7 +43,7 @@ import cn.jpush.android.api.JPushInterface;
 import static java.lang.System.currentTimeMillis;
 
 public class MainActivity extends BaseActivity {
-    public MainShoppingFragment mainShoppingFragment;
+    public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
     public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
@@ -84,11 +84,11 @@ public class MainActivity extends BaseActivity {
         baseLayout.setTitleBarAndStatusBar(false, false);
         manager = getSupportFragmentManager();
         fragmentList = new ArrayList<>();
-        mainShoppingFragment = new MainShoppingFragment();
+        rechargeFragment = new RechargeFragment();
         mainCashFragment = new MainCashFragment();
         mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
-        fragmentList.add(mainShoppingFragment);
+        fragmentList.add(rechargeFragment);
         fragmentList.add(mainCashFragment);
         fragmentList.add(mainRepayFragment);
         fragmentList.add(mainMeFragment);

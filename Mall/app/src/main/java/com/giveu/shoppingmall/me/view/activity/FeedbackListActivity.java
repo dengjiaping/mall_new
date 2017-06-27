@@ -51,11 +51,36 @@ public class FeedbackListActivity extends BaseActivity {
                 switch (checkedId){
                     case R.id.rb_in_processed:
                         //处理中
+                        viewpager.setCurrentItem(0);
                         break;
                     case R.id.rb_already_processed:
                         //已处理
+                        viewpager.setCurrentItem(1);
                         break;
                 }
+            }
+        });
+        viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int arg0) {
+                switch (arg0){
+                    case 0:
+                        rbInProcessed.setChecked(true);
+                        break;
+                    case 1:
+                        rbAlreadyProcessed.setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
