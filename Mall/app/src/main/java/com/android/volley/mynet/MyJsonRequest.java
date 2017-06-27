@@ -1,5 +1,7 @@
 package com.android.volley.mynet;
 
+import android.text.TextUtils;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -105,7 +107,9 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());
         String jsonParams = new Gson().toJson(getParams());
         String md5Str = MD5.MD5Encode(jsonParams + "!$*6uOuop@^&%,.$*ci(hf_&]|");
-        headerMap.put("sign", md5Str);
+        if ( !TextUtils.isEmpty(md5Str)){
+            headerMap.put("sign", md5Str.toLowerCase());
+        }
         LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }
