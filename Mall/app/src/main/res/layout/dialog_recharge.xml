@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <TextView
+            android:id="@+id/tv_dialog_top"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:gravity="center"
+            android:text="订单详情"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_18" />
+
+        <ImageView
+            android:id="@+id/iv_dialog_close"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_alignRight="@id/tv_dialog_top"
+            android:layout_marginRight="2dp"
+            android:padding="13dp"
+            android:src="@drawable/ic_close_white" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/default_divide_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical|bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="充值流量"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_recharge_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:text="100M"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_14" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="充值号码"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_recharge_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:text="185-7667-7447【广州联通】"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_14" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/default_divide_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical|bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="商品售价"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:text="￥9.50"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_14" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="支付方式"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="即有钱包"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_14" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_right" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/default_divide_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="需付款"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_16" />
+
+        <TextView
+            android:id="@+id/tv_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:text="￥0.00"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:button="@drawable/selector_checkbox_register"
+            android:checked="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:gravity="center_vertical"
+            android:text="已阅读并同意"
+            android:textColor="@color/color_4d4d4d"
+            android:textSize="@dimen/ts_11" />
+
+        <TextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="《贷款及咨询服务合同标准条款》"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/ts_11" />
+    </LinearLayout>
+
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
+        android:id="@+id/tv_payment"
+        style="@style/click_enabled_bt"
+        android:layout_marginTop="39dp"
+        android:layout_marginBottom="70dp"
+        android:text="确认付款" />
+
+</LinearLayout>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_status"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_activation_success" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:gravity="center"
+            android:text="支付成功"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_21" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_hint_mid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:text="很抱歉，本次支付失败，请重新发起支付"
+                android:textColor="@color/color_a4a4a4"
+                android:textSize="@dimen/ts_14"
+                android:visibility="invisible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="14dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/line_bg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="充值金额："
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:id="@+id/tv_recharge_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="13000.00元"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="支付金额："
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:id="@+id/tv_payment_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="13000.00元"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                android:background="@color/line_bg" />
+
+            <TextView
+                android:id="@+id/tv_hint_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginTop="9dp"
+                android:text="温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+
+        <com.giveu.shoppingmall.widget.ClickEnabledTextView
+            android:id="@+id/tv_see_order"
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/selector_login"
+            android:text="查看充值订单" />
+
+        <com.giveu.shoppingmall.widget.ClickEnabledTextView
+            android:id="@+id/tv_back"
+            style="@style/click_enabled_bt"
+            android:layout_marginBottom="120dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_back_btn_blue"
+            android:text="返回"
+            android:textColor="@color/title_color" />
+    </LinearLayout>
+</ScrollView>

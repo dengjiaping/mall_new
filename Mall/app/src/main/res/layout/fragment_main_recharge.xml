@@ -13,105 +13,104 @@
             android:id="@+id/rb_bill"
             style="@style/preferential_rbt"
             android:checked="true"
-            android:text="充话费" />
+            android:text="话费" />
 
         <RadioButton
             android:id="@+id/rb_flow"
             style="@style/preferential_rbt"
-            android:text="充流量" />
+            android:text="流量" />
 
     </RadioGroup>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="76dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ll_recharge"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/et_recharge"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="26dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:hint="输入手机号"
-                android:paddingTop="13dp"
-                android:paddingBottom="15dp"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:layout_marginTop="16dp"
                 android:background="@null"
-                android:maxLength="13"
+                android:hint="输入手机号"
                 android:inputType="number"
-                android:textColorHint="@color/color_4a4a4a"
+                android:maxLength="13"
                 android:textColor="@color/color_4a4a4a"
-                android:textSize="@dimen/ts_33" />
+                android:textColorHint="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_28" />
 
-            <LinearLayout
-                android:id="@+id/iv_recharge"
-                android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginRight="20dp">
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/ic_delete_photo" />
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/tv_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:text="错误号码"
+                android:textColor="@color/color_ff2a2a"
+                android:textSize="@dimen/ts_11" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_strings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ll_recharge"
-            android:layout_marginLeft="26dp"
-            android:text="账户绑定用户（广州联通）"
-            android:textColor="@color/color_c3c3c3"
-            android:visibility="invisible"
-            android:textSize="@dimen/ts_11" />
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="30dp"
+            android:layout_height="76dp"
+            android:padding="7dp"
+            android:src="@drawable/ic_clear" />
 
         <View
-            android:id="@+id/view_thread"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_below="@id/tv_strings"
-            android:layout_marginTop="15dp"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="10dp"
             android:background="@color/line_bg" />
 
-        <TextView
-            android:id="@+id/tv_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/view_thread"
-            android:layout_marginLeft="26dp"
-            android:layout_marginTop="15dp"
-            android:text="(即时生效，当月有效，全国通用)"
-            android:textColor="@color/title_color"
-            android:visibility="gone"
-            android:textSize="@dimen/ts_11" />
+        <ImageView
+            android:id="@+id/iv_mail_list"
+            android:layout_width="73dp"
+            android:layout_height="73dp"
+            android:padding="15dp"
+            android:src="@drawable/ic_mail_list" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:background="@color/white">
 
         <com.giveu.shoppingmall.widget.NoScrollGridView
             android:id="@+id/gv_recharge"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tv_text"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="26dp"
-            android:layout_marginRight="26dp"
-            android:horizontalSpacing="15dp"
-            android:verticalSpacing="9dp"
-            android:numColumns="3"
-            android:fadingEdge="none"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="27dp"
             android:cacheColorHint="@color/transparent"
-            android:listSelector="@color/transparent"/>
-    </RelativeLayout>
+            android:fadingEdge="none"
+            android:horizontalSpacing="15dp"
+            android:listSelector="@color/transparent"
+            android:numColumns="3"
+            android:verticalSpacing="9dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="温馨提示：温馨提示内容温馨提示内容温馨提示内容温馨提示内容"
+            android:textColor="@color/color_9b9b9b"
+            android:layout_marginTop="31dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginBottom="24dp"
+            android:textSize="@dimen/ts_11"/>
+    </LinearLayout>
 
 
 </LinearLayout>

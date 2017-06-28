@@ -201,7 +201,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
-        <item name="android:textSize">@dimen/ts_14</item>
+        <item name="android:textSize">@dimen/ts_18</item>
         <item name="android:background">@drawable/selector_feedback_list_top_rb_bg</item>
         <item name="android:textColor">@color/selector_main_activity_bottom_rb_tc</item>
         <item name="android:gravity">center</item>
@@ -213,7 +213,16 @@
         <item name="android:src">@color/default_divide_line</item>
     </style>
 
-
+    <style name="login_error_dialog_Style">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
     <style name="fragment_bill_ready_list_style2" parent="custom_listview_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
