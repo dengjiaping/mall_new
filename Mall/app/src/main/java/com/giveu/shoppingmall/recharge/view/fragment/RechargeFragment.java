@@ -386,6 +386,8 @@ public class RechargeFragment extends BaseFragment {
                 etRecharge.setSelection(sb.length());
             }
 
+            phone.close();
+
         }
     }
 

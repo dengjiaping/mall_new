@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -28,6 +29,7 @@ public class ChargeOrderDialog {
     //sumPrice 实际付款
     private TextView tv_recharge_amount, tv_recharge_phone, tv_price, tv_preferential_price, sumPrice;
     private ClickEnabledTextView tv_payment;
+    private LinearLayout ll_payment_style;
     private CheckBox cb_dialog;
     //充值显示的价格（没使用优惠券的时候）
     public String OldPrice;
@@ -72,7 +74,7 @@ public class ChargeOrderDialog {
         tv_recharge_amount = (TextView) contentView.findViewById(R.id.tv_recharge_amount);
         tv_recharge_phone = (TextView) contentView.findViewById(R.id.tv_recharge_phone);
         tv_price = (TextView) contentView.findViewById(R.id.tv_price);
-//        tv_preferential_price = (TextView) contentView.findViewById(R.id.tv_preferential_price);
+        ll_payment_style = (LinearLayout) contentView.findViewById(R.id.ll_payment_style);
         tv_payment = (ClickEnabledTextView) contentView.findViewById(R.id.tv_payment);
         cb_dialog = (CheckBox) contentView.findViewById(R.id.cb_dialog);
         tv_payment.setClickEnabled(true);
@@ -109,7 +111,14 @@ public class ChargeOrderDialog {
             }
         });
 
-
+        ll_payment_style.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //选择支付方式
+                PaymentStyleDialog paymentStyleDialog = new PaymentStyleDialog(mActivity);
+                paymentStyleDialog.showDialog();
+            }
+        });
         //付款按钮
         tv_payment.setOnClickListener(new View.OnClickListener() {
             @Override
