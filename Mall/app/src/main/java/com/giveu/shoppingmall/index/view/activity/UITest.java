@@ -16,7 +16,7 @@ public class UITest {
         if (!DebugConfig.isDev) {
             return;
         }
-     //   startActivity(ContactUsActivity.class);
+       // startActivity(FeedbackListActivity.class);
     }
 
 

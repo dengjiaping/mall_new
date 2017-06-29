@@ -22,26 +22,16 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            style="@style/iv_common_problem_style"
             android:src="@drawable/ic_question" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_weight="1"
-            android:text="忘记密码"
-            android:textColor="@color/color_4a4a4a"
-            android:textSize="@dimen/ts_15" />
+            style="@style/tv_common_problem_style"
+            android:text="忘记密码" />
 
         <ImageView
             android:id="@+id/iv_arrow"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:src="@drawable/ic_right" />
+            style="@style/arrow_common_problem_style" />
     </LinearLayout>
 
     <LinearLayout

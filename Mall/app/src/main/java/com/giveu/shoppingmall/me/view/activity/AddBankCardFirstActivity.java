@@ -36,6 +36,10 @@ public class AddBankCardFirstActivity extends BaseActivity {
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
 
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, AddBankCardFirstActivity.class);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -109,9 +113,5 @@ public class AddBankCardFirstActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity mActivity) {
-        Intent intent = new Intent(mActivity, AddBankCardFirstActivity.class);
-        mActivity.startActivity(intent);
-    }
 
 }

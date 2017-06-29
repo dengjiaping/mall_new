@@ -40,6 +40,17 @@ public class ActivationStatusActivity extends BaseActivity {
     @BindView(R.id.tv_consume_amount)
     TextView tvConsumeAmount;
 
+    public static void startIt(Activity mActivity, String status, String walletTotalAmount, String withdrawalsAmount, String consumeAmount, String bottomHint, String midHint) {
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        intent.putExtra("status", status);
+        intent.putExtra("walletTotalAmount", walletTotalAmount);
+        intent.putExtra("withdrawalsAmount", withdrawalsAmount);
+        intent.putExtra("consumeAmount", consumeAmount);
+        intent.putExtra("bottomHint", bottomHint);
+        intent.putExtra("midHint", midHint);
+        mActivity.startActivity(intent);
+    }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_activation_status);
@@ -119,16 +130,6 @@ public class ActivationStatusActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity mActivity, String status, String walletTotalAmount, String withdrawalsAmount, String consumeAmount, String bottomHint, String midHint) {
-        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        intent.putExtra("status", status);
-        intent.putExtra("walletTotalAmount", walletTotalAmount);
-        intent.putExtra("withdrawalsAmount", withdrawalsAmount);
-        intent.putExtra("consumeAmount", consumeAmount);
-        intent.putExtra("bottomHint", bottomHint);
-        intent.putExtra("midHint", midHint);
-        mActivity.startActivity(intent);
-    }
 
 
     @OnClick(R.id.tv_set_transaction_pwd)

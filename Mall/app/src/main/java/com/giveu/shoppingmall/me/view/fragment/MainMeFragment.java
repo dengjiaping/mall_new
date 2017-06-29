@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
@@ -87,6 +88,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_account_manage:
+                AccountManagementActivity.startIt(mBaseContext);
                 break;
 
             case R.id.ll_quota:

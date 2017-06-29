@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.imageselect.ImageItem;
 import com.giveu.shoppingmall.widget.imageselect.ImagesSelectView;
 
@@ -57,7 +58,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
         baseLayout.setRightTextAndListener("记录", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //     CommonUtils.startActivity(mBaseContext, FeedbackListActivity.class);
+                FeedbackListActivity.startIt(mBaseContext);
             }
         });
     }
@@ -86,7 +87,8 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
             @Override
             public void onClick(View v) {
                 if(tvCommit.isClickEnabled()){
-
+                    NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "提交成功！\n我们将在3个工作日内处理您的反馈！");
+                    dialog.showDialog();
                 }else {
                     commitButtonCanClick(true);
                 }

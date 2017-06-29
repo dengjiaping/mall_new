@@ -282,6 +282,9 @@
             android:name=".me.view.activity.CommonProblemActivity"
             android:label="常见问题页" />
         <activity
+            android:name=".me.view.activity.FeedbackListActivity"
+            android:label="处理记录页" />
+        <activity
             android:name=".me.view.activity.CustomerServicePhoneActivity"
             android:label="客服电话页" />
         <activity
@@ -290,6 +293,15 @@
         <activity
             android:name=".me.view.activity.ContactUsActivity"
             android:label="联系我们页" />
+        <activity
+            android:name=".me.view.activity.AccountManagementActivity"
+            android:label="账号管理主页" />
+        <activity
+            android:name=".me.view.activity.MyBankCardActivity"
+            android:label="我的银行卡" />
+        <activity
+            android:name=".recharge.view.activity.RechargeStatusActivity"
+            android:label="充值状态" />
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
         <service

@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by 508632 on 2016/12/12.
  * fragment初始化的时候不在自动调用{@link BaseFragment#initWithDataDelay()},需要自己手动调用
@@ -22,6 +25,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected boolean isLazyLoad = true;
     protected boolean isViewInitiated;
     private boolean isDataInitiated;//是否填充了数据
+    private BasePresenter[] mAllPresenters = new BasePresenter[]{};
 
 
     @Nullable
@@ -32,8 +36,24 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         myXmlView = initView(inflater, container, savedInstanceState);
         baseLayout.addContentView(myXmlView);
         baseLayout.setStatusBarVisiable(isTranslateStatusBar());
+
+        addPresenters();
         setListener();
         return baseLayout;
+    }
+
+    /**
+     * 当使用mvp模式时实现这个方法
+     */
+    protected BasePresenter[] initPresenters() {
+        return null;
+    }
+
+    private void addPresenters() {
+        BasePresenter[] presenters = initPresenters();
+        if (presenters != null) {
+            mAllPresenters = presenters;
+        }
     }
 
     @Override
@@ -107,5 +127,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void setDataInitiated(boolean dataInitiated) {
         isDataInitiated = dataInitiated;
     }
+
+
+    @Override
+    public void onDestroy() {
+        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onDestroy, mAllPresenters);
+
+        super.onDestroy();
+    }
+
 
 }
