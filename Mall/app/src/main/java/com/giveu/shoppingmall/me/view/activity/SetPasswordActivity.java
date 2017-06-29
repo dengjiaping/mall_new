@@ -11,6 +11,8 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.SetPasswordPresenter;
 import com.giveu.shoppingmall.me.view.agent.ISetPasswordView;
+import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
@@ -31,10 +33,14 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     ClickEnabledTextView tvComplete;
     private boolean isSetPassword;
     private SetPasswordPresenter presenter;
+    private String mobile;
+    private String smsCode;
 
-    public static void startIt(Activity activity, boolean isSetPassword) {
+    public static void startIt(Activity activity, boolean isSetPassword, String mobile, String smsCode) {
         Intent intent = new Intent(activity, SetPasswordActivity.class);
         intent.putExtra("isSetPassword", isSetPassword);
+        intent.putExtra("mobile", mobile);
+        intent.putExtra("smsCode", smsCode);
         activity.startActivity(intent);
     }
 
@@ -42,6 +48,8 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_set_password);
         isSetPassword = getIntent().getBooleanExtra("isSetPassword", false);
+        mobile = getIntent().getStringExtra("mobile");
+        smsCode = getIntent().getStringExtra("smsCode");
         //区分是设置密码还是重置密码
         if (isSetPassword) {
             baseLayout.setTitle("设置登录密码");
@@ -72,10 +80,8 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_complete:
-                if (tvComplete.isClickEnabled()) {
-
-                } else {
-
+                if (canClick(true)) {
+                    presenter.register(mobile, etPwd.getText().toString(), smsCode);
                 }
                 break;
 
@@ -90,23 +96,38 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         etConfirmPwd.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                canClick();
+                canClick(false);
             }
         });
         etConfirmPwd.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                canClick();
+                canClick(false);
             }
         });
     }
 
-    private void canClick() {
-        if (etPwd.getText().toString().length() >= 8 && etConfirmPwd.getText().toString().length() > 8
-                && etPwd.getText().toString().equals(etConfirmPwd.getText().toString())) {
-            tvComplete.setClickEnabled(true);
-        } else {
-            tvComplete.setClickEnabled(false);
+    private boolean canClick(boolean showToast) {
+        tvComplete.setClickEnabled(false);
+        if (etPwd.getText().toString().length() < 8) {
+            if (showToast) {
+                ToastUtils.showShortToast("请设置8-16位字母数字组合密码");
+            }
+            return false;
         }
+        if (!etConfirmPwd.getText().toString().equals(etPwd.getText().toString())) {
+            if (showToast) {
+                ToastUtils.showShortToast("输入密码不一致");
+            }
+            return false;
+        }
+        tvComplete.setClickEnabled(true);
+        return true;
+    }
+
+    @Override
+    public void registerSuccess(RegisterResponse response) {
+        ToastUtils.showShortToast("注册成功");
+        finish();
     }
 }

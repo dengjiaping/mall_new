@@ -73,14 +73,14 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         etPhone.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                canClick();
+                canClick(false);
             }
         });
 
         etCode.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                canClick();
+                canClick(false);
             }
         });
     }
@@ -91,26 +91,20 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.cb_agreement:
-                canClick();
+                canClick(false);
                 break;
 
             case R.id.tv_next:
-                if (tvNext.isClickEnabled()) {
-                    SetPasswordActivity.startIt(mBaseContext, true);
-                } else {
-                    if (etPhone.getText().toString().length() != 11) {
-                        ToastUtils.showShortToast("请输入11位的手机号");
-                    } else if (etCode.getText().toString().length() == 0) {
-                        ToastUtils.showShortToast("请输入验证码");
-                    }
+                if (canClick(true)) {
+                    presenter.checkSMSCode(etPhone.getText().toString(), etCode.getText().toString());
                 }
                 break;
 
             case R.id.tv_send_code:
-                if (etPhone.length() != 11) {
+                if (etPhone.getText().toString().length() != 11) {
                     ToastUtils.showShortToast("请输入11位的手机号");
                 } else {
-                    tvSendCode.startCount(null);
+                    presenter.sendSMSCode(etPhone.getText().toString());
                 }
                 break;
 
@@ -122,12 +116,38 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     /**
      * 是否满足条件，是的话，按钮状态变为可点击
      */
-    private void canClick() {
-        if (cbAgreement.isChecked() && etCode.getText().toString().length() != 0 && etPhone.getText().toString().length() == 11) {
-            tvNext.setClickEnabled(true);
-        } else {
-            tvNext.setClickEnabled(false);
+    private boolean canClick(boolean showToast) {
+        tvNext.setClickEnabled(false);
+        if (etPhone.getText().toString().length() != 11) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入11位的手机号");
+            }
+            return false;
         }
+
+        if ("获取验证码".equals(tvSendCode.getText().toString())) {
+            if (showToast) {
+                ToastUtils.showShortToast("请获取验证码");
+            }
+            return false;
+        }
+
+        if (etCode.getText().toString().length() == 0) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入验证码");
+            }
+            return false;
+        }
+
+        if (!cbAgreement.isChecked()) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入验证码");
+            }
+
+            return false;
+        }
+        tvNext.setClickEnabled(true);
+        return true;
     }
 
     @Override
@@ -136,5 +156,10 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         if (tvSendCode != null) {
             tvSendCode.onDestory();
         }
+    }
+
+    @Override
+    public void checkSMSSuccess() {
+        SetPasswordActivity.startIt(mBaseContext, true, etPhone.getText().toString(), etCode.getText().toString());
     }
 }

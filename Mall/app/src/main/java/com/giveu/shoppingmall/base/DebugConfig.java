@@ -36,14 +36,15 @@ public class DebugConfig {
 		}
 	}
 
-	private static String DOMAIN_TEST = "http://10.10.71.131:9000/";//域名
+	private static String DOMAIN_TEST = "http://10.10.11.140:9000";//域名
 	private static String DOMAIN_ONLINE = "http://3c.dafysz.cn/";//域名
 
 
     public static final String API_VERSION = "v1/";//api版本，开发，正式环境可用
     public static String BASE_URL_TEST = DOMAIN_TEST + "3c-web/";//测试环境
     public static String BASE_URL_ONLINE = DOMAIN_ONLINE + "3c-web/" + API_VERSION;//正式环境
-    public static String BASE_URL_DEV = DOMAIN_TEST + API_VERSION;//开发环境
+    public static String BASE_URL_DEV = DOMAIN_TEST;//开发环境
+//    public static String BASE_URL_DEV = DOMAIN_TEST + API_VERSION;//开发环境
 //    public static String BASE_URL_DEV = "http://10.10.72.86:8081/3c-web/";
 
 	public static String apk_update_test = DOMAIN_TEST + "sales/account/getVersion";

@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
+import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -112,7 +113,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
                 break;
             case R.id.tv_next:
                 if (tvNext.isClickEnabled()) {
-                    SetPasswordActivity.startIt(mBaseContext, false);
+                    SetPasswordActivity.startIt(mBaseContext, false, "", "");
                 } else {
                     if (etPhone.getText().toString().length() != 11) {
                         ToastUtils.showShortToast("请输入11位的手机号");
@@ -141,5 +142,10 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
         } else {
             tvNext.setClickEnabled(false);
         }
+    }
+
+    @Override
+    public void registerSuccess(RegisterResponse response) {
+
     }
 }

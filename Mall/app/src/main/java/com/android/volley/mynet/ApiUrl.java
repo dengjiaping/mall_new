@@ -27,8 +27,12 @@ public interface ApiUrl {
     String COMMON_KEY = "commonsMethod_path";
     //保存极光设备号
     String api_Account_SaveDeviceNumber = "/api/Account/SaveDeviceNumber";
+    //用户注册
+    String v1_personCenter_account_register = BASE_URL + "/v1/personCenter/account/register";
+    //下发短信验证码
+    String v1_personCenter_util_sendSMSCode = BASE_URL + "/v1/personCenter/util/sendSMSCode";
+    //校验短信验证码
+    String v1_personCenter_util_chkValiCode = "/v1/personCenter/util/chkValiCode";
 
 
-
-    
 }
