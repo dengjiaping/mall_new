@@ -100,65 +100,65 @@
             android:label="首次安装引导页"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".index.view.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <!--广告页-->
         <activity
             android:name=".index.view.activity.AdSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <!--个人中心-->
         <activity
             android:name=".me.view.activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="登录"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <activity
             android:name=".me.view.activity.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="注册"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.SetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="设置密码或重置密码"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.RequestPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="找回密码"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.FingerPrintActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="指纹解锁"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.QuotaActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
             android:label="我的额度"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.BillListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
             android:label="账单"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".me.view.activity.TransactionSearchActivity"
@@ -238,7 +238,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <!--锁屏验证密码-->
         <activity

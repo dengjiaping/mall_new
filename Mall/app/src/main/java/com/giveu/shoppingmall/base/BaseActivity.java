@@ -16,9 +16,10 @@ import com.giveu.shoppingmall.index.view.activity.AdSplashActivity;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.index.view.activity.SplashActivity;
 import com.giveu.shoppingmall.index.view.activity.WelcomeActivity;
-import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
+import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.GestureLoginActivity;
+import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
@@ -31,9 +32,7 @@ import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.ButterKnife;
 
@@ -235,7 +234,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
-            dealLockPattern();
+//            dealLockPattern();
         }
     }
 
@@ -275,16 +274,15 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 }
                 clearLockPatternExtraIntent();
                 return;
+            } else if (LoginActivity.class.getName().equals(className)) {
+                //从登录页面过来的
+               /* if (TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())) {
+                    //如果没有设置手势，第一次提示设置
+                    ((MainActivity) this).showPatternLockTipDialog();
+                }*/
+                clearLockPatternExtraIntent();
+                return;
             }
-//            else if (LoginActivity.class.getName().equals(className)) {
-//                //从登录页面过来的
-//                if (TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())) {
-//                    //如果没有设置手势，第一次提示设置
-//                    ((MainActivity) this).showPatternLockTipDialog();
-//                }
-//                clearLockPatternExtraIntent();
-//                return;
-//            }
         }
         //如果上面页面做个处理了就不处理了
         if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern()&&LoginHelper.getInstance().hasLogin()) {

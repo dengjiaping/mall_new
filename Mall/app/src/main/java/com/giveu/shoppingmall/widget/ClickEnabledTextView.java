@@ -34,9 +34,6 @@ public class ClickEnabledTextView extends TextView {
 
 
     public void setClickEnabled(boolean clickEnabled) {
-        if (this.clickEnabled == clickEnabled) {
-            return;
-        }
         this.clickEnabled = clickEnabled;
         if (clickEnabled) {
             setBackgroundResource(R.drawable.selector_login);

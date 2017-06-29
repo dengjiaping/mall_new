@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,10 @@ import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
+import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +43,12 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llAcountManage;
     @BindView(R.id.ll_help)
     LinearLayout llHelp;
+    @BindView(R.id.iv_avatar)
+    ImageView ivAvatar;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    @BindView(R.id.tv_withdrawals)
+    TextView tvWithdrawals;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,8 +62,31 @@ public class MainMeFragment extends BaseFragment {
 
             }
         });
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (LoginHelper.getInstance().hasLogin()) {
+            tvLogin.setText(LoginHelper.getInstance().getUserName());
+            if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
+                ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
+            }
+        } else {
+            tvLogin.setText("立即登录");
+            ivAvatar.setImageResource(R.drawable.ic_default_avatar);
+        }
+
+        //未开通钱包资质
+        if ("1".equals(LoginHelper.getInstance().getStatus())) {
+            tvStatus.setVisibility(View.VISIBLE);
+            tvWithdrawals.setText("查看信用钱包额度");
+        } else if ("2".equals(LoginHelper.getInstance().getStatus())) {
+            tvStatus.setVisibility(View.GONE);
+            tvWithdrawals.setText("可用额度" + LoginHelper.getInstance().getGlobleLimit() + "元");
+        }
     }
 
     @Override
@@ -70,7 +104,7 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage,R.id.ll_quota})
+    @OnClick({R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_quota})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -99,5 +133,13 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

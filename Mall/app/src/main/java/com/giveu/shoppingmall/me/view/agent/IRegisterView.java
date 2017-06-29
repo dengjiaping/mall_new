@@ -9,4 +9,5 @@ import com.giveu.shoppingmall.base.IView;
 public interface IRegisterView extends IView {
 
     void checkSMSSuccess();
+    void sendSMSSuccess();
 }

@@ -12,12 +12,14 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.SetPasswordPresenter;
 import com.giveu.shoppingmall.me.view.agent.ISetPasswordView;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by 513419 on 2017/6/20.
@@ -35,13 +37,14 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     private SetPasswordPresenter presenter;
     private String mobile;
     private String smsCode;
+    public static final int REQUEST_FINISH = 10000;
 
     public static void startIt(Activity activity, boolean isSetPassword, String mobile, String smsCode) {
         Intent intent = new Intent(activity, SetPasswordActivity.class);
         intent.putExtra("isSetPassword", isSetPassword);
         intent.putExtra("mobile", mobile);
         intent.putExtra("smsCode", smsCode);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, REQUEST_FINISH);
     }
 
     @Override
@@ -75,13 +78,16 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
 
     }
 
+    @OnClick({R.id.tv_complete})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_complete:
                 if (canClick(true)) {
-                    presenter.register(mobile, etPwd.getText().toString(), smsCode);
+                    if (StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString())) {
+                        presenter.register(mobile, etPwd.getText().toString(), smsCode);
+                    }
                 }
                 break;
 
@@ -128,6 +134,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     @Override
     public void registerSuccess(RegisterResponse response) {
         ToastUtils.showShortToast("注册成功");
+        setResult(RESULT_OK);
         finish();
     }
 }
