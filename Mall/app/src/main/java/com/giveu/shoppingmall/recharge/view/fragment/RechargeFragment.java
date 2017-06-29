@@ -143,8 +143,15 @@ public class RechargeFragment extends BaseFragment {
         list1.add(productsBean1);
         list1.add(productsBean2);
         list1.add(productsBean3);
+        RechargeResponse.ListBean.ProductsBean productsBean4 = new RechargeResponse.ListBean.ProductsBean("1", "30M", "30");
+        RechargeResponse.ListBean.ProductsBean productsBean5 = new RechargeResponse.ListBean.ProductsBean("1", "50M", "49.98");
+        RechargeResponse.ListBean.ProductsBean productsBean6 = new RechargeResponse.ListBean.ProductsBean("1", "100M", "99.98");
+        List<RechargeResponse.ListBean.ProductsBean> list2 = new ArrayList<>();
+        list2.add(productsBean4);
+        list2.add(productsBean5);
+        list2.add(productsBean6);
         rechargeResponse.calls = new RechargeResponse.ListBean("中国联通", "CUCC", list1);
-        rechargeResponse.flows = new RechargeResponse.ListBean("中国联通", "CUCC", list1);
+        rechargeResponse.flows = new RechargeResponse.ListBean("中国联通", "CUCC", list2);
         rechargeAdapter = new LvCommonAdapter<RechargeResponse.ListBean.ProductsBean>(mBaseContext, R.layout.gv_recharge_item, list1) {
             @Override
             protected void convert(ViewHolder viewHolder, RechargeResponse.ListBean.ProductsBean item, int position) {

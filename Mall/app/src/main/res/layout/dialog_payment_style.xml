@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
             <ImageView
+                android:id="@+id/iv_back"
                 android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:padding="@dimen/default_layout_screen_gap"
