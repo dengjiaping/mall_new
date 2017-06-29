@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="@dimen/default_layout_screen_gap"
-        android:background="@drawable/shape_bank_item"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:layout_height="96dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:background="@drawable/bg_bank_card_list"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="22dp"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="15dp"
             android:src="@drawable/ic_gongshang" />
 
         <LinearLayout
@@ -25,26 +27,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="民生银行"
-                android:textColor="@color/white" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="工商银行"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_17" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="储蓄卡"
-                android:textColor="@color/white" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="信用卡"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="* * * *   * * * *   * * * *   3896"
-                android:textColor="@color/white" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="* * * *   * * * *   * * * *   4562"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

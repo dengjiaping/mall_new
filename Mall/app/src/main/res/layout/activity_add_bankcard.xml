@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="@dimen/default_layout_screen_gap"
-        android:background="@drawable/shape_bank_item"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_default_bank_card"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="22dp"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="15dp"
             android:src="@drawable/ic_gongshang" />
 
         <LinearLayout
@@ -24,25 +31,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="民生银行"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_17" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
                 android:text="储蓄卡"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
                 android:text="* * * *   * * * *   * * * *   3896"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_14" />
         </LinearLayout>
     </LinearLayout>
 
@@ -55,11 +65,12 @@
         android:textColor="@color/color_40000000"
         android:textSize="@dimen/ts_10" />
 
-    <ListView
+    <com.giveu.shoppingmall.widget.NoScrollListView
         android:id="@+id/lv_bank_card"
-        android:layout_marginTop="41dp"
         android:layout_width="match_parent"
-        android:dividerHeight="0px"
-        android:divider="@color/transparent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="41dp"
+        android:divider="@color/white"
+        android:dividerHeight="10dp" />
 </LinearLayout>
+    </ScrollView>

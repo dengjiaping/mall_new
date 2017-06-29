@@ -80,6 +80,7 @@ public class RechargeFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_recharge, null);
         baseLayout.setTitle("手机充值");
+        baseLayout.hideBack();
         ButterKnife.bind(this, view);
         gvRecharge.setEnabled(false);
         return view;

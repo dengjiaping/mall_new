@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
@@ -32,6 +33,9 @@ public class MyBankCardActivity extends BaseActivity {
     ListView lvBankCard;
     LvCommonAdapter<BaseBean> bankListAdapter;
     CustomDialogUtil dialog;
+    @BindView(R.id.scroll_view)
+    ScrollView scrollView;
+
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
         mActivity.startActivity(intent);
@@ -41,6 +45,9 @@ public class MyBankCardActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_add_bankcard);
         baseLayout.setTitle("我的银行卡");
+        baseLayout.setRightImage(R.drawable.ic_add_bank_card);
+        //从最上方显示
+        scrollView.smoothScrollTo(0,20);
     }
 
     @Override
@@ -50,7 +57,7 @@ public class MyBankCardActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
                 dialog = new CustomDialogUtil(mBaseContext);
-                dialog.getDialogMode2("删除", "设置默认代扣卡", new View.OnClickListener() {
+                dialog.getDialogMode3("删除", "设置默认代扣卡", "取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
@@ -66,6 +73,10 @@ public class MyBankCardActivity extends BaseActivity {
 //                                if (list1.size() > 0 && list1 != null) {
 //                                    deleteBank(bankAdapter, position, bankCode, bankName, bankNo);
 //                                }
+                                if (bankListAdapter != null && bankListAdapter.getCount() > 0) {
+                                    bankListAdapter.getData().remove(position);
+                                    bankListAdapter.notifyDataSetChanged();
+                                }
                                 dialog.dismissDialog();
                             }
                         }, null).show();
@@ -103,6 +114,11 @@ public class MyBankCardActivity extends BaseActivity {
 //                        }
                         dialog.dismissDialog();
                     }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismissDialog();
+                    }
                 }).show();
             }
         });
@@ -115,7 +131,10 @@ public class MyBankCardActivity extends BaseActivity {
         data.add(bean);
         data.add(bean);
         data.add(bean);
-        bankListAdapter = new LvCommonAdapter<BaseBean>(mBaseContext, R.layout.lv_bank_card_item,  data) {
+        data.add(bean);
+        data.add(bean);
+        data.add(bean);
+        bankListAdapter = new LvCommonAdapter<BaseBean>(mBaseContext, R.layout.lv_bank_card_item, data) {
             @Override
             protected void convert(ViewHolder viewHolder, BaseBean item, int position) {
 

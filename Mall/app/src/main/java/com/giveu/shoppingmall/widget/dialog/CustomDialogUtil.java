@@ -143,7 +143,41 @@ public class CustomDialogUtil {
 
         return customDialog = listDialog;
     }
+	public CustomDialog getDialogMode3(final CharSequence topText, final CharSequence midText, final CharSequence bottomText, final OnClickListener topListener,final OnClickListener midListener, final OnClickListener bottomListener) {
+		CustomListDialog listDialog = new CustomListDialog(mActivity, new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String item = (String) ((ParentAdapter) parent.getAdapter()).getItem(position);
+				if ( !TextUtils.isEmpty(item) && item.equals(topText)){
+					if (topListener != null){
+						topListener.onClick(view);
+					}
+				}else if (!TextUtils.isEmpty(item) && item.equals(midText)){
+					if (midListener != null){
+						midListener.onClick(view);
+					}
+				}else if(!TextUtils.isEmpty(item) && item.equals(bottomText)){
+					if (bottomListener != null){
+						bottomListener.onClick(view);
+					}
+				}
+			}
+		});
 
+		List<CharSequence> data = new ArrayList<>();
+		if ( !TextUtils.isEmpty(topText)){
+			data.add(topText);
+		}
+		if ( !TextUtils.isEmpty(midText)){
+			data.add(midText);
+		}
+		if ( !TextUtils.isEmpty(bottomText)){
+			data.add(bottomText);
+		}
+		listDialog.setData(data);
+
+		return customDialog = listDialog;
+	}
 	public void dismissDialog() {
 		if (customDialog != null && customDialog.isShowing()) {
 			customDialog.dismiss();
