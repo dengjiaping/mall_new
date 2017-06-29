@@ -139,12 +139,8 @@ public abstract class BaseRequestAgent {
 		params.put("VERSION_NAME", CommonUtils.getVersionName());
 		params.put("DEVICE_TYPE", "android");//1:IOS :2ANDROID
 
-		String tokenKey = "token";
-		if (StringUtils.isNull((String) params.get(tokenKey))) {
-			params.put(tokenKey, SharePrefUtil.getAppToken());
-		}
 		//所有的接口加一个salesId
-		String salesIdKey = "salesId";
+//		String salesIdKey = "salesId";
 //		if (LoginHelper.getInstance().hasLogin() && StringUtils.isNull((String) params.get(salesIdKey))) {
 //			params.put(salesIdKey, LoginHelper.getInstance().getUserId());
 //		}
