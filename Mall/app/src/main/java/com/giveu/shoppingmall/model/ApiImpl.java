@@ -18,8 +18,6 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import java.util.Map;
 import java.util.Random;
 
-import static android.R.attr.password;
-
 
 /**
  * 所有的网络请求放在这个类中
@@ -125,11 +123,11 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
     }
 
-    //找回密码（重置密码）
-    public static void register(Activity context, String mobile, String newPwd, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "smsCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, smsCode});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetLoginPwd, RegisterResponse.class, context, responseListener);
-    }
+//    //找回密码（重置密码）
+//    public static void register(Activity context, String mobile, String newPwd, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
+//        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "smsCode"}, new String[]{SharePrefUtil.getUUId(), mobile, newPwd, smsCode});
+//        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetLoginPwd, RegisterResponse.class, context, responseListener);
+//    }
 }
 
 
