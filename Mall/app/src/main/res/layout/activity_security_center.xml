@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_change_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="修改手机号"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_right" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_change_login_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="修改登录密码"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_right" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_change_transaction_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="修改交易密码"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_right" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_weight="1"
+            android:text="手势与指纹"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <com.giveu.shoppingmall.widget.IosSwitch
+            android:id="@+id/switch_gesture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap" />
+    </LinearLayout>
+
+</LinearLayout>

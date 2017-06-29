@@ -57,6 +57,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
         initCallDialog();
         etPhone.checkFormat(11);
         presenter = new RequestPwdPresenter(this);
+        tvSendCode.setSendTextColor(false);
     }
 
     private void initCallDialog() {

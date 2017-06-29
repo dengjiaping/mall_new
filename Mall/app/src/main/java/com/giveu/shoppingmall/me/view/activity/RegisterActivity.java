@@ -55,6 +55,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         baseLayout.setTitle("注册");
         etPhone.checkFormat(11);
         presenter = new RegisterPresenter(this);
+        tvSendCode.setSendTextColor(false);
     }
 
     @Override

@@ -53,6 +53,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
         setContentView(R.layout.activity_addcardsecond);
         CommonUtils.openSoftKeyBoard(mBaseContext);
         baseLayout.setTitle("添加银行卡");
+        tvSendCode.setSendTextColor(true);
         CommonUtils.setTextWithSpan(checkboxDesc, false, "我同意代扣还款并遵守合同中相关约定", "《代扣服务协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {

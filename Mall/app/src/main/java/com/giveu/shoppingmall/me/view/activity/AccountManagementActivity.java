@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
@@ -56,6 +57,7 @@ public class AccountManagementActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_delivery_address:
                 //地址管理
+                AddressManageActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_bank_card:
                 //我的银行卡
@@ -63,6 +65,7 @@ public class AccountManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_security_center:
                 //安全中心
+                SecurityCenterActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_version_update:
                 //版本更新

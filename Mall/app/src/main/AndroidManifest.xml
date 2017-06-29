@@ -297,6 +297,15 @@
             android:name=".me.view.activity.AccountManagementActivity"
             android:label="账号管理主页" />
         <activity
+            android:name=".me.view.activity.SecurityCenterActivity"
+            android:label="安全中心页" />
+        <activity
+            android:name=".me.view.activity.TransactionInputActivity"
+            android:label="通用的交易密码输入页面" />
+        <activity
+            android:name=".me.view.activity.ChangePhoneNumberActivity"
+            android:label="修改手机号" />
+        <activity
             android:name=".me.view.activity.MyBankCardActivity"
             android:label="我的银行卡" />
         <activity

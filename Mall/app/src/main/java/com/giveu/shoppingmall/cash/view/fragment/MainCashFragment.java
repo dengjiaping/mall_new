@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -13,7 +15,6 @@ import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 消费模块
@@ -25,7 +26,9 @@ public class MainCashFragment extends BaseFragment {
 
     @BindView(R.id.tv_loan)
     TextView tvLoan;
-    Unbinder unbinder;
+    @BindView(R.id.iv_bg_top)
+    ImageView ivBgTop;
+
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,12 +58,16 @@ public class MainCashFragment extends BaseFragment {
 
     @Override
     public void initWithDataDelay() {
-
+        int width = ivBgTop.getWidth();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
+        layoutParams.height = (208 * width / 708);
+        ivBgTop.setLayoutParams(layoutParams);
     }
 
     @Override
     protected boolean translateStatusBar() {
         return true;
     }
+
 
 }

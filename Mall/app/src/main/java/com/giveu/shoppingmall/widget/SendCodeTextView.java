@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.R;
 public class SendCodeTextView extends TextView {
     private boolean isCounting;//记录验证码是否开始计时的标志
     CountEndListener mListener;
+    boolean flag;
 
     public SendCodeTextView(Context context) {
         super(context);
@@ -37,6 +38,15 @@ public class SendCodeTextView extends TextView {
 
     }
 
+    /**
+     * false 不带背景框的验证码
+     * true 带背景框的验证码
+     * @param flag
+     */
+    public void setSendTextColor(boolean flag) {
+        this.flag = flag;
+    }
+
     int MAXCOUNT = 60;
     int count = MAXCOUNT;
 
@@ -45,10 +55,15 @@ public class SendCodeTextView extends TextView {
             if (this != null) {
                 if (count == 0) {
                     stopCount("重发验证码");
-                    SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.color_00bbc0));
+                    if (!flag) {
+                        SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.color_00bbc0));
+                    }
+
                 } else {
                     SendCodeTextView.this.setText("重新发送(" + (--count) + "s)");
-                    SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.grey_a5a5a5));
+                    if (!flag) {
+                        SendCodeTextView.this.setTextColor(ContextCompat.getColor(getContext(), R.color.grey_a5a5a5));
+                    }
                     SendCodeTextView.this.setEnabled(false);
                     Message msg2 = Message.obtain();
                     handler.sendMessageDelayed(msg2, 1000);
@@ -70,7 +85,7 @@ public class SendCodeTextView extends TextView {
     public void stopCount(String codeStr) {
         this.setEnabled(true);
         this.setText(codeStr);
-        if(mListener != null){
+        if (mListener != null) {
             mListener.onEnd();
         }
         onDestory();

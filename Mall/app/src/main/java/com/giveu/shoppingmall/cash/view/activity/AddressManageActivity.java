@@ -3,11 +3,13 @@ package com.giveu.shoppingmall.cash.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.adpter.AddressManageAdapter;
+import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -22,6 +24,8 @@ import butterknife.BindView;
 public class AddressManageActivity extends BaseActivity {
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
+    @BindView(R.id.tv_add_address)
+    ClickEnabledTextView tvAddAddress;
     private AddressManageAdapter addressManageAdapter;
     private ArrayList<String> addressList;
     private int pageIndex = 1;
@@ -70,5 +74,12 @@ public class AddressManageActivity extends BaseActivity {
                 ptrlv.setPullRefreshEnable(true);
             }
         });
+        tvAddAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddAddressActivity.startIt(mBaseContext);
+            }
+        });
     }
+
 }

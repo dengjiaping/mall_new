@@ -57,6 +57,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         setContentView(R.layout.activity_wallet_activation_second);
         baseLayout.setTitle("钱包激活");
         CommonUtils.openSoftKeyBoard(mBaseContext);
+        tvSendCode.setSendTextColor(false);
     }
 
     @Override

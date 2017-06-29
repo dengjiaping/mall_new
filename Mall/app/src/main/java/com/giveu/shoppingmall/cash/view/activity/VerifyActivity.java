@@ -31,6 +31,7 @@ public class VerifyActivity extends BaseActivity {
         setContentView(R.layout.activity_verify);
         baseLayout.setTitle("验证");
         tvSendCode.startCount(null);
+        tvSendCode.setSendTextColor(false);
     }
 
     @OnClick({R.id.tv_send_code})
