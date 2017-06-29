@@ -121,7 +121,7 @@ public class CrashReportUtil {
 		}
 	}
 
-//	public static void setUserIdTobugly(LoginBean loginBean) {
+//	public static void setUserIdTobugly(RegisterResponse loginBean) {
 //		try{
 //			if (loginBean != null){
 //				CrashReport.setUserId(loginBean.getSalesId());//bugly记录用户信息

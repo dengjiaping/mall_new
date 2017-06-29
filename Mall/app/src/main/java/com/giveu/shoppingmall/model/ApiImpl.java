@@ -9,9 +9,9 @@ import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.Map;
@@ -98,19 +98,23 @@ public class ApiImpl {
         });
     }
 
+    //用户注册
+    public static void register(Activity context, String mobile, String password, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "smsCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, smsCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.v1_personCenter_account_register, RegisterResponse.class, context, responseListener);
+    }
 
+    //下发短信验证码
+    public static void sendSMSCode(Activity context, String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone", "codeType",}, new String[]{phone, "regType"});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.v1_personCenter_util_sendSMSCode, BaseBean.class, context, responseListener);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    //校验短信验证码
+    public static void chkValiCode(Activity context, String code, String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code", "phone", "codeType"}, new String[]{code, phone, "loginCode"});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.v1_personCenter_util_chkValiCode, BaseBean.class, context, responseListener);
+    }
 }
 
 
