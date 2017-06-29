@@ -19,31 +19,28 @@
             android:paddingTop="28dp">
 
             <ImageView
-                android:layout_width="49dp"
-                android:layout_height="49dp"
+                android:id="@+id/iv_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
                 android:src="@drawable/ic_default_avatar" />
 
             <TextView
                 android:id="@+id/tv_login"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLength="8"
+                android:maxLength="11"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp"
+                android:paddingRight="5dp"
                 android:singleLine="true"
                 android:text="立即登录"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_14" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/ll_quota"
@@ -58,6 +55,7 @@
                     android:src="@drawable/ic_money" />
 
                 <TextView
+                    android:id="@+id/tv_withdrawals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -75,6 +73,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_status"
             android:layout_width="match_parent"
             android:layout_height="38dp"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"

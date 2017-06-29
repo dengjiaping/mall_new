@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.RegisterPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRegisterView;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
@@ -104,6 +105,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
                 if (etPhone.getText().toString().length() != 11) {
                     ToastUtils.showShortToast("请输入11位的手机号");
                 } else {
+                    CommonUtils.closeSoftKeyBoard(mBaseContext);
                     presenter.sendSMSCode(etPhone.getText().toString());
                 }
                 break;
@@ -125,7 +127,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
             return false;
         }
 
-        if ("获取验证码".equals(tvSendCode.getText().toString())) {
+        if ("获取验证码".equals(tvSendCode.getText().toString()) && tvSendCode.isEnabled()) {
             if (showToast) {
                 ToastUtils.showShortToast("请获取验证码");
             }
@@ -161,5 +163,19 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     @Override
     public void checkSMSSuccess() {
         SetPasswordActivity.startIt(mBaseContext, true, etPhone.getText().toString(), etCode.getText().toString());
+    }
+
+    @Override
+    public void sendSMSSuccess() {
+        tvSendCode.startCount(null);
+        canClick(false);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SetPasswordActivity.REQUEST_FINISH && resultCode == RESULT_OK) {
+            finish();
+        }
     }
 }

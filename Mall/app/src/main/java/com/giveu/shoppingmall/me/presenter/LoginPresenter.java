@@ -3,11 +3,16 @@ package com.giveu.shoppingmall.me.presenter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +33,32 @@ public class LoginPresenter extends BasePresenter<ILoginView> {
         super(view);
     }
 
+    public void login(String userName, String password) {
+        ApiImpl.login(getView().getAct(), userName, password, new BaseRequestAgent.ResponseListener<LoginResponse>() {
+            @Override
+            public void onSuccess(LoginResponse response) {
+                if (getView() != null) {
+                    getView().onLoginSuccess(response.data);
+                }
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+
+    }
+
     public void WechatLogin() {
-        if(isWeixinAvailable()) {
+        if (isWeixinAvailable()) {
             thirdLogin(Wechat.NAME);
-        }else {
+        } else {
             ToastUtils.showShortToast("请先安装微信客户端");
-            getView().hideLoding();
+            if (getView() != null) {
+                getView().hideLoding();
+            }
         }
     }
 
@@ -97,6 +122,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> {
 
     /**
      * 判断是否已安装微信客户端
+     *
      * @return
      */
     public boolean isWeixinAvailable() {

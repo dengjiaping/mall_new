@@ -22,14 +22,16 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
-import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -99,8 +101,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         boolean isLogoutByServer = getIntent().getBooleanExtra("isLogoutByServer", false);
         String logoutMsg = getIntent().getStringExtra("logoutMsg");
         if (isLogoutByServer && !TextUtils.isEmpty(logoutMsg)) {
-           /* CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-            customDialogUtil.getDialogMode1("提示", logoutMsg, "确定", "", null, null).show();*/
+            CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
+            customDialogUtil.getDialogMode1("提示", logoutMsg, "确定", "", null, null).show();
         }
     }
 
@@ -115,7 +117,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             case R.id.tv_login:
                 //每次点击按钮重置定位次数
                 initLocCounts = 1;
-                turnToLogin();
+                login();
                 break;
 
             case R.id.tv_register:
@@ -162,7 +164,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         }
     }
 
-    private void turnToLogin() {
+    private void login() {
         userId = etAccount.getText().toString().trim();
         pwd = etPwd.getText().toString().trim();
         if (StringUtils.isNull(userId)) {
@@ -170,29 +172,35 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             return;
         }
         if (StringUtils.checkLoginPwdAndTipError(pwd)) {
+            presenter.login(userId, pwd);
         }
     }
 
     private void onLoginSuccessV() {
-        ToastUtils.showLongToast("登录成功");
-//        LoginHelper.getInstance().saveLoginStatus(loginBean);
+/*        ToastUtils.showLongToast("登录成功");
+        LoginHelper.getInstance().saveLoginStatus(loginBean);
         //统计登录次数
         MobclickAgent.onEvent(mBaseContext, "Forward");
         //如果此时deviceNumber不为空那么设备号上传服务器已成功
-        if (StringUtils.isNotNull(deviceNumber)) {
+*//*        if (StringUtils.isNotNull(deviceNumber)) {
 //            LoginHelper.getInstance().setHasUploadDeviceNumber(true);
         }
         //退出登录后，极光推送已关闭，此时登录成功后需恢复极光推送
         if (JPushInterface.isPushStopped(BaseApplication.getInstance())) {
             JPushInterface.resumePush(BaseApplication.getInstance());
-        }
+        }*//*
         MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
-        finish();
+        finish();*/
     }
 
     @Override
-    public void onLoginSuccess() {
-
+    public void onLoginSuccess(LoginResponse data) {
+        ToastUtils.showLongToast("登录成功");
+        LoginHelper.getInstance().saveLoginStatus(data);
+        //统计登录次数
+        MobclickAgent.onEvent(mBaseContext, "Forward");
+        MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
+        finish();
     }
 
     @Override

@@ -323,7 +323,7 @@ public class MainActivity extends BaseActivity {
     public static String extraKey = "data";
     public static String lockPatternKey = "lockPatternKey";
     public static String needTurnToMessageActivity = "needTurnToMessageActivity";//是否需要跳转至消息列表
-
+    //找回密码（重置密码）
 
     @Override
     protected void onNewIntent(Intent intent) {

@@ -28,11 +28,15 @@ public interface ApiUrl {
     //保存极光设备号
     String api_Account_SaveDeviceNumber = "/api/Account/SaveDeviceNumber";
     //用户注册
-    String v1_personCenter_account_register = BASE_URL + "/v1/personCenter/account/register";
+    String personCenter_account_register = BASE_URL + "personCenter/account/register";
     //下发短信验证码
-    String v1_personCenter_util_sendSMSCode = BASE_URL + "/v1/personCenter/util/sendSMSCode";
+    String personCenter_util_sendSMSCode = BASE_URL + "personCenter/util/sendSMSCode";
     //校验短信验证码
-    String v1_personCenter_util_chkValiCode = "/v1/personCenter/util/chkValiCode";
+    String personCenter_util_chkValiCode = BASE_URL + "personCenter/util/chkValiCode";
+    //用户登录
+    String personCenter_account_login = BASE_URL + "personCenter/account/login";
+    //找回密码（重置密码）
+    String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
 
 
 }
