@@ -47,9 +47,11 @@ public class BaseBeanParent implements Serializable {
 		return info;
 	}
 
-
+	/**
+	 * 判断token失效
+	 */
 	public boolean isTokenInvalidate() {
-		return "1".equals(code);
+		return "000401".equals(code);
 	}
 
 	/**
