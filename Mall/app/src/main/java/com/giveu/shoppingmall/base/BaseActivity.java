@@ -265,7 +265,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             if (SplashActivity.class.getName().equals(className)&& LoginHelper.getInstance().hasLogin()) {
                 //从splash页面过来的
                 if (SharePrefUtil.hasFingerPrint()) {
-                    FingerPrintActivity.startIt(mBaseContext);
+                    FingerPrintActivity.startIt(mBaseContext,false);
                 } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                     //如果设置过密码
                     GestureLoginActivity.startIt(this);
@@ -287,7 +287,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //如果上面页面做个处理了就不处理了
         if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern()&&LoginHelper.getInstance().hasLogin()) {
             if (SharePrefUtil.hasFingerPrint()) {
-                FingerPrintActivity.startIt(mBaseContext);
+                FingerPrintActivity.startIt(mBaseContext,false);
             } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                 //如果设置过密码
                 GestureLoginActivity.startIt(this);

@@ -33,8 +33,8 @@ public class SetPasswordPresenter extends BasePresenter<ISetPasswordView> {
         });
     }
 
-    public void changePassword(String mobile, String password, String randCode, String userName) {
-        ApiImpl.changePassword(getView().getAct(), mobile, password, userName, randCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
+    public void resetPassword(String mobile, String password, String randCode, String userName) {
+        ApiImpl.resetPassword(getView().getAct(), mobile, password, userName, randCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
             @Override
             public void onSuccess(RegisterResponse response) {
                 if (getView() != null) {

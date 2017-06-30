@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.widget.IosSwitch;
+import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -26,8 +31,11 @@ public class SecurityCenterActivity extends BaseActivity {
     LinearLayout llChangeLoginPwd;
     @BindView(R.id.ll_change_transaction_pwd)
     LinearLayout llChangeTransactionPwd;
-    @BindView(R.id.switch_gesture)
-    IosSwitch switchGesture;
+    @BindView(R.id.iv_switch)
+    ImageView switchGesture;
+    @BindView(R.id.tv_lock_type)
+    TextView tvLockType;
+    private FingerprintIdentify mFingerprintIdentify;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, SecurityCenterActivity.class);
@@ -41,11 +49,31 @@ public class SecurityCenterActivity extends BaseActivity {
     }
 
     @Override
-    public void setData() {
-
+    protected void onResume() {
+        super.onResume();
+        if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd())) {
+            switchGesture.setImageResource(R.drawable.ios_switch_checked);
+        } else {
+            switchGesture.setImageResource(R.drawable.ios_switch_unchecked);
+        }
     }
 
-    @OnClick({R.id.ll_change_phone_number, R.id.ll_change_login_pwd, R.id.ll_change_transaction_pwd, R.id.switch_gesture})
+    @Override
+    public void setData() {
+        mFingerprintIdentify = new FingerprintIdentify(mBaseContext);
+        if (mFingerprintIdentify.isHardwareEnable()) {
+            tvLockType.setText("手势与指纹");
+        } else {
+            tvLockType.setText("手势");
+        }
+    }
+
+    @Override
+    public void setListener() {
+        super.setListener();
+    }
+
+    @OnClick({R.id.ll_change_phone_number, R.id.ll_change_login_pwd, R.id.ll_change_transaction_pwd, R.id.iv_switch})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -61,16 +89,29 @@ public class SecurityCenterActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_change_login_pwd:
+                RequestPasswordActivity.startIt(mBaseContext);
                 //修改登录密码
 
                 break;
             case R.id.ll_change_transaction_pwd:
                 //修改交易密码
                 break;
-            case R.id.switch_gesture:
+            case R.id.iv_switch:
+                if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd())) {
+                    //去关闭
+                    VerifyPwdActivity.startIt(mBaseContext, true);
+                } else {
+                    //去开启
+                    VerifyPwdActivity.startItForSetting(mBaseContext, true);
+                }
                 //手势与指纹
                 break;
         }
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
+    }
 }

@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -44,11 +44,11 @@
             android:layout_height="50dp"
             android:background="@null"
             android:gravity="center_vertical"
-            android:hint="请输入登录密码解锁"
+            android:hint="请输入登录密码"
             android:inputType="textPassword"
             android:textColor="@color/color_d8d8d8"
             android:textColorHint="@color/color_d8d8d8"
-            android:textSize="@dimen/ts_16" />
+            android:textSize="@dimen/ts_15" />
     </LinearLayout>
 
     <ImageView
@@ -58,9 +58,11 @@
         android:layout_marginRight="20dp"
         android:src="@color/color_00adb2" />
 
-    <TextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_login"
         style="@style/click_enabled_bt"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
         android:layout_marginTop="74dp"
         android:text="确认" />
 

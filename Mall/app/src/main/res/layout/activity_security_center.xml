@@ -95,6 +95,7 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_lock_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
@@ -103,10 +104,11 @@
             android:textColor="@color/color_282828"
             android:textSize="@dimen/ts_15" />
 
-        <com.giveu.shoppingmall.widget.IosSwitch
-            android:id="@+id/switch_gesture"
+        <ImageView
+            android:id="@+id/iv_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ios_switch_unchecked"
             android:layout_marginRight="@dimen/default_layout_screen_gap" />
     </LinearLayout>
 
