@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
@@ -91,7 +92,12 @@ public class MainMeFragment extends BaseFragment {
 
     @Override
     protected void setListener() {
-
+        tvStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WalletActivationFirstActivity.startIt(mBaseContext);
+            }
+        });
     }
 
     @Override

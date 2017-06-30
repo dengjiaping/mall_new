@@ -37,6 +37,7 @@ public interface ApiUrl {
     String personCenter_account_login = BASE_URL + "personCenter/account/login";
     //找回密码（重置密码）
     String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
-
+    //钱包激活
+    String personCenter_account_activateWallet = BASE_URL + "personCenter/account/activateWallet";
 
 }

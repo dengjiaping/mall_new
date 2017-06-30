@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
+import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
@@ -122,6 +123,12 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password"}, new String[]{SharePrefUtil.getUUId(), userName, password});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
     }
+    //钱包激活
+    public static void activateWallet(Activity context, String bankNo, String idPerson,String ident, String latitude, String longitude, String phone, String realName, String smsCode, String userId,BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new String[]{bankNo,idPerson,ident,latitude,longitude,phone,realName,smsCode,userId});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_activateWallet, WalletActivationResponse.class, context, responseListener);
+    }
+
 
 //    //找回密码（重置密码）
 //    public static void register(Activity context, String mobile, String newPwd, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {

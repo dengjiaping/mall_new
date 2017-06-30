@@ -10,16 +10,21 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ActivationResponse;
+import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -126,10 +131,10 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     @Override
                     public void onEnd() {
                         String phone = StringUtils.getTextFromView(etPhone);
-                        if(StringUtils.checkPhoneNumberAndTipError(phone,false)){
+                        if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {
                             tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
                             tvSendCode.setEnabled(true);
-                        }else{
+                        } else {
                             tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
                             tvSendCode.setEnabled(false);
                         }
@@ -138,7 +143,18 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-                    ActivationStatusActivity.startIt(mBaseContext, activationResponse.status, activationResponse.date1, activationResponse.date2, activationResponse.date3, activationResponse.bottomHint, activationResponse.midHint);
+                    ApiImpl.activateWallet(mBaseContext, "6228481218003652486", "10000923", "622424199408300017", "106.72", "26.57", "18109491314", "唐兴", "123456", "30", new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
+                        @Override
+                        public void onSuccess(WalletActivationResponse response) {
+                            ToastUtils.showShortToast("激活成功！");
+                            ActivationStatusActivity.startIt(mBaseContext, activationResponse.status, activationResponse.date1, activationResponse.date2, activationResponse.date3, activationResponse.bottomHint, activationResponse.midHint);
+                        }
+
+                        @Override
+                        public void onError(BaseBean errorBean) {
+                            CommonLoadingView.showErrorToast(errorBean);
+                        }
+                    });
                 } else {
                     buttonCanClick(true);
                 }

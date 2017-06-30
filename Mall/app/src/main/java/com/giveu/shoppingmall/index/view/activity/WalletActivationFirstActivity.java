@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -37,6 +39,10 @@ public class WalletActivationFirstActivity extends BaseActivity {
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
 
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, WalletActivationFirstActivity.class);
+        mActivity.startActivity(intent);
+    }
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_first);
