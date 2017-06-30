@@ -20,10 +20,10 @@
         android:layout_marginTop="20dp"
         android:text="致电客服：4008075546\n服务时间：9:00-22:00" />
 
-    <TextView
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_call_phone"
-        style="@style/me_bt"
+        style="@style/click_enabled_bt"
         android:layout_marginTop="59dp"
-        android:background="@drawable/selector_btn_change_blue"
         android:text="立即拨打" />
+
 </LinearLayout>

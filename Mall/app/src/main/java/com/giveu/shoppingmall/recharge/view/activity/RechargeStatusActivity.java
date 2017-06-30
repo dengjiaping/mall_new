@@ -79,6 +79,8 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvHintMid.setVisibility(View.INVISIBLE);
                 tvSeeOrder.setText("查看充值订单");
                 tvBack.setVisibility(View.VISIBLE);
+                tvSeeOrder.setBackgroundResource(R.color.title_color);
+                tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);
                 break;
             case "fail":
                 ivStatus.setImageResource(R.drawable.ic_activation_fail);
@@ -88,7 +90,8 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
-                tvSeeOrder.setText("重新支付");
+              tvSeeOrder.setText("重新支付");
+                tvSeeOrder.setBackgroundResource(R.color.title_color);
                 tvBack.setVisibility(View.GONE);
                 break;
         }

@@ -17,7 +17,7 @@
             android:gravity="start"
             android:padding="@dimen/default_layout_screen_gap"
             android:hint="请针对页面异常情况进行反馈，业务咨询联系客服：4008075546"
-            android:textColor="@color/color_d8d8d8"
+            android:textColorHint="@color/color_d8d8d8"
             android:textSize="@dimen/ts_14" />
 
         <View

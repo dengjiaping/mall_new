@@ -146,8 +146,8 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (imageSelect != null) {
             imageSelect.doResult(requestCode, resultCode, data);
-            commitButtonCanClick(false);
         }
+            commitButtonCanClick(false);
     }
 
 }

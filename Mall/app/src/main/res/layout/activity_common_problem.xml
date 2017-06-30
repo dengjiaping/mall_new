@@ -8,6 +8,7 @@
         android:id="@+id/lv_problem_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/default_layout_screen_gap"
         android:divider="@color/line_bg"
-        android:dividerHeight="1px"/>
+        android:dividerHeight="1px" />
 </LinearLayout>

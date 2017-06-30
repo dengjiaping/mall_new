@@ -43,7 +43,7 @@ public class ChargeOrderDialog {
     //套餐的面值
     private String denomination;
     Activity mActivity;
-    String paymentType;//支付方式
+    String paymentType = "即有钱包";//支付方式，默认
     PwdDialog pwdDialog = null;
     public ChargeOrderDialog(Activity activity) {
         this.mActivity = activity;
@@ -102,9 +102,9 @@ public class ChargeOrderDialog {
     private void initView(final View contentView) {
          paymentTypeListResponse = new PaymentTypeListResponse();
         paymentTypeListResponse.list = new ArrayList<>();
-        PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wechat, true);
+        PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wallet, true);
         PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
-        PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝支付", R.drawable.ic_zhifubao, false);
+        PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
         paymentTypeListResponse.list.add(bean1);
         paymentTypeListResponse.list.add(bean2);
         paymentTypeListResponse.list.add(bean3);

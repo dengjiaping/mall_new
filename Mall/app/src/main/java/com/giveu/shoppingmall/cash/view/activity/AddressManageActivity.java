@@ -48,6 +48,7 @@ public class AddressManageActivity extends BaseActivity {
         ptrlv.setAdapter(addressManageAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
+        tvAddAddress.setClickEnabled(true);
     }
 
     @Override
