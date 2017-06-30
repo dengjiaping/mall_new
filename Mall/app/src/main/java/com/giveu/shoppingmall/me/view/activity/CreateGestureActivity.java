@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.me.view.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.view.View;
@@ -13,6 +15,8 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternIndicator;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
+import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
+import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +42,21 @@ public class CreateGestureActivity extends BaseActivity {
     private List<LockPatternView.Cell> mChosenPattern = null;
     private static final long DELAYTIME = 600L;
     private static final String TAG = "CreateGestureActivity";
+    private FingerprintIdentify mFingerprintIdentify;
+    public static final int REQUEST_FINISH = 10000;
+
+    public static void startIt(Activity activity) {
+        Intent intent = new Intent(activity, CreateGestureActivity.class);
+        activity.startActivityForResult(intent, REQUEST_FINISH);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_create_gesture);
 
         SpannableString titleText = StringUtils.getColorSpannable("", "手势密码设置", R.color.color_4a4a4a, R.color.color_4a4a4a);
-        baseLayout.setTitle(titleText);
+        baseLayout.setTitle("解锁");
         baseLayout.hideBack();
-        baseLayout.setTopBarBackgroundColor(R.color.white);
         SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
         baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
             @Override
@@ -55,6 +65,11 @@ public class CreateGestureActivity extends BaseActivity {
             }
         });
         lockPatternView.setOnPatternListener(patternListener);
+        mFingerprintIdentify = new FingerprintIdentify(this, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
+            @Override
+            public void onCatchException(Throwable exception) {
+            }
+        });
     }
 
 
@@ -152,6 +167,11 @@ public class CreateGestureActivity extends BaseActivity {
         //调用接口将图案密码传给服务器
         //接口存储图案成功
         ToastUtils.showShortToast("手势密码设置成功");
+        setResult(RESULT_OK);
+        //如果支持手机指纹，那么跳转至设置指纹界面
+        if (mFingerprintIdentify.isHardwareEnable()) {
+            FingerPrintActivity.startIt(mBaseContext, true);
+        }
         finish();
     }
 

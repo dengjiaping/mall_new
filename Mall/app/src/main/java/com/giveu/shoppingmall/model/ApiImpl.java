@@ -139,7 +139,7 @@ public class ApiImpl {
     }
 
     //找回密码（重置密码）
-    public static void changePassword(Activity context, String mobile, String newPwd, String userName, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
+    public static void resetPassword(Activity context, String mobile, String newPwd, String userName, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"mobile", "newPwd", "userName", "randCode"}, new String[]{mobile, newPwd, userName, randCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetLoginPwd, RegisterResponse.class, context, responseListener);
     }

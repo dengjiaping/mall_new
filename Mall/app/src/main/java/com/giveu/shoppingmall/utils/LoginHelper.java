@@ -51,6 +51,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.userName = getString(USER_NAME, "");
         personInfo.userPic = getString(USER_PIC, "");
         personInfo.globleLimit = getString(GLOBLE_LIMIT, "");
+        personInfo.idPerson = getString(ID_PERSON, "");
+        personInfo.mobile = getString(MOBILE, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -111,9 +113,16 @@ public class LoginHelper extends AbsSharePref {
         return loginPersonInfo == null ? null : loginPersonInfo.globleLimit;
     }
 
-    @Override
+    public String getIdPerson() {
+        return loginPersonInfo == null ? null : loginPersonInfo.idPerson;
+    }
+
+    public String getMobile() {
+        return loginPersonInfo == null ? null : loginPersonInfo.mobile;
+    }
+
     public String getUserId() {
-        return null;
+        return loginPersonInfo == null ? null : loginPersonInfo.userId;
     }
 
     public boolean hasLogin() {

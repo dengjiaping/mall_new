@@ -69,8 +69,7 @@ public class GestureLoginActivity extends BaseActivity {
             baseLayout.setRightTextAndListener("关闭", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VerifyPwdActivity.startIt(mBaseContext, false);
-                    finish();
+                    VerifyPwdActivity.startIt(mBaseContext, true);
                 }
             });
 //            SpannableString titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
@@ -134,10 +133,6 @@ public class GestureLoginActivity extends BaseActivity {
      * 手势登录成功（去首页）
      */
     private void loginGestureSuccess() {
-        if (isClosePattern) {
-            //告知设置界面
-            setResult(RESULT_OK);
-        }
         //解锁成功，重新开始计时
         BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
         finish();
@@ -206,8 +201,8 @@ public class GestureLoginActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 10 && resultCode == RESULT_OK) {
-            //使用登录密码解锁成功
-            loginGestureSuccess();
+            //使用登录密码解锁成功后关闭本页面
+            finish();
         }
     }
 
