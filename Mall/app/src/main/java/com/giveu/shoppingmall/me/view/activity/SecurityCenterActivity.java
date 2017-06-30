@@ -52,13 +52,14 @@ public class SecurityCenterActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_change_phone_number:
                 //修改手机号
-                if (true) {
-                    //有资质的
-                    TransactionInputActivity.startIt(mBaseContext);
-                } else {
-                    //没有资质的
-                    ChangePhoneNumberActivity.startIt(mBaseContext);
-                }
+//                if (true) {
+//                    //有资质的
+//                    TransactionInputActivity.startIt(mBaseContext);
+//                } else {
+//                    //没有资质的
+//                    ChangePhoneNumberActivity.startIt(mBaseContext);
+//                }
+                TransactionInputActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_change_login_pwd:
                 //修改登录密码

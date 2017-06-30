@@ -15,7 +15,6 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.ActivationResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -55,7 +54,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     CheckBox cbCheck;
     @BindView(R.id.tv_activation)
     ClickEnabledTextView tvActivation;
-    ActivationResponse activationResponse;
+
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -84,7 +83,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        activationResponse = new ActivationResponse("1", "13000.00元", "1000.00元", "12000.00元", null, null);
+
     }
 
     /**
@@ -127,27 +126,42 @@ public class WalletActivationSecondActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_send_code:
-                tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                ApiImpl.sendSMSCode(mBaseContext, "18109491314", "activateWallet", new BaseRequestAgent.ResponseListener<BaseBean>() {
                     @Override
-                    public void onEnd() {
-                        String phone = StringUtils.getTextFromView(etPhone);
-                        if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {
-                            tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
-                            tvSendCode.setEnabled(true);
-                        } else {
-                            tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
-                            tvSendCode.setEnabled(false);
-                        }
+                    public void onSuccess(BaseBean response) {
+                        tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                            @Override
+                            public void onEnd() {
+                                String phone = StringUtils.getTextFromView(etPhone);
+                                if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {
+                                    tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
+                                    tvSendCode.setEnabled(true);
+                                } else {
+                                    tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
+                                    tvSendCode.setEnabled(false);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
+
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
+
                     ApiImpl.activateWallet(mBaseContext, "6228481218003652486", "10000923", "622424199408300017", "106.72", "26.57", "18109491314", "唐兴", "123456", "30", new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
                             ToastUtils.showShortToast("激活成功！");
-                            ActivationStatusActivity.startIt(mBaseContext, activationResponse.status, activationResponse.date1, activationResponse.date2, activationResponse.date3, activationResponse.bottomHint, activationResponse.midHint);
+                            //TODO: 错误状态码未确定 ，先不跳转
+//                            if (response != null) {
+//                                ActivationStatusActivity.startIt(mBaseContext,"", response.globleLimit+"", response.cyLimit+"", response.posLimit+"", response.lab);
+//                            }
                         }
 
                         @Override

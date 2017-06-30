@@ -7,15 +7,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,10 +37,14 @@ public class MyBankCardActivity extends BaseActivity {
 
     @BindView(R.id.lv_bank_card)
     ListView lvBankCard;
-    LvCommonAdapter<BaseBean> bankListAdapter;
+    LvCommonAdapter<BankCardListResponse> bankListAdapter;
     CustomDialogUtil dialog;
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
+    @BindView(R.id.tv_defalut_bank_name)
+    TextView tvDefalutBankName;
+    @BindView(R.id.tv_defalut_bank_card_no)
+    TextView tvDefalutBankCardNo;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
@@ -47,7 +57,7 @@ public class MyBankCardActivity extends BaseActivity {
         baseLayout.setTitle("我的银行卡");
         baseLayout.setRightImage(R.drawable.ic_add_bank_card);
         //从最上方显示
-        scrollView.smoothScrollTo(0,20);
+        scrollView.smoothScrollTo(0, 20);
     }
 
     @Override
@@ -126,21 +136,38 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        BaseBean bean = new BaseBean();
-        List<BaseBean> data = new ArrayList<>();
-        data.add(bean);
-        data.add(bean);
-        data.add(bean);
-        data.add(bean);
-        data.add(bean);
-        data.add(bean);
-        bankListAdapter = new LvCommonAdapter<BaseBean>(mBaseContext, R.layout.lv_bank_card_item, data) {
-            @Override
-            protected void convert(ViewHolder viewHolder, BaseBean item, int position) {
 
+        ApiImpl.getBankCardInfo(mBaseContext, "11415969", new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
+            @Override
+            public void onSuccess(BankCardListResponse response) {
+                List<BankCardListResponse> bankList = response.data;
+                if (CommonUtils.isNotNullOrEmpty(bankList)) {
+
+                    for (BankCardListResponse bankCardListResponse : bankList) {
+                        if ("1".equals(bankCardListResponse.isDefault)) {
+                            //默认代扣卡
+                            tvDefalutBankName.setText(StringUtils.nullToEmptyString(bankCardListResponse.bankName));
+                            tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(bankCardListResponse.bankNo));
+                        }
+                    }
+                    bankListAdapter = new LvCommonAdapter<BankCardListResponse>(mBaseContext, R.layout.lv_bank_card_item, bankList) {
+                        @Override
+                        protected void convert(ViewHolder viewHolder, BankCardListResponse item, int position) {
+                            TextView tv_bank_name = viewHolder.getView(R.id.tv_bank_name);
+                            TextView tv_bank_card_no = viewHolder.getView(R.id.tv_bank_card_no);
+                            tv_bank_name.setText(StringUtils.nullToEmptyString(item.bankName));
+                            tv_bank_card_no.setText(StringUtils.nullToEmptyString(item.bankNo));
+                        }
+                    };
+                    lvBankCard.setAdapter(bankListAdapter);
+                }
             }
-        };
-        lvBankCard.setAdapter(bankListAdapter);
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
 }

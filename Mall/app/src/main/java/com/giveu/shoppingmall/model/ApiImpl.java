@@ -9,6 +9,7 @@ import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
@@ -126,7 +127,7 @@ public class ApiImpl {
     }
     //钱包激活
     public static void activateWallet(Activity context, String bankNo, String idPerson,String ident, String latitude, String longitude, String phone, String realName, String smsCode, String userId,BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new String[]{new Integer(bankNo),idPerson,ident,latitude,longitude,phone,realName,smsCode,userId});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new Object[]{bankNo, Integer.parseInt(idPerson),ident,latitude,longitude,phone,realName,smsCode,Integer.parseInt(userId)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_activateWallet, WalletActivationResponse.class, context, responseListener);
     }
 
@@ -148,7 +149,21 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"certNo", "mobile", "userName", "randCode"}, new String[]{certNo, mobile, userName, randCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPwd_checkUserInfo, BaseBean.class, context, responseListener);
     }
-
+    //校验交易密码
+    public static void verifyPayPwd(Activity context, String idPerson, String tradPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "tradPwd"}, new Object[]{Integer.parseInt(idPerson), tradPwd});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_verifyPayPwd, BaseBean.class, context, responseListener);
+    }
+    //修改手机号
+    public static void updatePhone(Activity context, String idPerson, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "randCode", "smsCode"}, new Object[]{Integer.parseInt(idPerson), phone, randCode, smsCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_updatePhone, BaseBean.class, context, responseListener);
+    }
+    //修改手机号
+    public static void getBankCardInfo(Activity context, String idPerson, BaseRequestAgent.ResponseListener<BankCardListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Integer.parseInt(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_getBankInfo, BankCardListResponse.class, context, responseListener);
+    }
 }
 
 

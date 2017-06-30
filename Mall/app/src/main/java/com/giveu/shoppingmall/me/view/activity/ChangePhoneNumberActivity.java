@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -15,6 +18,7 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -35,9 +39,10 @@ public class ChangePhoneNumberActivity extends BaseActivity {
     EditView etSendCode;
     @BindView(R.id.tv_finish)
     ClickEnabledTextView tvFinish;
-
-    public static void startIt(Activity mActivity) {
+    String randCode;//校验交易密码返回的随机码
+    public static void startIt(Activity mActivity, String randCode) {
         Intent intent = new Intent(mActivity, ChangePhoneNumberActivity.class);
+        intent.putExtra("randCode",randCode);
         mActivity.startActivity(intent);
     }
 
@@ -46,6 +51,7 @@ public class ChangePhoneNumberActivity extends BaseActivity {
         setContentView(R.layout.activity_change_phone_number);
         baseLayout.setTitle("修改手机号");
         tvSendCode.setSendTextColor(false);
+        randCode = getIntent().getStringExtra("randCode");
     }
 
     @Override
@@ -118,16 +124,41 @@ public class ChangePhoneNumberActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_send_code:
                 String phoneNumber = StringUtils.getTextFromView(etPhoneNumber);
-                if (phoneNumber.length() != 11) {
+
+                if (phoneNumber.length() == 11) {
                     // ToastUtils.showShortToast("请输入11位的手机号");
-                    NormalHintDialog normalHintDialog = new NormalHintDialog(mBaseContext, "请输入您本人的手机号码");
-                    normalHintDialog.showDialog();
+                    ApiImpl.sendSMSCode(mBaseContext, "18707530061", "updatephone", new BaseRequestAgent.ResponseListener<BaseBean>() {
+
+                        @Override
+                        public void onSuccess(BaseBean response) {
+                            tvSendCode.startCount(null);
+                        }
+
+                        @Override
+                        public void onError(BaseBean errorBean) {
+
+                        }
+                    });
+
                 } else {
-                    tvSendCode.startCount(null);
+//                    NormalHintDialog normalHintDialog = new NormalHintDialog(mBaseContext, "请输入您本人的手机号码");
+//                    normalHintDialog.showDialog();
+
                 }
                 break;
             case R.id.tv_finish:
                 if (tvFinish.isClickEnabled()) {
+                    ApiImpl.updatePhone(mBaseContext, "14703507", "17688933779", randCode, "123456", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                        @Override
+                        public void onSuccess(BaseBean response) {
+                            ToastUtils.showShortToast("修改成功!");
+                        }
+
+                        @Override
+                        public void onError(BaseBean errorBean) {
+                            CommonLoadingView.showErrorToast(errorBean);
+                        }
+                    });
                     NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "绑定手机修改成功！\n", "登陆手机号已同步，请通过绑定手机+登陆密码登陆");
                     dialog.showDialog();
                 } else {

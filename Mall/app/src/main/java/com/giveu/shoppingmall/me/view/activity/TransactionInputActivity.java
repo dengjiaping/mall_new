@@ -3,11 +3,17 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.widget.PassWordInputView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 
@@ -40,8 +46,24 @@ public class TransactionInputActivity extends BaseActivity {
             @Override
             public void onInputFinish(String result) {
                 if(result.length() == 6){
-                    CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    ChangePhoneNumberActivity.startIt(mBaseContext);
+                    //交易密码MD5加密
+                    String tradPwd = MD5.MD5Encode(result);
+                    if ( !TextUtils.isEmpty(tradPwd)){
+                        tradPwd = tradPwd.toLowerCase();
+                    }
+                    ApiImpl.verifyPayPwd(mBaseContext, "14703507", "e10adc3949ba59abbe56e057f20f883e", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                        @Override
+                        public void onSuccess(BaseBean response) {
+                            CommonUtils.closeSoftKeyBoard(mBaseContext);
+                            ChangePhoneNumberActivity.startIt(mBaseContext, response.data.toString());
+                        }
+
+                        @Override
+                        public void onError(BaseBean errorBean) {
+                            CommonLoadingView.showErrorToast(errorBean);
+                        }
+                    });
+
                 }
             }
         });

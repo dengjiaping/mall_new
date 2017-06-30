@@ -57,7 +57,7 @@ public abstract class BaseRequestAgent {
 	 * @param values
 	 * @return keys == null时，返回new HashMap<String, String>();
 	 */
-	public static Map<String, Object> getRequestParamsObject(String[] keys, String[] values) {
+	public static Map<String, Object> getRequestParamsObject(String[] keys, Object[] values) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (keys != null) {
 			for (int i = 0; i < keys.length; i++) {
