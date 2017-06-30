@@ -43,16 +43,27 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     private CustomDialog callDialog;
     private TextView tvDial;
     private RequestPwdPresenter presenter;
+    private boolean isForTrade;//是否找回交易密码,false为找回登录密码
 
     public static void startIt(Activity activity) {
+        startIt(activity, false);
+    }
+
+    public static void startIt(Activity activity, boolean isForTrade) {
         Intent intent = new Intent(activity, RequestPasswordActivity.class);
+        intent.putExtra("isForTrade", isForTrade);
         activity.startActivity(intent);
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_request_password);
-        baseLayout.setTitle("找回登录密码");
+        isForTrade = getIntent().getBooleanExtra("isForTrade", false);
+        if (isForTrade) {
+            baseLayout.setTitle("找回交易密码");
+        } else {
+            baseLayout.setTitle("找回登录密码");
+        }
         initCallDialog();
         etPhone.checkFormat(11);
         presenter = new RequestPwdPresenter(this);
@@ -106,7 +117,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             case R.id.tv_send_code:
                 if (etPhone.length() == 11) {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    presenter.sendSMSCode(etPhone.getText().toString(),"findLoginPwd");
+                    presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
                     canClick(false);
                 }
                 break;
@@ -150,12 +161,18 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
 
     @Override
     public void skipToIdentify(String randCode) {
-        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString());
+        //找回登录密码，钱包资质用户跳转至身份证填写
+        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), isForTrade);
     }
 
     @Override
     public void skipToChangePassword(String randCode) {
-        SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
+        //找回登录密码，非钱包资质用户跳转至密码重置
+        if (!isForTrade) {
+            SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
+        }else {
+            IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), true);
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -26,10 +27,12 @@ import butterknife.OnClick;
 public class FingerPrintActivity extends BaseActivity {
     @BindView(R.id.tv_change_login)
     TextView tvChangeLogin;
+    @BindView(R.id.tv_finger)
+    TextView tvFinger;
     private FingerprintIdentify mFingerprintIdentify;
     private boolean isForSetting;
     private ConfirmDialog settingDialog;
-    private boolean hasEnterSetting;
+    private BaseFingerprint.FingerprintIdentifyListener identifyListener;
 
     /**
      * @param activity
@@ -46,18 +49,27 @@ public class FingerPrintActivity extends BaseActivity {
         setContentView(R.layout.activity_finger_print);
         baseLayout.setTitle("解锁");
         baseLayout.setRightTextColor(R.color.color_00adb2);
+        baseLayout.hideBack();
         isForSetting = getIntent().getBooleanExtra("isForSetting", false);
         //设置指纹是没有切换账号按钮的
         if (isForSetting) {
             tvChangeLogin.setVisibility(View.GONE);
+            tvFinger.setText("设置指纹密码");
         }
-        baseLayout.setRightTextAndListener("取消", new View.OnClickListener() {
+        String textStr;
+        if (isForSetting) {
+            textStr = "取消";
+        } else {
+            textStr = "关闭";
+        }
+        baseLayout.setRightTextAndListener(textStr, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isForSetting) {
                     VerifyPwdActivity.startIt(mBaseContext, false);
+                } else {
+                    BaseApplication.getInstance().finishAllActivity();
                 }
-                finish();
             }
         });
         initDialog();
@@ -71,7 +83,6 @@ public class FingerPrintActivity extends BaseActivity {
         settingDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                hasEnterSetting = true;
                 Intent intent = new Intent(Settings.ACTION_SETTINGS);
                 startActivity(intent);
                 settingDialog.dismiss();
@@ -88,23 +99,29 @@ public class FingerPrintActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (hasEnterSetting) {
-            //j系统设置后返回需重新更新指纹是否可用的状态
-            mFingerprintIdentify = new FingerprintIdentify(mBaseContext, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
-                @Override
-                public void onCatchException(Throwable exception) {
+        mFingerprintIdentify = new FingerprintIdentify(mBaseContext, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
+            @Override
+            public void onCatchException(Throwable exception) {
 
-                }
-            });
-            //指纹可用时开始录入指纹，否则弹出设置框
-            if (mFingerprintIdentify.isFingerprintEnable()) {
-                mFingerprintIdentify.resumeIdentify();
-            } else {
-                settingDialog.show();
             }
-            hasEnterSetting = false;
+        });
+        if (mFingerprintIdentify.isFingerprintEnable()) {
+            if (mFingerprintIdentify.isFingerprintEnable()) {
+                try {
+                    //最多指纹解锁10次
+                    mFingerprintIdentify.startIdentify(10, identifyListener);
+                } catch (Exception e) {
+                }
+
+            } else {
+                ToastUtils.showShortToast("指纹识别不可用");
+                if (!isForSetting) {
+                    VerifyPwdActivity.startIt(mBaseContext, false);
+                }
+                finish();
+            }
         } else {
-            mFingerprintIdentify.resumeIdentify();
+            settingDialog.show();
         }
     }
 
@@ -117,48 +134,37 @@ public class FingerPrintActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        mFingerprintIdentify = new FingerprintIdentify(this, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
+        identifyListener = new BaseFingerprint.FingerprintIdentifyListener() {
             @Override
-            public void onCatchException(Throwable exception) {
-            }
-        });
-        if (mFingerprintIdentify.isFingerprintEnable() && SharePrefUtil.hasFingerPrint()) {
-            try {
-                mFingerprintIdentify.resumeIdentify();
-                //最多指纹解锁10次
-                mFingerprintIdentify.startIdentify(10, new BaseFingerprint.FingerprintIdentifyListener() {
-                    @Override
-                    public void onSucceed() {
-                        BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
-                        if (isForSetting) {
-                            ToastUtils.showShortToast("指纹设置成功");
-                        }
-                        mFingerprintIdentify.cancelIdentify();
-                        finish();
-                    }
-
-                    @Override
-                    public void onNotMatch(int availableTimes) {
-                        if (availableTimes > 1) {
-                        } else {
-                        }
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        ToastUtils.showShortToast("指纹识别失败");
-                    }
-                });
-            } catch (Exception e) {
+            public void onSucceed() {
+                BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
+                if (isForSetting) {
+                    ToastUtils.showShortToast("指纹设置成功");
+                    SharePrefUtil.setFingerPrint(true);
+                }
+                mFingerprintIdentify.cancelIdentify();
+                finish();
             }
 
-        } else {
-            ToastUtils.showShortToast("指纹识别不可用");
-            if (!isForSetting) {
-                VerifyPwdActivity.startIt(mBaseContext, false);
+            @Override
+            public void onNotMatch(int availableTimes) {
+                if (availableTimes > 1) {
+                } else {
+                }
             }
-            finish();
-        }
+
+            @Override
+            public void onFailed() {
+                if (isForSetting) {
+                    ToastUtils.showShortToast("指纹设置失败");
+                } else {
+                    //指纹解锁失败，跳转至密码验证
+                    ToastUtils.showShortToast("指纹密码错误");
+                    VerifyPwdActivity.startIt(mBaseContext, true);
+                }
+                finish();
+            }
+        };
     }
 
     @OnClick(R.id.tv_change_login)
@@ -166,5 +172,12 @@ public class FingerPrintActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         LoginActivity.startIt(mBaseContext);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

@@ -94,6 +94,7 @@ public class SecurityCenterActivity extends BaseActivity {
 
                 break;
             case R.id.ll_change_transaction_pwd:
+                RequestPasswordActivity.startIt(mBaseContext, true);
                 //修改交易密码
                 break;
             case R.id.iv_switch:
