@@ -126,7 +126,7 @@ public class ApiImpl {
     }
     //钱包激活
     public static void activateWallet(Activity context, String bankNo, String idPerson,String ident, String latitude, String longitude, String phone, String realName, String smsCode, String userId,BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new String[]{bankNo,idPerson,ident,latitude,longitude,phone,realName,smsCode,userId});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new String[]{new Integer(bankNo),idPerson,ident,latitude,longitude,phone,realName,smsCode,userId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_activateWallet, WalletActivationResponse.class, context, responseListener);
     }
 
