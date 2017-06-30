@@ -9,6 +9,7 @@ import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
@@ -107,8 +108,8 @@ public class ApiImpl {
     }
 
     //下发短信验证码
-    public static void sendSMSCode(Activity context, String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone", "codeType",}, new String[]{phone, "regType"});
+    public static void sendSMSCode(Activity context, String phone, String codeType,BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone", "codeType",}, new String[]{phone, codeType});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_util_sendSMSCode, BaseBean.class, context, responseListener);
     }
 
@@ -130,11 +131,24 @@ public class ApiImpl {
     }
 
 
-//    //找回密码（重置密码）
-//    public static void register(Activity context, String mobile, String newPwd, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-//        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "smsCode"}, new String[]{SharePrefUtil.getUUId(), mobile, newPwd, smsCode});
-//        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetLoginPwd, RegisterResponse.class, context, responseListener);
-//    }
+    //找回登录密码（校验短信码）
+    public static void checkSmsCode(Activity context, String mobile, String smsCode, BaseRequestAgent.ResponseListener<CheckSmsResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"mobile", "smsCode"}, new String[]{mobile, smsCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPwd_checkSmsCode, CheckSmsResponse.class, context, responseListener);
+    }
+
+    //找回密码（重置密码）
+    public static void changePassword(Activity context, String mobile, String newPwd, String userName, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"mobile", "newPwd", "userName", "randCode"}, new String[]{mobile, newPwd, userName, randCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetLoginPwd, RegisterResponse.class, context, responseListener);
+    }
+
+    //找回密码（校验身份）
+    public static void checkUserInfo(Activity context, String certNo, String mobile, String randCode, String userName, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"certNo", "mobile", "userName", "randCode"}, new String[]{certNo, mobile, userName, randCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPwd_checkUserInfo, BaseBean.class, context, responseListener);
+    }
+
 }
 
 

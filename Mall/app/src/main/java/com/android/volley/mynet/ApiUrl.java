@@ -29,15 +29,22 @@ public interface ApiUrl {
     String api_Account_SaveDeviceNumber = "/api/Account/SaveDeviceNumber";
     //用户注册
     String personCenter_account_register = BASE_URL + "personCenter/account/register";
+    String personCenter_account_register = BASE_URL + "personCenter/account/changePassword";
     //下发短信验证码
     String personCenter_util_sendSMSCode = BASE_URL + "personCenter/util/sendSMSCode";
     //校验短信验证码
     String personCenter_util_chkValiCode = BASE_URL + "personCenter/util/chkValiCode";
     //用户登录
     String personCenter_account_login = BASE_URL + "personCenter/account/login";
+    //找回登录密码（校验短信码）
+    String personCenter_account_resetPwd_checkSmsCode = BASE_URL +"personCenter/account/resetPwd/checkSmsCode";
     //找回密码（重置密码）
     String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
-    //钱包激活
+
+
+    //找回密码（校验身份）
+    String personCenter_account_resetPwd_checkUserInfo = BASE_URL + "personCenter/account/resetPwd/checkUserInfo";
+//钱包激活
     String personCenter_account_activateWallet = BASE_URL + "personCenter/account/activateWallet";
 
 }

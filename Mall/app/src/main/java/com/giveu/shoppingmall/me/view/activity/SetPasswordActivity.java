@@ -37,6 +37,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     private SetPasswordPresenter presenter;
     private String mobile;
     private String smsCode;
+    private String randCode;
     public static final int REQUEST_FINISH = 10000;
 
     public static void startIt(Activity activity, boolean isSetPassword, String mobile, String smsCode) {
@@ -47,12 +48,21 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         activity.startActivityForResult(intent, REQUEST_FINISH);
     }
 
+    public static void startItWithRandCode(Activity activity, boolean isSetPassword, String mobile, String randCode) {
+        Intent intent = new Intent(activity, SetPasswordActivity.class);
+        intent.putExtra("isSetPassword", isSetPassword);
+        intent.putExtra("randCode", randCode);
+        intent.putExtra("mobile", mobile);
+        activity.startActivityForResult(intent, REQUEST_FINISH);
+    }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_set_password);
         isSetPassword = getIntent().getBooleanExtra("isSetPassword", false);
         mobile = getIntent().getStringExtra("mobile");
         smsCode = getIntent().getStringExtra("smsCode");
+        randCode = getIntent().getStringExtra("randCode");
         //区分是设置密码还是重置密码
         if (isSetPassword) {
             baseLayout.setTitle("设置登录密码");
@@ -86,7 +96,12 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
             case R.id.tv_complete:
                 if (canClick(true)) {
                     if (StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString())) {
-                        presenter.register(mobile, etPwd.getText().toString(), smsCode);
+                        if (isSetPassword) {
+                            //设置密码
+                            presenter.register(mobile, etPwd.getText().toString(), smsCode);
+                        } else {
+                            presenter.changePassword(mobile, etPwd.getText().toString(), randCode, "");
+                        }
                     }
                 }
                 break;
@@ -134,6 +149,13 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     @Override
     public void registerSuccess(RegisterResponse response) {
         ToastUtils.showShortToast("注册成功");
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void changePwdSuccess() {
+        ToastUtils.showShortToast("重置密码成功");
         setResult(RESULT_OK);
         finish();
     }

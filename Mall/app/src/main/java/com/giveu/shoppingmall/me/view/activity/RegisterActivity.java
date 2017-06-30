@@ -107,7 +107,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
                     ToastUtils.showShortToast("请输入11位的手机号");
                 } else {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    presenter.sendSMSCode(etPhone.getText().toString());
+                    presenter.sendSMSCode(etPhone.getText().toString(),"regType");
                 }
                 break;
 
