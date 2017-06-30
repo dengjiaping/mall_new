@@ -28,8 +28,7 @@ public interface ApiUrl {
     //保存极光设备号
     String api_Account_SaveDeviceNumber = "/api/Account/SaveDeviceNumber";
     //用户注册
-    String personCenter_account_register = BASE_URL + "personCenter/account/register";
-    String personCenter_account_register = BASE_URL + "personCenter/account/changePassword";
+     String personCenter_account_register = BASE_URL + "personCenter/account/register";
     //下发短信验证码
     String personCenter_util_sendSMSCode = BASE_URL + "personCenter/util/sendSMSCode";
     //校验短信验证码
