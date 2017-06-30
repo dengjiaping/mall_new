@@ -135,6 +135,12 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
+            android:name=".me.view.activity.IdentifyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="身份证验证"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <activity
             android:name=".me.view.activity.RequestPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="找回密码"

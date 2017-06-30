@@ -9,4 +9,5 @@ import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 
 public interface ISetPasswordView extends IView{
     void registerSuccess(RegisterResponse response);
+    void changePwdSuccess();
 }

@@ -16,12 +16,29 @@ public class SetPasswordPresenter extends BasePresenter<ISetPasswordView> {
     public SetPasswordPresenter(ISetPasswordView view) {
         super(view);
     }
+
     public void register(String mobile, String password, String smsCode) {
         ApiImpl.register(getView().getAct(), mobile, password, smsCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
             @Override
             public void onSuccess(RegisterResponse response) {
                 if (getView() != null) {
                     getView().registerSuccess(response.data);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
+
+    public void changePassword(String mobile, String password, String randCode, String userName) {
+        ApiImpl.changePassword(getView().getAct(), mobile, password, userName, randCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
+            @Override
+            public void onSuccess(RegisterResponse response) {
+                if (getView() != null) {
+                    getView().changePwdSuccess();
                 }
             }
 
