@@ -8,6 +8,7 @@ import android.view.View;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
@@ -28,8 +29,9 @@ public class VerifyActivity extends BaseActivity {
     @BindView(R.id.input_view_pwd)
     PassWordInputView inputViewPwd;
 
-    public static void startIt(Activity activity) {
+    public static void startIt(Activity activity, String statusType) {
         Intent intent = new Intent(activity, VerifyActivity.class);
+        intent.putExtra("statusType", statusType);
         activity.startActivity(intent);
     }
 
@@ -37,7 +39,7 @@ public class VerifyActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_verify);
         baseLayout.setTitle("验证");
-        tvSendCode.startCount(null);
+     //   tvSendCode.startCount(null);
         tvSendCode.setSendTextColor(false);
     }
 
@@ -47,20 +49,31 @@ public class VerifyActivity extends BaseActivity {
         inputViewPwd.setInputCallBack(new PassWordInputView.InputCallBack() {
             @Override
             public void onInputFinish(String result) {
-                if(6 == result.length()){
-                    if("123456".equals(result)){
+                if (6 == result.length()) {
+                    if ("123456".equals(result)) {
                         Random random = new Random();
                         int randomNum = random.nextInt(2) + 1;
-                        switch (randomNum) {
-                            case 1:
-                                RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", "100.00元", "98.00元", null);
+                        String statusType = getIntent().getStringExtra("statusType");
+                        switch (statusType) {
+                            case PwdDialog.statusType.CASH:
+                                //跳转取现状态页
+                                if(randomNum == 1){
+                                    CashFinishStatusActivity.startIt(mBaseContext, "fail", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null, null, null);
+                                }else{
+                                    CashFinishStatusActivity.startIt(mBaseContext, "success", null, "3000.00元", "9期", "2017/05/18");
+                                }
                                 break;
-                            case 2:
-                                RechargeStatusActivity.startIt(mBaseContext, "success", null, "100.00元", "98.00元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+                            case PwdDialog.statusType.RECHARGE:
+                                //跳转充值状态页
+                                if(randomNum == 1){
+                                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", "100.00元", "98.00元", null);
+                                }else{
+                                    RechargeStatusActivity.startIt(mBaseContext, "success", null, "100.00元", "98.00元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+                                }
                                 break;
                         }
                         finish();
-                    }else{
+                    } else {
                         ToastUtils.showShortToast("验证码错误");
                     }
                 }

@@ -196,6 +196,7 @@
             android:label="取现记录" />
         <activity
             android:name=".cash.view.activity.CashTypeActivity"
+            android:launchMode="singleTask"
             android:label="取现类型页" />
 
         <!--支付宝支付-->
@@ -316,7 +317,10 @@
             android:label="我的银行卡" />
         <activity
             android:name=".recharge.view.activity.RechargeStatusActivity"
-            android:label="充值状态" />
+            android:label="充值完成状态" />
+        <activity
+            android:name=".cash.view.activity.CashFinishStatusActivity"
+            android:label="取现完成状态" />
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
         <service

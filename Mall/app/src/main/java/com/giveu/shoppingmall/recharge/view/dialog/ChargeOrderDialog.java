@@ -63,7 +63,7 @@ public class ChargeOrderDialog {
         tv_price.setText(price);
         tv_sum.setText(price);
 
-        pwdDialog = new PwdDialog(mActivity);
+        pwdDialog = new PwdDialog(mActivity,PwdDialog.statusType.RECHARGE);
     }
 
     public void showDialog() {
@@ -75,7 +75,7 @@ public class ChargeOrderDialog {
 
 
         iv_dialog_close = (ImageView) contentView.findViewById(R.id.iv_dialog_close);
-        tv_recharge_amount = (TextView) contentView.findViewById(R.id.tv_recharge_amount);
+        tv_recharge_amount = (TextView) contentView.findViewById(R.id.tv_date_top);
         tv_payment_type = (TextView) contentView.findViewById(R.id.tv_payment_type);
         tv_recharge_phone = (TextView) contentView.findViewById(R.id.tv_recharge_phone);
         tv_price = (TextView) contentView.findViewById(R.id.tv_price);

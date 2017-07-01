@@ -61,17 +61,17 @@ public class CashTypeActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_cash_type);
         baseLayout.setTitle("我要取现");
-
         scaleScrollView = (HorizontalScaleScrollView) findViewById(R.id.horizontalScale);
-
-
-//        findViewById(R.id.horizontalScaleValueBtn).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String valStr = mTvHorizontalScale.getText().toString().trim();
-//                scaleScrollView.setCurScale(Integer.parseInt(valStr));
-//            }
-//        });
+        baseLayout.setTopBarBgDrawble(R.color.title_color);
+        baseLayout.setRightTextColor(R.color.white);
+        baseLayout.setTitleTextColor(R.color.white);
+        baseLayout.setBackImage(R.drawable.back);
+        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CaseRecordActivity.startIt(mBaseContext);
+            }
+        });
     }
 
     @Override
@@ -115,8 +115,6 @@ public class CashTypeActivity extends BaseActivity {
                         stagingTypeAdapter.notifyDataSetChanged();
                     }
                 }
-
-
             }
         });
     }
@@ -177,7 +175,7 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.tv_ensure:
                 //确定
-                PwdDialog pwdDialog = new PwdDialog(mBaseContext);
+                PwdDialog pwdDialog = new PwdDialog(mBaseContext,PwdDialog.statusType.CASH);
                 pwdDialog.showDialog();
                 break;
         }

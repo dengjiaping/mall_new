@@ -22,8 +22,8 @@ import butterknife.OnClick;
 
 public class RechargeStatusActivity extends BaseActivity {
 
-    @BindView(R.id.tv_see_order)
-    ClickEnabledTextView tvSeeOrder;
+    @BindView(R.id.tv_btn_top)
+    ClickEnabledTextView tvBtnTop;
     @BindView(R.id.tv_back)
     ClickEnabledTextView tvBack;
     @BindView(R.id.iv_status)
@@ -32,10 +32,10 @@ public class RechargeStatusActivity extends BaseActivity {
     TextView tvStatus;
     @BindView(R.id.tv_hint_mid)
     TextView tvHintMid;
-    @BindView(R.id.tv_recharge_amount)
-    TextView tvRechargeAmount;
-    @BindView(R.id.tv_payment_amount)
-    TextView tvPaymentAmount;
+    @BindView(R.id.tv_date_top)
+    TextView tvDateTop;
+    @BindView(R.id.tv_date_mid)
+    TextView tvDateMid;
     @BindView(R.id.tv_hint_bottom)
     TextView tvHintBottom;
     String status;
@@ -59,6 +59,7 @@ public class RechargeStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         //支付成功或失败
+
         status = getIntent().getStringExtra("status");
         //中间状态提示语
         String hintMid = getIntent().getStringExtra("hintMid");
@@ -72,37 +73,37 @@ public class RechargeStatusActivity extends BaseActivity {
             case "success":
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("支付成功");
-                tvRechargeAmount.setText(rechargeAmount);
-                tvPaymentAmount.setText(paymentAmount);
+                tvDateTop.setText(rechargeAmount);
+                tvDateMid.setText(paymentAmount);
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintBottom.setText(hintBottom);
                 tvHintMid.setVisibility(View.INVISIBLE);
-                tvSeeOrder.setText("查看充值订单");
+                tvBtnTop.setText("查看充值订单");
                 tvBack.setVisibility(View.VISIBLE);
-                tvSeeOrder.setBackgroundResource(R.color.title_color);
+                tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);
                 break;
             case "fail":
                 ivStatus.setImageResource(R.drawable.ic_activation_fail);
                 tvStatus.setText("支付失败");
-                tvRechargeAmount.setText(rechargeAmount);
-                tvPaymentAmount.setText(paymentAmount);
+                tvDateTop.setText(rechargeAmount);
+                tvDateMid.setText(paymentAmount);
                 tvHintBottom.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
-                tvSeeOrder.setText("重新支付");
-                tvSeeOrder.setBackgroundResource(R.color.title_color);
+                tvBtnTop.setText("重新支付");
+                tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setVisibility(View.GONE);
                 break;
         }
     }
 
-    @OnClick({R.id.tv_see_order, R.id.tv_back})
+    @OnClick({R.id.tv_btn_top, R.id.tv_back})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.tv_see_order:
+            case R.id.tv_btn_top:
                 //查看充值订单
                 switch (status) {
                     case "success":

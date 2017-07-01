@@ -49,7 +49,7 @@
             android:textSize="@dimen/ts_14" />
 
         <TextView
-            android:id="@+id/tv_recharge_amount"
+            android:id="@+id/tv_date_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/default_layout_screen_gap"

@@ -27,7 +27,7 @@ public class PwdErrorDialog {
         this.times = times;
 
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View contentView = inflater.inflate(R.layout.dialog_errorpwd, null);
+        final View contentView = inflater.inflate(R.layout.dialog_error_pwd, null);
         initView(contentView);
 
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
@@ -58,7 +58,7 @@ public class PwdErrorDialog {
         tv_left_errorpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                turnToForgetPwdActivity();
+                RequestPasswordActivity.startIt(mActivity,true);
             }
         });
 
@@ -76,11 +76,4 @@ public class PwdErrorDialog {
 
     }
 
-    //忘记密码的跳转
-    private void turnToForgetPwdActivity() {
-//        Intent intent = new Intent(mActivity, ForgetPwdActivity.class);
-//        intent.putExtra(Const.REQUESTCODE, 4);
-//        mActivity.startActivity(intent);
-
-    }
 }
