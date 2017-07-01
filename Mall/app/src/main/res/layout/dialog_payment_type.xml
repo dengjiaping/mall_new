@@ -29,7 +29,7 @@
             android:layout_height="1px"
             android:background="@color/line_bg"/>
         <com.giveu.shoppingmall.widget.NoScrollListView
-            android:id="@+id/lv_payment_style"
+            android:id="@+id/lv_payment_type"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/line_bg"

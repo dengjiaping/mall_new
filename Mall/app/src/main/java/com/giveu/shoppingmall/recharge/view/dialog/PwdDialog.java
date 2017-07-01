@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 
 
@@ -23,19 +23,17 @@ public class PwdDialog {
     public PassWordInputView inputView;
     Activity mActivity;
     private String oldPwd;
-    SuccessOrFailListener listener;
     // CallsParam callsParam;
     TextView tv_dialog_pwd;
 
-    public PwdDialog(Activity mActivity, SuccessOrFailListener listener) {
+    public PwdDialog(Activity mActivity) {
         this.mActivity = mActivity;
-        this.listener = listener;
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View contentView = inflater.inflate(R.layout.dialog_pwd, null);
         initView(contentView);
         setListener();
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
-       // CommonUtils.openSoftKeyBoard(mActivity);
+        // CommonUtils.openSoftKeyBoard(mActivity);
     }
 
     public void showDialog() {
@@ -56,13 +54,11 @@ public class PwdDialog {
             public void onInputFinish(String result) {
                 if (result.length() == 6) {
                     oldPwd = result;
-                    CommonUtils.closeSoftKeyBoard(inputView.getWindowToken(),mActivity);
+                    CommonUtils.closeSoftKeyBoard(inputView.getWindowToken(), mActivity);
                     turnToSuccessActivity();
                 }
             }
         });
-
-
 
 
         //忘记密码跳转
@@ -79,13 +75,13 @@ public class PwdDialog {
 
     public void turnToSuccessActivity() {
         if (oldPwd.equals("111111")) {
-            if (listener != null) {
-                listener.onSuccess(null);
-                mDialog.dismiss();
-            }
+            VerifyActivity.startIt(mActivity);
+            mDialog.dismiss();
+            inputView.clearResult();
         } else {
+            //1-2 重试密码 3 冻结密码需要找回密码
             PwdErrorDialog errorDialog = new PwdErrorDialog();
-            errorDialog.showDialog(mActivity);
+            errorDialog.showDialog(mActivity, 3);
             inputView.clearResult();
         }
 

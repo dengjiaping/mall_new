@@ -48,6 +48,9 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_identify);
+        mobile = getIntent().getStringExtra("mobile");
+        randCode = getIntent().getStringExtra("randCode");
+        isForTrade = getIntent().getBooleanExtra("isForTrade", false);
         if (isForTrade) {
             baseLayout.setTitle("找回交易密码");
         } else {
@@ -64,9 +67,7 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
 
     @Override
     public void setData() {
-        mobile = getIntent().getStringExtra("mobile");
-        randCode = getIntent().getStringExtra("randCode");
-        isForTrade = getIntent().getBooleanExtra("isForTrade", false);
+
     }
 
     @OnClick({R.id.tv_next})
@@ -99,10 +100,10 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
 
     private boolean canClick(boolean showToast) {
         tvNext.setClickEnabled(false);
-        if (StringUtils.checkUserNameAndTipError(etUsername.getText().toString(), showToast)) {
+        if (!StringUtils.checkUserNameAndTipError(etUsername.getText().toString(), showToast)) {
             return false;
         }
-        if (StringUtils.checkIdCardAndTipError(etIdentNo.getText().toString(), showToast)) {
+        if (!StringUtils.checkIdCardAndTipError(etIdentNo.getText().toString(), showToast)) {
             return false;
         }
         tvNext.setClickEnabled(true);

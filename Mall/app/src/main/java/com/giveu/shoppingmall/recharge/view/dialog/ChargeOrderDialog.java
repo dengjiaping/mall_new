@@ -14,15 +14,9 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.model.bean.response.PaymentTypeListResponse;
-import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 
 /**
@@ -36,10 +30,9 @@ public class ChargeOrderDialog {
     private TextView tv_recharge_amount, tv_recharge_phone, tv_price, tv_preferential_price, tv_sum, tv_payment_type;
     private ClickEnabledTextView tv_payment;
     private LinearLayout ll_payment_type;
-    private CheckBox cb_dialog;
+    private CheckBox cb_agreement;
     //充值显示的价格（没使用优惠券的时候）
     public String OldPrice;
-    PaymentTypeListResponse paymentTypeListResponse;
     //套餐的面值
     private String denomination;
     Activity mActivity;
@@ -70,28 +63,7 @@ public class ChargeOrderDialog {
         tv_price.setText(price);
         tv_sum.setText(price);
 
-        pwdDialog = new PwdDialog(mActivity, new SuccessOrFailListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Random random = new Random();
-                int randomNum = random.nextInt(2) + 1;
-                switch (randomNum) {
-                    case 1:
-                        RechargeStatusActivity.startIt(mActivity, "fail", "很抱歉，本次支付失败，请重新发起支付", "100.00元", "98.00元", null);
-                        break;
-                    case 2:
-                        RechargeStatusActivity.startIt(mActivity, "success", null, "100.00元", "98.00元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-                        break;
-                }
-
-                mDialog.dismiss();
-            }
-
-            @Override
-            public void onFail(Object o) {
-
-            }
-        });
+        pwdDialog = new PwdDialog(mActivity);
     }
 
     public void showDialog() {
@@ -100,14 +72,7 @@ public class ChargeOrderDialog {
     }
 
     private void initView(final View contentView) {
-         paymentTypeListResponse = new PaymentTypeListResponse();
-        paymentTypeListResponse.list = new ArrayList<>();
-        PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wallet, true);
-        PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
-        PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
-        paymentTypeListResponse.list.add(bean1);
-        paymentTypeListResponse.list.add(bean2);
-        paymentTypeListResponse.list.add(bean3);
+
 
         iv_dialog_close = (ImageView) contentView.findViewById(R.id.iv_dialog_close);
         tv_recharge_amount = (TextView) contentView.findViewById(R.id.tv_recharge_amount);
@@ -116,11 +81,11 @@ public class ChargeOrderDialog {
         tv_price = (TextView) contentView.findViewById(R.id.tv_price);
         ll_payment_type = (LinearLayout) contentView.findViewById(R.id.ll_payment_type);
         tv_payment = (ClickEnabledTextView) contentView.findViewById(R.id.tv_payment);
-        cb_dialog = (CheckBox) contentView.findViewById(R.id.cb_dialog);
+        cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
         tv_payment.setClickEnabled(true);
 //
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
-//        isCheckBoxChecked = cb_dialog.isChecked();
+//        isCheckBoxChecked = cb_agreement.isChecked();
 //        ll_recharge_preferential = (LinearLayout) contentView.findViewById(R.id.ll_recharge_preferential);
 
         setListener();
@@ -130,7 +95,7 @@ public class ChargeOrderDialog {
     private void setListener() {
 
         //勾选协议
-        cb_dialog.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cb_agreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -150,7 +115,7 @@ public class ChargeOrderDialog {
                 }
             }
         });
-        final PaymentTypeDialog paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeListResponse.list, paymentType);
+        final PaymentTypeDialog paymentTypeDialog = new PaymentTypeDialog(mActivity,  paymentType);
         ll_payment_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

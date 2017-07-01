@@ -13,7 +13,6 @@ import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -39,14 +38,15 @@ public class RechargeStatusActivity extends BaseActivity {
     TextView tvPaymentAmount;
     @BindView(R.id.tv_hint_bottom)
     TextView tvHintBottom;
+    String status;
 
-    public static void startIt(Activity mActivity,String status, String hintMid, String rechargeAmount, String paymentAmount,String hintBottom) {
+    public static void startIt(Activity mActivity, String status, String hintMid, String rechargeAmount, String paymentAmount, String hintBottom) {
         Intent intent = new Intent(mActivity, RechargeStatusActivity.class);
-        intent.putExtra("status",status);
-        intent.putExtra("hintMid",hintMid);
-        intent.putExtra("rechargeAmount",rechargeAmount);
-        intent.putExtra("paymentAmount",paymentAmount);
-        intent.putExtra("hintBottom",hintBottom);
+        intent.putExtra("status", status);
+        intent.putExtra("hintMid", hintMid);
+        intent.putExtra("rechargeAmount", rechargeAmount);
+        intent.putExtra("paymentAmount", paymentAmount);
+        intent.putExtra("hintBottom", hintBottom);
         mActivity.startActivity(intent);
     }
 
@@ -59,7 +59,7 @@ public class RechargeStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         //支付成功或失败
-        String status = getIntent().getStringExtra("status");
+        status = getIntent().getStringExtra("status");
         //中间状态提示语
         String hintMid = getIntent().getStringExtra("hintMid");
         //充值金额
@@ -68,7 +68,7 @@ public class RechargeStatusActivity extends BaseActivity {
         String paymentAmount = getIntent().getStringExtra("paymentAmount");
         //下面的提示语
         String hintBottom = getIntent().getStringExtra("hintBottom");
-        switch (status){
+        switch (status) {
             case "success":
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("支付成功");
@@ -90,7 +90,7 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
-              tvSeeOrder.setText("重新支付");
+                tvSeeOrder.setText("重新支付");
                 tvSeeOrder.setBackgroundResource(R.color.title_color);
                 tvBack.setVisibility(View.GONE);
                 break;
@@ -104,6 +104,14 @@ public class RechargeStatusActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_see_order:
                 //查看充值订单
+                switch (status) {
+                    case "success":
+                        //跳转订单页
+                        break;
+                    case "fail":
+                        finish();
+                        break;
+                }
                 break;
             case R.id.tv_back:
                 //返回
@@ -112,10 +120,4 @@ public class RechargeStatusActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

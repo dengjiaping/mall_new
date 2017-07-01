@@ -48,7 +48,7 @@ public class TransactionPwdActivity extends BaseActivity {
                         //第二次输入密码
                         if (firstPwd.equals(result)) {
                             ActivationStatusActivity.startIt(mBaseContext, "100", null, null, null, "设置成功！请牢记你的交易密码");
-                            finish();
+                            MainActivity.startIt(mBaseContext);
                         } else {
                             ToastUtils.showShortToast("两次输入的密码不一致！");
                         }

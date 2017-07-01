@@ -1,10 +1,8 @@
 package com.giveu.shoppingmall.recharge.view.dialog;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -17,6 +15,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.PaymentTypeListResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,21 +26,27 @@ import java.util.List;
 public class PaymentTypeDialog {
     private CustomDialog mDialog;
     Activity mActivity;
-    LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentStyleAdapter;
-    ListView lv_payment_style;
+    LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentTypeAdapter;
+    ListView lv_payment_type;
     ImageView iv_back;
     public String paymentType;//支付类型
-    List<PaymentTypeListResponse.ListBean> list;
+    List<PaymentTypeListResponse.ListBean> paymentTypeList;
 
-    public PaymentTypeDialog(Activity mActivity, List<PaymentTypeListResponse.ListBean> list, String paymentType) {
+    public PaymentTypeDialog(Activity mActivity, String paymentType) {
         this.mActivity = mActivity;
-        this.list = list;
         this.paymentType = paymentType;
+
+        paymentTypeList = new ArrayList<>();
+        PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wallet, true);
+        PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
+        PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
+        paymentTypeList.add(bean1);
+        paymentTypeList.add(bean2);
+        paymentTypeList.add(bean3);
     }
 
     public void showDialog() {
-        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.dialog_payment_style, null);
+        View contentView = View.inflate(mActivity,R.layout.dialog_payment_type, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
         initView(contentView);
         mDialog.setCancelable(false);
@@ -49,11 +54,9 @@ public class PaymentTypeDialog {
     }
 
     private void initView(View contentView) {
-        lv_payment_style = (ListView) contentView.findViewById(R.id.lv_payment_style);
-
+        lv_payment_type = (ListView) contentView.findViewById(R.id.lv_payment_type);
         iv_back = (ImageView) contentView.findViewById(R.id.iv_back);
-
-        paymentStyleAdapter = new LvCommonAdapter<PaymentTypeListResponse.ListBean>(mActivity, R.layout.lv_payment_type_item, list) {
+        paymentTypeAdapter = new LvCommonAdapter<PaymentTypeListResponse.ListBean>(mActivity, R.layout.lv_payment_type_item, paymentTypeList) {
             @Override
             protected void convert(ViewHolder viewHolder, final PaymentTypeListResponse.ListBean item, final int position) {
                 ImageView iv_payment_icon = viewHolder.getView(R.id.iv_payment_icon);
@@ -69,41 +72,27 @@ public class PaymentTypeDialog {
                 cb_check.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == position) {
-                                paymentStyleAdapter.getItem(position).isChecked = true;
-                                paymentType = item.typeName;
-                            } else {
-                                paymentStyleAdapter.getItem(i).isChecked = false;
-                            }
-                        }
-                        paymentStyleAdapter.notifyDataSetChanged();
-                        mDialog.dismiss();
+                        onChoosePaymentType(position, paymentTypeAdapter);
                     }
                 });
+
                 viewHolder.getView(R.id.ll_pay_type).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == position) {
-                                paymentStyleAdapter.getItem(position).isChecked = true;
-                                paymentType = item.typeName;
-                            } else {
-                                paymentStyleAdapter.getItem(i).isChecked = false;
-                            }
-                        }
-                        paymentStyleAdapter.notifyDataSetChanged();
-                        mDialog.dismiss();
+                        onChoosePaymentType(position, paymentTypeAdapter);
                     }
                 });
             }
         };
         setListener();
-        lv_payment_style.setAdapter(paymentStyleAdapter);
-//        lv_payment_style.setSelection(0);
-//        paymentStyleAdapter.getItem(0).isChecked = true;
+        lv_payment_type.setAdapter(paymentTypeAdapter);
     }
 
+    /**
+     * 支付弹窗关闭的监听
+     * @param dismissListener
+     * @return
+     */
     public PaymentTypeDialog setdismissListener(DialogInterface.OnDismissListener dismissListener) {
         mDialog.setOnDismissListener(dismissListener);
         return this;
@@ -116,5 +105,24 @@ public class PaymentTypeDialog {
                 mDialog.dismiss();
             }
         });
+    }
+
+    /**
+     * 点击改变选中的支付类型，获取的支付类型名称，并关闭支付弹窗
+     * @param position 选中项
+     * @param paymentTypeAdapter 支付方式adapter
+     */
+    public void onChoosePaymentType(int position, LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentTypeAdapter) {
+        for (int i = 0; i < paymentTypeList.size(); i++) {
+            PaymentTypeListResponse.ListBean item = paymentTypeAdapter.getItem(i);
+            if (i == position) {
+                item.isChecked = true;
+                paymentType = item.typeName;
+            } else {
+                item.isChecked = false;
+            }
+        }
+        paymentTypeAdapter.notifyDataSetChanged();
+        mDialog.dismiss();
     }
 }

@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.model.bean.response.CashTypeResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
@@ -27,6 +28,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.giveu.shoppingmall.R.id.tv_ensure;
 
 /**
  * 取现类型页
@@ -44,6 +47,8 @@ public class CashTypeActivity extends BaseActivity {
     RelativeLayout rlAddBankCard;
     @BindView(R.id.tv_monthly_payment)
     TextView tvMonthlyPayment;
+    @BindView(tv_ensure)
+    TextView tvEnsure;
     private LvCommonAdapter<CashTypeResponse> stagingTypeAdapter;
     int amount;
 
@@ -156,7 +161,7 @@ public class CashTypeActivity extends BaseActivity {
         gvStagingType.setAdapter(stagingTypeAdapter);
     }
 
-    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card})
+    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -169,6 +174,11 @@ public class CashTypeActivity extends BaseActivity {
             case R.id.rl_add_bank_card:
                 //添加银行卡
                 AddBankCardFirstActivity.startIt(mBaseContext);
+                break;
+            case R.id.tv_ensure:
+                //确定
+                PwdDialog pwdDialog = new PwdDialog(mBaseContext);
+                pwdDialog.showDialog();
                 break;
         }
 
