@@ -87,6 +87,10 @@ public class SecurityCenterActivity extends BaseActivity {
 //                    //没有资质的
 //                    ChangePhoneNumberActivity.startIt(mBaseContext);
 //                }
+//                if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
+//                    WalletActivationFirstActivity.startIt(mBaseContext);
+//                    return;
+//                }
                 TransactionInputActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_change_login_pwd:
@@ -95,6 +99,10 @@ public class SecurityCenterActivity extends BaseActivity {
 
                 break;
             case R.id.ll_change_transaction_pwd:
+//                if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
+//                    ToastUtils.showShortToast("没有钱包资质");
+//                    return;
+//                }
                 RequestPasswordActivity.startIt(mBaseContext, true);
                 //修改交易密码
                 break;

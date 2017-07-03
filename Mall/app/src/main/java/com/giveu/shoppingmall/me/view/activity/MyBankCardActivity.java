@@ -18,7 +18,9 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -66,6 +68,7 @@ public class MyBankCardActivity extends BaseActivity {
         lvBankCard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                final String id = bankListAdapter.getItem(position).id + "";
                 dialog = new CustomDialogUtil(mBaseContext);
                 dialog.getDialogMode3("删除", "设置默认代扣卡", "取消", new View.OnClickListener() {
                     @Override
@@ -75,6 +78,17 @@ public class MyBankCardActivity extends BaseActivity {
                             @Override
                             public void onClick(View v) {
                                 //删除
+                                ApiImpl.deleteBankInfo(mBaseContext, id, "184735", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                    @Override
+                                    public void onSuccess(BaseBean response) {
+                                        ToastUtils.showShortToast("删除成功！");
+                                    }
+
+                                    @Override
+                                    public void onError(BaseBean errorBean) {
+                                        CommonLoadingView.showErrorToast(errorBean);
+                                    }
+                                });
 //                                BankResponseBean.BanksBean banksBean = bankAdapter.getItem(position);
 //                                List<BankResponseBean.BanksBean> list1 = bankAdapter.getItemList();
 //                                String bankCode = banksBean.bankCode;
@@ -83,6 +97,7 @@ public class MyBankCardActivity extends BaseActivity {
 //                                if (list1.size() > 0 && list1 != null) {
 //                                    deleteBank(bankAdapter, position, bankCode, bankName, bankNo);
 //                                }
+
                                 if (bankListAdapter != null && bankListAdapter.getCount() > 0) {
                                     bankListAdapter.getData().remove(position);
                                     bankListAdapter.notifyDataSetChanged();
@@ -96,6 +111,18 @@ public class MyBankCardActivity extends BaseActivity {
                     //设置默认代扣卡
                     @Override
                     public void onClick(View view) {
+                       ApiImpl.setDefaultCard(mBaseContext, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+                            @Override
+                            public void onSuccess(BaseBean response) {
+                                ToastUtils.showShortToast("设置默认代扣卡成功！");
+                            }
+
+                            @Override
+                            public void onError(BaseBean errorBean) {
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
+                        });
+                        setData();
 //                        clickDefalutBankPosition = position;
 //                        BankResponseBean.BanksBean banksBean = bankAdapter.getItem(position);
 //                        List<BankResponseBean.BanksBean> list1 = bankAdapter.getItemList();
@@ -137,7 +164,7 @@ public class MyBankCardActivity extends BaseActivity {
     @Override
     public void setData() {
 
-        ApiImpl.getBankCardInfo(mBaseContext, "11415969", new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
+        ApiImpl.getBankCardInfo(mBaseContext, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
             @Override
             public void onSuccess(BankCardListResponse response) {
                 List<BankCardListResponse> bankList = response.data;
