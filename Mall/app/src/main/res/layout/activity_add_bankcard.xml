@@ -8,12 +8,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/ll_default_bank_card"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginRight="@dimen/default_layout_screen_gap"
         android:layout_marginTop="20dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:background="@drawable/bg_default_bank_card"
         android:orientation="horizontal">
 

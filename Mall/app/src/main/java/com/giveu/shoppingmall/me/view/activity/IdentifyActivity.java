@@ -73,11 +73,8 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @OnClick({R.id.tv_next})
     public void nextStep() {
         if (canClick(true)) {
-            if (isForTrade) {
-                TransactionPwdActivity.startIt(mBaseContext);
-            } else {
-                presenter.checkUserInfo(etIdentNo.getText().toString(), mobile, randCode, etUsername.getText().toString());
-            }
+           // TransactionPwdActivity.startIt(mBaseContext);
+            presenter.checkUserInfo(etIdentNo.getText().toString(), mobile, randCode, etUsername.getText().toString());
         }
     }
 
@@ -113,7 +110,13 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @Override
     public void checkSuccess(String randCode) {
         //找回登录密码，身份校验成功，跳转至密码重置
-        SetPasswordActivity.startItWithRandCode(mBaseContext, false, mobile, randCode);
+        if (isForTrade) {
+            //跳转设置交易密码
+            TransactionPwdActivity.startIt(mBaseContext);
+        } else {
+            //跳转设置登录密码
+            SetPasswordActivity.startItWithRandCode(mBaseContext, false, mobile, randCode);
+        }
     }
 
     @Override

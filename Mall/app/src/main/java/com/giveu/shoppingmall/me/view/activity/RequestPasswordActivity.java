@@ -117,7 +117,14 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             case R.id.tv_send_code:
                 if (etPhone.length() == 11) {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
+                    if (isForTrade) {
+                        //交易密码
+                        presenter.sendSMSCode(etPhone.getText().toString(), "activateWallet");
+                    } else {
+                        //登录密码
+                        presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
+                    }
+
                     canClick(false);
                 }
                 break;
@@ -168,11 +175,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     @Override
     public void skipToChangePassword(String randCode) {
         //找回登录密码，非钱包资质用户跳转至密码重置
-        if (!isForTrade) {
-            SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
-        }else {
-            IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), true);
-        }
+        SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
     }
 
     @Override

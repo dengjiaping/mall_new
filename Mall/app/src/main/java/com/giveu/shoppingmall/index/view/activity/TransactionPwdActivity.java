@@ -67,7 +67,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 @Override
                                 public void onSuccess(BaseBean response) {
                                     ActivationStatusActivity.startIt(mBaseContext, "100", null, null, null, "设置成功！请牢记你的交易密码");
-                                    MainActivity.startIt(mBaseContext);
+
                                 }
 
                                 @Override
