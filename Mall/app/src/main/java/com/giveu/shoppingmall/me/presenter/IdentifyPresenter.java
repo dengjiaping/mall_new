@@ -5,6 +5,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IIdentifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -16,14 +17,13 @@ public class IdentifyPresenter extends BasePresenter<IIdentifyView> {
         super(view);
     }
 
-    public void checkUserInfo(String certNo, String mobile, String randCode, String userName) {
-        ApiImpl.checkUserInfo(getView().getAct(), certNo, mobile, randCode, userName, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void checkUserInfo(String certNo, String mobile, String randCode, String realName) {
+        ApiImpl.checkUserInfo(getView().getAct(), certNo, mobile, randCode, realName, new BaseRequestAgent.ResponseListener<RandCodeResponse>() {
             @Override
-            public void onSuccess(BaseBean response) {
+            public void onSuccess(RandCodeResponse response) {
                 if (getView() != null) {
-                    getView().checkSuccess(response.data.toString());
+                    getView().checkSuccess(response.data.randCode);
                 }
-
             }
 
             @Override

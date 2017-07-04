@@ -16,8 +16,6 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
@@ -65,17 +63,10 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             baseLayout.setTitle("找回交易密码");
         } else {
             baseLayout.setTitle("找回登录密码");
-            presenter = new RequestPwdPresenter(this);
-            //已登录用户自动填充手机号
-            if (LoginHelper.getInstance().hasLogin() && StringUtils.isNotNull(LoginHelper.getInstance().getMobile())) {
-                etPhone.setText(LoginHelper.getInstance().getMobile());
-                etPhone.setSelection(LoginHelper.getInstance().getMobile().length());
-                tvSendCode.performClick();
-                etVertificationCode.requestFocus();
-            }
         }
         initCallDialog();
         etPhone.checkFormat(11);
+        presenter = new RequestPwdPresenter(this);
         tvSendCode.setSendTextColor(false);
     }
 
@@ -126,7 +117,14 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             case R.id.tv_send_code:
                 if (etPhone.length() == 11) {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
+                    if (isForTrade) {
+                        //交易密码
+                        presenter.sendSMSCode(etPhone.getText().toString(), "activateWallet");
+                    } else {
+                        //登录密码
+                        presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
+                    }
+
                     canClick(false);
                 }
                 break;
@@ -177,11 +175,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     @Override
     public void skipToChangePassword(String randCode) {
         //找回登录密码，非钱包资质用户跳转至密码重置
-        if (!isForTrade) {
-            SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
-        } else {
-            IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), true);
-        }
+        SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
     }
 
     @Override

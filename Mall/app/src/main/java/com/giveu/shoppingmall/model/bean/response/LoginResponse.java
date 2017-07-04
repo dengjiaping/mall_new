@@ -37,7 +37,7 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String cyLimit;
     public String endDate;
     public String globleLimit;
-    public String idPerson;
+    public int idPerson;
     public String mobile;
     public String nickName;
     public String posLimit;

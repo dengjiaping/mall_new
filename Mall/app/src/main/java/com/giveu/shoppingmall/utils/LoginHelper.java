@@ -51,7 +51,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.userName = getString(USER_NAME, "");
         personInfo.userPic = getString(USER_PIC, "");
         personInfo.globleLimit = getString(GLOBLE_LIMIT, "");
-        personInfo.idPerson = getString(ID_PERSON, "");
+        personInfo.idPerson = getInt(ID_PERSON, 0);
         personInfo.mobile = getString(MOBILE, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -72,7 +72,7 @@ public class LoginHelper extends AbsSharePref {
         putString(CYLIMIT, personInfo.cyLimit);
         putString(END_DATE, personInfo.endDate);
         putString(GLOBLE_LIMIT, personInfo.globleLimit);
-        putString(ID_PERSON, personInfo.idPerson);
+        putInt(ID_PERSON, personInfo.idPerson);
         putString(MOBILE, personInfo.mobile);
         putString(NICK_NAME, personInfo.nickName);
         putString(POS_LIMIT, personInfo.posLimit);
@@ -113,8 +113,8 @@ public class LoginHelper extends AbsSharePref {
         return loginPersonInfo == null ? null : loginPersonInfo.globleLimit;
     }
 
-    public String getIdPerson() {
-        return loginPersonInfo == null ? null : loginPersonInfo.idPerson;
+    public int getIdPerson() {
+        return loginPersonInfo == null ? 0 : loginPersonInfo.idPerson;
     }
 
     public String getMobile() {

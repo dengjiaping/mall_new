@@ -148,8 +148,8 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.android.support:design:25.2.0'
     //微信支付
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    compile files('libs/umeng-analytics-v6.1.0.jar')
+//    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+//    compile files('libs/umeng-analytics-v6.1.0.jar')
     compile project(':cropimage_library')
     //极光推送
     compile 'cn.jiguang.sdk:jpush:3.0.5'

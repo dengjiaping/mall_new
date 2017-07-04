@@ -51,7 +51,10 @@ public class TransactionInputActivity extends BaseActivity {
                     if ( !TextUtils.isEmpty(tradPwd)){
                         tradPwd = tradPwd.toLowerCase();
                     }
-                    ApiImpl.verifyPayPwd(mBaseContext, "14703507", "e10adc3949ba59abbe56e057f20f883e", new BaseRequestAgent.ResponseListener<BaseBean>() {
+//                    if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
+//                        return;
+//                    }
+                    ApiImpl.verifyPayPwd(mBaseContext,"14703507", tradPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
                         public void onSuccess(BaseBean response) {
                             CommonUtils.closeSoftKeyBoard(mBaseContext);

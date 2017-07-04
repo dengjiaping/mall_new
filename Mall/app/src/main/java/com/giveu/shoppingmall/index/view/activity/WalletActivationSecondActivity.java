@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -55,6 +56,13 @@ public class WalletActivationSecondActivity extends BaseActivity {
     @BindView(R.id.tv_activation)
     ClickEnabledTextView tvActivation;
 
+
+    public static void startIt(Activity mActivity, String name, String ident) {
+        Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("ident", ident);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -124,15 +132,15 @@ public class WalletActivationSecondActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
+        final String phone = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etPhone));
         switch (view.getId()) {
             case R.id.tv_send_code:
-                ApiImpl.sendSMSCode(mBaseContext, "18109491314", "activateWallet", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                ApiImpl.sendSMSCode(mBaseContext, phone, "activateWallet", new BaseRequestAgent.ResponseListener<BaseBean>() {
                     @Override
                     public void onSuccess(BaseBean response) {
                         tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
                             @Override
                             public void onEnd() {
-                                String phone = StringUtils.getTextFromView(etPhone);
                                 if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {
                                     tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
                                     tvSendCode.setEnabled(true);
@@ -153,8 +161,11 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-
-                    ApiImpl.activateWallet(mBaseContext, "6228481218003652486", "10000923", "622424199408300017", "106.72", "26.57", "18109491314", "唐兴", "123456", "30", new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
+                    String name = StringUtils.nullToEmptyString(getIntent().getStringExtra("name"));
+                    String ident = StringUtils.nullToEmptyString(getIntent().getStringExtra("ident"));
+                    String bankNo = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etBankNo));
+                    String code = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etCode));
+                    ApiImpl.activateWallet(mBaseContext, bankNo, "10000923", ident, "106.72", "26.57", phone, name, code, LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
                             ToastUtils.showShortToast("激活成功！");
@@ -220,12 +231,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity mActivity, String name, String ident) {
-        Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
-        intent.putExtra("name", name);
-        intent.putExtra("ident", ident);
-        mActivity.startActivity(intent);
-    }
 
     @Override
     protected void onDestroy() {
