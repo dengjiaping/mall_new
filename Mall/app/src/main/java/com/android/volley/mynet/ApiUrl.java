@@ -41,16 +41,26 @@ public interface ApiUrl {
     String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
     //找回密码（校验身份）
     String personCenter_account_resetPwd_checkUserInfo = BASE_URL + "personCenter/account/resetPwd/checkUserInfo";
-    //设置（重置）交易密码
-    String personCenter_account_resetPayPwd = BASE_URL + "personCenter/account/resetPayPwd";
     //钱包激活
     String personCenter_account_activateWallet = BASE_URL + "personCenter/account/activateWallet";
     //修改手机号
     String personCenter_account_updatePhone = BASE_URL + "personCenter/account/updatePhone";
     //校验交易密码
     String personCenter_account_verifyPayPwd = BASE_URL + "personCenter/account/verifyPayPwd";
+    //设置（重置）交易密码
+    String personCenter_account_resetPayPwd = BASE_URL + "personCenter/account/resetPayPwd";
     //查询绑卡列表
     String personCenter_bankCard_getBankInfo = BASE_URL + "personCenter/bankCard/getBankInfo";
+    //还款首页
+    String personCenter_repayment_getRepaymentInfo = BASE_URL + "personCenter/repayment/getRepaymentInfo";
+    //还款明细
+    String personCenter_repayment_getInstalmentDetails = BASE_URL + "personCenter/repayment/getInstalmentDetails";
+    //交易查询
+    String personCenter_repayment_listContract = BASE_URL + "personCenter/repayment/listContract";
+    //交易详细
+    String personCenter_repayment_getContractDetails = BASE_URL + "personCenter/repayment/getContractDetails";
+    //分期明细
+    String personCenter_repayment_listInstalment = BASE_URL + "personCenter/repayment/listInstalment";
     //删除银行卡
     String personCenter_bankCard_deleteBankInfo = BASE_URL + "personCenter/bankCard/deleteBankInfo";
     //设置默认代扣卡

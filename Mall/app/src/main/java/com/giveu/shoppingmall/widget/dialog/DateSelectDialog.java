@@ -55,6 +55,9 @@ public class DateSelectDialog extends CustomDialog {
         currentYear = Integer.valueOf(currentTime.substring(0, 4));
         currentMonth = Integer.valueOf(currentTime.substring(5, 7));
         currentDay = Integer.valueOf(currentTime.substring(8, 10));
+        currentSelectYear = currentYear;
+        currentSelectMonth = currentMonth;
+        currentSelectDay = currentDay;
         mYear = currentYear;
         mMonth = currentMonth;
         selectDate = currentTime;
@@ -78,8 +81,8 @@ public class DateSelectDialog extends CustomDialog {
                         //选择的月份大于当前月份
                         selectErrorDate();
                     } else if (currentSelectMonth == currentMonth) {
-                        //选择的月份等于当前月份
-                        if (currentSelectDay > currentDay) {
+                        //选择的月份等于当前月份,当显示天的时候才需要判断当前选择日是否正确
+                        if (currentSelectDay > currentDay && isShowDay) {
                             //选择的天数大于当前天数
                             selectErrorDate();
                         } else {
@@ -170,15 +173,29 @@ public class DateSelectDialog extends CustomDialog {
      * 默认是不显示的，只显示年月
      */
     public void showDay() {
+        isShowDay = true;
         w1_day.setVisibility(View.VISIBLE);
     }
 
     public void hideDay() {
+        isShowDay = false;
         w1_day.setVisibility(View.GONE);
     }
 
-    public String getCurrentYearAndMonth() {
-        return mYear + "年" + mMonth + "月";
+    public String getCurrentYearAndMonth(String dividerFlag) {
+        if (dividerFlag == null ||dividerFlag.isEmpty()) {
+            return currentSelectYear + "年" + currentSelectMonth + "月";
+        } else {
+            return currentSelectYear + dividerFlag + currentSelectMonth;
+        }
+    }
+
+    public String getCurrentYearAndMonthAndDay(String dividerFlag) {
+        if (dividerFlag == null ||dividerFlag.isEmpty()) {
+            return currentSelectYear + "年" + currentSelectMonth + "月" + currentSelectDay + "日";
+        } else {
+            return currentSelectYear + dividerFlag + currentSelectMonth + dividerFlag + currentSelectDay;
+        }
     }
 
     /**
@@ -198,6 +215,20 @@ public class DateSelectDialog extends CustomDialog {
             wl_year.setCurrentItem(year - MIN_YEAR);
             wl_month.setCurrentItem(month - MIN_MONTH);
             w1_day.setCurrentItem(day - MIN_DAY);
+            currentSelectYear = year;
+            currentSelectMonth = month;
+            currentSelectDay = day;
+        }
+    }
+
+    public void setOriginalDate() {
+        if (wl_year != null && wl_month != null && w1_day != null) {
+            wl_year.setCurrentItem(currentYear - MIN_YEAR);
+            wl_month.setCurrentItem(currentMonth - MIN_MONTH);
+            w1_day.setCurrentItem(currentDay - MIN_DAY);
+            currentSelectYear = currentYear;
+            currentSelectMonth = currentMonth;
+            currentSelectDay = currentDay;
         }
     }
 

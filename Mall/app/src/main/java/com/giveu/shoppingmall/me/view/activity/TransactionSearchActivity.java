@@ -17,7 +17,11 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.adapter.TransactionAdapter;
 import com.giveu.shoppingmall.me.presenter.TransactionPresenter;
 import com.giveu.shoppingmall.me.view.agent.ITransactionView;
+import com.giveu.shoppingmall.model.bean.response.ContractResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.TypeUtlis;
+import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
@@ -26,6 +30,7 @@ import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,13 +51,13 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     @BindView(R.id.tv_reset)
     TextView tvReset;
     @BindView(R.id.tv_search)
-    TextView tvSearch;
+    ClickEnabledTextView tvSearch;
     @BindView(R.id.ll_search)
     LinearLayout llSearch;
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
     private TransactionAdapter transactionAdapter;
-    private ArrayList<String> transactionList;
+    private ArrayList<ContractResponse.Contract> transactionList;
     private TagAdapter<String> categoryAdapter;
     private TagAdapter<String> stateAdapter;
     private ArrayList<String> categoryList;
@@ -63,6 +68,16 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     private ObjectAnimator hideAlphaAnimator;
     private int pageIndex = 1;
     private final int pageSize = 10;
+    private String creditStatus;
+    private String creditType;
+    private String idPerson;
+    private String loanDate;
+    private String timeType;
+    //区分搜索框的数据和真正要进行查询时的值
+    private String selCreditStatus;
+    private String selCreditType;
+    private String selLoanDate;
+    private String selTimeType;
     private DateSelectDialog dateSelectDialog;
     private boolean currentTypeIsMonth = true;//区分是按月选择还是按日选择
     private TransactionPresenter presenter;
@@ -76,6 +91,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_search);
         baseLayout.setTitle("交易查询");
+        baseLayout.goneRightImage();
         baseLayout.setRightImageAndListener(R.drawable.ic_transaction_search, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +124,15 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
 
             }
         };
+        tfState.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
+            @Override
+            public void onSelected(Set<Integer> selectPosSet) {
+                for (Integer integer : selectPosSet) {
+                    selCreditType = TypeUtlis.getCreditTypeTotalValue(stateList.get(integer));
+                    canClick();
+                }
+            }
+        });
         tfState.setAdapter(stateAdapter);
         categoryAdapter = new TagAdapter<String>(categoryList) {
             @Override
@@ -117,21 +142,30 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 return tvTag;
             }
         };
+
+        tfCategory.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
+            @Override
+            public void onSelected(Set<Integer> selectPosSet) {
+                for (Integer integer : selectPosSet) {
+                    selCreditStatus = TypeUtlis.getCreditStatusValue(stateList.get(integer));
+                    canClick();
+                }
+            }
+        });
         tfCategory.setAdapter(categoryAdapter);
         transactionList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            transactionList.add(i + "");
-        }
         transactionAdapter = new TransactionAdapter(mBaseContext, transactionList);
         ptrlv.setAdapter(transactionAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         initAnimation();
-        hideSearchView();
-        llSearch.setVisibility(View.GONE);
         dateSelectDialog = new DateSelectDialog(mBaseContext);
-        tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth());
+        //设置时间默认值
+        tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth(null));
+        selLoanDate = dateSelectDialog.getCurrentYearAndMonth("/");
         presenter = new TransactionPresenter(this);
+        //默认是按月查询
+        selTimeType = "Month";
     }
 
     @Override
@@ -148,6 +182,16 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         hideAlphaAnimator = ObjectAnimator.ofFloat(llSearch, "alpha", 1f, 0f).setDuration(500);
     }
 
+    private boolean canClick() {
+        if (tfState.getSelectedList().size() > 0 && tfCategory.getSelectedList().size() > 0) {
+            tvSearch.setClickEnabled(true);
+            return true;
+        } else {
+            tvSearch.setClickEnabled(false);
+            return false;
+        }
+    }
+
     /**
      * 显示搜索框
      */
@@ -155,6 +199,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         if (!showAnimator.isRunning()) {
             showAnimator.start();
             showAlphaAnimator.start();
+            baseLayout.setClickable(true);
         }
     }
 
@@ -165,10 +210,11 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         if (!hideAnimator.isRunning()) {
             hideAnimator.start();
             hideAlphaAnimator.start();
+            baseLayout.setClickable(false);
         }
     }
 
-    @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date, R.id.ll_search})
+    @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date, R.id.tv_search, R.id.tv_reset})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -180,10 +226,17 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
 
             case R.id.tv_choose_type:
                 currentTypeIsMonth = !currentTypeIsMonth;
+                //选择日期类型后需重新更新已选择的日期
                 if (currentTypeIsMonth) {
                     tvChooseType.setText("按月选择");
+                    selTimeType = "Month";
+                    tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth(null));
+                    selLoanDate = dateSelectDialog.getCurrentYearAndMonth("/");
                 } else {
                     tvChooseType.setText("按日选择");
+                    selTimeType = "Day";
+                    tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonthAndDay(null));
+                    selLoanDate = dateSelectDialog.getCurrentYearAndMonthAndDay("/");
                 }
                 break;
 
@@ -197,12 +250,44 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 }
                 break;
 
-            case R.id.ll_search:
+            case R.id.tv_search:
+                //搜索交易记录
+                if (tvSearch.isClickEnabled()) {
+                    searchTransaction();
+                    hideSearchView();
+                    baseLayout.showRightImage();
+                    transactionList.clear();
+                    transactionAdapter.notifyDataSetChanged();
+                }
+                break;
+
+            case R.id.tv_reset:
+                //重置搜索条件
+                stateAdapter.notifyDataChanged();
+                categoryAdapter.notifyDataChanged();
+                selCreditStatus = "";
+                selCreditType = "";
+                selTimeType = "Month";
+                dateSelectDialog.setOriginalDate();
+                tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth(null));
+                selLoanDate = dateSelectDialog.getCurrentYearAndMonth("/");
+                tvChooseType.setText("按月选择");
+                tvSearch.setClickEnabled(false);
+                dateSelectDialog.hideDay();
                 break;
 
             default:
                 break;
         }
+    }
+
+    public void searchTransaction() {
+        creditStatus = selCreditStatus;
+        creditType = selCreditType;
+        loanDate = selLoanDate;
+        timeType = selTimeType;
+        // TODO: 2017/7/3 写死的数据需更换
+        presenter.searchContract(creditStatus, creditType, "15124638", loanDate, pageIndex, pageSize, timeType);
     }
 
     @Override
@@ -213,13 +298,22 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     @Override
     public void setListener() {
         super.setListener();
+        baseLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSearchView();
+                baseLayout.showRightImage();
+            }
+        });
         dateSelectDialog.setOnDateSelectListener(new DateSelectDialog.OnDateSelectListener() {
             @Override
             public void onSelectDate(String year, String month, String day) {
                 if (currentTypeIsMonth) {
                     tvChooseDate.setText(year + "年" + month + "月");
+                    selLoanDate = year + "/" + month;
                 } else {
                     tvChooseDate.setText(year + "年" + month + "月" + day + "日");
+                    selLoanDate = year + "/" + month + "/" + day;
                 }
             }
         });
@@ -228,14 +322,14 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageIndex = 1;
-                setData();
+                searchTransaction();
                 ptrlv.setPullLoadEnable(false);
 
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                setData();
+                searchTransaction();
                 ptrlv.setPullRefreshEnable(true);
             }
         });
@@ -243,7 +337,8 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 1 >= 0 && position - 1 < transactionList.size()) {
-                    TransactionDetailActivity.startIt(mBaseContext);
+                    ContractResponse.Contract contract = transactionList.get(position - 1);
+                    TransactionDetailActivity.startIt(mBaseContext, contract.idCredit, contract.creditType);
                 }
 
             }
@@ -268,6 +363,38 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         if (hideAlphaAnimator != null) {
             hideAlphaAnimator.end();
             hideAlphaAnimator.cancel();
+        }
+    }
+
+    @Override
+    public void showContractResult(ArrayList<ContractResponse.Contract> contractList) {
+        //显示查询结果
+        if (pageIndex == 1) {
+            ptrlv.onRefreshComplete();
+            ptrlv.setPullRefreshEnable(true);
+        }
+        if (CommonUtils.isNotNullOrEmpty(contractList)) {
+            if (pageIndex == 1) {
+                transactionList.clear();
+                if (contractList.size() >= pageSize) {
+                    ptrlv.setPullLoadEnable(true);
+                } else {
+                    ptrlv.setPullLoadEnable(false);
+                    ptrlv.showEnd("没有更多数据");
+                }
+//                emptyView.setVisibility(View.GONE);
+            }
+            transactionList.addAll(contractList);
+            transactionAdapter.notifyDataSetChanged();
+            pageIndex++;
+        } else {
+            if (pageIndex == 1) {
+//                emptyView.setVisibility(View.VISIBLE);
+                ptrlv.setPullLoadEnable(false);
+            } else {
+                ptrlv.setPullLoadEnable(false);
+                ptrlv.showEnd("没有更多数据");
+            }
         }
     }
 }

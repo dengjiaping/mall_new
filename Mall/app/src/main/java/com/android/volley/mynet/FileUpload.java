@@ -136,7 +136,7 @@ public class FileUpload {
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .post(mBody)
-                .addHeader("content-type", "multipart/form-data; boundary=" + boundary)
+                .addHeader("content-billType", "multipart/form-data; boundary=" + boundary)
                 .addHeader("cache-control", "no-cache")
                 .build();
         OkHttpClient client = new okhttp3.OkHttpClient.Builder().

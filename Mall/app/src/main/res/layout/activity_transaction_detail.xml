@@ -33,17 +33,19 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_creditNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123456"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_15" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_goos_name"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,6 +60,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_goodsName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="iphone 7"
@@ -72,6 +75,7 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tv_transaction_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="交易金额："
@@ -84,9 +88,9 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1200元"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_15" />
         </LinearLayout>
@@ -97,6 +101,7 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tv_pay_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="还款日："
@@ -109,9 +114,9 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2017-05-21"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_15" />
         </LinearLayout>
@@ -122,6 +127,7 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tv_pay_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="还款状态："
@@ -134,9 +140,9 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="结清/未结清"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_15" />
         </LinearLayout>
@@ -145,6 +151,7 @@
             android:id="@+id/ll_credit_detail"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:visibility="gone"
             android:gravity="center_vertical">
 
             <TextView

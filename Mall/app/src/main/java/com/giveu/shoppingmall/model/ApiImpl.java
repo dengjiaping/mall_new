@@ -10,12 +10,18 @@ import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
+import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
+import com.giveu.shoppingmall.model.bean.response.ContractResponse;
+import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
+
+import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -181,6 +187,35 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_getBankInfo, BankCardListResponse.class, context, responseListener);
     }
 
+    //还款首页
+    public static void getBillList(Activity context, String idPerson, BaseRequestAgent.ResponseListener<BillListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Integer.parseInt(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getRepaymentInfo, BillListResponse.class, context, responseListener);
+    }
+
+    //还款明细
+    public static void getInstalmentDetails(Activity context, String idCredit, boolean isCurrent, String numInstalment, String productType, BaseRequestAgent.ResponseListener<InstalmentDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idCredit", "isCurrent", "numInstalment", "productType"}, new Object[]{idCredit, isCurrent, numInstalment == null ? null : Integer.parseInt(numInstalment), productType});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getInstalmentDetails, InstalmentDetailResponse.class, context, responseListener);
+    }
+
+    //交易查询
+    public static void searchContract(Activity context, String creditStatus, String creditType, String idPerson, String loanDate, int page, int pageSize, String timeType, BaseRequestAgent.ResponseListener<ContractResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"creditStatus", "creditType", "idPerson", "loanDate", "page", "pageSize", "timeType"}, new Object[]{creditStatus, creditType, idPerson, loanDate, page, pageSize, timeType});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_listContract, ContractResponse.class, context, responseListener);
+    }
+
+    //交易详细
+    public static void getContractDetails(Activity context, String idCredit, String creditType, BaseRequestAgent.ResponseListener<TransactionDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idCredit", "creditType"}, new Object[]{idCredit, creditType});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getContractDetails, TransactionDetailResponse.class, context, responseListener);
+    }
+
+    //分期明细
+    public static void getListInstalment(Activity context, String idCredit, BaseRequestAgent.ResponseListener<ListInstalmentResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idCredit"}, new Object[]{idCredit});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_listInstalment, ListInstalmentResponse.class, context, responseListener);
+    }
     //删除银行卡
     public static void deleteBankInfo(Activity context, String id, int idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, idPerson});
@@ -192,6 +227,7 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_setDefaultCard, BaseBean.class, context, responseListener);
     }
 }
+
 
 
 

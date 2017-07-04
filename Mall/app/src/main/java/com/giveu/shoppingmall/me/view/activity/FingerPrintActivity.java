@@ -68,7 +68,7 @@ public class FingerPrintActivity extends BaseActivity {
                 if (!isForSetting) {
                     VerifyPwdActivity.startIt(mBaseContext, false);
                 } else {
-                    BaseApplication.getInstance().finishAllActivity();
+                    finish();
                 }
             }
         });

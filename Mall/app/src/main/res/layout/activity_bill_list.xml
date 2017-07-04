@@ -36,7 +36,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="还款金额：¥%s"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_18" />
 
@@ -61,17 +61,17 @@
             android:paddingTop="24dp"
             android:src="@drawable/ic_change_pay" />
 
-        <TextView
+        <com.giveu.shoppingmall.widget.ClickEnabledTextView
             android:id="@+id/tv_confirm"
+            style="@style/click_enabled_bt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/color_00bbc0"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:gravity="center"
             android:paddingLeft="@dimen/default_layout_screen_gap"
             android:paddingRight="@dimen/default_layout_screen_gap"
-            android:text="确定还款"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_18" />
+            android:text="确定还款" />
     </LinearLayout>
 
 </LinearLayout>

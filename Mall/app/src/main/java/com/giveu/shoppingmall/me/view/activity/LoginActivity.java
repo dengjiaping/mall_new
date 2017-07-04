@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -277,6 +278,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
               现在认为只要控件将Activity向上推的高度超过了1/3屏幕高，就认为软键盘弹起*/
                 if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
                     int dist = llContent.getBottom() - bottom;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        //如果系统版本大于等于6.0应该加上状态栏高度，否则弹起高度不够
+                        dist += DensityUtils.getStatusBarHeight();
+                    }
                     if (dist > 0) {
                         ObjectAnimator mAnimatorTranslateY = ObjectAnimator.ofFloat(llContent, "translationY", 0.0f, -dist);
                         mAnimatorTranslateY.setDuration(300);
