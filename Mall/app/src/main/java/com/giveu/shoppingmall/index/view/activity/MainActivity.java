@@ -19,10 +19,12 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.repay.view.fragment.MainRepayFragment;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
@@ -32,6 +34,7 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.PatternLockSetTipDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
 
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.rb1)
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
-
+    QuotaDialog quotaDialog;//额度为0的弹窗
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -103,6 +106,7 @@ public class MainActivity extends BaseActivity {
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
+        quotaDialog = new QuotaDialog(mBaseContext);
     }
 
     public void selectIconAndTextColor(int selectPos) {
@@ -159,6 +163,20 @@ public class MainActivity extends BaseActivity {
             case R.id.ll_cash:
                 mViewPager.setCurrentItem(1, false);
                 selectIconAndTextColor(1);
+                ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
+                    @Override
+                    public void onSuccess(PersonInfoResponse response) {
+                        //response.data.availablePosLimit == 0
+                        if(true){
+                            quotaDialog.showDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                });
                 break;
 
             case R.id.ll_repayment:

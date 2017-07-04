@@ -22,6 +22,6 @@ public interface SharePrefKeys {
     String LAST_APK_UPDATE_DIALOG_SHOW_TIME = "LAST_APK_UPDATE_DIALOG_SHOW_TIME" + CommonUtils.getVersionCode();
     String LOCK_PATTERN_PWD = "LOCK_PATTERN_PWD";
     String FINGER_PWD = "FINGER_PWD";
-
+    String PERSON_INFO_RESPONSE = "PERSON_INFO_RESPONSE";
 
 }

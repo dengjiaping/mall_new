@@ -75,7 +75,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_16" />
 
-            <EditText
+            <com.giveu.shoppingmall.widget.EditView
                 android:id="@+id/et_code"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

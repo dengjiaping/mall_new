@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
-                android:text="信用卡"
+                android:text="储蓄卡"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_14" />
 

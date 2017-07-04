@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -87,17 +88,26 @@ public class MyBankCardActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
+        //短按选择后显示在上一页面
         lvBankCard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showBankNoStyle(position);
+                finish();
+            }
+        });
+        //长按设置
+        lvBankCard.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long longId) {
                 if (bankListAdapter == null) {
-                    return;
+                    return true;
                 }
-                if(position < 0 || position > bankListAdapter.getCount() + 1){
-                    return;
+                if (position < 0 || position > bankListAdapter.getCount() + 1) {
+                    return true;
                 }
-                if(bankListAdapter.getItem(position) == null){
-                    return;
+                if (bankListAdapter.getItem(position) == null) {
+                    return true;
                 }
 
                 final String id = String.valueOf(bankListAdapter.getItem(position).id);
@@ -114,12 +124,30 @@ public class MyBankCardActivity extends BaseActivity {
                         setDefaultCard(id);
                     }
                 }, null).show();
+                return true;
             }
         });
+    }
+    /**
+     * 传入点击项，返回4位尾数的银行卡号给上一页面
+     *
+     * @param position
+     */
+    private void showBankNoStyle(int position) {
+        Intent data = new Intent(mBaseContext, CashTypeActivity.class);
+        BankCardListResponse.BankInfoListBean bankCardResponse = bankListAdapter.getItem(position);
+        String bankNo = bankCardResponse.bankNo;
+        if (bankNo.length() >= 4) {
+            bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
+        }
+        String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
+        data.putExtra("bankName", bankName);
+        setResult(RESULT_OK, data);
     }
 
     /**
      * 设置默认代扣卡
+     *
      * @param id
      */
     private void setDefaultCard(String id) {
@@ -140,6 +168,7 @@ public class MyBankCardActivity extends BaseActivity {
 
     /**
      * 显示删除银行卡的Dialog
+     *
      * @param bankListAdapter
      * @param id
      * @param position
@@ -157,6 +186,7 @@ public class MyBankCardActivity extends BaseActivity {
 
     /**
      * 发送请求删除银行卡，成功刷新列表
+     *
      * @param id
      * @param position
      */

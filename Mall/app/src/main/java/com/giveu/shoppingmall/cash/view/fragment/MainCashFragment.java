@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * 消费模块
@@ -28,6 +29,9 @@ public class MainCashFragment extends BaseFragment {
     TextView tvLoan;
     @BindView(R.id.iv_bg_top)
     ImageView ivBgTop;
+    @BindView(R.id.tv_available_credit)
+    TextView tvAvailableCredit;
+    Unbinder unbinder;
 
 
     @Override
@@ -70,4 +74,9 @@ public class MainCashFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }
