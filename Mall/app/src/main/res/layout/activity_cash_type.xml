@@ -106,6 +106,7 @@
                     android:verticalSpacing="6dp" />
 
                 <TextView
+                    android:id="@+id/tv_rate_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -264,7 +265,6 @@
                     android:layout_marginRight="10dp"
                     android:button="@drawable/selector_checkbox_register"
                     android:checked="true"
-                    android:text=""
                     android:textColor="@color/color_4a4a4a"
                     android:textSize="@dimen/ts_12" />
 

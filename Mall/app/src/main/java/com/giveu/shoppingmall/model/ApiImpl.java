@@ -19,8 +19,8 @@ import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
+import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
-
 import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -226,6 +226,12 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, idPerson});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_setDefaultCard, BaseBean.class, context, responseListener);
     }
+    //分期产品取现费用计算
+    public static void repaycost(Activity context, int idProduct, int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_repaycost, RepayCostResponse.class, context, responseListener);
+    }
+
 }
 
 

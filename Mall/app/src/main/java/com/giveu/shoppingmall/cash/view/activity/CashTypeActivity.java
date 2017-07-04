@@ -23,8 +23,10 @@ import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CashTypeResponse;
 import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
+import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -37,6 +39,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.giveu.shoppingmall.R.id.tv_ensure;
+
 
 /**
  * 取现类型页
@@ -62,9 +65,13 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvBankName;
     @BindView(R.id.tv_available_credit)
     TextView tvAvailableCredit;
+    @BindView(R.id.tv_rate_day)
+    TextView tvRateDay;//费率
     private LvCommonAdapter<CashTypeResponse> stagingTypeAdapter;
     int chooseQuota;//选择额度
     List<CashTypeResponse> data;
+    public final int MAXAMOUNT = 3000;//最大取现金额
+    public final int MINAMOUNT = 300;//最小取现金额
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
@@ -136,6 +143,16 @@ public class CashTypeActivity extends BaseActivity {
 
     @Override
     public void setData() {
+        ApiImpl.repaycost(mBaseContext, 2644874, 3000, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
+            @Override
+            public void onSuccess(RepayCostResponse response) {
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
         //显示可用额度
         ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
             @Override
@@ -150,29 +167,13 @@ public class CashTypeActivity extends BaseActivity {
             }
         });
 
-        //显示选择分期数选项
         chooseQuota = 3000;
-        if (chooseQuota > 3000) {
-            //仅支持取现分期
-            setStageNumberData();
-            data.remove(0);
-        } else if (chooseQuota >= 300 && chooseQuota <= 3000) {
-            //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
-            setStageNumberData();
-        } else {
-            //仅支持随借随还
-            CashTypeResponse c1 = data.get(0);
-            data = new ArrayList<>();
-            data.add(c1);
-        }
 
-
-        stagingTypeAdapter = new LvCommonAdapter<CashTypeResponse>(mBaseContext, R.layout.tv_cash_type_item, data) {
+        stagingTypeAdapter = new LvCommonAdapter<CashTypeResponse>(mBaseContext, R.layout.tv_cash_type_item, setStageNumberData(chooseQuota)) {
             @Override
             protected void convert(ViewHolder viewHolder, CashTypeResponse item, int position) {
                 TextView tv_staging_type = viewHolder.getView(R.id.tv_staging_type);
                 tv_staging_type.setText(item.month);
-
 
                 if (item.isChecked) {
                     tv_staging_type.setTextColor(getResources().getColor(R.color.white));
@@ -214,7 +215,13 @@ public class CashTypeActivity extends BaseActivity {
 
     }
 
-    public void setStageNumberData() {
+    /**
+     * 根据选择的额度显示不同的借款期数
+     *
+     * @param chooseQuota
+     * @return
+     */
+    public List<CashTypeResponse> setStageNumberData(int chooseQuota) {
         CashTypeResponse c1 = new CashTypeResponse("按日计息", false);
         CashTypeResponse c2 = new CashTypeResponse("9期", false);
         CashTypeResponse c3 = new CashTypeResponse("12期", false);
@@ -236,6 +243,21 @@ public class CashTypeActivity extends BaseActivity {
         data.add(c8);
         data.add(c9);
         data.add(c10);
+        if (chooseQuota > MAXAMOUNT) {
+            //仅支持取现分期
+            data.remove(0);
+            tvRateDay.setVisibility(View.GONE);
+        } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
+            //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
+            tvRateDay.setVisibility(View.VISIBLE);
+        } else {
+            //仅支持随借随还
+            CashTypeResponse cashData = data.get(0);
+            data = new ArrayList<>();
+            data.add(cashData);
+            tvRateDay.setVisibility(View.VISIBLE);
+        }
+        return data;
     }
 
     @Override
