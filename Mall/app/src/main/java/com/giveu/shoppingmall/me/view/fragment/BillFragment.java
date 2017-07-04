@@ -1,21 +1,27 @@
 package com.giveu.shoppingmall.me.view.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.adapter.BillAdapter;
-import com.giveu.shoppingmall.me.view.dialog.TransactionDetailDialog;
+import com.giveu.shoppingmall.me.presenter.InstalmentDetailsPresenter;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
-import com.giveu.shoppingmall.model.bean.response.BillResponse;
+import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
+import com.giveu.shoppingmall.me.view.dialog.IntalmentDetailsDialog;
+import com.giveu.shoppingmall.model.bean.response.BillBean;
+import com.giveu.shoppingmall.model.bean.response.BillListResponse;
+import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -28,18 +34,21 @@ import butterknife.ButterKnife;
  * Created by 513419 on 2017/6/22.
  */
 
-public class BillFragment extends BaseFragment {
+public class BillFragment extends BaseFragment implements IInstalmentDetailsView {
 
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
     private BillAdapter billAdapter;
-    private ArrayList<BillResponse> billList;
+    private ArrayList<BillBean> billList;
     private int pageIndex = 1;
     private final int pageSize = 10;
     private boolean isCurrentMonth;
     private BillListActivity mActivity;
     private ViewHolder headerHolder;
-    private TransactionDetailDialog transactionDetailDialog;
+    private double payMoney;
+    private InstalmentDetailsPresenter presenter;
+    private IntalmentDetailsDialog intalmentDetailsDialog; //还款明细对话框
+
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,53 +77,22 @@ public class BillFragment extends BaseFragment {
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.getRefreshableView().addHeaderView(headerView);
-        transactionDetailDialog = new TransactionDetailDialog(mBaseContext);
+        intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
+        presenter = new InstalmentDetailsPresenter(this);
         return view;
     }
 
-    private void setData() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 30; i++) {
-                    BillResponse bill = new BillResponse();
-                    if (i % 4 == 0) {
-                        bill.isTitle = true;
-                    } else {
-                        bill.isTitle = false;
-                    }
-                    billList.add(bill);
-                }
-                if (pageIndex == 1) {
-                    ptrlv.onRefreshComplete();
-                    ptrlv.setPullRefreshEnable(true);
-                }
-                billAdapter.notifyDataSetChanged();
-         /*       if (CommonUtils.isNotNullOrEmpty(billList)) {
-                    if (pageIndex == 1) {
-                        billList.clear();
-                        if (billList.size() >= pageSize) {
-                            ptrlv.setPullLoadEnable(true);
-                        } else {
-                            ptrlv.setPullLoadEnable(false);
-                            ptrlv.showEnd("没有更多数据");
-                        }
-//                emptyView.setVisibility(View.GONE);
-                    }
-//            billList.addAll(response.data.entities);
-                    billAdapter.notifyDataSetChanged();
-                    pageIndex++;
-                } else {
-                    if (pageIndex == 1) {
-//                emptyView.setVisibility(View.VISIBLE);
-                        ptrlv.setPullLoadEnable(false);
-                    } else {
-                        ptrlv.setPullLoadEnable(false);
-                        ptrlv.showEnd("没有更多数据");
-                    }
-                }*/
-            }
-        }, 1000);
+    public double getPayMoney() {
+        return payMoney;
+    }
+
+    public void setPayMoney(double payMoney) {
+        this.payMoney = payMoney;
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
@@ -134,19 +112,25 @@ public class BillFragment extends BaseFragment {
             }
         });
 
+        billAdapter.setOnMoneyChangetListener(new BillAdapter.OnMoneyChangeListener() {
+            @Override
+            public void moneyChange(double money) {
+                payMoney = payMoney + money;
+                mActivity.setPayMoney(payMoney);
+            }
+        });
+
 
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageIndex = 1;
-                setData();
                 ptrlv.setPullLoadEnable(false);
 
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                setData();
                 ptrlv.setPullRefreshEnable(true);
             }
         });
@@ -155,7 +139,9 @@ public class BillFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
-                        transactionDetailDialog.show();
+                        BillBean billBean = billList.get(position - 2);
+                        // TODO: 2017/7/3 写死的数据需更换
+                        presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType);
                     }
                 }
 
@@ -164,9 +150,33 @@ public class BillFragment extends BaseFragment {
 
     }
 
+    public void notifyDataSetChange(BillListResponse.HeaderBean headerBean, ArrayList<BillBean> billBeenList) {
+        if (headerBean != null) {
+            headerHolder.tvTotal.setText("¥" + headerBean.repayAmount);
+            headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
+            if (headerBean.isOverduce) {
+                headerHolder.ivOverDue.setVisibility(View.VISIBLE);
+            } else {
+                headerHolder.ivOverDue.setVisibility(View.GONE);
+            }
+        }
+        if (CommonUtils.isNotNullOrEmpty(billBeenList)) {
+            billList.clear();
+            billList.addAll(billBeenList);
+            billAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void initWithDataDelay() {
-        setData();
+        //刚进来这个fragment时，还款金额为0
+        mActivity.setPayMoney(0d);
+    }
+
+    @Override
+    public void showInstalmentDetails(InstalmentDetailResponse data) {
+        intalmentDetailsDialog.setInstalmentDetailsData(data);
+        intalmentDetailsDialog.show();
     }
 
 
@@ -183,6 +193,8 @@ public class BillFragment extends BaseFragment {
         TextView tvNextMonth;
         @BindView(R.id.view_next)
         View viewNext;
+        @BindView(R.id.iv_overdue)
+        ImageView ivOverDue;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

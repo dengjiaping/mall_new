@@ -9,15 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.giveu.shoppingmall.widget.dialog.LoadingDialog;
 
 /**
  * Created by 508632 on 2016/12/12.
  * fragment初始化的时候不在自动调用{@link BaseFragment#initWithDataDelay()},需要自己手动调用
  */
 
-public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener, IView {
     public Activity mBaseContext;
     private View myXmlView;
     public BaseLayout baseLayout;
@@ -79,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
     }
 
+
     /**
      * 是否需要延迟加载，默认是延迟加载，true为延迟加载
      *
@@ -96,7 +96,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @return true=使用状态栏一体化，false=不使用
      */
     private boolean isTranslateStatusBar() {
-        if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
             return true;
         }
         return false;
@@ -104,6 +104,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     /**
      * 子类重写此方法来控制是否状态栏一体化
+     *
      * @return
      */
     protected boolean translateStatusBar() {
@@ -128,6 +129,20 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         isDataInitiated = dataInitiated;
     }
 
+    @Override
+    public void showLoading() {
+        LoadingDialog.showIfNotExist(mBaseContext, false);
+    }
+
+    @Override
+    public void hideLoding() {
+        LoadingDialog.dismissIfExist();
+    }
+
+    @Override
+    public Activity getAct() {
+        return mBaseContext;
+    }
 
     @Override
     public void onDestroy() {

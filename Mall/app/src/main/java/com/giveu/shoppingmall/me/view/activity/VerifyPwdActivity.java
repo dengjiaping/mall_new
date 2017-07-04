@@ -45,7 +45,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     ClickEnabledTextView tvLogin;
     @BindView(R.id.tv_change_account)
     TextView tvChangeAccount;
-    private String pwd;
     boolean isForClosePattern;
     private LoginPresenter presenter;
     private boolean isForSetting;
@@ -164,14 +163,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
 
     }
 
-    private void onVerifySuccess() {
-        //登录密码解锁成功，清除手势密码
-        SharePrefUtil.setPatternPwd("");
-        SharePrefUtil.setFingerPrint(false);
-        setResult(RESULT_OK);
-        finish();
-    }
-
     @Override
     public void onLoginSuccess(LoginResponse data) {
         if (isForSetting) {
@@ -203,9 +194,12 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         //解锁界面的返回，那么需要关闭所有页面，不然会返回到解锁前的前一个页面
-        BaseApplication.getInstance().finishAllActivity();
+        if (isForClose) {
+            super.onBackPressed();
+        } else {
+            BaseApplication.getInstance().finishAllActivity();
+        }
     }
 
     @Override

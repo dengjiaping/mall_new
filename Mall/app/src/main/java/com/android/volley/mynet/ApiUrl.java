@@ -39,8 +39,6 @@ public interface ApiUrl {
     String personCenter_account_resetPwd_checkSmsCode = BASE_URL + "personCenter/account/resetPwd/checkSmsCode";
     //找回密码（重置密码）
     String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
-
-
     //找回密码（校验身份）
     String personCenter_account_resetPwd_checkUserInfo = BASE_URL + "personCenter/account/resetPwd/checkUserInfo";
     //钱包激活
@@ -51,4 +49,14 @@ public interface ApiUrl {
     String personCenter_account_verifyPayPwd = BASE_URL + "personCenter/account/verifyPayPwd";
     //查询绑卡列表
     String personCenter_bankCard_getBankInfo = BASE_URL + "personCenter/bankCard/getBankInfo";
+    //还款首页
+    String personCenter_repayment_getRepaymentInfo = BASE_URL + "personCenter/repayment/getRepaymentInfo";
+    //还款明细
+    String personCenter_repayment_getInstalmentDetails = BASE_URL + "personCenter/repayment/getInstalmentDetails";
+    //交易查询
+    String personCenter_repayment_listContract = BASE_URL + "personCenter/repayment/listContract";
+    //交易详细
+    String personCenter_repayment_getContractDetails = BASE_URL + "personCenter/repayment/getContractDetails";
+    //分期明细
+    String personCenter_repayment_listInstalment = BASE_URL + "personCenter/repayment/listInstalment";
 }

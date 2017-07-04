@@ -9,11 +9,17 @@ import android.widget.ListView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.adapter.CreditAdapter;
+import com.giveu.shoppingmall.me.presenter.CreditDetailPresenter;
+import com.giveu.shoppingmall.me.view.agent.ICreditDetailView;
+import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -21,16 +27,19 @@ import butterknife.BindView;
  * Created by 513419 on 2017/6/23.
  */
 
-public class CreditDetailActivity extends BaseActivity {
+public class CreditDetailActivity extends BaseActivity implements ICreditDetailView {
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
     private CreditAdapter creditAdapter;
-    private ArrayList<String> creditList;
+    private ArrayList<ListInstalmentResponse.Instalment> creditList;
     private int pageIndex = 1;
     private final int pageSize = 10;
+    private String idCredit;
+    private CreditDetailPresenter presenter;
 
-    public static void startIt(Activity activity) {
+    public static void startIt(Activity activity, String idCredit) {
         Intent intent = new Intent(activity, CreditDetailActivity.class);
+        intent.putExtra("idCredit", idCredit);
         activity.startActivity(intent);
     }
 
@@ -39,18 +48,21 @@ public class CreditDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_credit_detail);
         baseLayout.setTitle("分期明细");
         creditList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            creditList.add(i + "");
-        }
         creditAdapter = new CreditAdapter(mBaseContext, creditList);
         ptrlv.setAdapter(creditAdapter);
-        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
-        ptrlv.setPullLoadEnable(false);
+        ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
+        presenter = new CreditDetailPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
     public void setData() {
-
+        idCredit = getIntent().getStringExtra("idCredit");
+        presenter.getCreditDetail(idCredit);
     }
 
     @Override
@@ -80,5 +92,13 @@ public class CreditDetailActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public void showCreditDetail(List<ListInstalmentResponse.Instalment> instalmentList) {
+        if (CommonUtils.isNotNullOrEmpty(instalmentList)) {
+            creditList.addAll(instalmentList);
+            creditAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -103,7 +103,7 @@ public class MyBankCardActivity extends BaseActivity {
 //                        String bankName = banksBean.bankName;
 //                        String bankNo = banksBean.bankNo;
 //                        String protocolNo = banksBean.protocolNo;
-//                        String type = banksBean.type;
+//                        String billType = banksBean.billType;
 //                        if (list1.size() > 0 && list1 != null) {
 //                            phone = bankAdapter.getItemList().get(position).phone;
 //                            if (phone == null || phone.equals("")) {
@@ -114,7 +114,7 @@ public class MyBankCardActivity extends BaseActivity {
 //                                no = no.substring(no.length() - 4, no.length());
 //                                tv_cardnumber.setText("(尾号" + no + ")");
 //                            }
-//                            defalutBank(bankCode, bankName, bankNo, phone, type, protocolNo);
+//                            defalutBank(bankCode, bankName, bankNo, phone, billType, protocolNo);
 //                            //传给取现换默认卡用
 //                            Intent data = new Intent(mBaseContext, MyCashActivity.class);
 //                            data.putExtra(Const.CASHBANKNAME, bankName);
