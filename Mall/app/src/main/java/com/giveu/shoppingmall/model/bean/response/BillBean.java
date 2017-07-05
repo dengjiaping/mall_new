@@ -7,7 +7,6 @@ package com.giveu.shoppingmall.model.bean.response;
 public class BillBean {
     public boolean isTitle;
     public boolean isChoose;
-    public int billType;//0是分期产品，1是零花钱随借随还，2是红包
     public String repayDate;//还款日期
     public String contractId;//合同id
     public String contractNo;//合同号
@@ -26,7 +25,6 @@ public class BillBean {
         return "BillBean{" +
                 "isTitle=" + isTitle +
                 ", isChoose=" + isChoose +
-                ", billType=" + billType +
                 ", repayDate='" + repayDate + '\'' +
                 ", contractId='" + contractId + '\'' +
                 ", contractNo='" + contractNo + '\'' +

@@ -64,6 +64,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "");
         personInfo.cyLimit = getString(CYLIMIT, "");
         personInfo.posLimit = getString(POS_LIMIT, "");
+        personInfo.realName = getString(REAL_NAME,"");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;

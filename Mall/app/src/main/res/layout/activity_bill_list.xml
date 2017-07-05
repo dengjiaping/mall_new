@@ -68,6 +68,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
+            android:background="@drawable/shape_grey_without_corner"
             android:gravity="center"
             android:paddingLeft="@dimen/default_layout_screen_gap"
             android:paddingRight="@dimen/default_layout_screen_gap"

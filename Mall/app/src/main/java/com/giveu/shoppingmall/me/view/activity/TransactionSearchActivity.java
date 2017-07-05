@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.me.view.agent.ITransactionView;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
@@ -287,7 +288,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         loanDate = selLoanDate;
         timeType = selTimeType;
         // TODO: 2017/7/3 写死的数据需更换
-        presenter.searchContract(creditStatus, creditType, "15124638", loanDate, pageIndex, pageSize, timeType);
+        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson()+"", loanDate, pageIndex, pageSize, timeType);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                     //listview的头部bean
                                     BillBean titileBean = new BillBean();
                                     titileBean.isTitle = true;
-                                    titileBean.billType = 0;
+                                    titileBean.productType = "o";//产品类型为分期产品
                                     titileBean.isOverdue = billListBean.isOverduce;
                                     titileBean.repayAmount = billListBean.repayAmount;
                                     titileBean.isWithholding = billListBean.isWithholding;
@@ -53,7 +53,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                         contentBean.isOverdue = contractListBean.isOverduce;
                                         contentBean.numInstalment = contractListBean.numInstalment;
                                         contentBean.repayAmount = contractListBean.repayAmount;
-                                        contentBean.productType = "o";
+                                        contentBean.productType = contractListBean.productType;
                                         contentBean.repayDate = contractListBean.repayDate;
                                         if (billListBean.isCurrent) {
                                             currentMonthList.add(contentBean);//添加当期标题下的bean
@@ -69,7 +69,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                 //listview的头部bean
                                 BillBean titileBean = new BillBean();
                                 titileBean.isTitle = true;
-                                titileBean.billType = 1;
+                                titileBean.productType = "c";//产品类型为取现随借随还
                                 titileBean.isOverdue = response.data.product.cycleMoney.isOverduce;
                                 titileBean.repayAmount = response.data.product.cycleMoney.repayAmount;
                                 titileBean.creditType = response.data.product.cycleMoney.productType;
@@ -83,7 +83,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                     contentBean.creditType = contractListBean.creditType;
                                     contentBean.isWithholding = contractListBean.isWithholding;
                                     contentBean.isOverdue = contractListBean.isOverduce;
-                                    contentBean.productType = "c";
+                                    contentBean.productType = contractListBean.productType;
                                     contentBean.repayAmount = contractListBean.repayAmount;
                                     contentBean.numInstalment = contractListBean.numInstalment;
                                     contentBean.repayDate = contractListBean.repayDate;
@@ -95,7 +95,6 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                             if (response.data.product != null && CommonUtils.isNotNullOrEmpty(response.data.redPacketList)) {
                                 BillBean titileBean = new BillBean();
                                 titileBean.isTitle = true;
-                                titileBean.billType = 1;
                                 titileBean.isWithholding = response.data.product.cycleMoney.isWithholding;
                                 currentMonthList.add(titileBean);//添加标题bean
                                 for (BillListResponse.RedPacketListBean redPacketListBean : response.data.redPacketList) {

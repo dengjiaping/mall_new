@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.me.view.dialog.RepaymentDialog;
 import com.giveu.shoppingmall.me.view.fragment.BillFragment;
 import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -95,8 +96,7 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     @Override
     public void setData() {
         //调一次接口可获取当月和下月的数据，并进行拆分
-        // TODO: 2017/7/3 写死的数据需更换
-        presenter.getBillList("15124638");
+        presenter.getBillList(LoginHelper.getInstance().getIdPerson()+"");
     }
 
     @Override
@@ -171,10 +171,10 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
 
     public boolean canClick() {
         if (payMoney <= 0) {
-            tvConfirm.setClickEnabled(false);
+            tvConfirm.setBackgroundResource(R.drawable.shape_grey_without_corner);
             return false;
         } else {
-            tvConfirm.setClickEnabled(true);
+            tvConfirm.setBackgroundResource(R.drawable.shape_blue_without_corner);
             return true;
         }
     }
@@ -188,6 +188,7 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
 
     public void setPayMoney(double payMoney) {
         tvMoney.setText("还款金额：¥" + format.format(payMoney));
+        canClick();
     }
 
     @Override

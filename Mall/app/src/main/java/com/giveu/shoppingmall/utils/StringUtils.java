@@ -166,19 +166,25 @@ public class StringUtils {
      * @param pwd
      * @return
      */
-    public static boolean checkLoginPwdAndTipError(String pwd) {
+    public static boolean checkLoginPwdAndTipError(String pwd, boolean showToast) {
         if (TextUtils.isEmpty(pwd)) {
-            ToastUtils.showShortToast("请输入密码");
+            if (showToast) {
+                ToastUtils.showShortToast("请输入密码");
+            }
             return false;
         }
 
         if (pwd.length() < 6 || pwd.length() > 16) {
-            ToastUtils.showShortToast("请输入8~16位密码");
+            if (showToast) {
+                ToastUtils.showShortToast("请输入8~16位密码");
+            }
             return false;
         }
 
         if (!Validator.isLoginPassword(pwd)) {
-            ToastUtils.showShortToast("密码要是数字和字母的组合");
+            if (showToast) {
+                ToastUtils.showShortToast("密码要是数字和字母的组合");
+            }
             return false;
         }
 
@@ -210,7 +216,7 @@ public class StringUtils {
             }
             return false;
         }
-        if(idcard.length() != 15 && idcard.length() != 18){
+        if (idcard.length() != 15 && idcard.length() != 18) {
             if (showToast) {
                 ToastUtils.showShortToast("请输入正确位数的身份证！");
             }

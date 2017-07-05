@@ -26,7 +26,7 @@ import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
@@ -63,8 +63,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     private String lat;
     private String lng;
-    private String userId;
-    private String pwd;
     //标记定位次数，如果2次定位未成功，那么提示定位失败，并不再进行登录操作
     private int initLocCounts;
     private String deviceNumber;
@@ -116,7 +114,9 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             case R.id.tv_login:
                 //每次点击按钮重置定位次数
                 initLocCounts = 1;
-                login();
+                if (canClick(true)) {
+                    presenter.login(etAccount.getText().toString(), MD5.MD5Encode(etPwd.getText().toString()));
+                }
                 break;
 
             case R.id.tv_register:
@@ -155,24 +155,20 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         }
     }
 
-    private void canClick() {
-        if (etPwd.getText().toString().length() >= 8 && etAccount.getText().toString().length() == 11) {
-            tvLogin.setClickEnabled(true);
-        } else {
-            tvLogin.setClickEnabled(false);
+    private boolean canClick(boolean showToast) {
+        tvLogin.setClickEnabled(false);
+        if (etAccount.getText().toString().length() != 11) {
+            if(showToast){
+                ToastUtils.showShortToast("请输入11位的手机号");
+            }
+            return false;
         }
-    }
-
-    private void login() {
-        userId = etAccount.getText().toString().trim();
-        pwd = etPwd.getText().toString().trim();
-        if (StringUtils.isNull(userId)) {
-            ToastUtils.showShortToast("请输入手机号");
-            return;
-        }
-        if (StringUtils.checkLoginPwdAndTipError(pwd)) {
-            presenter.login(userId, pwd);
-        }
+        //TODO：方便开发，暂时注释
+   /*     if (!StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString(), showToast)) {
+            return false;
+        }*/
+        tvLogin.setClickEnabled(true);
+        return true;
     }
 
     private void onLoginSuccessV() {
@@ -233,7 +229,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 } else {
                     ivDeleteAccount.setVisibility(View.GONE);
                 }
-                canClick();
+                canClick(false);
             }
         });
 
@@ -256,7 +252,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 } else {
                     ivDeletePwd.setVisibility(View.GONE);
                 }
-                canClick();
+                canClick(false);
             }
         });
 

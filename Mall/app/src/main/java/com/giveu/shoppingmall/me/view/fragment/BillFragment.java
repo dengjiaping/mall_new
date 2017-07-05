@@ -74,8 +74,7 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         billList = new ArrayList<>();
         billAdapter = new BillAdapter(mBaseContext, billList);
         ptrlv.setAdapter(billAdapter);
-        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
-        ptrlv.setPullLoadEnable(false);
+        ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
         ptrlv.getRefreshableView().addHeaderView(headerView);
         intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
         presenter = new InstalmentDetailsPresenter(this);
