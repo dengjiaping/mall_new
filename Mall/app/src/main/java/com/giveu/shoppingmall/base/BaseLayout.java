@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.base;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -211,7 +212,7 @@ public class BaseLayout extends LinearLayout {
     /**
      * 显示页面的右边的图片
      */
-    public void showRightImage(){
+    public void showRightImage() {
         rl_click_right.setVisibility(VISIBLE);
     }
 
@@ -262,25 +263,33 @@ public class BaseLayout extends LinearLayout {
         clv.showEmpty();
     }
 
-    /**
-     *
-     * @param marginTop 空布局需要距离顶部高度
-     * @param marginBottom 空布局需要距离底部高度
-     * @param icon  图标
-     * @param message  提示信息
-     */
-    public void showEmpty(int marginTop , int marginBottom ,int icon , String message){
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) clv.getLayoutParams();
-        params.topMargin = DensityUtils.dip2px(marginTop);
-        params.bottomMargin = DensityUtils.dip2px(marginBottom);
-        clv.showEmpty(icon,message,"",false,null);
+    public void hideEmpty() {
+        clv.hideEmpty();
     }
 
-    public void showEmpty(int marginTop , int marginBottom  , String message){
+    /**
+     * @param marginTop    空布局需要距离顶部高度
+     * @param marginBottom 空布局需要距离底部高度
+     * @param icon         图标
+     * @param message      提示信息
+     */
+    public void showEmpty(int marginTop, int marginBottom, @DrawableRes int icon, String message) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) clv.getLayoutParams();
         params.topMargin = DensityUtils.dip2px(marginTop);
         params.bottomMargin = DensityUtils.dip2px(marginBottom);
-        clv.showEmpty(R.drawable.ic_defalut_empty,message,"",false,null);
+        clv.showEmpty(icon, message, "", false, null);
+    }
+
+    public void showEmpty(int marginTop, int marginBottom, String message) {
+        showEmpty(marginTop, marginBottom, R.drawable.ic_defalut_empty, message);
+    }
+
+    public void showEmpty(@DrawableRes int icon, String message) {
+        showEmpty(0, 0, icon, message);
+    }
+
+    public void showEmpty(String message) {
+        showEmpty(0, 0, R.drawable.ic_defalut_empty, message);
     }
 
     public void showEmpty(EmptyType emptyType) {

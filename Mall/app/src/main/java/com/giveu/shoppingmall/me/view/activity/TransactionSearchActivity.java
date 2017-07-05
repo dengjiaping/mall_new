@@ -100,6 +100,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 if (llSearch.getVisibility() == View.GONE) {
                     llSearch.setVisibility(View.VISIBLE);
                 }
+                baseLayout.hideEmpty();
                 showSearchView();
             }
         });
@@ -288,7 +289,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         loanDate = selLoanDate;
         timeType = selTimeType;
         // TODO: 2017/7/3 写死的数据需更换
-        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson()+"", loanDate, pageIndex, pageSize, timeType);
+        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson() + "", loanDate, pageIndex, pageSize, timeType);
     }
 
     @Override
@@ -383,14 +384,14 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                     ptrlv.setPullLoadEnable(false);
                     ptrlv.showEnd("没有更多数据");
                 }
-//                emptyView.setVisibility(View.GONE);
+                baseLayout.showEmpty("暂无交易记录");
             }
             transactionList.addAll(contractList);
             transactionAdapter.notifyDataSetChanged();
             pageIndex++;
         } else {
             if (pageIndex == 1) {
-//                emptyView.setVisibility(View.VISIBLE);
+                baseLayout.showEmpty("暂无交易记录");
                 ptrlv.setPullLoadEnable(false);
             } else {
                 ptrlv.setPullLoadEnable(false);

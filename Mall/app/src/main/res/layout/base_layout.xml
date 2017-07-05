@@ -119,17 +119,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.giveu.shoppingmall.widget.emptyview.CommonLoadingView
+            android:id="@+id/clv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
         <LinearLayout
             android:id="@+id/ll_baselayout_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
-            android:orientation="vertical" />
-
-        <com.giveu.shoppingmall.widget.emptyview.CommonLoadingView
-            android:id="@+id/clv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical" />
     </RelativeLayout>
 

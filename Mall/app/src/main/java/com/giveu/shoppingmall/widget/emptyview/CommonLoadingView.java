@@ -163,6 +163,10 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
         showEmpty(EmptyType.OPT_DEFAULT);
     }
 
+    public void hideEmpty() {
+        rl_empty.setVisibility(View.GONE);
+    }
+
 
     /**
      * 控件显示状态
