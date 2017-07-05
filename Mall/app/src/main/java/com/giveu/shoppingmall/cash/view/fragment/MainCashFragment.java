@@ -8,16 +8,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
-import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
+import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 消费模块
+ * 取现模块
  * Created by 508632 on 2016/12/13.
  */
 
@@ -28,7 +33,9 @@ public class MainCashFragment extends BaseFragment {
     TextView tvLoan;
     @BindView(R.id.iv_bg_top)
     ImageView ivBgTop;
-
+    @BindView(R.id.tv_available_credit)
+    TextView tvAvailableCredit;
+    QuotaDialog quotaDialog;//额度为0的弹窗
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,12 +43,13 @@ public class MainCashFragment extends BaseFragment {
         baseLayout.setTitle("我要取现");
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.hideBack();
-        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CaseRecordActivity.startIt(mBaseContext);
-            }
-        });
+//        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CaseRecordActivity.startIt(mBaseContext);
+//            }
+//        });
+        quotaDialog = new QuotaDialog(mBaseContext);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -51,7 +59,22 @@ public class MainCashFragment extends BaseFragment {
         tvLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CashTypeActivity.startIt(mBaseContext);
+                ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
+                    @Override
+                    public void onSuccess(PersonInfoResponse response) {
+                        //response.data.availablePosLimit == 0
+                        if (false) {
+                            quotaDialog.showDialog();
+                        } else {
+                            CashTypeActivity.startIt(mBaseContext);
+                        }
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                });
             }
         });
     }
@@ -62,6 +85,7 @@ public class MainCashFragment extends BaseFragment {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
         layoutParams.height = (208 * width / 708);
         ivBgTop.setLayoutParams(layoutParams);
+
     }
 
     @Override

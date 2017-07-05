@@ -67,4 +67,6 @@ public interface ApiUrl {
     String personCenter_bankCard_setDefaultCard = BASE_URL + "personCenter/bankCard/setDefaultCard";
     //获取用户信息
     String personCenter_account_getUserInfo = BASE_URL + "personCenter/account/getUserInfo";
+    //分期产品取现费用计算
+    String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repaycost";
 }

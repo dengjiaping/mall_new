@@ -3,28 +3,27 @@ package com.giveu.shoppingmall.model.bean.response;
 import com.android.volley.mynet.BaseBean;
 
 /**
- *  用户信息
- * Created by 101900 on 2017/7/3.
+ * Created by 101900 on 2017/7/4.
  */
 
-public class UserInfoResponse extends BaseBean<UserInfoResponse>{
+public class PersonInfoResponse extends BaseBean<PersonInfoResponse> {
 
     /**
-     * activeDate : 2017/6/23
-     * availableCyLimit : 50000
-     * availablePosLimit : 50000
-     * availableRechargeLimit : 500
-     * creditCount : null
-     * cyLimit : 50000
-     * endDate : 2020/6/1
-     * globleLimit : 100000
      * idPerson : 10000923
+     * endDate : 2020/6/1
+     * cyLimit : 50000
      * ident : 371082199201058672
-     * name : 唐兴
-     * phone : 18109491314
+     * repayAmount : 0
+     * creditCount : null
+     * availableCyLimit : 50000
+     * availablePosLimit : 49772.05
+     * globleLimit : 100000
      * posLimit : 0
-     * repayAmount : null
+     * phone : 18109491314
+     * activeDate : 2017/6/23
+     * name : 唐兴
      * repayDate : null
+     * availableRechargeLimit : null
      * status : true
      */
 

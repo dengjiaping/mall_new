@@ -25,7 +25,7 @@ import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
-import com.giveu.shoppingmall.model.bean.response.UserInfoResponse;
+import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
@@ -222,9 +222,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void getUserInfo() {
-        ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson() + "", new BaseRequestAgent.ResponseListener<UserInfoResponse>() {
+        ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
             @Override
-            public void onSuccess(UserInfoResponse response) {
+            public void onSuccess(PersonInfoResponse response) {
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.activeDate = response.data.activeDate;
                 loginResponse.availableCyLimit = response.data.availableCyLimit;

@@ -33,6 +33,7 @@
             android:text="最高可借（元）" />
 
         <TextView
+            android:id="@+id/tv_available_credit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3000.00"

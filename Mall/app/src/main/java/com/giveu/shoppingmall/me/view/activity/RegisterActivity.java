@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -34,7 +33,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     @BindView(R.id.et_phone)
     EditView etPhone;
     @BindView(R.id.et_code)
-    EditText etCode;
+    EditView etCode;
     @BindView(R.id.tv_send_code)
     SendCodeTextView tvSendCode;
     @BindView(R.id.cb_agreement)
@@ -55,6 +54,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         setContentView(R.layout.activity_register);
         baseLayout.setTitle("注册");
         etPhone.checkFormat(11);
+        etCode.checkFormat(6);
         presenter = new RegisterPresenter(this);
         tvSendCode.setSendTextColor(false);
     }

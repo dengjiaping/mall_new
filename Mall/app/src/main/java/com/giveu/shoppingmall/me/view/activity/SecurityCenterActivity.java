@@ -46,17 +46,6 @@ public class SecurityCenterActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_security_center);
         baseLayout.setTitle("安全中心");
-//        ApiImpl.getUserInfo(mBaseContext, "10000923", new BaseRequestAgent.ResponseListener<UserInfoResponse>() {
-//            @Override
-//            public void onSuccess(UserInfoResponse response) {
-//                ToastUtils.showShortToast("成功");
-//            }
-//
-//            @Override
-//            public void onError(BaseBean errorBean) {
-//                CommonLoadingView.showErrorToast(errorBean);
-//            }
-//        });
     }
 
     @Override
