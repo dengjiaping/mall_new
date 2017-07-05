@@ -196,8 +196,10 @@
             android:label="取现记录" />
         <activity
             android:name=".cash.view.activity.CashTypeActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="取现类型页"
             android:launchMode="singleTask" />
+
 
         <!--支付宝支付-->
         <activity

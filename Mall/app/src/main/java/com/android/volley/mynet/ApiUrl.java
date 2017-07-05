@@ -68,5 +68,7 @@ public interface ApiUrl {
     //获取用户信息
     String personCenter_account_getUserInfo = BASE_URL + "personCenter/account/getUserInfo";
     //分期产品取现费用计算
-    String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repaycost";
+    String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repayCost";
+    //随借随还取现费用计算
+    String personCenter_enchashment_enchashment = BASE_URL + "personCenter/enchashment/enchashment";
 }
