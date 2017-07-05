@@ -83,9 +83,7 @@ public class AccountManagementActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LoginHelper.getInstance().logout();
-           //     finish();
-           //     BaseApplication.getInstance().finishAllActivity();
-             //   CommonUtils.startActivity(mBaseContext, LoginActivity.class);
+                finish();
             }
         }, null).show();
     }

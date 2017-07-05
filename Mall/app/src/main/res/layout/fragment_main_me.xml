@@ -100,6 +100,16 @@
                 android:text="我的账单"
                 android:textSize="@dimen/ts_15" />
 
+            <TextView
+                android:id="@+id/tv_see"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="查看"
+                android:visibility="gone"
+                android:textColor="@color/color_00adb2"
+                android:textSize="@dimen/ts_14" />
+
             <ImageView
                 android:layout_width="7dp"
                 android:layout_height="12dp"
@@ -109,6 +119,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_pay_status"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginTop="1dp"
@@ -121,6 +132,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_waitting_pay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -147,6 +159,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_pay_amounts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -172,6 +185,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_days"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
