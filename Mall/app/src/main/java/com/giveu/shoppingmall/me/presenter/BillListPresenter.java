@@ -8,6 +8,7 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                     //listview的头部bean
                                     BillBean titileBean = new BillBean();
                                     titileBean.isTitle = true;
-                                    titileBean.productType = "o";//产品类型为分期产品
+                                    titileBean.productType = TypeUtlis.CERDIT_PRODUCT;//产品类型为分期产品
                                     titileBean.isOverdue = billListBean.isOverduce;
                                     titileBean.repayAmount = billListBean.repayAmount;
                                     titileBean.isWithholding = billListBean.isWithholding;
@@ -69,7 +70,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                 //listview的头部bean
                                 BillBean titileBean = new BillBean();
                                 titileBean.isTitle = true;
-                                titileBean.productType = "c";//产品类型为取现随借随还
+                                titileBean.productType = TypeUtlis.CASH;//产品类型为取现随借随还
                                 titileBean.isOverdue = response.data.product.cycleMoney.isOverduce;
                                 titileBean.repayAmount = response.data.product.cycleMoney.repayAmount;
                                 titileBean.creditType = response.data.product.cycleMoney.productType;

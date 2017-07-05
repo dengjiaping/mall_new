@@ -14,6 +14,13 @@ public class TypeUtlis {
      * @param text
      * @return
      */
+
+    public static final String CASH = "c";//取现随借随还
+    public static final String CERDIT_PRODUCT = "o";//分期产品
+    public static final String MONEY_PRODUCT = "v";//豪有钱
+    public static final String STUDENT_PRODUCT = "s";//学生贷
+    public static final String COMMODITY_PRODUCT = "g";//商品贷
+
     public static String getCreditStatusValue(String text) {
         String value = "";
         switch (text) {
@@ -152,6 +159,36 @@ public class TypeUtlis {
     }
 
     /**
+     * 将【v--豪有钱】【s--学生贷】【g--商品贷】归类为：o：分期产品
+     *
+     * @param type
+     * @return
+     */
+    public static String convertProductType(String type) {
+        String productType = type;
+        if (StringUtils.isNull(type)) {
+            return "";
+        }
+        switch (type) {
+            case CERDIT_PRODUCT:
+            case MONEY_PRODUCT:
+            case STUDENT_PRODUCT:
+            case COMMODITY_PRODUCT:
+                productType = CERDIT_PRODUCT;
+                break;
+
+            case CASH:
+                productType = CASH;
+                break;
+
+            default:
+                break;
+
+        }
+        return productType;
+    }
+
+    /**
      * 根据字符串返回产品类型
      *
      * @param type
@@ -163,11 +200,11 @@ public class TypeUtlis {
             return "";
         }
         switch (type) {
-            case "c":
+            case CASH:
                 productType = "取现随借随还";
                 break;
 
-            case "o":
+            case CERDIT_PRODUCT:
                 productType = "分期产品";
                 break;
 

@@ -17,12 +17,12 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
         super(view);
     }
 
-    public void getInstalmentDetails(String idCredit, boolean isCurrent, String numInstalment, String productType) {
+    public void getInstalmentDetails(String idCredit, boolean isCurrent, String numInstalment, final String productType) {
         ApiImpl.getInstalmentDetails(getView().getAct(), idCredit, isCurrent, numInstalment, productType, new BaseRequestAgent.ResponseListener<InstalmentDetailResponse>() {
             @Override
             public void onSuccess(InstalmentDetailResponse response) {
                 if (getView() != null) {
-                    getView().showInstalmentDetails(response.data);
+                    getView().showInstalmentDetails(response.data,productType);
                 }
             }
 

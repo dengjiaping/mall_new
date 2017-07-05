@@ -9,6 +9,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.TypeUtlis;
 
 /**
  * Created by 513419 on 2017/6/23.
@@ -56,45 +57,51 @@ public class IntalmentDetailsDialog extends CustomDialog {
         });
     }
 
-    public void setInstalmentDetailsData(InstalmentDetailResponse details) {
+    public void setInstalmentDetailsData(InstalmentDetailResponse details, String productType) {
         //数据为空不作任何处理
         if (details == null) {
             return;
         }
         tvCreditNo.setText("合同号：" + details.contractNo);
-        if (StringUtils.isNotNull(details.goodsName)) {
+        //分期产品
+        if (TypeUtlis.CERDIT_PRODUCT.equals(productType)) {
             tvGoodsName.setText("商品名称：" + details.goodsName);
             tvGoodsName.setVisibility(View.VISIBLE);
-        } else {
+            tvLoanDays.setText("交易金额：" + StringUtils.format2(details.creditAmount) + "元");
+            tvOverDays.setVisibility(View.VISIBLE);
+            tvInterestAmount.setText("当前金额：" + StringUtils.format2(details.instalmentAmount) + "元");
+
+        } else if (TypeUtlis.CASH.equals(TypeUtlis.convertProductType(productType))) {
+            //取现随借随还
             tvGoodsName.setVisibility(View.GONE);
-        }
-        tvLoanDate.setText("交易时间：" + details.loanDate);
-        if (StringUtils.isNotNull(details.loanDays)) {
-            tvLoanDays.setText("已借天数：" + details.loanDays+"天");
+            tvLoanDays.setText("已借天数：" + details.loanDays + "天");
             tvLoanDays.setVisibility(View.VISIBLE);
-        } else {
-            if (StringUtils.isNotNull(details.creditAmount)) {
-                tvLoanDays.setText("交易金额：" + details.creditAmount+"元");
+            tvCreditAmount.setText("取现金额：" + StringUtils.format2(details.instalmentAmount) + "元");
+            if (StringUtils.isNotNull(details.interestAmount)) {
+                tvInterestAmount.setText("当前息费：" + StringUtils.format2(details.interestAmount) + "元");
             } else {
-                tvLoanDays.setVisibility(View.GONE);
+                tvInterestAmount.setVisibility(View.GONE);
             }
         }
-        if (details.overDays > 0) {
-            tvOverDays.setText("逾期天数：" + details.overDays+"天");
-            tvOverDays.setVisibility(View.VISIBLE);
+        if (StringUtils.isNotNull(details.loanDate)) {
+            tvLoanDate.setText("交易时间：" + details.loanDate);
         } else {
-            tvOverDays.setVisibility(View.GONE);
+            tvLoanDate.setText("交易时间：--");
         }
-        tvCreditAmount.setText("取现金额：" + details.creditAmount+"元");
         if (details.overDays > 0) {
-            tvOverAmount.setText("逾期费用：" + details.overAmount+"元");
+            tvOverAmount.setText("逾期费用：" + StringUtils.format2(details.overAmount) + "元");
             tvOverAmount.setVisibility(View.VISIBLE);
         } else {
             tvOverAmount.setVisibility(View.GONE);
         }
-        tvInterestAmount.setText("当前息费：" + details.interestAmount+"元");
-        tvPayAmount.setText("当期已还：" + details.payAmount+"元");
-        tvRepayAmount.setText("当前应还：" + details.repayAmount+"元");
+        if (details.overDays > 0) {
+            tvOverDays.setText("逾期天数：" + details.overDays + "天");
+            tvOverDays.setVisibility(View.VISIBLE);
+        } else {
+            tvOverDays.setVisibility(View.GONE);
+        }
+        tvPayAmount.setText("当期已还：" + StringUtils.format2(details.payAmount) + "元");
+        tvRepayAmount.setText("当前应还：" + StringUtils.format2(details.repayAmount) + "元");
     }
 
     @Override

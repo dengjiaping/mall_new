@@ -186,8 +186,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     }
 
     @Override
-    public void showInstalmentDetails(InstalmentDetailResponse data) {
-        intalmentDetailsDialog.setInstalmentDetailsData(data);
+    public void showInstalmentDetails(InstalmentDetailResponse data, String productType) {
+        intalmentDetailsDialog.setInstalmentDetailsData(data,productType);
         intalmentDetailsDialog.show();
     }
 

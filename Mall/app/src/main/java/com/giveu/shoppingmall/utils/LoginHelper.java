@@ -131,8 +131,10 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasQualifications() {
-        return loginPersonInfo != null && loginPersonInfo.status;
+//        return loginPersonInfo != null && loginPersonInfo.status;
+        return true;
     }
+
 
 
     @Override
