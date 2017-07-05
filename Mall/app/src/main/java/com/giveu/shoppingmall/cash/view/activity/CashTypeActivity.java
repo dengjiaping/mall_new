@@ -187,8 +187,6 @@ public class CashTypeActivity extends BaseActivity {
                         return;
                     }
                     chooseQuota = Integer.parseInt(s.toString());
-                    //输入金额，指针滑动
-
                 }
             }
         });

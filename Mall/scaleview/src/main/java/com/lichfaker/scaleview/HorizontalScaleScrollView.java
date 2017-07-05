@@ -19,7 +19,6 @@ import android.widget.Toast;
 public class HorizontalScaleScrollView extends BaseScaleView {
     public final int LARGESCALE = 500;//每10格的一个大刻度
     Context context;
-    MoveListener mListener;
     public HorizontalScaleScrollView(Context context) {
         super(context);
         this.context = context;
@@ -111,6 +110,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
 
     }
+    //滑动停下的监听事件
     public interface OnMoveStopListener{
         void stop();
     }
