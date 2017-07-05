@@ -7,9 +7,11 @@ package com.giveu.shoppingmall.model.bean.response;
 public class CashTypeResponse {
     public String month;//期数
     public boolean isChecked = false;//是否选中
+    public boolean isShow = false;//是否显示费率
 
-    public CashTypeResponse(String month, boolean isChecked) {
+    public CashTypeResponse(String month, boolean isChecked, boolean isShow) {
         this.month = month;
         this.isChecked = isChecked;
+        this.isShow = isShow;
     }
 }

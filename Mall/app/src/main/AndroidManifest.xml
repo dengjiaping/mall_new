@@ -196,7 +196,7 @@
             android:label="取现记录" />
         <activity
             android:name=".cash.view.activity.CashTypeActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             android:label="取现类型页"
             android:launchMode="singleTask" />
 

@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * 水平滚动刻度尺
@@ -17,16 +18,21 @@ import android.view.ViewGroup;
  */
 public class HorizontalScaleScrollView extends BaseScaleView {
     public final int LARGESCALE = 500;//每10格的一个大刻度
+    Context context;
+    MoveListener mListener;
     public HorizontalScaleScrollView(Context context) {
         super(context);
+        this.context = context;
     }
 
     public HorizontalScaleScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
     }
 
     public HorizontalScaleScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
     }
 
     public HorizontalScaleScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -46,7 +52,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height=MeasureSpec.makeMeasureSpec(mRectHeight, MeasureSpec.AT_MOST);
+        int height = MeasureSpec.makeMeasureSpec(mRectHeight, MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, height);
         mScaleScrollViewRange = getMeasuredWidth();
         mTempScale = mScaleScrollViewRange / mScaleMargin / 2 + mMin;
@@ -96,22 +102,31 @@ public class HorizontalScaleScrollView extends BaseScaleView {
         //红线
         canvas.drawLine(countScale * mScaleMargin + finalX, mRectHeight,
                 countScale * mScaleMargin + finalX, 0, paint);
-        Path path=new Path();
-        path.moveTo(countScale * mScaleMargin + finalX-20,0);//330 - 100dp=横线上方
-        path.lineTo(countScale * mScaleMargin + finalX+20,0);
-        path.lineTo(countScale * mScaleMargin + finalX,35);
+        Path path = new Path();
+        path.moveTo(countScale * mScaleMargin + finalX - 20, 0);//330 - 100dp=横线上方
+        path.lineTo(countScale * mScaleMargin + finalX + 20, 0);
+        path.lineTo(countScale * mScaleMargin + finalX, 35);
         path.close();
         canvas.drawPath(path, paint);
 
 
     }
+    public interface OnMoveStopListener{
+        void stop();
+    }
+
+    private OnMoveStopListener listener;
+
+    public void setOnMoveStopListener(OnMoveStopListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void scrollToScale(int val) {
-        if (val < mMin || val > mMax*mValue) {
+        if (val < mMin || val > mMax * mValue) {
             return;
         }
-        int dx = (val/mValue - mCountScale) * mScaleMargin;
+        int dx = (val / mValue - mCountScale) * mScaleMargin;
         smoothScrollBy(dx, 0);
     }
 
@@ -140,11 +155,15 @@ public class HorizontalScaleScrollView extends BaseScaleView {
                 mTempScale = mCountScale;
                 return true;
             case MotionEvent.ACTION_UP:
+                Toast.makeText(context, "停下", Toast.LENGTH_SHORT).show();
                 if (mCountScale < mMin) mCountScale = mMin;
                 if (mCountScale > mMax) mCountScale = mMax;
                 int finalX = (mCountScale - mMidCountScale) * mScaleMargin;
                 mScroller.setFinalX(finalX); //纠正指针位置
                 postInvalidate();
+                if(listener != null){
+                    listener.stop();
+                }
                 return true;
         }
         return super.onTouchEvent(event);
