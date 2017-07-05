@@ -139,6 +139,11 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
     }
 
+    //钱包资质判定
+    public static void getWalletQualified(Activity context, String bankNo, String idPerson, String ident, String latitude, String longitude, String phone, String realName, String smsCode, String userId, BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new Object[]{bankNo, Integer.parseInt(idPerson), ident, latitude, longitude, phone, realName, smsCode, Integer.parseInt(userId)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getWalletQualified, WalletActivationResponse.class, context, responseListener);
+    }
     //钱包激活
     public static void activateWallet(Activity context, String bankNo, String idPerson, String ident, String latitude, String longitude, String phone, String realName, String smsCode, String userId, BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "phone", "realName", "smsCode", "userId"}, new Object[]{bankNo, Integer.parseInt(idPerson), ident, latitude, longitude, phone, realName, smsCode, Integer.parseInt(userId)});
