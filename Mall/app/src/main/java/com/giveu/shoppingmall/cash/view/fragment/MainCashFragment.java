@@ -59,10 +59,11 @@ public class MainCashFragment extends BaseFragment {
         tvLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CashTypeActivity.startIt(mBaseContext);
                 ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
                     @Override
                     public void onSuccess(PersonInfoResponse response) {
-                        //response.data.availablePosLimit == 0
+                        //TODO: response.data.availablePosLimit == 0
                         if (false) {
                             quotaDialog.showDialog();
                         } else {
