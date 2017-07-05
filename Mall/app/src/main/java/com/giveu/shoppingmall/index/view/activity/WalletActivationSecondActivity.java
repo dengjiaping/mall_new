@@ -15,9 +15,9 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -55,12 +55,22 @@ public class WalletActivationSecondActivity extends BaseActivity {
     CheckBox cbCheck;
     @BindView(R.id.tv_activation)
     ClickEnabledTextView tvActivation;
+    String orderNo;
+    String sendSouce;
+    String smsSeq;
+    int idPerson;
+    String ident;
+    String name;
+    String bankNo;
+    String phone;
 
-
-    public static void startIt(Activity mActivity, String name, String ident) {
+    public static void startIt(Activity mActivity, String name, String ident, int idPerson, String bankNo,String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("ident", ident);
+        intent.putExtra("idPerson", idPerson);
+        intent.putExtra("bankNo", bankNo);
+        intent.putExtra("phone", phone);
         mActivity.startActivity(intent);
     }
 
@@ -70,6 +80,20 @@ public class WalletActivationSecondActivity extends BaseActivity {
         baseLayout.setTitle("钱包激活");
         CommonUtils.openSoftKeyBoard(mBaseContext);
         tvSendCode.setSendTextColor(false);
+        idPerson = getIntent().getIntExtra("idPerson", 0);
+        ident = getIntent().getStringExtra("ident");
+        name = getIntent().getStringExtra("name");
+        bankNo = getIntent().getStringExtra("bankNo");
+        phone = getIntent().getStringExtra("phone");
+        if (StringUtils.isNotNull(StringUtils.getTextFromView(etBankNo))) {
+            etBankNo.setSelection(etBankNo.length());
+        }
+        if (StringUtils.isNotNull(bankNo)) {
+            etBankNo.setText(bankNo);
+        }
+        if (StringUtils.isNotNull(phone)) {
+            etPhone.setText(phone);
+        }
     }
 
     @Override
@@ -77,10 +101,12 @@ public class WalletActivationSecondActivity extends BaseActivity {
         super.setListener();
         etPhone.checkFormat(11);
         etCode.checkFormat(6);
-        etBankNo.checkFormat(19);
         editTextListener(etPhone, ivPhone);
         editTextListener(etCode, ivCode);
         editTextListener(etBankNo, ivBankNo);
+        showPhoneTextColor(ivPhone, etPhone,StringUtils.getTextFromView(etPhone));
+        showPhoneTextColor(ivBankNo, etBankNo,StringUtils.getTextFromView(etBankNo));
+
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -104,28 +130,36 @@ public class WalletActivationSecondActivity extends BaseActivity {
         editText.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    imageView.setImageResource(R.drawable.ic_pen);
-                } else {
-                    imageView.setImageResource(R.drawable.ic_add);
-                }
-                if (etPhone == editText) {
-                    //如果是手机号的EditText还需判断验证码是否可以点击
-                    if (StringUtils.checkPhoneNumberAndTipError(s.toString(), false)) {
-                        tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
-                        if (!tvSendCode.isCounting()) {
-                            tvSendCode.setEnabled(true);
-                        }
-                        tvActivation.setClickEnabled(false);
-                    } else {
-                        tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
-                        tvSendCode.setEnabled(false);
-                    }
-                    tvActivation.setClickEnabled(false);
-                }
-                buttonCanClick(false);
+                showPhoneTextColor(imageView, editText,s.toString());
             }
         });
+    }
+
+    /**
+     * 银行卡、手机号从上一个页面带过来的颜色逻辑处理
+     * @param phone
+     */
+    public void showPhoneTextColor(ImageView iv,final EditText editText,String phone){
+        if (phone.length() > 0) {
+            iv.setImageResource(R.drawable.ic_pen);
+        } else {
+            iv.setImageResource(R.drawable.ic_add);
+        }
+        if (etPhone == editText) {
+            //如果是手机号的EditText还需判断验证码是否可以点击
+            if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {
+                tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
+                if (!tvSendCode.isCounting()) {
+                    tvSendCode.setEnabled(true);
+                }
+                tvActivation.setClickEnabled(false);
+            } else {
+                tvSendCode.setTextColor(getResources().getColor(R.color.color_d8d8d8));
+                tvSendCode.setEnabled(false);
+            }
+            tvActivation.setClickEnabled(false);
+        }
+        buttonCanClick(false);
     }
 
     @OnClick({R.id.tv_send_code, R.id.tv_activation})
@@ -133,11 +167,20 @@ public class WalletActivationSecondActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         final String phone = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etPhone));
+        String bankNo = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etBankNo));
+        String code = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etCode));
+
         switch (view.getId()) {
             case R.id.tv_send_code:
-                ApiImpl.sendSMSCode(mBaseContext, phone, "activateWallet", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                ApiImpl.sendActivateSmsCode(mBaseContext, bankNo, idPerson, ident, name, phone, new BaseRequestAgent.ResponseListener<SmsCodeResponse>() {
                     @Override
-                    public void onSuccess(BaseBean response) {
+                    public void onSuccess(SmsCodeResponse response) {
+                        SmsCodeResponse smsCodeResponse = response.data;
+                        if (smsCodeResponse != null) {
+                            orderNo = StringUtils.nullToEmptyString(smsCodeResponse.orderNo);
+                            sendSouce = StringUtils.nullToEmptyString(smsCodeResponse.sendSouce);
+                            smsSeq = StringUtils.nullToEmptyString(smsCodeResponse.smsSeq);
+                        }
                         tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
                             @Override
                             public void onEnd() {
@@ -150,6 +193,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                 }
                             }
                         });
+                        ToastUtils.showShortToast("成功！");
                     }
 
                     @Override
@@ -157,15 +201,10 @@ public class WalletActivationSecondActivity extends BaseActivity {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
-
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-                    String name = StringUtils.nullToEmptyString(getIntent().getStringExtra("name"));
-                    String ident = StringUtils.nullToEmptyString(getIntent().getStringExtra("ident"));
-                    String bankNo = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etBankNo));
-                    String code = StringUtils.nullToEmptyString(StringUtils.getTextFromView(etCode));
-                    ApiImpl.activateWallet(mBaseContext, bankNo, "10000923", ident, "106.72", "26.57", phone, name, code, LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
+                    ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, "106.72", "26.57", orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
                             ToastUtils.showShortToast("激活成功！");
@@ -199,9 +238,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
         String phone = StringUtils.getTextFromView(etPhone);
         String bankNo = StringUtils.getTextFromView(etBankNo);
 
-        if (!StringUtils.isCardNum(bankNo)) {
+        if (StringUtils.isNull(bankNo)) {
             if (showToast) {
-                ToastUtils.showShortToast("请输入19位的银行卡号！");
+                ToastUtils.showShortToast("请输入银行卡号！");
             }
             return;
         }

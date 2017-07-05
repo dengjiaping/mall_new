@@ -41,6 +41,10 @@ public interface ApiUrl {
     String personCenter_account_resetLoginPwd = BASE_URL + "personCenter/account/resetLoginPwd";
     //找回密码（校验身份）
     String personCenter_account_resetPwd_checkUserInfo = BASE_URL + "personCenter/account/resetPwd/checkUserInfo";
+    //钱包资质判定
+    String personCenter_account_getWalletQualified = BASE_URL + "personCenter/account/getWalletQualified";
+    //钱包激活发送短信接口
+    String personCenter_account_sendActivateSmsCode = BASE_URL + "personCenter/account/sendActivateSmsCode";
     //钱包激活
     String personCenter_account_activateWallet = BASE_URL + "personCenter/account/activateWallet";
     //修改手机号

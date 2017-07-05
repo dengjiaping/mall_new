@@ -57,8 +57,6 @@
         android:layout_height="1px"
         android:background="@color/line_bg" />
 
-
-
     <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_next"
         style="@style/click_enabled_bt"

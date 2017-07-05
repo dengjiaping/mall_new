@@ -8,14 +8,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,6 +48,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
         Intent intent = new Intent(mActivity, WalletActivationFirstActivity.class);
         mActivity.startActivity(intent);
     }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_first);
@@ -89,7 +95,21 @@ public class WalletActivationFirstActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (tvNext.isClickEnabled()) {
-            WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent));
+            String ident = StringUtils.getTextFromView(etIdent);
+            String name = StringUtils.getTextFromView(etName);
+            ApiImpl.getWalletQualified(mBaseContext, ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
+                @Override
+                public void onSuccess(WalletQualifiedResponse response) {
+                    if (response.data != null) {
+                        WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo,response.data.phone);
+                    }
+                }
+
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
         } else {
             nextButtonCanClick(true);
         }
