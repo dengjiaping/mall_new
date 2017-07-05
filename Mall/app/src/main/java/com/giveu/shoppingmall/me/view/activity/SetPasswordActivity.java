@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.me.presenter.SetPasswordPresenter;
 import com.giveu.shoppingmall.me.view.agent.ISetPasswordView;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -96,13 +97,13 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         switch (view.getId()) {
             case R.id.tv_complete:
                 if (canClick(true)) {
-                    if (StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString())) {
+                    if (StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString(),true)) {
                         if (isSetPassword) {
                             //设置密码
-                            presenter.register(mobile, etPwd.getText().toString(), smsCode);
+                            presenter.register(mobile, MD5.MD5Encode(etPwd.getText().toString()), smsCode);
                         } else {
                             //重置密码
-                            presenter.resetPassword(mobile, etPwd.getText().toString(), randCode, LoginHelper.getInstance().getUserName());
+                            presenter.resetPassword(mobile, MD5.MD5Encode(etPwd.getText().toString()), randCode, LoginHelper.getInstance().getUserName());
                         }
                     }
                 }

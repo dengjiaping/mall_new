@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.presenter.QuotaPresenter;
 import com.giveu.shoppingmall.me.view.agent.IQuotaView;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,6 +55,8 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
         baseLayout.setTitle("我的额度");
         baseLayout.setBlueWhiteStyle();
         presenter = new QuotaPresenter(this);
+        tvWithdrawalsMoney.setText("¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailableCylimit()));
+        tvConsumableMoney.setText("¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit()));
     }
 
     @Override
@@ -84,22 +87,22 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
         }
         switch (flag) {
             case 1:
-                tvWithdrawals.setText("可用额度：" + "¥4000.00" + "\n总授信额度：" + LoginHelper.getInstance().getGlobleLimit());
+                tvWithdrawals.setText("可用额度：" + "¥4000.00" + "\n总授信额度：" + "¥"+ StringUtils.format2(LoginHelper.getInstance().getGlobleLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
                 tvHint.setVisibility(View.GONE);
                 break;
 
             case 2:
-                tvWithdrawals.setText("取现可用额度：" + LoginHelper.getInstance().getAvailableCylimit()
-                        + "\n取现总额度：" + LoginHelper.getInstance().getAvailableCylimit());
+                tvWithdrawals.setText("取现可用额度：" + "¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailableCylimit())
+                        + "\n取现总额度：" + "¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailableCylimit()));
 //                tvLargeWithdrawals.setVisibility(View.VISIBLE);
 //                tvLargeWithdrawals.setText("大额现金分期可用额度：" + "¥4000.00" + "\n大额现金分期总额度：" + " ¥8000.00");
                 tvHint.setVisibility(View.GONE);
                 break;
 
             case 3:
-                tvWithdrawals.setText("消费可用额度：" + LoginHelper.getInstance().getAvailablePoslimit()
-                        + "\n消费总额度：" + LoginHelper.getInstance().getAvailablePoslimit());
+                tvWithdrawals.setText("消费可用额度：" + "¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit())
+                        + "\n消费总额度：" + "¥"+ StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
                 tvHint.setVisibility(View.GONE);
                 break;

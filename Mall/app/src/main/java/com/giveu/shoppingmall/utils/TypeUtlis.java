@@ -113,6 +113,7 @@ public class TypeUtlis {
         return value;
     }
 
+
     /**
      * 根据合同类型值转换成合同类型文本
      *
@@ -148,5 +149,32 @@ public class TypeUtlis {
                 break;
         }
         return text;
+    }
+
+    /**
+     * 根据字符串返回产品类型
+     *
+     * @param type
+     * @return
+     */
+    public static String getProductType(String type) {
+        String productType = type;
+        if (StringUtils.isNull(type)) {
+            return "";
+        }
+        switch (type) {
+            case "c":
+                productType = "取现随借随还";
+                break;
+
+            case "o":
+                productType = "分期产品";
+                break;
+
+            default:
+                break;
+
+        }
+        return productType;
     }
 }
