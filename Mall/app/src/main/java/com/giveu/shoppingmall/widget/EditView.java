@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 
 
@@ -77,10 +78,15 @@ public class EditView extends EditText {
      * @param flag
      */
     public void checkFormat(final int flag) {
+        if(StringUtils.getTextFromView(this).length() == flag){
+            setTextColor(getResources().getColor(R.color.color_4a4a4a));
+        }else{
+            setTextColor(getResources().getColor(R.color.red));
+        }
         this.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (hasSetMaxLength && s.length() >= flag && s.length() <= maxLength) {
+                if (hasSetMaxLength && s.length() >= flag && s.length() <= maxLength ) {
                     setTextColor(getResources().getColor(R.color.color_4a4a4a));
                 } else if (s.length() == flag) {
                     setTextColor(getResources().getColor(R.color.color_4a4a4a));
