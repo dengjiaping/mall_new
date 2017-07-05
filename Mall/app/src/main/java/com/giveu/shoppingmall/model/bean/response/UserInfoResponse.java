@@ -7,7 +7,7 @@ import com.android.volley.mynet.BaseBean;
  * Created by 101900 on 2017/7/3.
  */
 
-public class UserInfoResponse extends BaseBean{
+public class UserInfoResponse extends BaseBean<UserInfoResponse>{
 
     /**
      * activeDate : 2017/6/23
@@ -29,18 +29,18 @@ public class UserInfoResponse extends BaseBean{
      */
 
     public String activeDate;
-    public int availableCyLimit;
-    public int availablePosLimit;
-    public int availableRechargeLimit;
-    public Object creditCount;
-    public int cyLimit;
+    public String availableCyLimit;
+    public String availablePosLimit;
+    public String availableRechargeLimit;
+    public String creditCount;
+    public String cyLimit;
     public String endDate;
-    public int globleLimit;
+    public String globleLimit;
     public int idPerson;
     public String ident;
     public String name;
     public String phone;
-    public int posLimit;
+    public String posLimit;
     public String repayAmount;
     public String repayDate;
     public boolean status;

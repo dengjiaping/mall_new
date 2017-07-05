@@ -29,6 +29,7 @@ public class LoginResponse extends BaseBean<LoginResponse> {
      * userPic : user_09.jpg
      */
 
+
     public String accessToken;
     public String activeDate;
     public String availableCyLimit;
@@ -39,6 +40,8 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String globleLimit;
     public int idPerson;
     public String mobile;
+    public String availableRechargeLimit;
+    public String creditCount;
     public String nickName;
     public String posLimit;
     public String realName;
@@ -47,4 +50,8 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String userId;
     public String userName;
     public String userPic;
+    public String repayAmount;
+    public String repayDate;
+
+
 }

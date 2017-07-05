@@ -196,20 +196,26 @@
             android:label="取现记录" />
         <activity
             android:name=".cash.view.activity.CashTypeActivity"
-            android:launchMode="singleTask"
-            android:label="取现类型页" />
+            android:label="取现类型页"
+            android:launchMode="singleTask" />
 
         <!--支付宝支付-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
+            android:screenOrientation="behind" />
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
+            android:screenOrientation="behind" />
+
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            android:exported="false" />
 
         <!--图片选择列出所有图片-->
         <activity
