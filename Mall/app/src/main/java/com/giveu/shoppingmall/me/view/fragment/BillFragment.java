@@ -75,10 +75,18 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         billAdapter = new BillAdapter(mBaseContext, billList);
         ptrlv.setAdapter(billAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
+        ptrlv.setPullLoadEnable(false);
         ptrlv.getRefreshableView().addHeaderView(headerView);
         intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
         presenter = new InstalmentDetailsPresenter(this);
+//        baseLayout.showEmpty(144, 0, "抱歉，没有账单哦");
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     public double getPayMoney() {
