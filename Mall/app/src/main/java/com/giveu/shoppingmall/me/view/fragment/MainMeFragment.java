@@ -90,7 +90,7 @@ public class MainMeFragment extends BaseFragment {
             if (LoginHelper.getInstance().hasQualifications()) {
                 tvStatus.setVisibility(View.GONE);
                 tvLogin.setText(LoginHelper.getInstance().getRealName());
-                tvWithdrawals.setText("可用额度" + StringUtils.format2(LoginHelper.getInstance().getGlobleLimit()) + "元");
+                tvWithdrawals.setText("可用额度" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()) + "元");
                 tvSee.setVisibility(View.VISIBLE);
             } else {
                 tvLogin.setText(LoginHelper.getInstance().getUserName());

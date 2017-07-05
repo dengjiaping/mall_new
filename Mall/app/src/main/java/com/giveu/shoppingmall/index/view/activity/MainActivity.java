@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity {
     //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
+    private boolean hasFetchUserInfo;
 
     @BindView(R.id.mainViewPager)
     ViewPager mViewPager;
@@ -239,7 +240,7 @@ public class MainActivity extends BaseActivity {
                 loginResponse.posLimit = response.data.posLimit;
                 loginResponse.realName = response.data.name;
                 //response.data.status为true，对应的是2（有资质），1为未激活
-                loginResponse.status = response.data.status ? 2 + "" : 1 + "";
+                loginResponse.status = response.data.status;
 //                loginResponse.statusDesc = LoginHelper.getInstance().getStatus();
                 loginResponse.userId = LoginHelper.getInstance().getUserId();
                 loginResponse.userName = LoginHelper.getInstance().getUserName();
@@ -250,7 +251,7 @@ public class MainActivity extends BaseActivity {
                 loginResponse.repayDate = response.data.repayDate;
                 //更新个人信息，缓存在本地
                 LoginHelper.getInstance().saveLoginStatus(loginResponse);
-
+                hasFetchUserInfo = true;
 
             }
 
@@ -316,8 +317,11 @@ public class MainActivity extends BaseActivity {
         /**
          * 只有已登录并且钱包资质用户才能查询个人信息
          */
-        if (LoginHelper.getInstance().hasLogin() && LoginHelper.getInstance().hasQualifications()) {
+        if (LoginHelper.getInstance().hasLogin() && LoginHelper.getInstance().hasQualifications() && !hasFetchUserInfo) {
             getUserInfo();
+        } else {
+            //保证不是每次onResume都会调个人信息接口，只有切换账户或者开通了钱包资质才获取个人信息
+            hasFetchUserInfo = false;
         }
 
     }

@@ -45,13 +45,14 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String nickName;
     public String posLimit;
     public String realName;
-    public String status;
+    public boolean status;
     public String statusDesc;
     public String userId;
     public String userName;
     public String userPic;
     public String repayAmount;
     public String repayDate;
+    public String totalCost;
 
 
 }

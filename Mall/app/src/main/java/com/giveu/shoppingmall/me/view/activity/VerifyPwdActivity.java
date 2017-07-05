@@ -195,7 +195,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     @Override
     public void onBackPressed() {
         //解锁界面的返回，那么需要关闭所有页面，不然会返回到解锁前的前一个页面
-        if (isForClose) {
+        if (isForClose || isForSetting) {
             super.onBackPressed();
         } else {
             BaseApplication.getInstance().finishAllActivity();

@@ -198,10 +198,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
      */
     private void showSearchView() {
         if (!showAnimator.isRunning()) {
+            hideAnimator.end();
+            hideAlphaAnimator.end();
             showAnimator.start();
             showAlphaAnimator.start();
-            baseLayout.setClickable(true);
         }
+        baseLayout.setClickable(true);
     }
 
     /**
@@ -209,10 +211,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
      */
     private void hideSearchView() {
         if (!hideAnimator.isRunning()) {
+            showAnimator.end();
+            showAlphaAnimator.end();
             hideAnimator.start();
             hideAlphaAnimator.start();
-            baseLayout.setClickable(false);
         }
+        baseLayout.setClickable(false);
     }
 
     @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date, R.id.tv_search, R.id.tv_reset})
@@ -287,7 +291,6 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         creditType = selCreditType;
         loanDate = selLoanDate;
         timeType = selTimeType;
-        // TODO: 2017/7/3 写死的数据需更换
         presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson() + "", loanDate, pageIndex, pageSize, timeType);
     }
 

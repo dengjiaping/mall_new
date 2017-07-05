@@ -38,6 +38,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String CREDIT_COUNT = "creditCount";
     public static final String REPAY_AMOUNT = "repayAmount";
     public static final String REPAY_DATE = "repayDate";
+    public static final String TOTAL_COST = "totalCost";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -54,7 +55,7 @@ public class LoginHelper extends AbsSharePref {
     private void getLoginStatus() {
         LoginResponse personInfo = new LoginResponse();
         personInfo.userId = getString(USER_ID, "");
-        personInfo.status = getString(STATUS, "1");
+        personInfo.status = getBoolean(STATUS, false);
         personInfo.userName = getString(USER_NAME, "");
         personInfo.userPic = getString(USER_PIC, "");
         personInfo.globleLimit = getString(GLOBLE_LIMIT, "");
@@ -64,7 +65,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "");
         personInfo.cyLimit = getString(CYLIMIT, "");
         personInfo.posLimit = getString(POS_LIMIT, "");
-        personInfo.realName = getString(REAL_NAME,"");
+        personInfo.realName = getString(REAL_NAME, "");
+        personInfo.totalCost = getString(TOTAL_COST, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -89,7 +91,7 @@ public class LoginHelper extends AbsSharePref {
         putString(NICK_NAME, personInfo.nickName);
         putString(POS_LIMIT, personInfo.posLimit);
         putString(REAL_NAME, personInfo.realName);
-        putString(STATUS, personInfo.status);
+        putBoolean(STATUS, personInfo.status);
         putString(STATUS_DESC, personInfo.statusDesc);
         putString(USER_ID, personInfo.userId);
         putString(USER_NAME, personInfo.userName);
@@ -98,6 +100,7 @@ public class LoginHelper extends AbsSharePref {
         putString(CREDIT_COUNT, personInfo.creditCount);
         putString(REPAY_AMOUNT, personInfo.repayAmount);
         putString(REPAY_DATE, personInfo.repayDate);
+        putString(TOTAL_COST, personInfo.totalCost);
         this.loginPersonInfo = personInfo;
     }
 
@@ -128,26 +131,13 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasQualifications() {
-        if ("2".equals(getStatus())) {
-            return true;
-        } else {
-            return false;
-        }
+        return loginPersonInfo != null && loginPersonInfo.status;
     }
 
 
     @Override
     public String getSharedPreferencesName() {
         return spName;
-    }
-
-    /**
-     * 1为未激活钱包，2为已激活钱包
-     *
-     * @return
-     */
-    public String getStatus() {
-        return loginPersonInfo == null ? "1" : loginPersonInfo.status;
     }
 
     /**
@@ -160,7 +150,17 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 可用额度
+     * @return
+     */
+    public String getTotalCost() {
+        return loginPersonInfo == null ? null : loginPersonInfo.totalCost;
+    }
+
+
+    /**
      * 获取用户真实姓名
+     *
      * @return
      */
     public String getRealName() {

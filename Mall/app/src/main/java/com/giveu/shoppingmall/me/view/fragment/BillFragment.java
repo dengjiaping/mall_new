@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -79,7 +80,6 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         ptrlv.getRefreshableView().addHeaderView(headerView);
         intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
         presenter = new InstalmentDetailsPresenter(this);
-//        baseLayout.showEmpty(144, 0, "抱歉，没有账单哦");
         return view;
     }
 
@@ -147,7 +147,6 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
                 if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
                         BillBean billBean = billList.get(position - 2);
-                        // TODO: 2017/7/3 写死的数据需更换
                         presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType);
                     }
                 }
@@ -160,7 +159,11 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     public void notifyDataSetChange(BillListResponse.HeaderBean headerBean, ArrayList<BillBean> billBeenList) {
         if (headerBean != null) {
             headerHolder.tvTotal.setText("¥" + headerBean.repayAmount);
-            headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
+            if(StringUtils.isNotNull(headerBean.endDate)) {
+                headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
+            }else {
+                headerHolder.tvDate.setText("最后还款日：--");
+            }
             if (headerBean.isOverduce) {
                 headerHolder.ivOverDue.setVisibility(View.VISIBLE);
             } else {
@@ -171,6 +174,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
             billList.clear();
             billList.addAll(billBeenList);
             billAdapter.notifyDataSetChanged();
+        } else {
+            baseLayout.showEmpty(144, 0, "抱歉，没有账单哦");
         }
     }
 
