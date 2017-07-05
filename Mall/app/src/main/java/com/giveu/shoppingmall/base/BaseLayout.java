@@ -262,6 +262,27 @@ public class BaseLayout extends LinearLayout {
         clv.showEmpty();
     }
 
+    /**
+     *
+     * @param marginTop 空布局需要距离顶部高度
+     * @param marginBottom 空布局需要距离底部高度
+     * @param icon  图标
+     * @param message  提示信息
+     */
+    public void showEmpty(int marginTop , int marginBottom ,int icon , String message){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) clv.getLayoutParams();
+        params.topMargin = DensityUtils.dip2px(marginTop);
+        params.bottomMargin = DensityUtils.dip2px(marginBottom);
+        clv.showEmpty(icon,message,"",false,null);
+    }
+
+    public void showEmpty(int marginTop , int marginBottom  , String message){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) clv.getLayoutParams();
+        params.topMargin = DensityUtils.dip2px(marginTop);
+        params.bottomMargin = DensityUtils.dip2px(marginBottom);
+        clv.showEmpty(R.drawable.ic_defalut_empty,message,"",false,null);
+    }
+
     public void showEmpty(EmptyType emptyType) {
         clv.showEmpty(emptyType);
     }
