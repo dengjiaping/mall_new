@@ -100,7 +100,6 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 if (llSearch.getVisibility() == View.GONE) {
                     llSearch.setVisibility(View.VISIBLE);
                 }
-                baseLayout.hideEmpty();
                 showSearchView();
             }
         });
@@ -386,6 +385,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 }
                 baseLayout.showEmpty("暂无交易记录");
             }
+            baseLayout.hideEmpty();
             transactionList.addAll(contractList);
             transactionAdapter.notifyDataSetChanged();
             pageIndex++;
