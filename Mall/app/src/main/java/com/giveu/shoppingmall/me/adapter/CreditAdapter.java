@@ -24,17 +24,17 @@ public class CreditAdapter extends LvCommonAdapter<ListInstalmentResponse.Instal
 
     @Override
     protected void convert(ViewHolder holder, ListInstalmentResponse.Instalment item, int position) {
-        //未结清状体字体颜色较浅，结清字体颜色较深
+        //未结清状体字体颜色较深，结清字体颜色较浅
         if ("a".equals(item.payStatus)) {
-            holder.setTextColor(R.id.tv_instalment, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
-            holder.setTextColor(R.id.tv_amount, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
-            holder.setTextColor(R.id.tv_date, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
-            holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
-        } else {
             holder.setTextColor(R.id.tv_instalment, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
             holder.setTextColor(R.id.tv_amount, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
             holder.setTextColor(R.id.tv_date, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
             holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_00adb2));
+        } else {
+            holder.setTextColor(R.id.tv_instalment, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
+            holder.setTextColor(R.id.tv_amount, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
+            holder.setTextColor(R.id.tv_date, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
+            holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
         }
         holder.setText(R.id.tv_instalment, item.num + "");
         holder.setText(R.id.tv_amount, StringUtils.format2(item.amount));

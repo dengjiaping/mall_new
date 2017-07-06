@@ -105,6 +105,8 @@ public class LoginHelper extends AbsSharePref {
     //退出登录，清空信息
     public void logout() {
         clear();
+        //退出登录后清空有权限的token
+        SharePrefUtil.setAppToken("");
         loginPersonInfo = null;
     }
 
@@ -130,7 +132,9 @@ public class LoginHelper extends AbsSharePref {
      */
     public boolean hasQualifications() {
         return loginPersonInfo != null && loginPersonInfo.status;
+
 //        return true;
+
     }
 
 
@@ -277,8 +281,10 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getIdPerson() {
-        return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
+//        return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
+        return "11413705";
     }
+
 
     /**
      * 获取手机号
