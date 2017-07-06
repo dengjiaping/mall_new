@@ -67,7 +67,6 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:hint="请输入您的身份证号码"
-            android:inputType="number"
             android:maxLength="18"
             android:singleLine="true"
             android:textColor="@color/color_4a4a4a"

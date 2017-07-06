@@ -131,8 +131,8 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasQualifications() {
-//        return loginPersonInfo != null && loginPersonInfo.status;
-        return true;
+        return loginPersonInfo != null && loginPersonInfo.status;
+//        return true;
     }
 
 
@@ -167,6 +167,14 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getRealName() {
         return loginPersonInfo == null ? null : loginPersonInfo.realName;
+    }
+    /**
+     * 获取用户身份证
+     *
+     * @return
+     */
+    public String getIdent() {
+        return loginPersonInfo == null ? null : loginPersonInfo.certNo;
     }
 
     /**

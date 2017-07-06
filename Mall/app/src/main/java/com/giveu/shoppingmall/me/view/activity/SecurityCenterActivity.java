@@ -15,7 +15,6 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -94,17 +93,16 @@ public class SecurityCenterActivity extends BaseActivity {
                 TransactionInputActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_change_login_pwd:
-                RequestPasswordActivity.startIt(mBaseContext);
                 //修改登录密码
-
+                RequestPasswordActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_change_transaction_pwd:
 //                if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
 //                    ToastUtils.showShortToast("没有钱包资质");
 //                    return;
 //                }
-                RequestPasswordActivity.startIt(mBaseContext, true);
                 //修改交易密码
+                RequestPasswordActivity.startIt(mBaseContext, true);
                 break;
             case R.id.iv_switch:
                 if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd())) {
@@ -117,11 +115,5 @@ public class SecurityCenterActivity extends BaseActivity {
                 //手势与指纹
                 break;
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
     }
 }

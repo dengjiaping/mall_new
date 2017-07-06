@@ -53,6 +53,8 @@ public interface ApiUrl {
     String personCenter_account_verifyPayPwd = BASE_URL + "personCenter/account/verifyPayPwd";
     //设置（重置）交易密码
     String personCenter_account_resetPayPwd = BASE_URL + "personCenter/account/resetPayPwd";
+    //设置（钱包激活）交易密码
+    String personCenter_account_setPayPwd = BASE_URL + "personCenter/account/setPayPwd";
     //查询绑卡列表
     String personCenter_bankCard_getBankInfo = BASE_URL + "personCenter/bankCard/getBankInfo";
     //还款首页

@@ -181,21 +181,27 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPwd_checkUserInfo, RandCodeResponse.class, context, responseListener);
     }
 
+    //设置交易密码
+    public static void setPayPwd(Activity context, String confirmPwd, int idPerson, String newPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd"}, new Object[]{confirmPwd, idPerson, newPwd});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_setPayPwd, BaseBean.class, context, responseListener);
+    }
     //找回交易密码（重置密码）
-    public static void resetPayPwd(Activity context, String confirmPwd, String idPerson, String newPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd"}, new Object[]{confirmPwd, Integer.parseInt(idPerson), newPwd});
+    public static void resetPayPwd(Activity context, String confirmPwd, int idPerson, String newPwd,String phone,String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd","phone", "smsCode"}, new Object[]{confirmPwd, idPerson, newPwd,phone, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPayPwd, BaseBean.class, context, responseListener);
     }
 
+
     //校验交易密码
-    public static void verifyPayPwd(Activity context, String idPerson, String tradPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "tradPwd"}, new Object[]{Integer.parseInt(idPerson), tradPwd});
+    public static void verifyPayPwd(Activity context, int idPerson, String tradPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "tradPwd"}, new Object[]{idPerson, tradPwd});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_verifyPayPwd, BaseBean.class, context, responseListener);
     }
 
     //修改手机号
-    public static void updatePhone(Activity context, String idPerson, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "randCode", "smsCode"}, new Object[]{Integer.parseInt(idPerson), phone, randCode, smsCode});
+    public static void updatePhone(Activity context, int idPerson, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "randCode", "smsCode"}, new Object[]{idPerson, phone, randCode, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_updatePhone, BaseBean.class, context, responseListener);
     }
 
