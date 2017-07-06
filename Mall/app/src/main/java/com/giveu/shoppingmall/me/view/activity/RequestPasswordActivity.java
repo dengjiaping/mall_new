@@ -119,7 +119,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
                     if (isForTrade) {
                         //交易密码
-                        presenter.sendSMSCode(etPhone.getText().toString(), "activateWallet");
+                        presenter.sendSMSCode(etPhone.getText().toString(), "resetPayPwd");
                     } else {
                         //登录密码
                         presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");

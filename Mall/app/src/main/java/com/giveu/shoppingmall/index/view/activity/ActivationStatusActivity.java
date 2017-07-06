@@ -11,10 +11,10 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 钱包激活状态页
@@ -26,8 +26,6 @@ public class ActivationStatusActivity extends BaseActivity {
     TextView tvSetTransactionPwd;
     @BindView(R.id.iv_status)
     ImageView ivStatus;
-    @BindView(R.id.tv_status)
-    TextView tvStatus;
     @BindView(R.id.tv_hint_bottom)
     TextView tvHintBottom;
     @BindView(R.id.tv_hint_mid)
@@ -40,6 +38,10 @@ public class ActivationStatusActivity extends BaseActivity {
     TextView tvCyLimit;
     @BindView(R.id.tv_pos_limit)
     TextView tvPosLimit;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    public final int BACK = 1;
+    public final int SETPWD = 2;
 
     //钱包激活设置交易密码
     public static void startSetPwd(Activity mActivity) {
@@ -77,27 +79,24 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
-//防止快速点击
-        if (CommonUtils.isFastDoubleClick(R.id.tv_set_transaction_pwd)) {
-            return;
-        }
-        switch (StringUtils.getTextFromView(tvSetTransactionPwd)) {
-            case "设置交易密码":
-                tvSetTransactionPwd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int idPerson = getIntent().getIntExtra("idPerson", 0);
-                        TransactionPwdActivity.startIt(mBaseContext, idPerson);
-                    }
-                });
+    }
+
+    @OnClick(R.id.tv_set_transaction_pwd)
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        int tag = (int) view.getTag();
+        switch (tag) {
+            case SETPWD:
+                //设置交易密码
+                int idPerson = getIntent().getIntExtra("idPerson", 0);
+                TransactionPwdActivity.startIt(mBaseContext, idPerson);
+
                 break;
-            case "返回":
-                tvSetTransactionPwd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity.startIt(mBaseContext);
-                    }
-                });
+            case BACK:
+                //返回
+                MainActivity.startIt(mBaseContext);
+
                 break;
         }
     }
@@ -121,6 +120,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
                 tvSetTransactionPwd.setText("设置交易密码");
+                tvSetTransactionPwd.setTag(SETPWD);
                 break;
             case "fail":
                 // 激活失败，无额度，含中间提示语
@@ -140,6 +140,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvStatus.setText("设置成功");
                 tvHintMid.setText("设置成功！请牢记你的交易密码");
                 tvSetTransactionPwd.setText("返回");
+                tvSetTransactionPwd.setTag(BACK);
                 break;
         }
     }

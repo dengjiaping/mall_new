@@ -76,7 +76,7 @@ public class LoginHelper extends AbsSharePref {
 
     //保存用户登录信息
     public void saveLoginStatus(LoginResponse personInfo) {
-        SharePrefUtil.setAppToken(personInfo.accessToken);
+        SharePrefUtil.setAppToken(personInfo.accessToken);SharePrefUtil.getAppToken();
         putString(ACCESS_TOKEN, personInfo.accessToken);
         putString(ACTIVE_DATE, personInfo.activeDate);
         putString(AVAILABLE_CYLIMIT, personInfo.availableCyLimit);

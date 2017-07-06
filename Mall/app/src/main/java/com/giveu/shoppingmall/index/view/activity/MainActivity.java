@@ -249,6 +249,7 @@ public class MainActivity extends BaseActivity {
                 loginResponse.repayAmount = response.data.repayAmount;
                 loginResponse.repayDate = response.data.repayDate;
                 //更新个人信息，缓存在本地*/
+                response.data.accessToken = SharePrefUtil.getAppToken();
                 LoginHelper.getInstance().saveLoginStatus(response.data);
                 hasFetchUserInfo = true;
             }
