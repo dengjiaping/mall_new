@@ -291,7 +291,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         creditType = selCreditType;
         loanDate = selLoanDate;
         timeType = selTimeType;
-        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson() + "", loanDate, pageIndex, pageSize, timeType);
+        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson(), loanDate, pageIndex, pageSize, timeType);
     }
 
     @Override

@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CashTypeResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
-import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -236,19 +235,6 @@ public class CashTypeActivity extends BaseActivity {
             @Override
             public void onSuccess(CostFeeResponse response) {
                 costFee = String.valueOf(response.data.costFee);
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-        //显示可用额度
-        ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
-            @Override
-            public void onSuccess(PersonInfoResponse response) {
-                //   etInputAmount.setText(String.valueOf((int) response.data.availablePosLimit));
-                tvAvailableCredit.setText(String.valueOf(response.data.availablePosLimit));
             }
 
             @Override

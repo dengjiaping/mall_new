@@ -30,29 +30,28 @@ public class LoginResponse extends BaseBean<LoginResponse> {
      */
 
 
+
+
     public String accessToken;
     public String activeDate;
     public String availableCyLimit;
     public String availablePosLimit;
-    public String certNo;
+    public String availableRechargeLimit;
+    public String creditCount;
     public String cyLimit;
     public String endDate;
     public String globleLimit;
-    public int idPerson;
-    public String mobile;
-    public String availableRechargeLimit;
-    public String creditCount;
+    public String idPerson;
+    public String ident;
+    public String name;
     public String nickName;
+    public String phone;
     public String posLimit;
-    public String realName;
+    public String repayAmount;
+    public String repayDate;
     public boolean status;
-    public String statusDesc;
     public String userId;
     public String userName;
     public String userPic;
-    public String repayAmount;
-    public String repayDate;
     public String totalCost;
-
-
 }

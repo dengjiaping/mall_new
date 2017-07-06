@@ -109,7 +109,7 @@ public class MainRepayFragment extends BaseFragment {
             tvWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_withdrawals);
             tvLargeWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_large_withdrawals);
             tvHint = (TextView) totalDialog.findViewById(R.id.tv_hint);
-            tvKnow = (TextView) totalDialog.findViewById(R.id.tv_know);
+            tvKnow = (TextView) totalDialog.findViewById(R.id.tv_confirm);
         }
         switch (flag) {
             case 1:

@@ -48,7 +48,7 @@ public class IntalmentDetailsDialog extends CustomDialog {
         tvInterestAmount = (TextView) contentView.findViewById(R.id.tv_interestAmount);
         tvPayAmount = (TextView) contentView.findViewById(R.id.tv_payAmount);
         tvRepayAmount = (TextView) contentView.findViewById(R.id.tv_repayAmount);
-        tvKnow = (TextView) contentView.findViewById(R.id.tv_know);
+        tvKnow = (TextView) contentView.findViewById(R.id.tv_confirm);
         tvKnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,21 +57,29 @@ public class IntalmentDetailsDialog extends CustomDialog {
         });
     }
 
-    public void setInstalmentDetailsData(InstalmentDetailResponse details, String productType) {
+    public void setInstalmentDetailsData(InstalmentDetailResponse details, String creditType) {
         //数据为空不作任何处理
         if (details == null) {
             return;
         }
         tvCreditNo.setText("合同号：" + details.contractNo);
         //分期产品
-        if (TypeUtlis.CERDIT_PRODUCT.equals(productType)) {
-            tvGoodsName.setText("商品名称：" + details.goodsName);
+        if (TypeUtlis.getConsumType(creditType) == 1||TypeUtlis.getConsumType(creditType) == 2) {
+            if (StringUtils.isNotNull(details.goodsName)) {
+                tvGoodsName.setText("商品名称：" + details.goodsName);
+            } else {
+                tvGoodsName.setText("商品名称：--");
+            }
             tvGoodsName.setVisibility(View.VISIBLE);
-            tvLoanDays.setText("交易金额：" + StringUtils.format2(details.creditAmount) + "元");
-            tvOverDays.setVisibility(View.VISIBLE);
+            tvCreditAmount.setVisibility(View.GONE);
+            if(TypeUtlis.getConsumType(creditType) == 1) {
+                tvLoanDays.setText("分期总额：" + StringUtils.format2(details.creditAmount) + "元");
+            }else {
+                tvLoanDays.setText("交易金额：" + StringUtils.format2(details.creditAmount) + "元");
+            }
             tvInterestAmount.setText("当前金额：" + StringUtils.format2(details.instalmentAmount) + "元");
 
-        } else if (TypeUtlis.CASH.equals(TypeUtlis.convertProductType(productType))) {
+        }  else if (TypeUtlis.getConsumType(creditType) == 3) {
             //取现随借随还
             tvGoodsName.setVisibility(View.GONE);
             tvLoanDays.setText("已借天数：" + details.loanDays + "天");
@@ -91,14 +99,13 @@ public class IntalmentDetailsDialog extends CustomDialog {
         if (details.overDays > 0) {
             tvOverAmount.setText("逾期费用：" + StringUtils.format2(details.overAmount) + "元");
             tvOverAmount.setVisibility(View.VISIBLE);
-        } else {
-            tvOverAmount.setVisibility(View.GONE);
-        }
-        if (details.overDays > 0) {
             tvOverDays.setText("逾期天数：" + details.overDays + "天");
             tvOverDays.setVisibility(View.VISIBLE);
+            tvOverdue.setVisibility(View.VISIBLE);
         } else {
+            tvOverAmount.setVisibility(View.GONE);
             tvOverDays.setVisibility(View.GONE);
+            tvOverdue.setVisibility(View.GONE);
         }
         tvPayAmount.setText("当期已还：" + StringUtils.format2(details.payAmount) + "元");
         tvRepayAmount.setText("当前应还：" + StringUtils.format2(details.repayAmount) + "元");

@@ -17,7 +17,6 @@ import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
-import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
@@ -115,9 +114,9 @@ public class ApiImpl {
     }
 
     //获取用户信息
-    public static void getUserInfo(Activity context, int idPerson, BaseRequestAgent.ResponseListener<PersonInfoResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{idPerson});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getUserInfo, PersonInfoResponse.class, context, responseListener);
+    public static void getUserInfo(Activity context, String idPerson, String userId, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","userId"}, new Object[]{Long.parseLong(idPerson),userId});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getUserInfo, LoginResponse.class, context, responseListener);
     }
 
     //用户注册
@@ -213,7 +212,7 @@ public class ApiImpl {
 
     //还款首页
     public static void getBillList(Activity context, String idPerson, BaseRequestAgent.ResponseListener<BillListResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Integer.parseInt(idPerson)});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Long.parseLong(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getRepaymentInfo, BillListResponse.class, context, responseListener);
     }
 

@@ -96,7 +96,7 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     @Override
     public void setData() {
         //调一次接口可获取当月和下月的数据，并进行拆分
-        presenter.getBillList(LoginHelper.getInstance().getIdPerson()+"");
+        presenter.getBillList(LoginHelper.getInstance().getIdPerson());
     }
 
     @Override
