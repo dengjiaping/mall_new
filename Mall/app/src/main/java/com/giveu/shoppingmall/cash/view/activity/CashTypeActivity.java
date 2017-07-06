@@ -265,8 +265,7 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.ll_choose_bank:
                 //银行卡列表
-                Intent intent = new Intent(mBaseContext, MyBankCardActivity.class);
-                startActivityForResult(intent, 1);
+                MyBankCardActivity.startIt(mBaseContext,true);
                 break;
         }
 
