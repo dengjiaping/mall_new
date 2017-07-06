@@ -84,7 +84,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
             tvWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_withdrawals);
             tvLargeWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_large_withdrawals);
             tvHint = (TextView) totalDialog.findViewById(R.id.tv_hint);
-            tvKnow = (TextView) totalDialog.findViewById(R.id.tv_know);
+            tvKnow = (TextView) totalDialog.findViewById(R.id.tv_confirm);
         }
         switch (flag) {
             case 1:
@@ -103,7 +103,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
 
             case 3:
                 tvWithdrawals.setText("消费可用额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit())
-                        + "\n消费总额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit()));
+                        + "\n消费总额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getPosLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
                 tvHint.setVisibility(View.GONE);
                 break;

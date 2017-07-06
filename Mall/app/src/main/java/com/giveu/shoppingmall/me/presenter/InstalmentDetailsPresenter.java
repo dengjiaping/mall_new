@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -17,12 +18,12 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
         super(view);
     }
 
-    public void getInstalmentDetails(String idCredit, boolean isCurrent, String numInstalment, final String productType) {
-        ApiImpl.getInstalmentDetails(getView().getAct(), idCredit, isCurrent, numInstalment, productType, new BaseRequestAgent.ResponseListener<InstalmentDetailResponse>() {
+    public void getInstalmentDetails(String idCredit, boolean isCurrent, String numInstalment, final String productType, final String creditType) {
+        ApiImpl.getInstalmentDetails(getView().getAct(), idCredit, isCurrent, numInstalment, TypeUtlis.convertProductType(productType), new BaseRequestAgent.ResponseListener<InstalmentDetailResponse>() {
             @Override
             public void onSuccess(InstalmentDetailResponse response) {
                 if (getView() != null) {
-                    getView().showInstalmentDetails(response.data,productType);
+                    getView().showInstalmentDetails(response.data,creditType);
                 }
             }
 

@@ -111,7 +111,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
         }*/
         baseLayout.setTitle("登录");
-        tv_userId.setText(LoginHelper.getInstance().getMobile());
+        tv_userId.setText(LoginHelper.getInstance().getPhone());
         if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
             ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
         }
@@ -154,7 +154,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             return;
         }
         CommonUtils.closeSoftKeyBoard(this);
-        presenter.login(LoginHelper.getInstance().getMobile(), etPwd.getText().toString());
+        presenter.login(LoginHelper.getInstance().getPhone(), etPwd.getText().toString());
     }
 
 

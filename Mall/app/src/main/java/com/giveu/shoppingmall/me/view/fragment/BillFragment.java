@@ -147,7 +147,7 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
                 if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
                         BillBean billBean = billList.get(position - 2);
-                        presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType);
+                        presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType,billBean.creditType);
                     }
                 }
 
@@ -159,9 +159,9 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     public void notifyDataSetChange(BillListResponse.HeaderBean headerBean, ArrayList<BillBean> billBeenList) {
         if (headerBean != null) {
             headerHolder.tvTotal.setText("¥" + headerBean.repayAmount);
-            if(StringUtils.isNotNull(headerBean.endDate)) {
+            if (StringUtils.isNotNull(headerBean.endDate)) {
                 headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
-            }else {
+            } else {
                 headerHolder.tvDate.setText("最后还款日：--");
             }
             if (headerBean.isOverduce) {
@@ -186,8 +186,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     }
 
     @Override
-    public void showInstalmentDetails(InstalmentDetailResponse data, String productType) {
-        intalmentDetailsDialog.setInstalmentDetailsData(data,productType);
+    public void showInstalmentDetails(InstalmentDetailResponse data, String creditType) {
+        intalmentDetailsDialog.setInstalmentDetailsData(data, creditType);
         intalmentDetailsDialog.show();
     }
 

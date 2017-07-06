@@ -89,7 +89,7 @@ public class MainMeFragment extends BaseFragment {
             //用户有钱包资质
             if (LoginHelper.getInstance().hasQualifications()) {
                 tvStatus.setVisibility(View.GONE);
-                tvLogin.setText(LoginHelper.getInstance().getRealName());
+                tvLogin.setText(LoginHelper.getInstance().getName());
                 tvWithdrawals.setText("可用额度" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()) + "元");
                 tvSee.setVisibility(View.VISIBLE);
             } else {
@@ -105,6 +105,7 @@ public class MainMeFragment extends BaseFragment {
         } else {
             //未登录状态
             tvStatus.setVisibility(View.GONE);
+            tvWithdrawals.setText("查看信用钱包额度");
             tvLogin.setText("立即登录");
             tvSee.setVisibility(View.GONE);
             ivAvatar.setImageResource(R.drawable.ic_default_avatar);

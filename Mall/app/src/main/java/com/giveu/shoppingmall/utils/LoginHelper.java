@@ -25,12 +25,11 @@ public class LoginHelper extends AbsSharePref {
     public static final String END_DATE = "endDate";
     public static final String GLOBLE_LIMIT = "globleLimit";
     public static final String ID_PERSON = "idPerson";
-    public static final String MOBILE = "mobile";
+    public static final String PHONE = "phone";
     public static final String NICK_NAME = "nickName";
     public static final String POS_LIMIT = "posLimit";
-    public static final String REAL_NAME = "realName";
+    public static final String name = "name";
     public static final String STATUS = "status";
-    public static final String STATUS_DESC = "statusDesc";
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "userName";
     public static final String USER_PIC = "userPic";
@@ -59,13 +58,13 @@ public class LoginHelper extends AbsSharePref {
         personInfo.userName = getString(USER_NAME, "");
         personInfo.userPic = getString(USER_PIC, "");
         personInfo.globleLimit = getString(GLOBLE_LIMIT, "");
-        personInfo.idPerson = getInt(ID_PERSON, 0);
-        personInfo.mobile = getString(MOBILE, "");
+        personInfo.idPerson = getString(ID_PERSON, "");
+        personInfo.phone = getString(PHONE, "");
         personInfo.availableCyLimit = getString(AVAILABLE_CYLIMIT, "");
         personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "");
         personInfo.cyLimit = getString(CYLIMIT, "");
         personInfo.posLimit = getString(POS_LIMIT, "");
-        personInfo.realName = getString(REAL_NAME, "");
+        personInfo.name = getString(name, "");
         personInfo.totalCost = getString(TOTAL_COST, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -82,17 +81,16 @@ public class LoginHelper extends AbsSharePref {
         putString(ACTIVE_DATE, personInfo.activeDate);
         putString(AVAILABLE_CYLIMIT, personInfo.availableCyLimit);
         putString(AVAILABLE_POSLIMIT, personInfo.availablePosLimit);
-        putString(CERTNO, personInfo.certNo);
+        putString(CERTNO, personInfo.ident);
         putString(CYLIMIT, personInfo.cyLimit);
         putString(END_DATE, personInfo.endDate);
         putString(GLOBLE_LIMIT, personInfo.globleLimit);
-        putInt(ID_PERSON, personInfo.idPerson);
-        putString(MOBILE, personInfo.mobile);
+        putString(ID_PERSON, personInfo.idPerson);
+        putString(PHONE, personInfo.phone);
         putString(NICK_NAME, personInfo.nickName);
         putString(POS_LIMIT, personInfo.posLimit);
-        putString(REAL_NAME, personInfo.realName);
+        putString(name, personInfo.name);
         putBoolean(STATUS, personInfo.status);
-        putString(STATUS_DESC, personInfo.statusDesc);
         putString(USER_ID, personInfo.userId);
         putString(USER_NAME, personInfo.userName);
         putString(USER_PIC, personInfo.userPic);
@@ -136,7 +134,6 @@ public class LoginHelper extends AbsSharePref {
     }
 
 
-
     @Override
     public String getSharedPreferencesName() {
         return spName;
@@ -153,6 +150,7 @@ public class LoginHelper extends AbsSharePref {
 
     /**
      * 可用额度
+     *
      * @return
      */
     public String getTotalCost() {
@@ -165,8 +163,8 @@ public class LoginHelper extends AbsSharePref {
      *
      * @return
      */
-    public String getRealName() {
-        return loginPersonInfo == null ? null : loginPersonInfo.realName;
+    public String getName() {
+        return loginPersonInfo == null ? null : loginPersonInfo.name;
     }
 
     /**
@@ -270,8 +268,8 @@ public class LoginHelper extends AbsSharePref {
      *
      * @return
      */
-    public int getIdPerson() {
-        return loginPersonInfo == null ? -1 : loginPersonInfo.idPerson;
+    public String getIdPerson() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
     }
 
     /**
@@ -279,8 +277,8 @@ public class LoginHelper extends AbsSharePref {
      *
      * @return
      */
-    public String getMobile() {
-        return loginPersonInfo == null ? null : loginPersonInfo.mobile;
+    public String getPhone() {
+        return loginPersonInfo == null ? null : loginPersonInfo.phone;
     }
 
     /**
@@ -298,7 +296,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasLogin() {
-        return loginPersonInfo == null ? false : true;
+        return loginPersonInfo != null;
     }
 
     public boolean hasUploadDeviceNumber() {

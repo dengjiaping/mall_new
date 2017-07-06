@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -42,12 +43,16 @@
             android:layout_marginTop="60dp"
             android:text="立即提交" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/tv_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="107dp"
             android:textColor="@color/title_color"
             android:text="业务咨询联系客服：4008075546"
             android:layout_marginBottom="30dp"

@@ -9,5 +9,5 @@ import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 
 public interface IInstalmentDetailsView extends IView {
 
-    void showInstalmentDetails(InstalmentDetailResponse data, String productType);
+    void showInstalmentDetails(InstalmentDetailResponse data, String creditType);
 }
