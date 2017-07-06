@@ -16,6 +16,8 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
@@ -64,10 +66,16 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
         } else {
             baseLayout.setTitle("找回登录密码");
         }
+        presenter = new RequestPwdPresenter(this);
         initCallDialog();
         etPhone.checkFormat(11);
-        presenter = new RequestPwdPresenter(this);
         tvSendCode.setSendTextColor(false);
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
+            etPhone.setText(LoginHelper.getInstance().getPhone());
+            etPhone.setSelection(etPhone.getText().toString().length());
+            etVertificationCode.requestFocus();
+            tvSendCode.performClick();
+        }
     }
 
     private void initCallDialog() {

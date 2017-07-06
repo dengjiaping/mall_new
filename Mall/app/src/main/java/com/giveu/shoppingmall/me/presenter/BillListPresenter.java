@@ -30,6 +30,9 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                             ArrayList<BillBean> currentMonthList = new ArrayList<>();//当期账单列表
                             ArrayList<BillBean> nextMonthList = new ArrayList<>();//下期账单列表
                             //先处理分期产品再处理零花钱最后是红包
+//                            response.data.product.billList.addAll(response.data.product.billList);
+//                            response.data.product.billList.addAll(response.data.product.billList);
+//                            response.data.product.billList.addAll(response.data.product.billList);
                             if (response.data.product != null && CommonUtils.isNotNullOrEmpty(response.data.product.billList)) {
                                 for (BillListResponse.BillListBean billListBean : response.data.product.billList) {
                                     //listview的头部bean
@@ -64,6 +67,46 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                     }
                                 }
                             }
+
+/*                            //// TODO: 2017/7/6虚假数据
+                            BillBean titile = new BillBean();
+                            titile.isTitle = true;
+                            titile.productType = TypeUtlis.CASH;//产品类型为取现随借随还
+                            titile.isOverdue = response.data.product.cycleMoney.isOverduce;
+                            titile.repayAmount = response.data.product.cycleMoney.repayAmount;
+                            titile.creditType = response.data.product.cycleMoney.productType;
+                            titile.isWithholding = response.data.product.cycleMoney.isWithholding;
+                            currentMonthList.add(titile);//添加标题bean
+
+                            BillListResponse.ContractListBean contract1ListBean = new BillListResponse.ContractListBean();
+                            contract1ListBean.paymentNum = "20";
+
+
+                            BillBean content1Bean = new BillBean();
+                            content1Bean.isTitle = false;
+                            content1Bean.contractId = contract1ListBean.contractId;
+                            content1Bean.contractNo = contract1ListBean.contractNo;
+                            content1Bean.creditType = contract1ListBean.creditType;
+                            content1Bean.isWithholding = contract1ListBean.isWithholding;
+                            content1Bean.isOverdue = contract1ListBean.isOverduce;
+                            content1Bean.productType = contract1ListBean.productType;
+                            content1Bean.repayAmount = contract1ListBean.repayAmount;
+                            content1Bean.numInstalment = contract1ListBean.numInstalment;
+                            content1Bean.repayDate = contract1ListBean.repayDate;
+                            currentMonthList.add(content1Bean);
+
+                            BillBean content2Bean = new BillBean();
+                            content2Bean.isTitle = false;
+                            content2Bean.contractId = contract1ListBean.contractId;
+                            content2Bean.contractNo = contract1ListBean.contractNo;
+                            content2Bean.creditType = contract1ListBean.creditType;
+                            content2Bean.isWithholding = contract1ListBean.isWithholding;
+                            content2Bean.isOverdue = contract1ListBean.isOverduce;
+                            content2Bean.productType = contract1ListBean.productType;
+                            content2Bean.repayAmount = contract1ListBean.repayAmount;
+                            content2Bean.numInstalment = contract1ListBean.numInstalment;
+                            content2Bean.repayDate = contract1ListBean.repayDate;
+                            currentMonthList.add(content2Bean);*/
 
                             //零花钱
                             if (response.data.product != null && response.data.product.cycleMoney != null && CommonUtils.isNotNullOrEmpty(response.data.product.cycleMoney.contractList)) {

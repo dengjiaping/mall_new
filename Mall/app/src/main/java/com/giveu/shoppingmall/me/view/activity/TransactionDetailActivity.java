@@ -93,7 +93,7 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
             tvTransactionType.setText("分期总额：");
             tvMoney.setText(data.creditAmount);
             tvPayDate.setText("分期数：");
-            tvDate.setText(data.paymentNum + "元");
+            tvDate.setText(data.paymentNum +"期");
             tvPayStatus.setText("剩余应还本金：");
             tvStatus.setText(data.lastPrincipal + "元");
             llCreditDetail.setVisibility(View.VISIBLE);

@@ -20,15 +20,14 @@ import com.giveu.shoppingmall.me.view.fragment.BillFragment;
 import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -51,7 +50,6 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     private double payMoney;
     private RepaymentDetailDialog repaymentDetailDialog;
     private BillListPresenter presenter;
-    private DecimalFormat format = new DecimalFormat("0.00");
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, BillListActivity.class);
@@ -105,7 +103,7 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
         repaymentDialog.setOnConfirmListener(new RepaymentDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String money) {
-                tvMoney.setText("还款金额：¥" + format.format(Double.parseDouble(money)));
+                tvMoney.setText("还款金额：¥" + StringUtils.format2(money));
                 payMoney = Double.parseDouble(money);
                 if (vpBill.getCurrentItem() == 0) {
                     //更新fragment的还款金额，以便下次切换时显示的是已更新的数据
@@ -157,12 +155,12 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     public void setCurrentItem(int currentItem) {
         //来回切换时需重新设置该列表下还款金额
         if (currentItem == 0) {
-            tvMoney.setText("还款金额：¥" + format.format(currentMonthFragment.getPayMoney()));
+            tvMoney.setText("还款金额：¥" + StringUtils.format2(currentMonthFragment.getPayMoney()+""));
             payMoney = currentMonthFragment.getPayMoney();
             canClick();
 
         } else if (currentItem == 1) {
-            tvMoney.setText("还款金额：¥" + format.format(nextMonthFragment.getPayMoney()));
+            tvMoney.setText("还款金额：¥" + StringUtils.format2(nextMonthFragment.getPayMoney()+""));
             payMoney = nextMonthFragment.getPayMoney();
             canClick();
         }
@@ -187,15 +185,9 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     }
 
     public void setPayMoney(double payMoney) {
-        tvMoney.setText("还款金额：¥" + format.format(payMoney));
+        tvMoney.setText("还款金额：¥" + StringUtils.format2(payMoney+""));
+        this.payMoney = payMoney;
         canClick();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
 
