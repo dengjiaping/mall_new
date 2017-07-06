@@ -172,7 +172,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getIdent() {
-        return loginPersonInfo == null ? null : loginPersonInfo.certNo;
+        return loginPersonInfo == null ? null : loginPersonInfo.ident;
     }
 
     /**

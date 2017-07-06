@@ -80,7 +80,7 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
                 String userName = StringUtils.getTextFromView(etUsername);
                 if (LoginHelper.getInstance() != null) {
                     String localIdent = LoginHelper.getInstance().getIdent();
-                    String localRealName = LoginHelper.getInstance().getRealName();
+                    String localRealName = LoginHelper.getInstance().getName();
                     if (StringUtils.isNotNull(localIdent) && StringUtils.isNotNull(localRealName)) {
                         //交易密码验证身份信息
                         if (localIdent.equals(ident) && localRealName.equals(userName)) {
