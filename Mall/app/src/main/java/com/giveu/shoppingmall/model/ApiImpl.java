@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
+import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
@@ -268,6 +269,11 @@ public class ApiImpl {
     //随借随还取现费用计算
     public static void getCostFee(Activity context, BaseRequestAgent.ResponseListener<CostFeeResponse> responseListener) {
         RequestAgent.getInstance().sendPostRequest(null, ApiUrl.personCenter_enchashment_enchashment, CostFeeResponse.class, context, responseListener);
+    }
+    //分期取现月供明细
+    public static void rpmDetail(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
 }
 

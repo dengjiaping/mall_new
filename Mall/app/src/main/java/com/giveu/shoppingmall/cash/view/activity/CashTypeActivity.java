@@ -27,11 +27,14 @@ import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
+import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
+import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
@@ -67,6 +70,10 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvAvailableCredit;
     @BindView(R.id.rl_cash_type)
     RelativeLayout rlCashType;
+    @BindView(R.id.tv_draw_money)
+    TextView tvDrawMoney;
+    @BindView(R.id.tv_cost)
+    TextView tvCost;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     List<ProductResponse> data;
@@ -76,6 +83,7 @@ public class CashTypeActivity extends BaseActivity {
     private ViewGroup decorView;
     ProductResponse noStageProduct;
     private int statusBarHeight;
+    private int idProduct = 0;
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         int previousKeyboardHeight = -1;
 
@@ -213,6 +221,9 @@ public class CashTypeActivity extends BaseActivity {
                         for (int i = 0; i < stagingTypeAdapter.getCount(); i++) {
                             if (checkId == i) {
                                 stagingTypeAdapter.getItem(i).isChecked = true;
+                                idProduct = stagingTypeAdapter.getItem(i).idProduct;
+                                showLoanAmount(idProduct, (int)chooseQuota);
+
                             } else {
                                 stagingTypeAdapter.getItem(i).isChecked = false;
                             }
@@ -220,6 +231,32 @@ public class CashTypeActivity extends BaseActivity {
                         stagingTypeAdapter.notifyDataSetChanged();
                     }
                 }
+            }
+        });
+    }
+
+    /**
+     * 获取贷款金额
+     *
+     * @param idProduct
+     * @param chooseQuota
+     */
+    private void showLoanAmount(int idProduct, int chooseQuota) {
+        ApiImpl.repayCost(mBaseContext, idProduct, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
+            @Override
+            public void onSuccess(RepayCostResponse response) {
+                ToastUtils.showShortToast("成功！");
+                if (response.data != null) {
+                    RepayCostResponse product = response.data;
+                    tvDrawMoney.setText("提款金额：" + product.drawMoney);
+                    tvCost.setText("（含咨询费￥" + product.drawMoney + "）");
+                    tvMonthlyPayment.setText("月供：" + product.monthPay + "元");
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
             }
         });
     }
@@ -282,8 +319,19 @@ public class CashTypeActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
-                MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext);
-                monthlyDetailsDialog.showDialog();
+                ApiImpl.rpmDetail(mBaseContext, idProduct, (int)chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                    @Override
+                    public void onSuccess(RpmDetailResponse response) {
+                        MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext,response.data);
+                        monthlyDetailsDialog.showDialog();
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+
+                    }
+                });
+
                 //查看月供
                 break;
             case R.id.rl_add_bank_card:
