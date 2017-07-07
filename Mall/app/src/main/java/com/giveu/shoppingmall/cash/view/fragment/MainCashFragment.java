@@ -64,7 +64,7 @@ public class MainCashFragment extends BaseFragment {
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
         int width = ivBgTop.getWidth();
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
         layoutParams.height = (208 * width / 708);

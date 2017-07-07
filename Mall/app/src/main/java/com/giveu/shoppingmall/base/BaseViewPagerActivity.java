@@ -47,7 +47,7 @@ public abstract class BaseViewPagerActivity extends BaseActivity {
 			public void onPageSelected(int position) {
 /*				BaseFragment item = (BaseFragment) myFragmentAdapter.getItem(position);
 				if ( !item.isDataInitiated() ){
-					item.initWithDataDelay();
+					item.initDataDelay();
 				}*/
 			}
 

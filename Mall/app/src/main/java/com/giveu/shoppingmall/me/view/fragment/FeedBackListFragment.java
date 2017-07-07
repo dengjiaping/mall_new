@@ -83,14 +83,14 @@ public class FeedBackListFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                initWithDataDelay();
+                initDataDelay();
             }
         });
     }
 
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
 //        String state = "0";//state	记录：处理中/已处理	string	0处理中 1已处理
 //        if (isSecondFrg) {
 //            state = "1";
