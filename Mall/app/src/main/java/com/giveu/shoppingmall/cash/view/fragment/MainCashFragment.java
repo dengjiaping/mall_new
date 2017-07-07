@@ -10,15 +10,14 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
-import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
+import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
- * 消费模块
+ * 取现模块
  * Created by 508632 on 2016/12/13.
  */
 
@@ -31,8 +30,7 @@ public class MainCashFragment extends BaseFragment {
     ImageView ivBgTop;
     @BindView(R.id.tv_available_credit)
     TextView tvAvailableCredit;
-    Unbinder unbinder;
-
+    QuotaDialog quotaDialog;//额度为0的弹窗
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,12 +38,13 @@ public class MainCashFragment extends BaseFragment {
         baseLayout.setTitle("我要取现");
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.hideBack();
-        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CaseRecordActivity.startIt(mBaseContext);
-            }
-        });
+//        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CaseRecordActivity.startIt(mBaseContext);
+//            }
+//        });
+        quotaDialog = new QuotaDialog(mBaseContext);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -55,7 +54,11 @@ public class MainCashFragment extends BaseFragment {
         tvLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CashTypeActivity.startIt(mBaseContext);
+                if (false) {
+                    quotaDialog.showDialog();
+                } else {
+                    CashTypeActivity.startIt(mBaseContext);
+                }
             }
         });
     }
@@ -66,6 +69,7 @@ public class MainCashFragment extends BaseFragment {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
         layoutParams.height = (208 * width / 708);
         ivBgTop.setLayoutParams(layoutParams);
+
     }
 
     @Override
@@ -74,9 +78,4 @@ public class MainCashFragment extends BaseFragment {
     }
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

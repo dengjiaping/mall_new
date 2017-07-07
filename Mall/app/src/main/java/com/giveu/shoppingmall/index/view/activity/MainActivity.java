@@ -19,13 +19,12 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
+import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
-import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
-import com.giveu.shoppingmall.repay.view.fragment.MainRepayFragment;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
@@ -34,12 +33,10 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.PatternLockSetTipDialog;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 
@@ -48,7 +45,7 @@ import static java.lang.System.currentTimeMillis;
 public class MainActivity extends BaseActivity {
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
-    public MainRepayFragment mainRepayFragment;
+    //    public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
     @BindView(R.id.iv_recharge)
     ImageView ivRecharge;
@@ -68,17 +65,17 @@ public class MainActivity extends BaseActivity {
     TextView tvMe;
 
     private FragmentManager manager;
-    private int nowPosition;
     //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
+    private boolean hasFetchUserInfo;
 
     @BindView(R.id.mainViewPager)
     ViewPager mViewPager;
     @BindView(R.id.rb1)
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
-    QuotaDialog quotaDialog;//额度为0的弹窗
+
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -89,15 +86,15 @@ public class MainActivity extends BaseActivity {
         fragmentList = new ArrayList<>();
         rechargeFragment = new RechargeFragment();
         mainCashFragment = new MainCashFragment();
-        mainRepayFragment = new MainRepayFragment();
+//        mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
         fragmentList.add(rechargeFragment);
         fragmentList.add(mainCashFragment);
-        fragmentList.add(mainRepayFragment);
+//        fragmentList.add(mainRepayFragment);
         fragmentList.add(mainMeFragment);
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(2);
         //跳转至消息列表
         if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
@@ -106,8 +103,8 @@ public class MainActivity extends BaseActivity {
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
-        quotaDialog = new QuotaDialog(mBaseContext);
     }
+
 
     public void selectIconAndTextColor(int selectPos) {
         switch (selectPos) {
@@ -120,12 +117,14 @@ public class MainActivity extends BaseActivity {
                 setTextColor(tvCash, R.color.color_00bbc0);
                 break;
             case 2:
-                setImageView(ivRepayment, R.drawable.ic_repayment_select);
-                setTextColor(tvRepayment, R.color.color_00bbc0);
-                break;
-            case 3:
+//                setImageView(ivRepayment, R.drawable.ic_repayment_select);
+//                setTextColor(tvRepayment, R.color.color_00bbc0);
                 setImageView(ivMe, R.drawable.ic_me_select);
                 setTextColor(tvMe, R.color.color_00bbc0);
+                break;
+            case 3:
+                setImageView(ivRepayment, R.drawable.ic_repayment_select);
+                setTextColor(tvRepayment, R.color.color_00bbc0);
                 break;
         }
     }
@@ -149,7 +148,7 @@ public class MainActivity extends BaseActivity {
         imageView.setImageResource(imageId);
     }
 
-    @OnClick({R.id.ll_recharge,R.id.ll_cash,R.id.ll_repayment,R.id.ll_me})
+    @OnClick({R.id.ll_recharge, R.id.ll_cash, R.id.ll_repayment, R.id.ll_me})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -163,30 +162,27 @@ public class MainActivity extends BaseActivity {
             case R.id.ll_cash:
                 mViewPager.setCurrentItem(1, false);
                 selectIconAndTextColor(1);
-                ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
-                    @Override
-                    public void onSuccess(PersonInfoResponse response) {
-                        //response.data.availablePosLimit == 0
-                        if(true){
-                            quotaDialog.showDialog();
-                        }
-                    }
-
-                    @Override
-                    public void onError(BaseBean errorBean) {
-                        CommonLoadingView.showErrorToast(errorBean);
-                    }
-                });
                 break;
 
             case R.id.ll_repayment:
-                mViewPager.setCurrentItem(2, false);
-                selectIconAndTextColor(2);
+                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        BillListActivity.startIt(mBaseContext);
+                        selectIconAndTextColor(3);
+                    } else {
+                        ToastUtils.showShortToast("请先开通钱包");
+                        mViewPager.setCurrentItem(2);
+                        selectIconAndTextColor(2);
+                    }
+                }
+//                mViewPager.setCurrentItem(2, false);
+//                selectIconAndTextColor(2);
                 break;
 
             case R.id.ll_me:
-                mViewPager.setCurrentItem(3, false);
-                selectIconAndTextColor(3);
+                mViewPager.setCurrentItem(2, false);
+                selectIconAndTextColor(2);
                 break;
 
             default:
@@ -224,11 +220,42 @@ public class MainActivity extends BaseActivity {
         doApkUpgrade();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    public void getUserInfo() {
+        ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<LoginResponse>() {
+            @Override
+            public void onSuccess(LoginResponse response) {
+/*                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.activeDate = response.data.activeDate;
+                loginResponse.availableCyLimit = response.data.availableCyLimit;
+                loginResponse.availablePosLimit = response.data.availablePosLimit;
+                loginResponse.certNo = response.data.ident;
+                loginResponse.cyLimit = response.data.cyLimit;
+                loginResponse.endDate = response.data.endDate;
+                loginResponse.globleLimit = response.data.globleLimit;
+                loginResponse.idPerson = response.data.idPerson;
+                loginResponse.mobile = response.data.phone;
+                loginResponse.nickName = LoginHelper.getInstance().getUserName();
+                loginResponse.posLimit = response.data.posLimit;
+                loginResponse.realName = response.data.name;
+                //response.data.status为true，对应的是2（有资质），1为未激活
+                loginResponse.status = response.data.status;
+//                loginResponse.statusDesc = LoginHelper.getInstance().getStatus();
+                loginResponse.userId = LoginHelper.getInstance().getUserId();
+                loginResponse.userName = LoginHelper.getInstance().getUserName();
+                loginResponse.userPic = LoginHelper.getInstance().getUserPic();
+                loginResponse.availableRechargeLimit = response.data.availableRechargeLimit;
+                loginResponse.creditCount = response.data.creditCount;
+                loginResponse.repayAmount = response.data.repayAmount;
+                loginResponse.repayDate = response.data.repayDate;
+                //更新个人信息，缓存在本地*/
+                LoginHelper.getInstance().saveLoginStatus(response.data);
+                hasFetchUserInfo = true;
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+            }
+        });
     }
 
     private class MainActivityAdapter extends FragmentStatePagerAdapter {
@@ -270,7 +297,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        //从账单返回主界面时需刷新tab的图标和字体颜色
+        setImageView(ivRepayment, R.drawable.ic_repayment);
+        setTextColor(tvRepayment, R.color.color_9b9b9b);
+        selectIconAndTextColor(mViewPager.getCurrentItem());
         if (downloadApkUtils != null) {
             downloadApkUtils.onActivityResume();
         }
@@ -278,6 +308,16 @@ public class MainActivity extends BaseActivity {
         if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {
             //上传设备号至服务器
             ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
+        }
+
+        /**
+         * 只有已登录并且钱包资质用户才能查询个人信息
+         */
+        if (LoginHelper.getInstance().hasLogin() && LoginHelper.getInstance().hasQualifications() && !hasFetchUserInfo) {
+            getUserInfo();
+        } else {
+            //保证不是每次onResume都会调个人信息接口，只有切换账户或者开通了钱包资质才获取个人信息
+            hasFetchUserInfo = false;
         }
 
     }

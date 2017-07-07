@@ -11,8 +11,11 @@ import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.TypeUtlis;
 
 import java.util.List;
+
 
 /**
  * Created by 513419 on 2017/6/22.
@@ -20,7 +23,7 @@ import java.util.List;
 
 public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
 
-    public BillAdapter(Context context, List<BillBean> datas) {
+    public BillAdapter(Context context, final List<BillBean> datas) {
         super(context, datas);
         addItemViewDelegate(new ItemViewDelegate<BillBean>() {
             @Override
@@ -34,13 +37,22 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
             }
 
             @Override
-            public void convert(ViewHolder holder, final BillBean item, int position) {
+            public void convert(final ViewHolder holder, final BillBean item, int position) {
                 final CheckBox cbChoose = holder.getView(R.id.cb_choose);
-                holder.setText(R.id.tv_title, getProductType(item.creditType) + "：" + item.repayAmount);
+                holder.setText(R.id.tv_title, TypeUtlis.getProductType(item.productType) + "：¥" + StringUtils.format2(item.repayAmount));
                 cbChoose.setChecked(item.isChoose);
                 cbChoose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致给予提醒
+                        for (BillBean billBean : datas) {
+                            if (billBean.isChoose && !item.productType.equals(billBean.productType)) {
+                                cbChoose.setChecked(!cbChoose.isChecked());
+                                ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
+                                return;
+                            }
+                        }
+                        //更新activity还款数目，选中为加，取消勾选为减
                         if (listener != null) {
                             try {
                                 double money = Double.parseDouble(item.repayAmount);
@@ -57,6 +69,12 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                 holder.setOnClickListener(R.id.ll_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        for (BillBean billBean : datas) {
+                            if (billBean.isChoose && !item.productType.equals(billBean.productType)) {
+                                ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
+                                return;
+                            }
+                        }
                         cbChoose.setChecked(!cbChoose.isChecked());
                         item.isChoose = cbChoose.isChecked();
                         if (listener != null) {
@@ -89,8 +107,8 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
             @Override
             public void convert(ViewHolder holder, BillBean item, int position) {
                 holder.setText(R.id.tv_date, item.repayDate);
-                holder.setText(R.id.tv_money, "¥" + item.repayAmount);
-                holder.setText(R.id.tv_type, getProductType(item.creditType));
+                holder.setText(R.id.tv_money, "¥" + StringUtils.format2(item.repayAmount));
+                holder.setText(R.id.tv_type, TypeUtlis.getCreditTypeText(item.creditType));
                 ImageView ivOverDue = holder.getView(R.id.iv_overdue);
                 if (item.isOverdue) {
                     ivOverDue.setVisibility(View.VISIBLE);
@@ -111,57 +129,4 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
         this.listener = listener;
     }
 
-    /**
-     * 根据字符串返回产品类型
-     *
-     * @param type
-     * @return
-     */
-    private String getProductType(String type) {
-        String productType = type;
-        if (StringUtils.isNull(type)) {
-            return "";
-        }
-        switch (type) {
-            case "c":
-                productType = "零花钱";
-                break;
-
-            case "sh":
-                productType = "取现";
-                break;
-
-
-            case "sc":
-                productType = "现金分期";
-                break;
-
-
-            case "sf":
-                productType = "零花钱";
-                break;
-
-
-            case "sy":
-                productType = "商城一次性消费";
-                break;
-
-            case "ss":
-                productType = "线下消费";
-                break;
-
-            case "sq":
-                productType = "常规取现分期";
-                break;
-
-            case "sd":
-                productType = "大额取现分期";
-                break;
-
-            default:
-                break;
-
-        }
-        return productType;
-    }
 }

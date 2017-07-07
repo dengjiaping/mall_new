@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.me.view.agent.ITransactionView;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
@@ -197,10 +198,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
      */
     private void showSearchView() {
         if (!showAnimator.isRunning()) {
+            hideAnimator.end();
+            hideAlphaAnimator.end();
             showAnimator.start();
             showAlphaAnimator.start();
-            baseLayout.setClickable(true);
         }
+        baseLayout.setClickable(true);
     }
 
     /**
@@ -208,10 +211,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
      */
     private void hideSearchView() {
         if (!hideAnimator.isRunning()) {
+            showAnimator.end();
+            showAlphaAnimator.end();
             hideAnimator.start();
             hideAlphaAnimator.start();
-            baseLayout.setClickable(false);
         }
+        baseLayout.setClickable(false);
     }
 
     @OnClick({R.id.view_blank, R.id.tv_choose_type, R.id.ll_choose_date, R.id.tv_search, R.id.tv_reset})
@@ -286,8 +291,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         creditType = selCreditType;
         loanDate = selLoanDate;
         timeType = selTimeType;
-        // TODO: 2017/7/3 写死的数据需更换
-        presenter.searchContract(creditStatus, creditType, "15124638", loanDate, pageIndex, pageSize, timeType);
+        presenter.searchContract(creditStatus, creditType, LoginHelper.getInstance().getIdPerson(), loanDate, pageIndex, pageSize, timeType);
     }
 
     @Override
@@ -382,14 +386,15 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                     ptrlv.setPullLoadEnable(false);
                     ptrlv.showEnd("没有更多数据");
                 }
-//                emptyView.setVisibility(View.GONE);
+                baseLayout.showEmpty("暂无交易记录");
             }
+            baseLayout.hideEmpty();
             transactionList.addAll(contractList);
             transactionAdapter.notifyDataSetChanged();
             pageIndex++;
         } else {
             if (pageIndex == 1) {
-//                emptyView.setVisibility(View.VISIBLE);
+                baseLayout.showEmpty("暂无交易记录");
                 ptrlv.setPullLoadEnable(false);
             } else {
                 ptrlv.setPullLoadEnable(false);

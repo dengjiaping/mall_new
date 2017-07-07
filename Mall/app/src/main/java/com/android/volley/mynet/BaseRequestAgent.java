@@ -14,9 +14,7 @@ import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
 import com.giveu.shoppingmall.utils.NetWorkUtils;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
@@ -135,9 +133,9 @@ public abstract class BaseRequestAgent {
 			params = new HashMap<String, Object>();
 		}
 
-		params.put("VERSION_CODE", CommonUtils.getVersionCode());
-		params.put("VERSION_NAME", CommonUtils.getVersionName());
-		params.put("DEVICE_TYPE", "android");//1:IOS :2ANDROID
+//		params.put("VERSION_CODE", CommonUtils.getVersionCode());
+//		params.put("VERSION_NAME", CommonUtils.getVersionName());
+//		params.put("DEVICE_TYPE", "android");//1:IOS :2ANDROID
 
 		//所有的接口加一个salesId
 //		String salesIdKey = "salesId";
@@ -145,10 +143,10 @@ public abstract class BaseRequestAgent {
 //			params.put(salesIdKey, LoginHelper.getInstance().getUserId());
 //		}
 		//设备唯一标识
-		String identificationKey = "identification";
-		if (StringUtils.isNull((String) params.get(identificationKey))) {
-			params.put( identificationKey, SharePrefUtil.getUUId());
-		}
+//		String identificationKey = "identification";
+//		if (StringUtils.isNull((String) params.get(identificationKey))) {
+//			params.put( identificationKey, SharePrefUtil.getUUId());
+//		}
 //        int networkType = NetWorkUtils.getCurrentNetworkType();
 //        if (networkType != -1) {
 //            params.put("NETWORK_TYPE", String.valueOf(networkType));
@@ -174,7 +172,7 @@ public abstract class BaseRequestAgent {
 			params = new HashMap<String, Object>();
 		}
 		params = addMoreParams(params);
-		params = filterEmptyParamValue(params);
+		//params = filterEmptyParamValue(params);
 
 		if (isParamsNeedEncode(url)){//需要加密
 			Map encryptParams = new HashMap<String, String>();

@@ -27,20 +27,20 @@ public class PersonInfoResponse extends BaseBean<PersonInfoResponse> {
      * status : true
      */
 
-    public int idPerson;
-    public String endDate;
-    public int cyLimit;
-    public String ident;
-    public int repayAmount;
-    public Object creditCount;
-    public int availableCyLimit;
-    public double availablePosLimit;
-    public int globleLimit;
-    public int posLimit;
-    public String phone;
     public String activeDate;
+    public String availableCyLimit;
+    public String availablePosLimit;
+    public String availableRechargeLimit;
+    public String creditCount;
+    public String cyLimit;
+    public String endDate;
+    public String globleLimit;
+    public int idPerson;
+    public String ident;
     public String name;
-    public Object repayDate;
-    public Object availableRechargeLimit;
+    public String phone;
+    public String posLimit;
+    public String repayAmount;
+    public String repayDate;
     public boolean status;
 }

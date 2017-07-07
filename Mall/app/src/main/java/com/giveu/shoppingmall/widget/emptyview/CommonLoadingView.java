@@ -146,13 +146,13 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
             layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         }
         rl_empty.setLayoutParams(layoutParams);
-        rl_empty.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        rl_empty.setBackgroundColor(mContext.getResources().getColor(R.color.default_layoutxml_bg));
 
         setViewState(iconResId, message, meaageSamll, isError);
     }
 
     public void showEmpty(String message, String meaageSamll) {
-        showEmpty(DEFAULT_ICON, message, meaageSamll, false, null);
+        showEmpty(R.drawable.ic_defalut_empty, message, meaageSamll, false, null);
     }
 
     public void showEmpty(EmptyType emptyType) {
@@ -161,6 +161,10 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
 
     public void showEmpty() {
         showEmpty(EmptyType.OPT_DEFAULT);
+    }
+
+    public void hideEmpty() {
+        rl_empty.setVisibility(View.GONE);
     }
 
 

@@ -8,11 +8,13 @@ import com.android.volley.mynet.BaseBean;
 
 public class WalletActivationResponse extends BaseBean<WalletActivationResponse> {
 
+
+
     /**
      * cyLimit : 50000
      * globleLimit : 100000
-     * isPhoneChage : true
-     * lab : 通过个人资金进行商城消费可积累信用提升额度哦
+     * isPhoneChage : false
+     * lab : 通过取现或商城消费可积累信用提高消费额度哦
      * posLimit : 0
      */
 

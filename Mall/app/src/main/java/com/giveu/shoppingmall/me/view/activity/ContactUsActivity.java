@@ -63,7 +63,7 @@ public class ContactUsActivity extends BaseActivity {
                 CustomerServicePhoneActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_common_problem:
-                //常建电话
+                //常见问题
                 CommonProblemActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_problem_feedback:

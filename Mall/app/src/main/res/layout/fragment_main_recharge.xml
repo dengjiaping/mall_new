@@ -7,22 +7,32 @@
 
     <RadioGroup
         android:id="@+id/rg_recharge"
-        style="@style/preferential_rg">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:background="@color/white"
+        android:layout_height="40dp">
 
         <RadioButton
             android:id="@+id/rb_bill"
             style="@style/preferential_rbt"
             android:checked="true"
+            android:layout_marginRight="20dp"
             android:text="话费" />
 
         <RadioButton
             android:id="@+id/rb_flow"
+            android:layout_marginLeft="20dp"
             style="@style/preferential_rbt"
             android:text="流量" />
 
     </RadioGroup>
 
-
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:background="@color/line_bg"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="76dp"

@@ -51,6 +51,7 @@ public class CreditDetailActivity extends BaseActivity implements ICreditDetailV
         creditAdapter = new CreditAdapter(mBaseContext, creditList);
         ptrlv.setAdapter(creditAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
+        ptrlv.setPullLoadEnable(false);
         presenter = new CreditDetailPresenter(this);
     }
 

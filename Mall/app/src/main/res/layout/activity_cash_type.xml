@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_cash_type"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -97,24 +98,12 @@
                     android:id="@+id/gv_staging_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                    android:layout_marginRight="@dimen/default_layout_screen_gap"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="9dp"
                     android:layout_marginTop="23dp"
                     android:gravity="center"
-                    android:horizontalSpacing="12dp"
                     android:numColumns="4"
                     android:verticalSpacing="6dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                    android:layout_marginTop="5dp"
-                    android:text="费率0.55元/天"
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/ts_11"
-                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -264,7 +253,6 @@
                     android:layout_marginRight="10dp"
                     android:button="@drawable/selector_checkbox_register"
                     android:checked="true"
-                    android:text=""
                     android:textColor="@color/color_4a4a4a"
                     android:textSize="@dimen/ts_12" />
 
@@ -288,7 +276,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/tv_ensure"
+        android:id="@+id/tv_ensure_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

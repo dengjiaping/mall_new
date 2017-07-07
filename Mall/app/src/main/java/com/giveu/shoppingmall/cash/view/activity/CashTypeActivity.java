@@ -2,9 +2,12 @@ package com.giveu.shoppingmall.cash.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,9 +25,11 @@ import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CashTypeResponse;
-import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
+import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -36,7 +41,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.giveu.shoppingmall.R.id.tv_ensure;
 
 /**
  * 取现类型页
@@ -44,7 +48,6 @@ import static com.giveu.shoppingmall.R.id.tv_ensure;
  */
 
 public class CashTypeActivity extends BaseActivity {
-    TextView mTvVerticalScale;
     HorizontalScaleScrollView scaleScrollView;
     @BindView(R.id.et_input_amount)
     EditText etInputAmount;
@@ -54,17 +57,55 @@ public class CashTypeActivity extends BaseActivity {
     RelativeLayout rlAddBankCard;
     @BindView(R.id.tv_monthly_payment)
     TextView tvMonthlyPayment;
-    @BindView(tv_ensure)
-    TextView tvEnsure;
+    @BindView(R.id.tv_ensure_bottom)
+    TextView tvEnsureBottom;
     @BindView(R.id.ll_choose_bank)
     LinearLayout llChooseBank;
     @BindView(R.id.tv_bank_name)
     TextView tvBankName;
     @BindView(R.id.tv_available_credit)
     TextView tvAvailableCredit;
+    @BindView(R.id.rl_cash_type)
+    RelativeLayout rlCashType;
     private LvCommonAdapter<CashTypeResponse> stagingTypeAdapter;
     int chooseQuota;//选择额度
     List<CashTypeResponse> data;
+    String costFee;//费率
+    public final int MAXAMOUNT = 3000;//最大取现金额
+    public final int MINAMOUNT = 300;//最小取现金额
+    private ViewGroup decorView;
+
+    private int statusBarHeight;
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        int previousKeyboardHeight = -1;
+
+        @Override
+        public void onGlobalLayout() {
+            Rect rect = new Rect();
+            int displayHeight = 0;
+            decorView.getWindowVisibleDisplayFrame(rect);
+            if (rect.top == 0) {
+                displayHeight = rect.bottom - statusBarHeight;
+            } else {
+                displayHeight = rect.bottom - rect.top;
+            }
+            int height = decorView.getHeight();
+            final int keyboardHeight = height - rect.bottom;
+            if (previousKeyboardHeight != keyboardHeight) {
+                boolean hide = (double) displayHeight / height > 0.8;
+                if (hide) {
+                    //键盘消失监听
+                    setData();
+                    if (chooseQuota >= 0 && chooseQuota <= 3000 && (chooseQuota % 50 == 0)) {
+                        scaleScrollView.setCurScale(chooseQuota);
+                    }
+                }
+            }
+
+            previousKeyboardHeight = keyboardHeight;
+
+        }
+    };
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
@@ -86,11 +127,49 @@ public class CashTypeActivity extends BaseActivity {
                 CaseRecordActivity.startIt(mBaseContext);
             }
         });
+        initAdapter();
+        statusBarHeight = DensityUtils.getStatusBarHeight();
+        decorView = (ViewGroup) getWindow().getDecorView();
+    }
+
+    private void initAdapter() {
+        data = new ArrayList<>();
+        stagingTypeAdapter = new LvCommonAdapter<CashTypeResponse>(mBaseContext, R.layout.tv_cash_type_item, data) {
+            @Override
+            protected void convert(ViewHolder viewHolder, CashTypeResponse item, int position) {
+                TextView tvStagingType = viewHolder.getView(R.id.tv_staging_type);
+                TextView tv_cost_fee = viewHolder.getView(R.id.tv_cost_fee);
+                tvStagingType.setText(item.month);
+
+                if (item.isChecked) {
+                    tvStagingType.setTextColor(getResources().getColor(R.color.white));
+                    tvStagingType.setBackgroundResource(R.drawable.shape_ordinary_pressed);
+                } else {
+                    tvStagingType.setTextColor(getResources().getColor(R.color.title_color));
+                    tvStagingType.setBackgroundResource(R.drawable.shape_ordinary_normal);
+                }
+                if (item.isShow) {
+                    tv_cost_fee.setVisibility(View.VISIBLE);
+                    if (StringUtils.isNotNull(costFee)) {
+                        tv_cost_fee.setText("费率" + costFee + "元/天");
+                    }
+                } else {
+                    tv_cost_fee.setVisibility(View.GONE);
+                }
+            }
+        };
+        gvStagingType.setAdapter(stagingTypeAdapter);
     }
 
     @Override
     public void setListener() {
         super.setListener();
+        scaleScrollView.setOnMoveStopListener(new HorizontalScaleScrollView.OnMoveStopListener() {
+            @Override
+            public void stop() {
+                setData();
+            }
+        });
         scaleScrollView.setOnScrollListener(new HorizontalScaleScrollView.OnScrollListener() {
             @Override
             public void onScaleScroll(int scale) {
@@ -107,16 +186,15 @@ public class CashTypeActivity extends BaseActivity {
                         return;
                     }
                     chooseQuota = Integer.parseInt(s.toString());
-                    if (chooseQuota >= 0 && chooseQuota <= 3000 && (chooseQuota % 50 == 0)) {
-                        scaleScrollView.setCurScale(chooseQuota);
-                    }
                 }
             }
         });
 
+
         gvStagingType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int checkId, long id) {
+                ToastUtils.showShortToast("" + stagingTypeAdapter.getItem(checkId).isShow);
                 if (stagingTypeAdapter != null) {
                     if (stagingTypeAdapter.getCount() > 0) {
                         for (int i = 0; i < stagingTypeAdapter.getCount(); i++) {
@@ -135,13 +213,28 @@ public class CashTypeActivity extends BaseActivity {
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        decorView.getViewTreeObserver().removeGlobalOnLayoutListener(globalLayoutListener);
+    }
+
+
+    @Override
     public void setData() {
-        //显示可用额度
-        ApiImpl.getUserInfo(mBaseContext, 10000923, new BaseRequestAgent.ResponseListener<PersonInfoResponse>() {
+        //选择的到账金额
+        //  chooseQuota = 4000;
+        //   etInputAmount.setText(String.valueOf(chooseQuota));
+        setStageNumberData(chooseQuota);
+        ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
             @Override
-            public void onSuccess(PersonInfoResponse response) {
-                //   etInputAmount.setText(String.valueOf((int) response.data.availablePosLimit));
-                tvAvailableCredit.setText(String.valueOf(response.data.availablePosLimit));
+            public void onSuccess(CostFeeResponse response) {
+                costFee = String.valueOf(response.data.costFee);
             }
 
             @Override
@@ -149,44 +242,9 @@ public class CashTypeActivity extends BaseActivity {
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
-
-        //显示选择分期数选项
-        chooseQuota = 3000;
-        if (chooseQuota > 3000) {
-            //仅支持取现分期
-            setStageNumberData();
-            data.remove(0);
-        } else if (chooseQuota >= 300 && chooseQuota <= 3000) {
-            //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
-            setStageNumberData();
-        } else {
-            //仅支持随借随还
-            CashTypeResponse c1 = data.get(0);
-            data = new ArrayList<>();
-            data.add(c1);
-        }
-
-
-        stagingTypeAdapter = new LvCommonAdapter<CashTypeResponse>(mBaseContext, R.layout.tv_cash_type_item, data) {
-            @Override
-            protected void convert(ViewHolder viewHolder, CashTypeResponse item, int position) {
-                TextView tv_staging_type = viewHolder.getView(R.id.tv_staging_type);
-                tv_staging_type.setText(item.month);
-
-
-                if (item.isChecked) {
-                    tv_staging_type.setTextColor(getResources().getColor(R.color.white));
-                    tv_staging_type.setBackgroundResource(R.drawable.shape_ordinary_pressed);
-                } else {
-                    tv_staging_type.setTextColor(getResources().getColor(R.color.title_color));
-                    tv_staging_type.setBackgroundResource(R.drawable.shape_ordinary_normal);
-                }
-            }
-        };
-        gvStagingType.setAdapter(stagingTypeAdapter);
     }
 
-    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure, R.id.ll_choose_bank})
+    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -200,7 +258,7 @@ public class CashTypeActivity extends BaseActivity {
                 //添加银行卡
                 AddBankCardFirstActivity.startIt(mBaseContext);
                 break;
-            case R.id.tv_ensure:
+            case R.id.tv_ensure_bottom:
                 //确定
                 PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
                 pwdDialog.showDialog();
@@ -214,17 +272,23 @@ public class CashTypeActivity extends BaseActivity {
 
     }
 
-    public void setStageNumberData() {
-        CashTypeResponse c1 = new CashTypeResponse("按日计息", false);
-        CashTypeResponse c2 = new CashTypeResponse("9期", false);
-        CashTypeResponse c3 = new CashTypeResponse("12期", false);
-        CashTypeResponse c4 = new CashTypeResponse("15期", false);
-        CashTypeResponse c5 = new CashTypeResponse("18期", false);
-        CashTypeResponse c6 = new CashTypeResponse("21期", false);
-        CashTypeResponse c7 = new CashTypeResponse("24期", false);
-        CashTypeResponse c8 = new CashTypeResponse("27期", false);
-        CashTypeResponse c9 = new CashTypeResponse("30期", false);
-        CashTypeResponse c10 = new CashTypeResponse("36期", false);
+    /**
+     * 根据选择的额度显示不同的借款期数
+     *
+     * @param chooseQuota
+     * @return
+     */
+    public void setStageNumberData(int chooseQuota) {
+        CashTypeResponse c1 = new CashTypeResponse("按日计息", false, false);
+        CashTypeResponse c2 = new CashTypeResponse("9期", false, false);
+        CashTypeResponse c3 = new CashTypeResponse("12期", false, false);
+        CashTypeResponse c4 = new CashTypeResponse("15期", false, false);
+        CashTypeResponse c5 = new CashTypeResponse("18期", false, false);
+        CashTypeResponse c6 = new CashTypeResponse("21期", false, false);
+        CashTypeResponse c7 = new CashTypeResponse("24期", false, false);
+        CashTypeResponse c8 = new CashTypeResponse("27期", false, false);
+        CashTypeResponse c9 = new CashTypeResponse("30期", false, false);
+        CashTypeResponse c10 = new CashTypeResponse("36期", false, false);
         data = new ArrayList<>();
         data.add(c1);
         data.add(c2);
@@ -236,6 +300,24 @@ public class CashTypeActivity extends BaseActivity {
         data.add(c8);
         data.add(c9);
         data.add(c10);
+        if (chooseQuota > MAXAMOUNT) {
+            //仅支持取现分期
+            data.remove(0);
+        } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
+            //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
+            int size = data.size() % 4;
+            for (int i = data.size() - 1; i > data.size() - size - 1; i--) {
+                data.get(i).isShow = true;
+            }
+        } else {
+            //仅支持随借随还
+            CashTypeResponse cashData = data.get(data.size() - 1);
+            data = new ArrayList<>();
+            data.add(cashData);
+            data.get(0).isShow = true;
+        }
+        stagingTypeAdapter.setData(data);
+        stagingTypeAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -245,5 +327,4 @@ public class CashTypeActivity extends BaseActivity {
             tvBankName.setText(data.getStringExtra("bankName"));
         }
     }
-
 }

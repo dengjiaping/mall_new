@@ -62,6 +62,7 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
         setContentView(R.layout.activity_transaction_detail);
         baseLayout.setTitle("交易详情");
         presenter = new TransactionDetailPresenter(this);
+        initTextView(new TransactionDetailResponse());
     }
 
     @Override
@@ -78,30 +79,43 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
 
     @OnClick(R.id.ll_credit_detail)
     public void onCreditDetail() {
-        CreditDetailActivity.startIt(mBaseContext,idCredit);
+        CreditDetailActivity.startIt(mBaseContext, idCredit);
     }
 
     @Override
     public void showTransactionDetail(TransactionDetailResponse data) {
-        if (StringUtils.isNotNull(data.goodsName)) {
-            llGoosName.setVisibility(View.VISIBLE);
-            tvGoodsName.setText(data.goodsName);
-        }
+        initTextView(data);
+    }
+
+    private void initTextView(TransactionDetailResponse data) {
         tvCreditNo.setText(data.contractNo);
-        //分期交易详情 根据分期数确定是否分期产品
-        if (data.paymentNum != 0) {
+        //分期产品
+        if (TypeUtlis.getConsumType(creditType) == 1) {
             tvTransactionType.setText("分期总额：");
             tvMoney.setText(data.creditAmount);
             tvPayDate.setText("分期数：");
-            tvDate.setText(data.paymentNum + "元");
+            tvDate.setText(data.paymentNum + "期");
             tvPayStatus.setText("剩余应还本金：");
             tvStatus.setText(data.lastPrincipal + "元");
             llCreditDetail.setVisibility(View.VISIBLE);
-        } else {
-            //一次性交易详情  根据有无商品名称确定是否一次性交易详情，更改显示名称,默认是交易金额
-            if (llGoosName.getVisibility() == View.GONE) {
+            llGoosName.setVisibility(View.VISIBLE);
+            if (StringUtils.isNotNull(data.goodsName)) {
+                tvGoodsName.setText(data.goodsName);
+            } else {
+                tvGoodsName.setText("--");
+            }
+        } else if (TypeUtlis.getConsumType(creditType) == 2 || TypeUtlis.getConsumType(creditType) == 3) {
+            if (TypeUtlis.getConsumType(creditType) == 3) {
                 //随借随还取现交易详情
                 tvTransactionType.setText("取现金额：");
+            } else {
+                //一次性交易详情
+                llGoosName.setVisibility(View.VISIBLE);
+                if (StringUtils.isNotNull(data.goodsName)) {
+                    tvGoodsName.setText(data.goodsName);
+                } else {
+                    tvGoodsName.setText("--");
+                }
             }
             tvMoney.setText(data.creditAmount);
             tvDate.setText(data.dueDate);
