@@ -180,7 +180,7 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
         //刚进来这个fragment时，还款金额为0
         mActivity.setPayMoney(0d);
     }

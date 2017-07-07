@@ -91,7 +91,7 @@ public class MainRepayFragment extends BaseFragment {
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
 
     }
 
