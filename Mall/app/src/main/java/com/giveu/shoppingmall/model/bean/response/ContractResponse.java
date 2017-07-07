@@ -43,6 +43,6 @@ public class ContractResponse extends BaseBean<ContractResponse> {
         public int currentInstalment;
         public String idCredit;
         public String loanDate;
-        public int paymentNum;
+        public String paymentNum;
     }
 }

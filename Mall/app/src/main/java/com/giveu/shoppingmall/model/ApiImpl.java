@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
@@ -278,9 +279,9 @@ public class ApiImpl {
     }
 
     //手机归属地查询
-    public static void goodsCallTrafficsSegment(Activity context, String phone ,BaseRequestAgent.ResponseListener<RechargeResponse> responseListener) {
+    public static void goodsCallTrafficsSegment(Activity context, String phone ,BaseRequestAgent.ResponseListener<SegmentResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone"}, new Object[]{phone});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.goods_callTraffics_segment, RechargeResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.goods_callTraffics_segment, SegmentResponse.class, context, responseListener);
     }
 
     //分期取现月供明细

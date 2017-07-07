@@ -33,8 +33,6 @@ public class ChargeOrderDialog {
     private CheckBox cb_agreement;
     //充值显示的价格（没使用优惠券的时候）
     public String OldPrice;
-    //套餐的面值
-    private String denomination;
     Activity mActivity;
     String paymentType = "即有钱包";//支付方式，默认
     PwdDialog pwdDialog = null;
@@ -48,9 +46,8 @@ public class ChargeOrderDialog {
         initView(contentView);
     }
 
-    public ChargeOrderDialog(Activity activity, String phoneArea, final String rechargeAmount, final String phone, String price, String inputDenomination) {
+    public ChargeOrderDialog(Activity activity, String phoneArea, final String rechargeAmount, final String phone, String price) {
         this.mActivity = activity;
-        denomination = inputDenomination;
 
         //   callsParam = new CallsParam();
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

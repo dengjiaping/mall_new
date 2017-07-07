@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -28,7 +29,10 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
+import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -76,8 +80,8 @@ public class RechargeFragment extends BaseFragment {
 
     private int tabIndex;//0=话费 1=流量
     private boolean isVailable = false;//是否可点击
-    private ArrayList<RechargeResponse.PackageBean> callList;
-    private ArrayList<RechargeResponse.PackageBean> trafficList;
+    private ArrayList<RechargeResponse.PackageBean> productList;
+    private String currentOperator = "";
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,10 +114,10 @@ public class RechargeFragment extends BaseFragment {
 
         gvRecharge.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            //Activity activity, String phoneArea, final String product, final String number, String price, String inputDenomination) {
             public void onItemClick(AdapterView<?> adapterView, View view, final int checkId, long l) {
-//                ChargeOrderDialog dialog = new ChargeOrderDialog(mBaseContext, "广东移动", rechargeAdapter.getItem(checkId).productName, etRecharge.getText().toString(), rechargeAdapter.getItem(checkId).salesPrice, rechargeAdapter.getItem(checkId).denomination);
-//                dialog.showDialog();
+
+                ChargeOrderDialog dialog = new ChargeOrderDialog(mBaseContext, tvMessage.getText().toString(), rechargeAdapter.getItem(checkId).name, etRecharge.getText().toString(), StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice+""));
+                dialog.showDialog();
                 //优惠券
             }
         });
@@ -121,9 +125,8 @@ public class RechargeFragment extends BaseFragment {
 
     @Override
     public void initDataDelay() {
-        callList = new ArrayList<>();
-        trafficList = new ArrayList<>();
-        rechargeAdapter = new LvCommonAdapter<RechargeResponse.PackageBean>(mBaseContext, R.layout.gv_recharge_item, callList) {
+        productList = new ArrayList<>();
+        rechargeAdapter = new LvCommonAdapter<RechargeResponse.PackageBean>(mBaseContext, R.layout.gv_recharge_item, productList) {
             @Override
             protected void convert(ViewHolder viewHolder, RechargeResponse.PackageBean item, int position) {
                 TextView tv1 = viewHolder.getView(R.id.tv_recharge_t1);
@@ -150,9 +153,11 @@ public class RechargeFragment extends BaseFragment {
                 switch (checkId) {
                     case R.id.rb_bill:
                         tabIndex = 0;
+                        showContentData();
                         break;
                     case R.id.rb_flow:
                         tabIndex = 1;
+                        showContentData();
                         break;
                     default:
                         break;
@@ -165,8 +170,10 @@ public class RechargeFragment extends BaseFragment {
             public void onSuccess(RechargeResponse response) {
                 //默认显示中国移动话费充值
                 rechargeResponse = response.data;
-                callList.addAll(response.data.call.cmccs);
-                rechargeAdapter.notifyDataSetChanged();
+                if (CommonUtils.isNotNullOrEmpty(response.data.call.cmccs)) {
+                    productList.addAll(response.data.call.cmccs);
+                    rechargeAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -250,11 +257,12 @@ public class RechargeFragment extends BaseFragment {
         //1表示显示地区 0表示隐藏
         @Override
         public void afterTextChanged(Editable editable) {
+            currentOperator = "";
             if (editable.length() == 13) {
                 String phone = editable.toString().replace(" ", "");
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
                 isVailable = true;
-                checkPhoneType(phone);
+                getPhoneInfo(phone);
             } else {
                 isVailable = false;
                 tvMessage.setText("");
@@ -265,20 +273,69 @@ public class RechargeFragment extends BaseFragment {
 
 
     /**
-     * 校验该手机号运营商
+     * 获取该手机号运营商
      */
-    private void checkPhoneType(String phone) {
-        ApiImpl.goodsCallTrafficsSegment(mBaseContext, phone, new BaseRequestAgent.ResponseListener<RechargeResponse>() {
+    private void getPhoneInfo(String phone) {
+        ApiImpl.goodsCallTrafficsSegment(mBaseContext, phone, new BaseRequestAgent.ResponseListener<SegmentResponse>() {
             @Override
-            public void onSuccess(RechargeResponse response) {
-                changeItemHasPhone(rechargeAdapter.getData());
+            public void onSuccess(SegmentResponse response) {
+                tvMessage.setText(response.data.city + response.data.isp);
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
+                currentOperator = response.data.code;
+                showContentData();
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
+                tvMessage.setText("错误号码");
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
             }
         });
+    }
+
+    /**
+     * 展示流量还是话费，并且区分运营商
+     */
+    private void showContentData() {
+        switch (tabIndex) {
+            case 0:
+                //话费充值
+                //中国移动
+                if ("0".equals(currentOperator)) {
+                    rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                } else if ("1".equals(currentOperator)) {
+                    //中国联通
+                    rechargeAdapter.setData(rechargeResponse.call.cuccs);
+
+                } else if ("2".equals(currentOperator)) {
+                    //中国电信
+                    rechargeAdapter.setData(rechargeResponse.call.ctcs);
+                }
+                break;
+
+            case 1:
+                //流量充值
+                //中国移动
+                if ("0".equals(currentOperator)) {
+                    rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                } else if ("1".equals(currentOperator)) {
+                    //中国联通
+                    rechargeAdapter.setData(rechargeResponse.traffic.cuccs);
+
+                } else if ("2".equals(currentOperator)) {
+                    //中国电信
+                    rechargeAdapter.setData(rechargeResponse.traffic.ctcs);
+                }
+                break;
+        }
+        if (StringUtils.isNull(currentOperator)) {
+            if (tabIndex == 0) {
+                rechargeAdapter.setData(rechargeResponse.call.cmccs);
+            } else {
+                rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+            }
+        }
+        changeItemHasPhone(rechargeAdapter.getData());
     }
 
     //设置gridView的Item是否可点击
@@ -292,9 +349,6 @@ public class RechargeFragment extends BaseFragment {
             } else {//绿色
                 for (RechargeResponse.PackageBean products : data) {
                     products.hasPhone = true;
-                }
-                for (RechargeResponse.PackageBean products : data) {
-                    products.hasPhone = false;
                 }
                 gvRecharge.setEnabled(true);
             }
@@ -332,9 +386,7 @@ public class RechargeFragment extends BaseFragment {
                 etRecharge.setText(sb);
                 etRecharge.setSelection(sb.length());
             }
-
             phone.close();
-
         }
     }
 

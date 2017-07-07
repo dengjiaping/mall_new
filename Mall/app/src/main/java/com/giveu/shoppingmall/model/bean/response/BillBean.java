@@ -19,6 +19,7 @@ public class BillBean {
     public String price;//红包金额
     public String type;//红包类别
     public String numInstalment;//期次
+    public String paymentNum;//期数
 
     @Override
     public String toString() {

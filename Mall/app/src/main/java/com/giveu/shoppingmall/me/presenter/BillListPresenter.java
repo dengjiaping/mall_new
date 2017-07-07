@@ -53,6 +53,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                         contentBean.contractId = contractListBean.contractId;
                                         contentBean.contractNo = contractListBean.contractNo;
                                         contentBean.creditType = contractListBean.creditType;
+                                        contentBean.paymentNum = contractListBean.paymentNum;
                                         contentBean.isWithholding = contractListBean.isWithholding;
                                         contentBean.isOverdue = contractListBean.isOverduce;
                                         contentBean.numInstalment = contractListBean.numInstalment;
@@ -122,6 +123,7 @@ public class BillListPresenter extends BasePresenter<IBillIistView> {
                                 for (BillListResponse.ContractListBean contractListBean : response.data.product.cycleMoney.contractList) {
                                     BillBean contentBean = new BillBean();
                                     contentBean.isTitle = false;
+                                    contentBean.paymentNum = contractListBean.paymentNum;
                                     contentBean.contractId = contractListBean.contractId;
                                     contentBean.contractNo = contractListBean.contractNo;
                                     contentBean.creditType = contractListBean.creditType;
