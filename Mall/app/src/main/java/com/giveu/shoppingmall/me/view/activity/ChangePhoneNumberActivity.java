@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -148,7 +149,7 @@ public class ChangePhoneNumberActivity extends BaseActivity {
 //                    if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
 //                        return;
 //                    }
-                    ApiImpl.updatePhone(mBaseContext, 11413713, phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                    ApiImpl.updatePhone(mBaseContext, LoginHelper.getInstance().getIdPerson(), phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
                         public void onSuccess(BaseBean response) {
                             NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "绑定手机修改成功！\n", "登陆手机号已同步，请通过绑定手机+登陆密码登陆");

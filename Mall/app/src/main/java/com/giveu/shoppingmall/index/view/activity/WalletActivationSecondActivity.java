@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.amap.api.location.AMapLocation;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -18,8 +19,10 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LocationUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.listener.LocationListener;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
@@ -63,7 +66,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
     String name;
     String bankNo;
     String phone;
-
+    private String latitude;
+    private String longitude;
+    LocationUtils locationUtils;//定位方法
     public static void startIt(Activity mActivity, String name, String ident, int idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
@@ -111,10 +116,24 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 buttonCanClick(false);
             }
         });
+
+        locationUtils.setOnLocationListener(new LocationListener() {
+            @Override
+            public void onSuccess(AMapLocation locationResult) {
+                latitude = locationResult.getLatitude() + "";
+                longitude = locationResult.getLongitude() + "";
+            }
+
+            @Override
+            public void onFail(Object o) {
+                ToastUtils.showShortToast("定位失败！");
+            }
+        });
     }
 
     @Override
     public void setData() {
+         locationUtils = new LocationUtils(mBaseContext);
         if (StringUtils.isNotNull(StringUtils.getTextFromView(etBankNo))) {
             etBankNo.setSelection(etBankNo.length());
         }
@@ -204,7 +223,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-                    ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, "106.72", "26.57", orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
+
+                    locationUtils.startLocation();
+                    ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
                             ActivationStatusActivity.startShowResult(mBaseContext, response.data,idPerson);
@@ -271,6 +292,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
         super.onDestroy();
         if (tvSendCode != null) {
             tvSendCode.onDestory();
+        }
+        if(locationUtils != null){
+            locationUtils.destory();
         }
     }
 

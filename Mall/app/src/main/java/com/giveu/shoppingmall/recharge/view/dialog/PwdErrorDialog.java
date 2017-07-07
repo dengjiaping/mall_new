@@ -40,7 +40,7 @@ public class PwdErrorDialog {
         tv_left_errorpwd = (TextView) contentView.findViewById(R.id.tv_left_errorpwd);
         tv_right_errorpwd = (TextView) contentView.findViewById(R.id.tv_right_errorpwd);
 
-        if (times == 3) {
+        if (times == 0) {
             //错误达到3次
             tv_left_errorpwd.setVisibility(View.GONE);
             tv_right_errorpwd.setText("找回交易密码");
@@ -66,7 +66,7 @@ public class PwdErrorDialog {
         tv_right_errorpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (times == 3) {
+                if (times == 0) {
                     //跳转找回交易密码
                     RequestPasswordActivity.startIt(mActivity,true);
                 }

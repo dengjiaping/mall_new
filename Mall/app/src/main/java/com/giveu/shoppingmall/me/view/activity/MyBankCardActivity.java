@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -170,18 +171,26 @@ public class MyBankCardActivity extends BaseActivity {
      *
      * @param id
      */
-    private void setDefaultCard(String id) {
-        ApiImpl.setDefaultCard(mBaseContext, id, 10103773, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    private void setDefaultCard(final String id) {
+        final PwdDialog pwdDialog = new PwdDialog(mBaseContext,PwdDialog.statusType.BANKCARD);
+        pwdDialog.showDialog();
+        //验证成功的监听，拿到返回的code
+        pwdDialog.setOnVerifyPwdListener(new PwdDialog.OnVerifyPwdListener() {
             @Override
-            public void onSuccess(BaseBean response) {
-                //设置默认代扣卡之后刷新列表
-                setData();
-                ToastUtils.showShortToast("设置默认代扣卡成功！");
-            }
+            public void onSuccess(String code) {
+                ApiImpl.setDefaultCard(mBaseContext,code, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                    @Override
+                    public void onSuccess(BaseBean response) {
+                        //设置默认代扣卡之后刷新列表
+                        setData();
+                        ToastUtils.showShortToast("设置默认代扣卡成功！");
+                    }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                });
             }
         });
     }
@@ -211,7 +220,7 @@ public class MyBankCardActivity extends BaseActivity {
      * @param position
      */
     public void deleteBankCard(String id, final int position, final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter) {
-        ApiImpl.deleteBankInfo(mBaseContext, id, 10103773, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteBankInfo(mBaseContext, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (bankListAdapter != null && bankListAdapter.getCount() > 0) {
@@ -231,7 +240,7 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getBankCardInfo(mBaseContext, 10103773, new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
+        ApiImpl.getBankCardInfo(mBaseContext, 11413713, new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
             @Override
             public void onSuccess(BankCardListResponse response) {
                 bankInfoList = response.data.bankInfoList;

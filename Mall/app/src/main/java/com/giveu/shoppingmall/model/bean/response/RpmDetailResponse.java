@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class RpmDetailResponse extends BaseBean<List<RpmDetailResponse>> {
-    public int monthPay;
+    public double monthPay;
     public int repayNum;
     public String repayDate;
 }

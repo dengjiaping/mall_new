@@ -34,7 +34,6 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -74,6 +74,8 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvDrawMoney;
     @BindView(R.id.tv_cost)
     TextView tvCost;
+    @BindView(R.id.ll_show_data)
+    LinearLayout llShowData;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     List<ProductResponse> data;
@@ -222,7 +224,7 @@ public class CashTypeActivity extends BaseActivity {
                             if (checkId == i) {
                                 stagingTypeAdapter.getItem(i).isChecked = true;
                                 idProduct = stagingTypeAdapter.getItem(i).idProduct;
-                                showLoanAmount(idProduct, (int)chooseQuota);
+                                showLoanAmount(idProduct, (int) chooseQuota);
 
                             } else {
                                 stagingTypeAdapter.getItem(i).isChecked = false;
@@ -245,12 +247,11 @@ public class CashTypeActivity extends BaseActivity {
         ApiImpl.repayCost(mBaseContext, idProduct, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
             @Override
             public void onSuccess(RepayCostResponse response) {
-                ToastUtils.showShortToast("成功！");
                 if (response.data != null) {
                     RepayCostResponse product = response.data;
                     tvDrawMoney.setText("提款金额：" + product.drawMoney);
-                    tvCost.setText("（含咨询费￥" + product.drawMoney + "）");
-                    tvMonthlyPayment.setText("月供：" + product.monthPay + "元");
+                    tvCost.setText("（含咨询费￥" + product.cost + "）");
+                    tvMonthlyPayment.setText("月供：" + (int) product.monthPay + "元");
                 }
             }
 
@@ -283,6 +284,7 @@ public class CashTypeActivity extends BaseActivity {
         //  chooseQuota = 4000;
         //   etInputAmount.setText(String.valueOf(chooseQuota));
         if (CommonUtils.isNullOrEmpty(productList)) {
+            //获取产品数据（分期数）
             ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getGlobleLimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {
                 @Override
                 public void onSuccess(ProductResponse response) {
@@ -319,16 +321,16 @@ public class CashTypeActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
-                ApiImpl.rpmDetail(mBaseContext, idProduct, (int)chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                ApiImpl.rpmDetail(mBaseContext, idProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
-                        MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext,response.data);
+                        MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext, response.data);
                         monthlyDetailsDialog.showDialog();
                     }
 
                     @Override
                     public void onError(BaseBean errorBean) {
-
+                        CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
 
@@ -374,19 +376,42 @@ public class CashTypeActivity extends BaseActivity {
 
             }
         }
+        int localIdProduct = 0;
         stagingTypeAdapter.setData(data);
         List<ProductResponse> products = stagingTypeAdapter.getData();
+        ProductResponse p = null;
+        //chooseQuota>3000
+        llShowData.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
+            if (CommonUtils.isNullOrEmpty(products)) {
+                return;
+            }
             //仅支持取现分期
             products.remove(0);
+            p = products.get(stagingTypeAdapter.getCount() - 1);
+            if (p != null) {
+                localIdProduct = p.idProduct;
+            }
+            showLoanAmount(localIdProduct, (int) chooseQuota);
         } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
+            if (CommonUtils.isNullOrEmpty(products)) {
+                return;
+            }
             //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
             products.add(noStageProduct);
             products.get(products.size() - 1).isShow = true;
+            products.get(products.size() - 2).isChecked = true;
+            p = products.get(stagingTypeAdapter.getCount() - 2);
+            if (p != null) {
+                localIdProduct = p.idProduct;
+            }
+            showLoanAmount(localIdProduct, (int) chooseQuota);
         } else {
             //仅支持随借随还
             products.add(noStageProduct);
             products.get(0).isShow = true;
+            products.get(0).isChecked = true;
+            llShowData.setVisibility(View.GONE);
         }
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);
@@ -435,4 +460,10 @@ public class CashTypeActivity extends BaseActivity {
         myGridView.setLayoutParams(params);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

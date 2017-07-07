@@ -312,8 +312,8 @@ public class StringUtils {
         return D;
     }
     //解析数据传参类型转换异常捕获（转int）
-    public static double string2Int(String intStr) {
-        double I = 0;
+    public static int string2Int(String intStr) {
+        int I = 0;
         try {
             I = Integer.parseInt(intStr);
         } catch (Exception e) {

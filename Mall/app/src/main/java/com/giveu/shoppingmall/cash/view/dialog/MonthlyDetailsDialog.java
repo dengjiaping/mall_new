@@ -58,6 +58,7 @@ public class MonthlyDetailsDialog {
     private void initView(View convertView) {
         tv_commit = (ClickEnabledTextView) convertView.findViewById(R.id.tv_commit);
         lv_monthly_details = (ListView) convertView.findViewById(R.id.lv_monthly_details);
+        tv_commit.setBackgroundResource(R.drawable.selector_login);
 
         monthlyDetailsAdapter = new LvCommonAdapter<RpmDetailResponse>(mActivity, R.layout.lv_monthly_details_item, rpmDetailList) {
             @Override
@@ -65,7 +66,7 @@ public class MonthlyDetailsDialog {
                 TextView tv_stage_number =viewHolder.getView(R.id.tv_stage_number);
                 TextView tv_price =viewHolder.getView(R.id.tv_price);
                 TextView tv_date =viewHolder.getView(R.id.tv_date);
-                tv_stage_number.setText(String.valueOf(item.repayNum));
+                tv_stage_number.setText("第"+String.valueOf(item.repayNum)+"期");
                 tv_price.setText(String.valueOf(item.monthPay));
                 tv_date.setText(item.repayDate);
             }

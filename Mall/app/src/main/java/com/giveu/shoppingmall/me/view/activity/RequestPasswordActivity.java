@@ -74,7 +74,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             etPhone.setText(LoginHelper.getInstance().getPhone());
             etPhone.setSelection(etPhone.getText().toString().length());
             etVertificationCode.requestFocus();
-            tvSendCode.performClick();
+           // tvSendCode.performClick();
         }
     }
 

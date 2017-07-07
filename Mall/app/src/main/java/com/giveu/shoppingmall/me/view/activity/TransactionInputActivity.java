@@ -3,15 +3,18 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.MD5;
+import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -48,21 +51,38 @@ public class TransactionInputActivity extends BaseActivity {
                 if(result.length() == 6){
                     //交易密码MD5加密
                     String tradPwd = MD5.MD5Encode(result);
-                    if ( !TextUtils.isEmpty(tradPwd)){
+                    if (StringUtils.isNotNull(tradPwd)){
                         tradPwd = tradPwd.toLowerCase();
-                    }
-                    ApiImpl.verifyPayPwd(mBaseContext,11413713, tradPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                        @Override
-                        public void onSuccess(BaseBean response) {
-                            CommonUtils.closeSoftKeyBoard(mBaseContext);
-                            ChangePhoneNumberActivity.startIt(mBaseContext, response.data.toString());
-                        }
+                        ApiImpl.verifyPayPwd(mBaseContext, "11413713", tradPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                            @Override
+                            public void onSuccess(PayPwdResponse response) {
+                                if (response.data != null) {
+                                    PayPwdResponse pwdResponse = response.data;
+                                    if (pwdResponse.status) {
+                                        //密码正确
+                                        CommonUtils.closeSoftKeyBoard(mBaseContext);
+                                        ChangePhoneNumberActivity.startIt(mBaseContext, response.data.code);
+                                    } else {
+                                        //TODO: 1-2 重试密码 3 冻结密码需要找回密码
+                                        PwdErrorDialog errorDialog = new PwdErrorDialog();
+                                        errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
+                                        inputViewPwd.clearResult();
+                                    }
 
-                        @Override
-                        public void onError(BaseBean errorBean) {
-                            CommonLoadingView.showErrorToast(errorBean);
-                        }
-                    });
+                                    CommonUtils.closeSoftKeyBoard(mBaseContext);
+                                }
+                            }
+
+                            @Override
+                            public void onError(BaseBean errorBean) {
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
+                        });
+                    }else{
+                        ToastUtils.showShortToast("请输入交易密码！");
+                    }
+
+
 
                 }
             }

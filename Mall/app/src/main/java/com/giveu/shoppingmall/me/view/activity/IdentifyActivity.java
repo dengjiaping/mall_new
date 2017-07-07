@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.me.presenter.IdentifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IIdentifyView;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
@@ -88,6 +89,8 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
                             String smsCode = getIntent().getStringExtra("smsCode");
                             TransactionPwdActivity.startItWithCode(mBaseContext, mobile, smsCode);
                         }
+                    }else{
+                        ToastUtils.showShortToast("姓名身份证验证失败！");
                     }
                 }
 
