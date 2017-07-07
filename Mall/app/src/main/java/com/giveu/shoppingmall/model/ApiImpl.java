@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
@@ -27,6 +28,7 @@ import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.Map;
@@ -250,6 +252,11 @@ public class ApiImpl {
     public static void setDefaultCard(Activity context, String id, int idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, idPerson});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_setDefaultCard, BaseBean.class, context, responseListener);
+    }
+    //初始化金融产品接口
+    public static void initProduct(Activity context,String availableCyLimit, BaseRequestAgent.ResponseListener<ProductResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"availableCyLimit"}, new Object[]{StringUtils.string2Double(availableCyLimit)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_getProducts, ProductResponse.class, context, responseListener);
     }
 
     //分期产品取现费用计算

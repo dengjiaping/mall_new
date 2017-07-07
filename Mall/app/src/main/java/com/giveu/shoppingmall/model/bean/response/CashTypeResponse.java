@@ -5,6 +5,7 @@ package com.giveu.shoppingmall.model.bean.response;
  */
 
 public class CashTypeResponse {
+    public String idProduct;//期数
     public String month;//期数
     public boolean isChecked = false;//是否选中
     public boolean isShow = false;//是否显示费率

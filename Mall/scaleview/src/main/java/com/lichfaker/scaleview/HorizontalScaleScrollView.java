@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 /**
  * 水平滚动刻度尺
@@ -155,7 +154,6 @@ public class HorizontalScaleScrollView extends BaseScaleView {
                 mTempScale = mCountScale;
                 return true;
             case MotionEvent.ACTION_UP:
-                Toast.makeText(context, "停下", Toast.LENGTH_SHORT).show();
                 if (mCountScale < mMin) mCountScale = mMin;
                 if (mCountScale > mMax) mCountScale = mMax;
                 int finalX = (mCountScale - mMidCountScale) * mScaleMargin;
