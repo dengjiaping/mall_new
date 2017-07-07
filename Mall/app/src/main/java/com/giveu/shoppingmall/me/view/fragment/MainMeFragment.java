@@ -106,7 +106,7 @@ public class MainMeFragment extends BaseFragment {
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
 
     }
 

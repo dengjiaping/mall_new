@@ -134,7 +134,7 @@ public class RechargeFragment extends BaseFragment {
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
 
         rechargeResponse = new RechargeResponse();
         RechargeResponse.ListBean.ProductsBean productsBean1 = new RechargeResponse.ListBean.ProductsBean("1", "30元", "30");
