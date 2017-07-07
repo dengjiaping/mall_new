@@ -300,4 +300,25 @@ public class StringUtils {
         }
         return new String(c);
     }
+
+    //解析数据传参类型转换异常捕获（转double）
+    public static double string2Double(String doubleStr) {
+        double D = 0;
+        try {
+            D = Double.parseDouble(doubleStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return D;
+    }
+    //解析数据传参类型转换异常捕获（转int）
+    public static double string2Int(String intStr) {
+        double I = 0;
+        try {
+            I = Integer.parseInt(intStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return I;
+    }
 }

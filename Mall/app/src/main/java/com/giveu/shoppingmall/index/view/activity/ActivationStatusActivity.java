@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
@@ -26,33 +26,46 @@ public class ActivationStatusActivity extends BaseActivity {
     TextView tvSetTransactionPwd;
     @BindView(R.id.iv_status)
     ImageView ivStatus;
-    @BindView(R.id.tv_status)
-    TextView tvStatus;
     @BindView(R.id.tv_hint_bottom)
     TextView tvHintBottom;
     @BindView(R.id.tv_hint_mid)
     TextView tvHintMid;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
-    @BindView(R.id.tv_wallet_total_amount)
-    TextView tvWalletTotalAmount;
-    @BindView(R.id.tv_withdrawals_amount)
-    TextView tvWithdrawalsAmount;
-    @BindView(R.id.tv_consume_amount)
-    TextView tvConsumeAmount;
+    @BindView(R.id.tv_globle_limit)
+    TextView tvGlobleLimit;
+    @BindView(R.id.tv_cy_limit)
+    TextView tvCyLimit;
+    @BindView(R.id.tv_pos_limit)
+    TextView tvPosLimit;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    public final int BACK = 1;
+    public final int SETPWD = 2;
 
-    public static void startIt(Activity mActivity, String status, String walletTotalAmount, String withdrawalsAmount, String consumeAmount, String midHint) {
+    //钱包激活设置交易密码
+    public static void startSetPwd(Activity mActivity) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        //默认钱包激活跳转过来，100是设置密码跳转
-        intent.putExtra("status", status);
-        //总额度
-        intent.putExtra("walletTotalAmount", walletTotalAmount);
-        //提现额度
-        intent.putExtra("withdrawalsAmount", withdrawalsAmount);
-        //消费额度
-        intent.putExtra("consumeAmount", consumeAmount);
-        //额度为0的提示语
-        intent.putExtra("midHint", midHint);
+        mActivity.startActivity(intent);
+    }
+
+    //显示结果
+    public static void startShowResult(Activity mActivity, WalletActivationResponse response, int idPerson) {
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        if (response != null) {
+            intent.putExtra("status", response.result);
+            if (response.data != null) {
+                //总额度
+                intent.putExtra("globleLimit", response.data.globleLimit);
+                //提现额度
+                intent.putExtra("cyLimit", response.data.cyLimit);
+                //消费额度
+                intent.putExtra("posLimit", response.data.posLimit);
+                //额度为0的提示语
+                intent.putExtra("midHint", response.data.lab);
+            }
+        }
+        intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
 
@@ -62,43 +75,28 @@ public class ActivationStatusActivity extends BaseActivity {
         baseLayout.setTitle("钱包激活");
     }
 
-    @OnClick(R.id.tv_set_transaction_pwd)
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        switch (StringUtils.getTextFromView(tvSetTransactionPwd)) {
-            case "设置交易密码":
-                TransactionPwdActivity.startIt(mBaseContext);
-                break;
-            case "返回":
-                 MainActivity.startIt(mBaseContext);
-                break;
-        }
-    }
 
     @Override
     public void setListener() {
         super.setListener();
-//防止快速点击
-        if (CommonUtils.isFastDoubleClick(R.id.tv_set_transaction_pwd)) {
-            return;
-        }
-        switch (StringUtils.getTextFromView(tvSetTransactionPwd)) {
-            case "设置交易密码":
-                tvSetTransactionPwd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TransactionPwdActivity.startIt(mBaseContext);
-                    }
-                });
+    }
+
+    @OnClick(R.id.tv_set_transaction_pwd)
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        int tag = (int) view.getTag();
+        switch (tag) {
+            case SETPWD:
+                //设置交易密码
+                int idPerson = getIntent().getIntExtra("idPerson", 0);
+                TransactionPwdActivity.startIt(mBaseContext, idPerson);
+
                 break;
-            case "返回":
-                tvSetTransactionPwd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity.startIt(mBaseContext);
-                    }
-                });
+            case BACK:
+                //返回
+                MainActivity.startIt(mBaseContext);
+
                 break;
         }
     }
@@ -106,111 +104,44 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
-        String walletTotalAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("walletTotalAmount"));
-        String withdrawalsAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("withdrawalsAmount"));
-        String consumeAmount = StringUtils.nullToEmptyString(getIntent().getStringExtra("consumeAmount"));
+        double globleLimit = getIntent().getDoubleExtra("globleLimit", 0.00);
+        double cyLimit = getIntent().getDoubleExtra("cyLimit", 0.00);
+        double posLimit = getIntent().getDoubleExtra("posLimit", 0.00);
         String midHint = StringUtils.nullToEmptyString(getIntent().getStringExtra("midHint"));
+        // status = null;
         switch (status) {
-            case "100":
+            case "success":
+                //激活成功
+                llDate.setVisibility(View.VISIBLE);
+                tvHintMid.setVisibility(View.GONE);
+                tvGlobleLimit.setText(String.valueOf(globleLimit));
+                tvCyLimit.setText(String.valueOf(cyLimit));
+                tvPosLimit.setText(String.valueOf(posLimit));
+                ivStatus.setImageResource(R.drawable.ic_activation_success);
+                tvStatus.setText("激活成功");
+                tvSetTransactionPwd.setText("设置交易密码");
+                tvSetTransactionPwd.setTag(SETPWD);
+                break;
+            case "fail":
+                // 激活失败，无额度，含中间提示语
+                llDate.setVisibility(View.GONE);
+                tvHintMid.setVisibility(View.VISIBLE);
+                ivStatus.setImageResource(R.drawable.ic_activation_fail);
+                tvStatus.setText("激活失败");
+                tvHintMid.setText(midHint);
+                tvSetTransactionPwd.setText("重新激活钱包");
+                break;
+            default:
                 //设置完交易密码后跳转的设置成功页
                 tvHintBottom.setVisibility(View.GONE);
                 llDate.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
-                tvStatus.setVisibility(View.GONE);
-                tvHintMid.setText(midHint);
+                tvStatus.setText("设置成功");
+                tvHintMid.setText("设置成功！请牢记你的交易密码");
                 tvSetTransactionPwd.setText("返回");
-                break;
-            default:
-                //激活成功且有授信额度
-                tvStatus.setVisibility(View.VISIBLE);
-                if (StringUtils.isNull(midHint)) {
-                    llDate.setVisibility(View.VISIBLE);
-                    tvHintMid.setVisibility(View.GONE);
-                    tvWalletTotalAmount.setText(walletTotalAmount);
-                    tvWithdrawalsAmount.setText(withdrawalsAmount);
-                    tvConsumeAmount.setText(consumeAmount);
-                    ivStatus.setImageResource(R.drawable.ic_activation_success);
-                    tvStatus.setText("激活成功");
-                    tvSetTransactionPwd.setText("设置交易密码");
-                } else {
-                    // 激活失败，无额度，含中间提示语
-                    llDate.setVisibility(View.GONE);
-                    tvHintMid.setVisibility(View.VISIBLE);
-                    ivStatus.setImageResource(R.drawable.ic_activation_fail);
-                    tvStatus.setText("激活失败");
-                    tvHintMid.setText(midHint);
-                    tvSetTransactionPwd.setText("重新激活钱包");
-                }
+                tvSetTransactionPwd.setTag(BACK);
                 break;
         }
-
-//
-//        switch (status) {
-//            //1、激活成功，有额度，不含下方提示语
-//            case "1":
-//                //激活成功且有授信额度
-//                if(!"".equals(midHint)){
-//
-//                }
-//                tvHintBottom.setVisibility(View.GONE);
-//                llDate.setVisibility(View.VISIBLE);
-//                tvHintMid.setVisibility(View.GONE);
-//                tvWalletTotalAmount.setText(walletTotalAmount);
-//                tvWithdrawalsAmount.setText(withdrawalsAmount);
-//                tvConsumeAmount.setText(consumeAmount);
-//                ivStatus.setImageResource(R.drawable.ic_activation_success);
-//                tvStatus.setText("激活成功");
-//                tvSetTransactionPwd.setText("设置交易密码");
-//                break;
-//
-//            //2、激活成功，有额度，含下方提示语
-//            case "2":
-//                //激活成功且可用额度为0
-//            case "3":
-//                //激活成功且取现额度为0
-//            case "4":
-//                //激活成功且消费额度为0
-//                tvHintBottom.setVisibility(View.VISIBLE);
-//                llDate.setVisibility(View.VISIBLE);
-//                tvHintMid.setVisibility(View.GONE);
-//                tvWalletTotalAmount.setText("0");
-//                tvWithdrawalsAmount.setText("0");
-//                tvConsumeAmount.setText("0");
-//                ivStatus.setImageResource(R.drawable.ic_activation_success);
-//                tvStatus.setText("激活成功");
-//                tvHintBottom.setText(bottomHint);
-//                tvSetTransactionPwd.setText("设置交易密码");
-//                break;
-//
-//            //3、激活失败，无额度，含中间提示语
-//            case "5":
-//                //身份验证不通过
-//            case "6":
-//                //身份证/手机号格式错误
-//            case "7":
-//                //激活失败
-//            case "8":
-//                //激活失败次数>=3
-//            case "9":
-//                //激活号码与登录号码不一致
-//                tvHintBottom.setVisibility(View.GONE);
-//                llDate.setVisibility(View.GONE);
-//                tvHintMid.setVisibility(View.VISIBLE);
-//                ivStatus.setImageResource(R.drawable.ic_activation_fail);
-//                tvStatus.setText("激活失败");
-//                tvHintMid.setText(midHint);
-//                tvSetTransactionPwd.setText("重新激活钱包");
-//                break;
-//            case "100":
-//                //设置完交易密码后跳转的设置成功页
-//                tvHintBottom.setVisibility(View.GONE);
-//                llDate.setVisibility(View.GONE);
-//                tvHintMid.setVisibility(View.VISIBLE);
-//                ivStatus.setImageResource(R.drawable.ic_activation_success);
-//                tvStatus.setText("设置成功");
-//                tvHintMid.setText(midHint);
-//                tvSetTransactionPwd.setText("返回");
-//        }
     }
 }

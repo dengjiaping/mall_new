@@ -49,6 +49,8 @@ public interface ApiUrl {
     String personCenter_account_activateWallet = BASE_URL + "personCenter/account/activateWallet";
     //修改手机号
     String personCenter_account_updatePhone = BASE_URL + "personCenter/account/updatePhone";
+    //设置(钱包激活)交易密码
+    String personCenter_account_setPayPwd = BASE_URL + "personCenter/account/setPayPwd";
     //校验交易密码
     String personCenter_account_verifyPayPwd = BASE_URL + "personCenter/account/verifyPayPwd";
     //设置（重置）交易密码
@@ -72,11 +74,15 @@ public interface ApiUrl {
     //获取用户信息
     String personCenter_account_getUserInfo = BASE_URL + "personCenter/account/getUserInfo";
     //分期产品取现费用计算
-    String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repayCost";
+    String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repaycost";
     //随借随还取现费用计算
     String personCenter_enchashment_enchashment = BASE_URL + "personCenter/enchashment/enchashment";
     //话费流量充值产品
     String goods_callTraffics = BASE_URL + "goods/callTraffics";
     //手机归属地查询
     String goods_callTraffics_segment = BASE_URL + "goods/callTraffics/segment";
+    //初始化金融产品接口
+    String personCenter_enchashment_getProducts = BASE_URL + "personCenter/enchashment/getProducts";
+    //分期取现月供明细
+    String personCenter_enchashment_rpmDetail = BASE_URL + "personCenter/enchashment/rpmDetail";
 }

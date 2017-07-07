@@ -10,6 +10,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -64,11 +65,6 @@ public class ChangePhoneNumberActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 buttonCanClick(false);
-//                if(s.length() == 11){
-//                    tvSendCode.setTextColor(getResources().getColor(R.color.title_color));
-//                }else{
-//                    tvSendCode.setTextColor(getResources().getColor(R.color.grey_a5a5a5));
-//                }
             }
         });
 
@@ -152,10 +148,16 @@ public class ChangePhoneNumberActivity extends BaseActivity {
 //                    if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
 //                        return;
 //                    }
-                    ApiImpl.updatePhone(mBaseContext, "14703507", phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                    ApiImpl.updatePhone(mBaseContext, 11413713, phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
                         public void onSuccess(BaseBean response) {
                             NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "绑定手机修改成功！\n", "登陆手机号已同步，请通过绑定手机+登陆密码登陆");
+                            dialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                @Override
+                                public void onDismiss() {
+                                    MainActivity.startIt(mBaseContext);
+                                }
+                            });
                             dialog.showDialog();
                         }
 

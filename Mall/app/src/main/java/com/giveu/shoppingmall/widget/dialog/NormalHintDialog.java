@@ -59,8 +59,21 @@ public class NormalHintDialog {
         tvEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(null != listener){
+                    listener.onDismiss();
+                }
                 mDialog.dismiss();
             }
         });
+    }
+
+    //窗口关闭监听
+    public interface OnDialogDismissListener{
+        void onDismiss();
+    }
+
+    private OnDialogDismissListener listener;
+    public void setOnDialogDismissListener(OnDialogDismissListener listener) {
+        this.listener = listener;
     }
 }

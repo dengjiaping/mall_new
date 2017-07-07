@@ -12,10 +12,9 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.model.bean.response.MonthlyDetailsResponse;
+import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,9 +28,10 @@ public class MonthlyDetailsDialog {
     private Activity mActivity;
     private ListView lv_monthly_details;
     private ClickEnabledTextView tv_commit;
-    LvCommonAdapter<MonthlyDetailsResponse> monthlyDetailsAdapter;
-
-    public MonthlyDetailsDialog(Activity mActivity) {
+    LvCommonAdapter<RpmDetailResponse> monthlyDetailsAdapter;
+    List<RpmDetailResponse> rpmDetailList;
+    public MonthlyDetailsDialog(Activity mActivity, List<RpmDetailResponse> rpmDetailList) {
+        this.rpmDetailList = rpmDetailList;
         this.mActivity = mActivity;
     }
 
@@ -58,25 +58,16 @@ public class MonthlyDetailsDialog {
     private void initView(View convertView) {
         tv_commit = (ClickEnabledTextView) convertView.findViewById(R.id.tv_commit);
         lv_monthly_details = (ListView) convertView.findViewById(R.id.lv_monthly_details);
-        MonthlyDetailsResponse m1 = new MonthlyDetailsResponse("第一期","200.00","2017/06/29");
-        List<MonthlyDetailsResponse> data = new ArrayList<>();
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        data.add(m1);
-        monthlyDetailsAdapter = new LvCommonAdapter<MonthlyDetailsResponse>(mActivity, R.layout.lv_monthly_details_item, data) {
+
+        monthlyDetailsAdapter = new LvCommonAdapter<RpmDetailResponse>(mActivity, R.layout.lv_monthly_details_item, rpmDetailList) {
             @Override
-            protected void convert(ViewHolder viewHolder, MonthlyDetailsResponse item, int position) {
+            protected void convert(ViewHolder viewHolder, RpmDetailResponse item, int position) {
                 TextView tv_stage_number =viewHolder.getView(R.id.tv_stage_number);
                 TextView tv_price =viewHolder.getView(R.id.tv_price);
                 TextView tv_date =viewHolder.getView(R.id.tv_date);
-                tv_stage_number.setText(item.stageNumber);
-                tv_price.setText(item.price);
-                tv_date.setText(item.date);
+                tv_stage_number.setText(String.valueOf(item.repayNum));
+                tv_price.setText(String.valueOf(item.monthPay));
+                tv_date.setText(item.repayDate);
             }
         };
         lv_monthly_details.setAdapter(monthlyDetailsAdapter);

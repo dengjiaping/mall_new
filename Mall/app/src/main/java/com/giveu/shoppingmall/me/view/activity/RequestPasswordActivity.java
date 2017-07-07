@@ -127,7 +127,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
                     if (isForTrade) {
                         //交易密码
-                        presenter.sendSMSCode(etPhone.getText().toString(), "activateWallet");
+                        presenter.sendSMSCode(etPhone.getText().toString(), "resetPayPwd");
                     } else {
                         //登录密码
                         presenter.sendSMSCode(etPhone.getText().toString(), "findLoginPwd");
@@ -176,8 +176,8 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
 
     @Override
     public void skipToIdentify(String randCode) {
-        //找回登录密码，钱包资质用户跳转至身份证填写
-        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), isForTrade);
+        //找回密码，钱包资质用户跳转至身份证填写
+        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), etVertificationCode.getText().toString(), isForTrade);
     }
 
     @Override

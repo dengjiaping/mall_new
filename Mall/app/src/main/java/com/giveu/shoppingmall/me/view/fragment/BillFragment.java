@@ -149,6 +149,11 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         }
     }
 
+    @Override
+    public void initDataDelay() {
+
+    }
+
     public boolean canClick() {
         if (payMoney <= 0) {
             tvConfirm.setBackgroundResource(R.drawable.shape_grey_without_corner);
@@ -252,10 +257,6 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         } else {
             baseLayout.showEmpty(144, 62, "抱歉，没有账单哦");
         }
-    }
-
-    @Override
-    public void initWithDataDelay() {
     }
 
     @Override

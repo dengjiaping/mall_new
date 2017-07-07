@@ -64,7 +64,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     String bankNo;
     String phone;
 
-    public static void startIt(Activity mActivity, String name, String ident, int idPerson, String bankNo,String phone) {
+    public static void startIt(Activity mActivity, String name, String ident, int idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("ident", ident);
@@ -85,9 +85,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         name = getIntent().getStringExtra("name");
         bankNo = getIntent().getStringExtra("bankNo");
         phone = getIntent().getStringExtra("phone");
-        if (StringUtils.isNotNull(StringUtils.getTextFromView(etBankNo))) {
-            etBankNo.setSelection(etBankNo.length());
-        }
+
         if (StringUtils.isNotNull(bankNo)) {
             etBankNo.setText(bankNo);
         }
@@ -104,8 +102,8 @@ public class WalletActivationSecondActivity extends BaseActivity {
         editTextListener(etPhone, ivPhone);
         editTextListener(etCode, ivCode);
         editTextListener(etBankNo, ivBankNo);
-        showPhoneTextColor(ivPhone, etPhone,StringUtils.getTextFromView(etPhone));
-        showPhoneTextColor(ivBankNo, etBankNo,StringUtils.getTextFromView(etBankNo));
+        showPhoneTextColor(ivPhone, etPhone, StringUtils.getTextFromView(etPhone));
+        showPhoneTextColor(ivBankNo, etBankNo, StringUtils.getTextFromView(etBankNo));
 
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -117,7 +115,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
 
     @Override
     public void setData() {
-
+        if (StringUtils.isNotNull(StringUtils.getTextFromView(etBankNo))) {
+            etBankNo.setSelection(etBankNo.length());
+        }
     }
 
     /**
@@ -130,16 +130,17 @@ public class WalletActivationSecondActivity extends BaseActivity {
         editText.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                showPhoneTextColor(imageView, editText,s.toString());
+                showPhoneTextColor(imageView, editText, s.toString());
             }
         });
     }
 
     /**
      * 银行卡、手机号从上一个页面带过来的颜色逻辑处理
+     *
      * @param phone
      */
-    public void showPhoneTextColor(ImageView iv,final EditText editText,String phone){
+    public void showPhoneTextColor(ImageView iv, final EditText editText, String phone) {
         if (phone.length() > 0) {
             iv.setImageResource(R.drawable.ic_pen);
         } else {
@@ -193,7 +194,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                 }
                             }
                         });
-                        ToastUtils.showShortToast("成功！");
                     }
 
                     @Override
@@ -207,11 +207,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, "106.72", "26.57", orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
-                            ToastUtils.showShortToast("激活成功！");
-                            //TODO: 错误状态码未确定 ，先不跳转
-//                            if (response != null) {
-//                                ActivationStatusActivity.startIt(mBaseContext,"", response.globleLimit+"", response.cyLimit+"", response.posLimit+"", response.lab);
-//                            }
+                            ActivationStatusActivity.startShowResult(mBaseContext, response.data,idPerson);
                         }
 
                         @Override
@@ -234,7 +230,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
      */
     private void buttonCanClick(boolean showToast) {
         tvActivation.setClickEnabled(false);
-
         String phone = StringUtils.getTextFromView(etPhone);
         String bankNo = StringUtils.getTextFromView(etBankNo);
 

@@ -32,6 +32,7 @@ public class TransactionPwdActivity extends BaseActivity {
     String firstPwd;
     @BindView(R.id.input_view_pwd)
     PassWordInputView inputViewPwd;
+    int idPerson;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -40,9 +41,22 @@ public class TransactionPwdActivity extends BaseActivity {
         CommonUtils.openSoftKeyBoard(mBaseContext);
     }
 
+    public static void startIt(Activity mActivity, int idPerson) {
+        Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
+        intent.putExtra("idPerson", idPerson);
+        mActivity.startActivity(intent);
+    }
+
+    public static void startItWithCode(Activity mActivity, String phone, String smsCode) {
+        Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
+        intent.putExtra("phone", phone);
+        intent.putExtra("smsCode", smsCode);
+        mActivity.startActivity(intent);
+    }
+
     @Override
     public void setData() {
-
+        idPerson = getIntent().getIntExtra("idPerson", 0);
     }
 
     public void setListener() {
@@ -63,19 +77,38 @@ public class TransactionPwdActivity extends BaseActivity {
                             if (!TextUtils.isEmpty(confirmPwd)) {
                                 confirmPwd = confirmPwd.toLowerCase();
                             }
-                            ApiImpl.resetPayPwd(mBaseContext, confirmPwd, "14703507", newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                                @Override
-                                public void onSuccess(BaseBean response) {
-                                    ActivationStatusActivity.startIt(mBaseContext, "100", null, null, null, "设置成功！请牢记你的交易密码");
-
+                            String phone = getIntent().getStringExtra("phone");
+                            String smsCode = getIntent().getStringExtra("smsCode");
+                            if (StringUtils.isNotNull(phone)) {
+                                //找回交易密码
+                                if (StringUtils.isNull(smsCode)) {
+                                    return;
                                 }
+                                ApiImpl.resetPayPwd(mBaseContext, confirmPwd, 11413713, newPwd, phone, smsCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                    @Override
+                                    public void onSuccess(BaseBean response) {
+                                        ActivationStatusActivity.startSetPwd(mBaseContext);
+                                    }
 
-                                @Override
-                                public void onError(BaseBean errorBean) {
-                                    CommonLoadingView.showErrorToast(errorBean);
-                                }
-                            });
+                                    @Override
+                                    public void onError(BaseBean errorBean) {
+                                        CommonLoadingView.showErrorToast(errorBean);
+                                    }
+                                });
+                            } else {
+                                //激活钱包，设置交易密码
+                                ApiImpl.setPayPwd(mBaseContext, confirmPwd, 11413713, newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                    @Override
+                                    public void onSuccess(BaseBean response) {
+                                        ActivationStatusActivity.startSetPwd(mBaseContext);
+                                    }
 
+                                    @Override
+                                    public void onError(BaseBean errorBean) {
+                                        CommonLoadingView.showErrorToast(errorBean);
+                                    }
+                                });
+                            }
                         } else {
                             ToastUtils.showShortToast("两次输入的密码不一致！");
                         }
@@ -90,9 +123,5 @@ public class TransactionPwdActivity extends BaseActivity {
         });
     }
 
-    public static void startIt(Activity mActivity) {
-        Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
-        mActivity.startActivity(intent);
-    }
 
 }

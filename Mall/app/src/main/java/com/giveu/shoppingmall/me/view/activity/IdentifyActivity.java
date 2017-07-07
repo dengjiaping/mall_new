@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.IdentifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IIdentifyView;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
@@ -37,11 +38,12 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     private IdentifyPresenter presenter;
     private boolean isForTrade;//是否找回交易密码,false为找回登录密码
 
-    public static void startIt(Activity activity, String randCode, String mobile, boolean isForTrade) {
+    public static void startIt(Activity activity, String randCode, String mobile, String smsCode, boolean isForTrade) {
         Intent intent = new Intent(activity, IdentifyActivity.class);
         intent.putExtra("mobile", mobile);
         intent.putExtra("randCode", randCode);
         intent.putExtra("isForTrade", isForTrade);
+        intent.putExtra("smsCode", smsCode);
         activity.startActivityForResult(intent, SetPasswordActivity.REQUEST_FINISH);
     }
 
@@ -73,8 +75,26 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @OnClick({R.id.tv_next})
     public void nextStep() {
         if (canClick(true)) {
-           // TransactionPwdActivity.startIt(mBaseContext);
-            presenter.checkUserInfo(etIdentNo.getText().toString(), mobile, randCode, etUsername.getText().toString());
+            if (isForTrade) {
+                String ident = StringUtils.getTextFromView(etIdentNo);
+                String userName = StringUtils.getTextFromView(etUsername);
+                if (LoginHelper.getInstance() != null) {
+                    String localIdent = LoginHelper.getInstance().getIdent();
+                    String localRealName = LoginHelper.getInstance().getName();
+                    if (StringUtils.isNotNull(localIdent) && StringUtils.isNotNull(localRealName)) {
+                        //交易密码验证身份信息
+                        if (localIdent.equals(ident) && localRealName.equals(userName)) {
+                            //本地验证通过
+                            String smsCode = getIntent().getStringExtra("smsCode");
+                            TransactionPwdActivity.startItWithCode(mBaseContext, mobile, smsCode);
+                        }
+                    }
+                }
+
+            } else {
+                //登录密码验证身份信息
+                presenter.checkUserInfo(etIdentNo.getText().toString(), mobile, randCode, etUsername.getText().toString());
+            }
         }
     }
 
@@ -110,13 +130,7 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @Override
     public void checkSuccess(String randCode) {
         //找回登录密码，身份校验成功，跳转至密码重置
-        if (isForTrade) {
-            //跳转设置交易密码
-            TransactionPwdActivity.startIt(mBaseContext);
-        } else {
-            //跳转设置登录密码
-            SetPasswordActivity.startItWithRandCode(mBaseContext, false, mobile, randCode);
-        }
+        SetPasswordActivity.startItWithRandCode(mBaseContext, false, mobile, randCode);
     }
 
     @Override

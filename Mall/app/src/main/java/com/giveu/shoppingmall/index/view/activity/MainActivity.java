@@ -160,8 +160,17 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.ll_cash:
-                mViewPager.setCurrentItem(1, false);
-                selectIconAndTextColor(1);
+                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        mViewPager.setCurrentItem(1, false);
+                        selectIconAndTextColor(1);
+                    } else {
+                        ToastUtils.showShortToast("请先开通钱包");
+                        mViewPager.setCurrentItem(2);
+                        selectIconAndTextColor(2);
+                    }
+                }
                 break;
 
             case R.id.ll_repayment:
@@ -248,6 +257,7 @@ public class MainActivity extends BaseActivity {
                 loginResponse.repayAmount = response.data.repayAmount;
                 loginResponse.repayDate = response.data.repayDate;
                 //更新个人信息，缓存在本地*/
+                response.data.accessToken = SharePrefUtil.getAppToken();
                 LoginHelper.getInstance().saveLoginStatus(response.data);
                 hasFetchUserInfo = true;
             }

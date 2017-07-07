@@ -84,7 +84,7 @@ public class AccountManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_bank_card:
                 //我的银行卡
-                MyBankCardActivity.startIt(mBaseContext);
+                MyBankCardActivity.startIt(mBaseContext,false);
                 break;
             case R.id.ll_security_center:
                 //安全中心

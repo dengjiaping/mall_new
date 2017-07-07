@@ -120,7 +120,7 @@ public class RechargeFragment extends BaseFragment {
     }
 
     @Override
-    public void initWithDataDelay() {
+    public void initDataDelay() {
         callList = new ArrayList<>();
         trafficList = new ArrayList<>();
         rechargeAdapter = new LvCommonAdapter<RechargeResponse.PackageBean>(mBaseContext, R.layout.gv_recharge_item, callList) {
