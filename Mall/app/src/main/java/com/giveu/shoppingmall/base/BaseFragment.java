@@ -142,7 +142,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * 获取数据填充fragment
+     * fragment可见的时候，获取数据填充fragment
      */
     public abstract void initDataDelay();
 
