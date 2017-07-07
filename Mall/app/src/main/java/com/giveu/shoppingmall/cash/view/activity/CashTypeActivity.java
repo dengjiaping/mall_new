@@ -379,8 +379,8 @@ public class CashTypeActivity extends BaseActivity {
         int localIdProduct = 0;
         stagingTypeAdapter.setData(data);
         List<ProductResponse> products = stagingTypeAdapter.getData();
-        ProductResponse p = null;
-        //chooseQuota>3000
+        ProductResponse p;
+
         llShowData.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
             if (CommonUtils.isNullOrEmpty(products)) {
@@ -392,6 +392,8 @@ public class CashTypeActivity extends BaseActivity {
             if (p != null) {
                 localIdProduct = p.idProduct;
             }
+            products.get(products.size() - 1).isShow = true;
+            products.get(products.size() - 1).isChecked = true;
             showLoanAmount(localIdProduct, (int) chooseQuota);
         } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
             if (CommonUtils.isNullOrEmpty(products)) {
@@ -401,6 +403,7 @@ public class CashTypeActivity extends BaseActivity {
             products.add(noStageProduct);
             products.get(products.size() - 1).isShow = true;
             products.get(products.size() - 2).isChecked = true;
+
             p = products.get(stagingTypeAdapter.getCount() - 2);
             if (p != null) {
                 localIdProduct = p.idProduct;
