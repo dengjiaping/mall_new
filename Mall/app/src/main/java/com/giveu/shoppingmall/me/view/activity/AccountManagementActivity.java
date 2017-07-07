@@ -18,7 +18,6 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -109,12 +108,5 @@ public class AccountManagementActivity extends BaseActivity {
                 finish();
             }
         }, null).show();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

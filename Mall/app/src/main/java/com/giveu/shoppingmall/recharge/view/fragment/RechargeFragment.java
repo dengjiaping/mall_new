@@ -58,8 +58,8 @@ public class RechargeFragment extends BaseFragment {
     RadioGroup rgRecharge;
     @BindView(et_recharge)
     EditText etRecharge;
-    @BindView(R.id.tv_text)
-    TextView tvText;
+    @BindView(R.id.tv_message)
+    TextView tvMessage;
     @BindView(gv_recharge)
     NoScrollGridView gvRecharge;
     @BindView(R.id.iv_clear)
@@ -257,6 +257,7 @@ public class RechargeFragment extends BaseFragment {
                 checkPhoneType(phone);
             } else {
                 isVailable = false;
+                tvMessage.setText("");
                 changeItemHasPhone(rechargeAdapter.getData());
             }
         }

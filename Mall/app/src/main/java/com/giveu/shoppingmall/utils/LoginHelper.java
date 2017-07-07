@@ -38,6 +38,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String REPAY_AMOUNT = "repayAmount";
     public static final String REPAY_DATE = "repayDate";
     public static final String TOTAL_COST = "totalCost";
+    public static final String REMAINING_TIMES = "remainingTimes";//手势或指纹剩余提醒次数
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -76,7 +77,8 @@ public class LoginHelper extends AbsSharePref {
 
     //保存用户登录信息
     public void saveLoginStatus(LoginResponse personInfo) {
-        SharePrefUtil.setAppToken(personInfo.accessToken);SharePrefUtil.getAppToken();
+        SharePrefUtil.setAppToken(personInfo.accessToken);
+        SharePrefUtil.getAppToken();
         putString(ACCESS_TOKEN, personInfo.accessToken);
         putString(ACTIVE_DATE, personInfo.activeDate);
         putString(AVAILABLE_CYLIMIT, personInfo.availableCyLimit);
@@ -99,8 +101,17 @@ public class LoginHelper extends AbsSharePref {
         putString(REPAY_AMOUNT, personInfo.repayAmount);
         putString(REPAY_DATE, personInfo.repayDate);
         putString(TOTAL_COST, personInfo.totalCost);
+        //剩余提醒次数
+        int remainingTimes = getInt(REMAINING_TIMES, -1);
+        //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
+        if (remainingTimes == -1) {
+            putInt(REMAINING_TIMES, 2);
+        } else {
+            putInt(REMAINING_TIMES, remainingTimes);
+        }
         this.loginPersonInfo = personInfo;
     }
+
 
     //退出登录，清空信息
     public void logout() {
@@ -123,6 +134,22 @@ public class LoginHelper extends AbsSharePref {
             LoginActivity.startIt(activity);
             return false;
         }
+    }
+
+    /**
+     * 设置手势或指纹提醒
+     *
+     * @return
+     */
+    public boolean shouldShowSetting() {
+        return loginPersonInfo != null && getInt(REMAINING_TIMES, 0) >= 1;
+    }
+
+    /**
+     * 减少提醒次数
+     */
+    public void reduceRemingTimes() {
+        putInt(REMAINING_TIMES, getInt(REMAINING_TIMES, 0) - 1);
     }
 
     /**
@@ -170,6 +197,7 @@ public class LoginHelper extends AbsSharePref {
     public String getName() {
         return loginPersonInfo == null ? null : loginPersonInfo.name;
     }
+
     /**
      * 获取用户身份证
      *

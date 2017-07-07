@@ -60,11 +60,10 @@
                 android:textSize="@dimen/ts_28" />
 
             <TextView
-                android:id="@+id/tv_text"
+                android:id="@+id/tv_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                android:text="错误号码"
                 android:textColor="@color/color_ff2a2a"
                 android:textSize="@dimen/ts_11" />
         </LinearLayout>

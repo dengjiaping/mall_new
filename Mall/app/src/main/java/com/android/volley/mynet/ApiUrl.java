@@ -85,4 +85,10 @@ public interface ApiUrl {
     String personCenter_enchashment_getProducts = BASE_URL + "personCenter/enchashment/getProducts";
     //分期取现月供明细
     String personCenter_enchashment_rpmDetail = BASE_URL + "personCenter/enchashment/rpmDetail";
+    //创建充值订单
+    String order_createRechargeOrder = BASE_URL+"order/createRechargeOrder";
+    //确认充值订单
+    String order_confirmRechargeOrder = BASE_URL+"order/confirmRechargeOrder";
+    //第三方支付成功调用充值
+    String order_thirdPayRecharge = BASE_URL+"order/thirdPayRecharge";
 }

@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,7 +34,7 @@ public class SecurityCenterActivity extends BaseActivity {
     ImageView switchGesture;
     @BindView(R.id.tv_lock_type)
     TextView tvLockType;
-    private FingerprintIdentify mFingerprintIdentify;
+    private FingerPrintHelper fingerHelper;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, SecurityCenterActivity.class);
@@ -59,8 +59,8 @@ public class SecurityCenterActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        mFingerprintIdentify = new FingerprintIdentify(mBaseContext);
-        if (mFingerprintIdentify.isHardwareEnable()) {
+        fingerHelper = new FingerPrintHelper(mBaseContext);
+        if (fingerHelper.isHardwareEnable()) {
             tvLockType.setText("手势与指纹");
         } else {
             tvLockType.setText("手势");

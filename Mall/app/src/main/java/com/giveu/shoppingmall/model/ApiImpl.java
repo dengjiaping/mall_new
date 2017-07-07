@@ -288,6 +288,24 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
+
+    //创建充值订单
+    public static void createRechargeOrder(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_createRechargeOrder, RpmDetailResponse.class, context, responseListener);
+    }
+
+    //确认充值订单
+    public static void confirmRechargeOrder(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_confirmRechargeOrder, RpmDetailResponse.class, context, responseListener);
+    }
+
+    //第三方支付成功调用充值
+    public static void thirdPayRecharge(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_thirdPayRecharge, RpmDetailResponse.class, context, responseListener);
+    }
 }
 
 
