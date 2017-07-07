@@ -45,7 +45,7 @@ public class OnlyConfirmDialog extends CustomDialog {
         });
     }
 
-    public void setContent(String content) {
+    public void setContent(CharSequence content) {
         tvContent.setText(content);
     }
 }

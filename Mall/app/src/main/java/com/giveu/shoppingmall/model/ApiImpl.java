@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
+import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -256,6 +257,18 @@ public class ApiImpl {
     public static void getCostFee(Activity context, BaseRequestAgent.ResponseListener<CostFeeResponse> responseListener) {
         RequestAgent.getInstance().sendPostRequest(null, ApiUrl.personCenter_enchashment_enchashment, CostFeeResponse.class, context, responseListener);
     }
+
+    //话费流量充值产品
+    public static void goodsCallTraffics(Activity context,BaseRequestAgent.ResponseListener<RechargeResponse> responseListener) {
+        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.goods_callTraffics, RechargeResponse.class, context, responseListener);
+    }
+
+    //手机归属地查询
+    public static void goodsCallTrafficsSegment(Activity context, String phone ,BaseRequestAgent.ResponseListener<RechargeResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone"}, new Object[]{phone});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.goods_callTraffics_segment, RechargeResponse.class, context, responseListener);
+    }
+
 }
 
 

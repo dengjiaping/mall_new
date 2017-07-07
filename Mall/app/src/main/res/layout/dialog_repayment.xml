@@ -22,10 +22,12 @@
         android:layout_height="46dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:maxLength="8"
-        android:inputType="number"
         android:layout_marginTop="17dp"
-        android:background="@drawable/shape_repayment" />
+        android:background="@drawable/shape_repayment"
+        android:inputType="number"
+        android:maxLength="8"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" />
 
     <View
         android:layout_width="match_parent"

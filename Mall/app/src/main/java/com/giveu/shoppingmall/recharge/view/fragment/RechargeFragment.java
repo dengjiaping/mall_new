@@ -20,14 +20,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
-import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +48,8 @@ import static com.giveu.shoppingmall.R.id.gv_recharge;
 
 public class RechargeFragment extends BaseFragment {
 
-    LvCommonAdapter<RechargeResponse.ListBean.ProductsBean> rechargeAdapter;
+    LvCommonAdapter<RechargeResponse.PackageBean> rechargeAdapter;
+    private RechargeResponse rechargeResponse;
     @BindView(R.id.rb_bill)
     RadioButton rbBill;
     @BindView(R.id.rb_flow)
@@ -70,12 +74,11 @@ public class RechargeFragment extends BaseFragment {
     //产品id
     private String pid;
 
-    // PersonInfoResponse.UserInfoBean userInfoBean = null;
-    //  List<RechargeBean> list;
     private int tabIndex;//0=话费 1=流量
     private boolean isVailable = false;//是否可点击
+    private ArrayList<RechargeResponse.PackageBean> callList;
+    private ArrayList<RechargeResponse.PackageBean> trafficList;
 
-    //RechargePreferntialResponse rechargePreferntialResponse = null;
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_recharge, null);
@@ -109,93 +112,38 @@ public class RechargeFragment extends BaseFragment {
             @Override
             //Activity activity, String phoneArea, final String product, final String number, String price, String inputDenomination) {
             public void onItemClick(AdapterView<?> adapterView, View view, final int checkId, long l) {
-                ChargeOrderDialog dialog = new ChargeOrderDialog(mBaseContext,"广东移动",rechargeAdapter.getItem(checkId).productName,etRecharge.getText().toString(),rechargeAdapter.getItem(checkId).salesPrice,rechargeAdapter.getItem(checkId).denomination);
-                dialog.showDialog();
+//                ChargeOrderDialog dialog = new ChargeOrderDialog(mBaseContext, "广东移动", rechargeAdapter.getItem(checkId).productName, etRecharge.getText().toString(), rechargeAdapter.getItem(checkId).salesPrice, rechargeAdapter.getItem(checkId).denomination);
+//                dialog.showDialog();
                 //优惠券
-//                final String productName = rechargeAdapter.getItem(checkId).productName;
-//                final ChargeOrderDialog dialog = new ChargeOrderDialog();
-//                ApiImpl.rechargePreferntial(mBaseContext, productName, "", new ResponseListener<RechargePreferntialResponse>() {
-//                    @Override
-//                    public void onSuccess(RechargePreferntialResponse response) {
-//
-//                        rechargePreferntialResponse = response;
-//                        pid = rechargeAdapter.getItem(checkId).productId;
-//                        dialog.showDialog(rechargePreferntialResponse, mBaseContext, tabIndex, username, phoneArea, oper, pid, productName, et_recharge.getText().toString(), "￥" + rechargeAdapter.getItem(checkId).salesPrice, rechargeAdapter.getItem(checkId).denomination);
-//                    }
-//
-//                    @Override
-//                    public void onError(BaseBean errorBean) {
-//                        CommonLoadingView.showErrorToast(errorBean);
-//                    }
-//                });
-
             }
         });
     }
 
     @Override
     public void initWithDataDelay() {
-
-        rechargeResponse = new RechargeResponse();
-        RechargeResponse.ListBean.ProductsBean productsBean1 = new RechargeResponse.ListBean.ProductsBean("1", "30元", "30");
-        RechargeResponse.ListBean.ProductsBean productsBean2 = new RechargeResponse.ListBean.ProductsBean("1", "50元", "49.98");
-        RechargeResponse.ListBean.ProductsBean productsBean3 = new RechargeResponse.ListBean.ProductsBean("1", "100元", "99.98");
-        List<RechargeResponse.ListBean.ProductsBean> list1 = new ArrayList<>();
-        list1.add(productsBean1);
-        list1.add(productsBean2);
-        list1.add(productsBean3);
-        RechargeResponse.ListBean.ProductsBean productsBean4 = new RechargeResponse.ListBean.ProductsBean("1", "30M", "30");
-        RechargeResponse.ListBean.ProductsBean productsBean5 = new RechargeResponse.ListBean.ProductsBean("1", "50M", "49.98");
-        RechargeResponse.ListBean.ProductsBean productsBean6 = new RechargeResponse.ListBean.ProductsBean("1", "100M", "99.98");
-        List<RechargeResponse.ListBean.ProductsBean> list2 = new ArrayList<>();
-        list2.add(productsBean4);
-        list2.add(productsBean5);
-        list2.add(productsBean6);
-        rechargeResponse.calls = new RechargeResponse.ListBean("中国联通", "CUCC", list1);
-        rechargeResponse.flows = new RechargeResponse.ListBean("中国联通", "CUCC", list2);
-        rechargeAdapter = new LvCommonAdapter<RechargeResponse.ListBean.ProductsBean>(mBaseContext, R.layout.gv_recharge_item, list1) {
+        callList = new ArrayList<>();
+        trafficList = new ArrayList<>();
+        rechargeAdapter = new LvCommonAdapter<RechargeResponse.PackageBean>(mBaseContext, R.layout.gv_recharge_item, callList) {
             @Override
-            protected void convert(ViewHolder viewHolder, RechargeResponse.ListBean.ProductsBean item, int position) {
+            protected void convert(ViewHolder viewHolder, RechargeResponse.PackageBean item, int position) {
                 TextView tv1 = viewHolder.getView(R.id.tv_recharge_t1);
                 TextView tv2 = viewHolder.getView(R.id.tv_recharge_t2);
-                tv1.setText(item.productName);
-                tv2.setText("售价￥"+item.salesPrice);
+                tv1.setText(item.name);
+                tv2.setText("售价￥" + item.salePrice);
                 LinearLayout ll_recharge_item = viewHolder.getView(R.id.ll_recharge_item);
-                switch (item.status) {
-                    case 0:
-                        tv1.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
-                        tv2.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
-                        ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_default);
-                        break;
-                    case 1:
-                        tv1.setTextColor(getContext().getResources().getColor(R.color.title_color));
-                        tv2.setTextColor(getContext().getResources().getColor(R.color.android_default_dialog_title));
-                        ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_press);
-                        break;
-                    default:
-                        break;
+                if (!item.hasPhone) {
+                    tv1.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
+                    tv2.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
+                    ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_default);
+                } else {
+                    tv1.setTextColor(getContext().getResources().getColor(R.color.title_color));
+                    tv2.setTextColor(getContext().getResources().getColor(R.color.android_default_dialog_title));
+                    ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_press);
                 }
             }
         };
-        gvRecharge.setAdapter(rechargeAdapter);
-//        rechargePreferntialResponse = new RechargePreferntialResponse();
-//
-//
-//
-//        if (PersonInfoResponse.getInstance() != null) {
-//            if (PersonInfoResponse.getInstance().userInfo != null) {
-//                userInfoBean = PersonInfoResponse.getInstance().userInfo;
-//                username = userInfoBean.name;
-//                StringBuffer defaultStr = new StringBuffer();
-//                defaultStr.append(userInfoBean.mobile);
-//                defaultStr.insert(3, " ");
-//                defaultStr.insert(8, " ");
-//                et_recharge.setText(defaultStr);
-//                et_recharge.setSelection(et_recharge.getText().length());
-//                getData(userInfoBean.mobile);
-//            }
-//        }
 
+        gvRecharge.setAdapter(rechargeAdapter);
         rgRecharge.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
@@ -209,8 +157,21 @@ public class RechargeFragment extends BaseFragment {
                     default:
                         break;
                 }
+            }
+        });
 
-                setMyData(rechargeResponse);
+        ApiImpl.goodsCallTraffics(mBaseContext, new BaseRequestAgent.ResponseListener<RechargeResponse>() {
+            @Override
+            public void onSuccess(RechargeResponse response) {
+                //默认显示中国移动话费充值
+                rechargeResponse = response.data;
+                callList.addAll(response.data.call.cmccs);
+                rechargeAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
             }
         });
 
@@ -270,6 +231,12 @@ public class RechargeFragment extends BaseFragment {
                 etRecharge.addTextChangedListener(textWatcher);
             }
 
+            if (etRecharge.getText().toString().length() > 0) {
+                ivClear.setVisibility(View.VISIBLE);
+            } else {
+                ivClear.setVisibility(View.GONE);
+            }
+
         }
 
         private boolean isNeedSpace(int length) {
@@ -286,81 +253,52 @@ public class RechargeFragment extends BaseFragment {
             if (editable.length() == 13) {
                 String phone = editable.toString().replace(" ", "");
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
-
                 isVailable = true;
-                getData(phone);
+                checkPhoneType(phone);
             } else {
                 isVailable = false;
-                setMyData(rechargeResponse);
+                changeItemHasPhone(rechargeAdapter.getData());
             }
         }
     };
 
 
     /**
-     * 请求数据
+     * 校验该手机号运营商
      */
+    private void checkPhoneType(String phone) {
+        ApiImpl.goodsCallTrafficsSegment(mBaseContext, phone, new BaseRequestAgent.ResponseListener<RechargeResponse>() {
+            @Override
+            public void onSuccess(RechargeResponse response) {
+                changeItemHasPhone(rechargeAdapter.getData());
+            }
 
-    RechargeResponse rechargeResponse = null;
-
-    private void getData(String phone) {
-
-
-        setMyData(rechargeResponse);
-//        ApiImpl.rechargeRequest(null, phone, new ResponseListener<RechargeResponse>() {
-//            @Override
-//            public void onSuccess(RechargeResponse response) {
-//                rechargeResponse = response.data;
-//                setMyData(rechargeResponse);
-//
-//            }
-//
-//            @Override
-//            public void onError(BaseBean errorBean) {
-//                CommonLoadingView.showErrorToast(errorBean);
-//            }
-//        });
-
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
-    //设置显示数据
-    private void setMyData(RechargeResponse data) {
+    //设置gridView的Item是否可点击
+    private void changeItemHasPhone(List<RechargeResponse.PackageBean> data) {
         if (data != null) {
-            // rechargeAdapter = new RechargeAdapter(mBaseContext);
-            gvRecharge.setAdapter(rechargeAdapter);
-
             if (!isVailable) {
-                for (RechargeResponse.ListBean.ProductsBean products : data.calls.products) {
-                    products.status = 0;
+                for (RechargeResponse.PackageBean products : data) {
+                    products.hasPhone = false;
                 }
-                for (RechargeResponse.ListBean.ProductsBean products : data.flows.products) {
-                    products.status = 0;
-                }
-
                 gvRecharge.setEnabled(false);
             } else {//绿色
-                for (RechargeResponse.ListBean.ProductsBean products : data.calls.products) {
-                    products.status = 1;
+                for (RechargeResponse.PackageBean products : data) {
+                    products.hasPhone = true;
                 }
-                for (RechargeResponse.ListBean.ProductsBean products : data.flows.products) {
-                    products.status = 1;
+                for (RechargeResponse.PackageBean products : data) {
+                    products.hasPhone = false;
                 }
                 gvRecharge.setEnabled(true);
             }
-
-            switch (tabIndex) {
-                case 0:
-                    rechargeAdapter.setData(data.calls.products);
-                    oper = data.calls.operatorType;
-
-                    break;
-                case 1:
-                    rechargeAdapter.setData(data.flows.products);
-                    oper = data.flows.operatorType;
-                    break;
-            }
-
         }
+        rechargeAdapter.notifyDataSetChanged();
     }
 
     @Override

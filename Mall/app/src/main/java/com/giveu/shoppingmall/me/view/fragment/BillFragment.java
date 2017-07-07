@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.me.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,15 @@ import com.giveu.shoppingmall.me.presenter.InstalmentDetailsPresenter;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
 import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.me.view.dialog.IntalmentDetailsDialog;
+import com.giveu.shoppingmall.me.view.dialog.RepaymentDetailDialog;
+import com.giveu.shoppingmall.me.view.dialog.RepaymentDialog;
 import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -30,6 +35,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by 513419 on 2017/6/22.
@@ -41,14 +47,23 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     PullToRefreshListView ptrlv;
     private BillAdapter billAdapter;
     private ArrayList<BillBean> billList;
+    @BindView(R.id.tv_money)
+    TextView tvMoney;
+    @BindView(R.id.tv_confirm)
+    TextView tvConfirm;
+    private RepaymentDialog repaymentDialog;
+    private RepaymentDetailDialog repaymentDetailDialog;
     private int pageIndex = 1;
     private final int pageSize = 10;
     private boolean isCurrentMonth;
     private BillListActivity mActivity;
     private ViewHolder headerHolder;
     private double payMoney;
+    private double cycleTotalAmount;//零花钱总欠款
+    private double othersTotalAmount;//分期产品总欠款
     private InstalmentDetailsPresenter presenter;
     private IntalmentDetailsDialog intalmentDetailsDialog; //还款明细对话框
+    private OnlyConfirmDialog hintDialog;
 
 
     @Override
@@ -80,21 +95,68 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
         ptrlv.getRefreshableView().addHeaderView(headerView);
         intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
         presenter = new InstalmentDetailsPresenter(this);
+        repaymentDialog = new RepaymentDialog(mBaseContext);
+        repaymentDetailDialog = new RepaymentDetailDialog(mBaseContext);
+        hintDialog = new OnlyConfirmDialog(mBaseContext);
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
+    @OnClick({R.id.iv_change_money, R.id.tv_confirm})
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            case R.id.iv_change_money:
+                if (canClick()) {
+                    repaymentDialog.show();
+                } else {
+                    ToastUtils.showShortToast("请先勾选要还的款项");
+                }
+                break;
+
+            case R.id.tv_confirm:
+                if (canClick()) {
+                    //判断选中的是什么类型，再判断最大可还金额
+                    for (BillBean billBean : billList) {
+                        //分期产品
+                        if (billBean.isChoose && "o".equalsIgnoreCase(billBean.productType)) {
+                            if (payMoney > othersTotalAmount) {
+                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于分期产品剩余待还期款总额", "¥" + StringUtils.format2(othersTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
+                                hintDialog.setContent(colorStr);
+                                hintDialog.show();
+                                return;
+                            }
+                            break;
+                        } else if (billBean.isChoose && "c".equalsIgnoreCase(billBean.productType)) {
+                            //零花钱产品
+                            if (payMoney > cycleTotalAmount) {
+                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于零花钱剩余待还期款总额", "¥" + StringUtils.format2(othersTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
+                                hintDialog.setContent(colorStr);
+                                hintDialog.show();
+                                return;
+                            }
+                            break;
+                        }
+                    }
+                    repaymentDetailDialog.show();
+                } else {
+                    ToastUtils.showShortToast("请先勾选要还的款项");
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
-    public double getPayMoney() {
-        return payMoney;
-    }
-
-    public void setPayMoney(double payMoney) {
-        this.payMoney = payMoney;
+    public boolean canClick() {
+        if (payMoney <= 0) {
+            tvConfirm.setBackgroundResource(R.drawable.shape_grey_without_corner);
+            return false;
+        } else {
+            tvConfirm.setBackgroundResource(R.drawable.shape_blue_without_corner);
+            return true;
+        }
     }
 
     @Override
@@ -104,6 +166,16 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
 
     @Override
     protected void setListener() {
+
+        repaymentDialog.setOnConfirmListener(new RepaymentDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(String money) {
+                tvMoney.setText("还款金额：¥" + StringUtils.format2(money));
+                payMoney = Double.parseDouble(money);
+                canClick();
+            }
+
+        });
 
         headerHolder.tvCurrentMonth.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +195,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
             @Override
             public void moneyChange(double money) {
                 payMoney = payMoney + money;
-                mActivity.setPayMoney(payMoney);
+                tvMoney.setText("还款金额：¥" + StringUtils.format2(payMoney + ""));
+                canClick();
             }
         });
 
@@ -147,7 +220,7 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
                 if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
                         BillBean billBean = billList.get(position - 2);
-                        presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType,billBean.creditType);
+                        presenter.getInstalmentDetails(billBean.contractId, isCurrentMonth, billBean.numInstalment, billBean.productType, billBean.creditType);
                     }
                 }
 
@@ -158,6 +231,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
 
     public void notifyDataSetChange(BillListResponse.HeaderBean headerBean, ArrayList<BillBean> billBeenList) {
         if (headerBean != null) {
+            cycleTotalAmount = headerBean.cycleTotalAmount;
+            othersTotalAmount = headerBean.othersTotalAmount;
             headerHolder.tvTotal.setText("¥" + headerBean.repayAmount);
             if (StringUtils.isNotNull(headerBean.endDate)) {
                 headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
@@ -175,14 +250,12 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
             billList.addAll(billBeenList);
             billAdapter.notifyDataSetChanged();
         } else {
-            baseLayout.showEmpty(144, 0, "抱歉，没有账单哦");
+            baseLayout.showEmpty(144, 62, "抱歉，没有账单哦");
         }
     }
 
     @Override
     public void initWithDataDelay() {
-        //刚进来这个fragment时，还款金额为0
-        mActivity.setPayMoney(0d);
     }
 
     @Override

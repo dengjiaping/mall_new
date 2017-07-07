@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
+import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
@@ -39,6 +42,8 @@ public class AccountManagementActivity extends BaseActivity {
     TextView tvUserName;
     @BindView(R.id.tv_phone)
     TextView tvPhone;
+    @BindView(R.id.iv_avatar)
+    ImageView ivAvatar;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, AccountManagementActivity.class);
@@ -60,6 +65,7 @@ public class AccountManagementActivity extends BaseActivity {
                 tvUserName.setText(LoginHelper.getInstance().getPhone());
             }
         }
+        ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
 
     @Override

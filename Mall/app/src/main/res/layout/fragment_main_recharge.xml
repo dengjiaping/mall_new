@@ -74,6 +74,7 @@
             android:layout_width="30dp"
             android:layout_height="76dp"
             android:padding="7dp"
+            android:visibility="gone"
             android:src="@drawable/ic_clear" />
 
         <View

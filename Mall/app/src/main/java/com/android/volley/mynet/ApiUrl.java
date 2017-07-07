@@ -75,4 +75,8 @@ public interface ApiUrl {
     String personCenter_enchashment_repaycost = BASE_URL + "personCenter/enchashment/repayCost";
     //随借随还取现费用计算
     String personCenter_enchashment_enchashment = BASE_URL + "personCenter/enchashment/enchashment";
+    //话费流量充值产品
+    String goods_callTraffics = BASE_URL + "goods/callTraffics";
+    //手机归属地查询
+    String goods_callTraffics_segment = BASE_URL + "goods/callTraffics/segment";
 }
