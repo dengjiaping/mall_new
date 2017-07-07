@@ -106,7 +106,11 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
 
             @Override
             public void convert(ViewHolder holder, BillBean item, int position) {
-                holder.setText(R.id.tv_date, item.repayDate);
+                if(StringUtils.isNotNull(item.paymentNum)){
+                    holder.setText(R.id.tv_date, item.numInstalment+"/"+item.paymentNum+"期");
+                }else {
+                    holder.setText(R.id.tv_date, item.repayDate);
+                }
                 holder.setText(R.id.tv_money, "¥" + StringUtils.format2(item.repayAmount));
                 holder.setText(R.id.tv_type, TypeUtlis.getCreditTypeText(item.creditType));
                 ImageView ivOverDue = holder.getView(R.id.iv_overdue);

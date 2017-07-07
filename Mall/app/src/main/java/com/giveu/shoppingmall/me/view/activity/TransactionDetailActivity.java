@@ -62,6 +62,9 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
         setContentView(R.layout.activity_transaction_detail);
         baseLayout.setTitle("交易详情");
         presenter = new TransactionDetailPresenter(this);
+        idCredit = getIntent().getStringExtra("idCredit");
+        creditType = getIntent().getStringExtra("creditType");
+        presenter.getContractDetails(idCredit, creditType);
         initTextView(new TransactionDetailResponse());
     }
 
@@ -72,9 +75,7 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
 
     @Override
     public void setData() {
-        idCredit = getIntent().getStringExtra("idCredit");
-        creditType = getIntent().getStringExtra("creditType");
-        presenter.getContractDetails(idCredit, creditType);
+
     }
 
     @OnClick(R.id.ll_credit_detail)

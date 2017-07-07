@@ -10,14 +10,12 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
-import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
-import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -29,10 +27,9 @@ public class FingerPrintActivity extends BaseActivity {
     TextView tvChangeLogin;
     @BindView(R.id.tv_finger)
     TextView tvFinger;
-    private FingerprintIdentify mFingerprintIdentify;
+    private FingerPrintHelper fingerHelper;
     private boolean isForSetting;
     private ConfirmDialog settingDialog;
-    private BaseFingerprint.FingerprintIdentifyListener identifyListener;
 
     /**
      * @param activity
@@ -73,6 +70,7 @@ public class FingerPrintActivity extends BaseActivity {
             }
         });
         initDialog();
+        fingerHelper = new FingerPrintHelper(mBaseContext);
     }
 
     private void initDialog() {
@@ -99,27 +97,10 @@ public class FingerPrintActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mFingerprintIdentify = new FingerprintIdentify(mBaseContext, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
-            @Override
-            public void onCatchException(Throwable exception) {
-
-            }
-        });
-        if (mFingerprintIdentify.isFingerprintEnable()) {
-            if (mFingerprintIdentify.isFingerprintEnable()) {
-                try {
-                    //最多指纹解锁10次
-                    mFingerprintIdentify.startIdentify(10, identifyListener);
-                } catch (Exception e) {
-                }
-
-            } else {
-                ToastUtils.showShortToast("指纹识别不可用");
-                if (!isForSetting) {
-                    VerifyPwdActivity.startIt(mBaseContext, false);
-                }
-                finish();
-            }
+        fingerHelper.onResumeIdentify();
+        if (fingerHelper.isFingerprintEnable()) {
+            //最多指纹解锁10次
+            fingerHelper.startIdentify();
         } else {
             settingDialog.show();
         }
@@ -128,33 +109,36 @@ public class FingerPrintActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mFingerprintIdentify.cancelIdentify();
+        fingerHelper.onPauseIdentify();
     }
 
 
     @Override
     public void setData() {
-        identifyListener = new BaseFingerprint.FingerprintIdentifyListener() {
+    }
+
+    @Override
+    public void setListener() {
+        super.setListener();
+        fingerHelper.setOnFingerMathchListener(new FingerPrintHelper.OnFingerMathchListener() {
             @Override
-            public void onSucceed() {
+            public void onSuccess() {
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 if (isForSetting) {
                     ToastUtils.showShortToast("指纹设置成功");
                     SharePrefUtil.setFingerPrint(true);
                 }
-                mFingerprintIdentify.cancelIdentify();
+                fingerHelper.onPauseIdentify();
                 finish();
             }
 
             @Override
-            public void onNotMatch(int availableTimes) {
-                if (availableTimes > 1) {
-                } else {
-                }
+            public void onFailed() {
+
             }
 
             @Override
-            public void onFailed() {
+            public void onNotMatch() {
                 if (isForSetting) {
                     ToastUtils.showShortToast("指纹设置失败");
                 } else {
@@ -164,7 +148,7 @@ public class FingerPrintActivity extends BaseActivity {
                 }
                 finish();
             }
-        };
+        });
     }
 
     @OnClick(R.id.tv_change_login)
@@ -172,12 +156,5 @@ public class FingerPrintActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         LoginActivity.startIt(mBaseContext);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

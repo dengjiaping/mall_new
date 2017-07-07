@@ -9,14 +9,13 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternIndicator;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
-import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
-import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class CreateGestureActivity extends BaseActivity {
     private List<LockPatternView.Cell> mChosenPattern = null;
     private static final long DELAYTIME = 600L;
     private static final String TAG = "CreateGestureActivity";
-    private FingerprintIdentify mFingerprintIdentify;
+    private FingerPrintHelper fingerHelper;
     public static final int REQUEST_FINISH = 10000;
 
     public static void startIt(Activity activity) {
@@ -65,11 +64,7 @@ public class CreateGestureActivity extends BaseActivity {
             }
         });
         lockPatternView.setOnPatternListener(patternListener);
-        mFingerprintIdentify = new FingerprintIdentify(this, new BaseFingerprint.FingerprintIdentifyExceptionListener() {
-            @Override
-            public void onCatchException(Throwable exception) {
-            }
-        });
+        fingerHelper = new FingerPrintHelper(mBaseContext);
     }
 
 
@@ -169,7 +164,7 @@ public class CreateGestureActivity extends BaseActivity {
         ToastUtils.showShortToast("手势密码设置成功");
         setResult(RESULT_OK);
         //如果支持手机指纹，那么跳转至设置指纹界面
-        if (mFingerprintIdentify.isHardwareEnable()) {
+        if (fingerHelper.isHardwareEnable()) {
             FingerPrintActivity.startIt(mBaseContext, true);
         }
         finish();

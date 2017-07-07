@@ -24,6 +24,7 @@ import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
@@ -279,15 +280,33 @@ public class ApiImpl {
     }
 
     //手机归属地查询
-    public static void goodsCallTrafficsSegment(Activity context, String phone ,BaseRequestAgent.ResponseListener<RechargeResponse> responseListener) {
+    public static void goodsCallTrafficsSegment(Activity context, String phone ,BaseRequestAgent.ResponseListener<SegmentResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"phone"}, new Object[]{phone});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.goods_callTraffics_segment, RechargeResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.goods_callTraffics_segment, SegmentResponse.class, context, responseListener);
     }
 
     //分期取现月供明细
     public static void rpmDetail(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
+    }
+
+    //创建充值订单
+    public static void createRechargeOrder(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_createRechargeOrder, RpmDetailResponse.class, context, responseListener);
+    }
+
+    //确认充值订单
+    public static void confirmRechargeOrder(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_confirmRechargeOrder, RpmDetailResponse.class, context, responseListener);
+    }
+
+    //第三方支付成功调用充值
+    public static void thirdPayRecharge(Activity context,int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_thirdPayRecharge, RpmDetailResponse.class, context, responseListener);
     }
 }
 

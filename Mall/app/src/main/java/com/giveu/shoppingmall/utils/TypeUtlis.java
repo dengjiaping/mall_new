@@ -314,4 +314,28 @@ public class TypeUtlis {
         }
         return productType;
     }
+
+    /**
+     * 根据值获取对应的运营商
+     * @param value
+     * @return
+     */
+    public static String getOperatorStr(int value){
+        String operatorStr ="未知运营商";
+        switch (value){
+            case 0:
+                operatorStr ="中国移动";
+                break;
+            case 1:
+                operatorStr ="中国联通";
+                break;
+            case 2:
+                operatorStr ="中国电信";
+                break;
+            default:
+                break;
+        }
+        return  operatorStr;
+    }
+
 }

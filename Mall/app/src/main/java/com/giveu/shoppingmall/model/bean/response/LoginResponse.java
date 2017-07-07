@@ -54,4 +54,5 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String userName;
     public String userPic;
     public String totalCost;
+    public int hintRemainingTimes;
 }

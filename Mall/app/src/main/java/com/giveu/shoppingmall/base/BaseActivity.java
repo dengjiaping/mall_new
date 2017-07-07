@@ -99,14 +99,15 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * @return true=使用状态栏一体化，false=不使用
      */
     private boolean isTranslateStatusBar() {
-        if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && translateStatusBar()) {
             return true;
         }
         return false;
     }
 
-	/**
+    /**
      * 子类重写此方法来控制是否状态栏一体化
+     *
      * @return
      */
     protected boolean translateStatusBar() {
@@ -140,7 +141,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 //    }
 
 
-    public static void setTranslucentStatus(Activity activity){
+    public static void setTranslucentStatus(Activity activity) {
         Window window = activity.getWindow();
         // 默认主色调为白色, 如果是6.0或者是miui6、flyme4以上, 设置状态栏文字为黑色, 否则给状态栏着色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -149,13 +150,12 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-        }else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         //设置状态栏字体颜色
         SystemBarHelper.setStatusBarDarkMode(activity);
     }
-
 
 
     /**
@@ -262,10 +262,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     private void dealLockPattern() {
         if (this.getClass() == MainActivity.class) {
             String className = getIntent().getStringExtra(MainActivity.lockPatternKey);
-            if (SplashActivity.class.getName().equals(className)&& LoginHelper.getInstance().hasLogin()) {
+            if (SplashActivity.class.getName().equals(className) && LoginHelper.getInstance().hasLogin()) {
                 //从splash页面过来的
                 if (SharePrefUtil.hasFingerPrint()) {
-                    FingerPrintActivity.startIt(mBaseContext,false);
+                    FingerPrintActivity.startIt(mBaseContext, false);
                 } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                     //如果设置过密码
                     GestureLoginActivity.startIt(this);
@@ -276,18 +276,18 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 return;
             } else if (LoginActivity.class.getName().equals(className)) {
                 //从登录页面过来的
-               /* if (TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())) {
+                if (TextUtils.isEmpty(SharePrefUtil.getPatternPwd()) || !SharePrefUtil.hasFingerPrint()) {
                     //如果没有设置手势，第一次提示设置
-                    ((MainActivity) this).showPatternLockTipDialog();
-                }*/
+                    ((MainActivity) this).settingPatternOrFingerPrint();
+                }
                 clearLockPatternExtraIntent();
                 return;
             }
         }
         //如果上面页面做个处理了就不处理了
-        if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern()&&LoginHelper.getInstance().hasLogin()) {
+        if (BaseApplication.getInstance().isOverTimeForPattern() && isThisActivityNeedPattern() && LoginHelper.getInstance().hasLogin()) {
             if (SharePrefUtil.hasFingerPrint()) {
-                FingerPrintActivity.startIt(mBaseContext,false);
+                FingerPrintActivity.startIt(mBaseContext, false);
             } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
                 //如果设置过密码
                 GestureLoginActivity.startIt(this);
@@ -305,7 +305,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * 判断当前activity超时是否需要锁屏
      */
     private boolean isThisActivityNeedPattern() {
-        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class,
+        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class, FingerPrintActivity.class,
                 WelcomeActivity.class, GestureLoginActivity.class, CreateGestureActivity.class, VerifyPwdActivity.class};
         List<Class> notNeedPatternActivitys = Arrays.asList(classes);
 

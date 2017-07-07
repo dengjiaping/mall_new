@@ -21,6 +21,8 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.me.view.activity.BillListActivity;
+import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
+import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
@@ -28,11 +30,11 @@ import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.widget.dialog.PatternLockSetTipDialog;
 
 import java.util.ArrayList;
 
@@ -403,8 +405,16 @@ public class MainActivity extends BaseActivity {
     /**
      * 设置手势密码的提示dialog
      */
-    public void showPatternLockTipDialog() {
-        new PatternLockSetTipDialog(mBaseContext).show();
+    public void settingPatternOrFingerPrint() {
+        if (LoginHelper.getInstance().shouldShowSetting()) {
+            FingerPrintHelper fingerHelper = new FingerPrintHelper(mBaseContext);
+            if (fingerHelper.isHardwareEnable()) {
+                FingerPrintActivity.startIt(mBaseContext, true);
+            } else {
+                CreateGestureActivity.startIt(mBaseContext);
+            }
+            LoginHelper.getInstance().reduceRemingTimes();
+        }
     }
 
 }
