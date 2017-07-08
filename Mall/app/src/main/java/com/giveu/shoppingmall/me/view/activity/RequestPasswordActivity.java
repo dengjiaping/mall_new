@@ -192,6 +192,11 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     }
 
     @Override
+    public void checkSMSSuccess() {
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SetPasswordActivity.REQUEST_FINISH && resultCode == RESULT_OK) {

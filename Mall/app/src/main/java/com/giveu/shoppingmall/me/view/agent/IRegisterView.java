@@ -5,5 +5,4 @@ package com.giveu.shoppingmall.me.view.agent;
  */
 
 public interface IRegisterView extends ISendSmsView {
-    void checkSMSSuccess();
 }

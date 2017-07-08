@@ -46,7 +46,7 @@ public class PaymentTypeDialog {
     }
 
     public void showDialog() {
-        View contentView = View.inflate(mActivity,R.layout.dialog_payment_type, null);
+        View contentView = View.inflate(mActivity, R.layout.dialog_payment_type, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
         initView(contentView);
         mDialog.setCancelable(false);
@@ -90,6 +90,7 @@ public class PaymentTypeDialog {
 
     /**
      * 支付弹窗关闭的监听
+     *
      * @param dismissListener
      * @return
      */
@@ -109,7 +110,8 @@ public class PaymentTypeDialog {
 
     /**
      * 点击改变选中的支付类型，获取的支付类型名称，并关闭支付弹窗
-     * @param position 选中项
+     *
+     * @param position           选中项
      * @param paymentTypeAdapter 支付方式adapter
      */
     public void onChoosePaymentType(int position, LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentTypeAdapter) {
@@ -122,7 +124,21 @@ public class PaymentTypeDialog {
                 item.isChecked = false;
             }
         }
+        if (listener != null) {
+            listener.onChooseType(position);
+        }
         paymentTypeAdapter.notifyDataSetChanged();
         mDialog.dismiss();
+    }
+
+    public interface OnChoosePayTypeListener {
+        //选中的支付方式，0为钱包，1为微信，2为支付宝
+        void onChooseType(int type);
+    }
+
+    private OnChoosePayTypeListener listener;
+
+    public void setOnChoosePayTypeListener(OnChoosePayTypeListener listener) {
+        this.listener = listener;
     }
 }

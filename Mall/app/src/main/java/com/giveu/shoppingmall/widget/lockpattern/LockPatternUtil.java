@@ -51,7 +51,7 @@ public class LockPatternUtil {
     }
 
     /**
-     * check the touch cell is or not in the circle
+     * checkPwd the touch cell is or not in the circle
      *
      * @param sx
      * @param sy

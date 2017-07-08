@@ -67,7 +67,7 @@ public class LockPatternIndicator extends View {
 				//Log.e(TAG, "layout_height:" + value);
 			}
 		}
-		//check the width is or not equals height
+		//checkPwd the width is or not equals height
 		//if not throw exception
 		if (this.width != this.height) {
 			throw new IllegalArgumentException("the width must be equals height");

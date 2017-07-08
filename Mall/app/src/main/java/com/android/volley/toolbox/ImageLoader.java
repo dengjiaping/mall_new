@@ -331,7 +331,7 @@ public class ImageLoader {
                     mInFlightRequests.remove(mCacheKey);
                 }
             } else {
-                // check to see if it is already batched for delivery.
+                // checkPwd to see if it is already batched for delivery.
                 request = mBatchedResponses.get(mCacheKey);
                 if (request != null) {
                     request.removeContainerAndCancelIfNecessary(this);

@@ -87,7 +87,7 @@ public interface IPullToRefresh<T extends View> {
 	/**
 	 * Get the mode that this view has been set to. If this returns
 	 * <code>Mode.BOTH</code>, you can use <code>getCurrentMode()</code> to
-	 * check which mode the view is currently in
+	 * checkPwd which mode the view is currently in
 	 * 
 	 * @return Mode that the view has been set to
 	 */

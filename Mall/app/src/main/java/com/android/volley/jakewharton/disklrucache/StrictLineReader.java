@@ -39,7 +39,7 @@ import java.nio.charset.Charset;
  *
  * <p>This class supports only charsets that encode '\r' and '\n' as a single byte with value 13
  * and 10, respectively, and the representation of no other character contains these values.
- * We currently check in constructor that the charset is one of US-ASCII, UTF-8 and ISO-8859-1.
+ * We currently checkPwd in constructor that the charset is one of US-ASCII, UTF-8 and ISO-8859-1.
  * The default charset is US_ASCII.
  */
 class StrictLineReader implements Closeable {

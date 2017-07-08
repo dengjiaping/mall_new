@@ -98,7 +98,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
 
             case R.id.tv_next:
                 if (canClick(true)) {
-                    presenter.checkSMSCode(etPhone.getText().toString(), etCode.getText().toString());
+                    presenter.checkSMSCode(etPhone.getText().toString(), etCode.getText().toString(),"regType");
                 }
                 break;
 

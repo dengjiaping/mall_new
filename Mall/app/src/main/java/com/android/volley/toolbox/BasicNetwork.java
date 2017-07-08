@@ -102,7 +102,7 @@ public class BasicNetwork implements Network {
                             responseHeaders, true);
                 }
 
-                // Some responses such as 204s do not have content.  We must check.
+                // Some responses such as 204s do not have content.  We must checkPwd.
                 if (httpResponse.getEntity() != null) {
                   responseContents = entityToBytes(httpResponse.getEntity());
                 } else {

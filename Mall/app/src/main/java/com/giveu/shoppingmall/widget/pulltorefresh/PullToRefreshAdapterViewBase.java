@@ -108,13 +108,13 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
         /**
          * Set whether the Last Item is Visible. lastVisibleItemIndex is a
-         * zero-based index, so we minus one totalItemCount to check
+         * zero-based index, so we minus one totalItemCount to checkPwd
          */
         if (null != mOnLastItemVisibleListener) {
             mLastItemVisible = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 1);
         }
 
-        // If we're showing the indicator, check positions...
+        // If we're showing the indicator, checkPwd positions...
         if (getShowIndicatorInternal()) {
             updateIndicatorViewsVisibility();
         }
@@ -384,7 +384,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
             }
 
             /**
-             * This check should really just be:
+             * This checkPwd should really just be:
              * mRefreshableView.getFirstVisiblePosition() == 0, but PtRListView
              * internally use a HeaderView which messes the positions up. For
              * now we'll just add one to account for it and rely on the inner
@@ -417,7 +417,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
             final int lastVisiblePosition = mRefreshableView.getLastVisiblePosition();
 
             /**
-             * This check should really just be: lastVisiblePosition ==
+             * This checkPwd should really just be: lastVisiblePosition ==
              * lastItemPosition, but PtRListView internally uses a FooterView
              * which messes the positions up. For me we'll just subtract one to
              * account for it and rely on the inner condition which checks

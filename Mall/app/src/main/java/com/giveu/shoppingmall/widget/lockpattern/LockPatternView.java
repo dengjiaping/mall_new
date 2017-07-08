@@ -171,7 +171,7 @@ public class LockPatternView extends View {
 				this.height = LockPatternUtil.changeSize(context, value);
 			}
 		}
-		//check the width is or not equals height.
+		//checkPwd the width is or not equals height.
 		//if not throw exception
 		if (this.width != this.height) {
 			throw new IllegalArgumentException("the width must be equals height");
@@ -267,7 +267,7 @@ public class LockPatternView extends View {
 	}
 
 	/**
-	 * draw line not include circle (check whether the cell between two cells )
+	 * draw line not include circle (checkPwd whether the cell between two cells )
 	 * @param preCell
 	 * @param nextCell
 	 * @param canvas
@@ -522,7 +522,7 @@ public class LockPatternView extends View {
 	}
 
 	/**
-	 * check user's touch moving is or not in the area of cells 
+	 * checkPwd user's touch moving is or not in the area of cells
 	 * @param x
 	 * @param y
 	 * @return

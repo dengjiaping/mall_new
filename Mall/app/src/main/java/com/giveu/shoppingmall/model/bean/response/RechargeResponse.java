@@ -36,6 +36,7 @@ public class RechargeResponse extends BaseBean<RechargeResponse> {
 
         public String name;
         public int operator;
+        public long callTrafficId;
         public int productType;
         public double salePrice;
         public boolean hasPhone;

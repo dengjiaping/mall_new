@@ -13,11 +13,11 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -34,6 +34,15 @@ public class PwdDialog {
     TextView tv_dialog_pwd;
     String mStatusType;
 
+    public PwdDialog(Activity mActivity) {
+        this.mActivity = mActivity;
+        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View contentView = inflater.inflate(R.layout.dialog_pwd, null);
+        initView(contentView);
+        setListener();
+        mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+    }
+
     public PwdDialog(Activity mActivity, String statusType) {
         this.mActivity = mActivity;
         mStatusType = statusType;
@@ -48,12 +57,17 @@ public class PwdDialog {
         mDialog.show();
     }
 
+    public void dissmissDialog() {
+        if (mActivity != null && !mActivity.isFinishing() && mDialog.isShowing())
+            mDialog.dismiss();
+    }
+
 
     private void initView(final View contentView) {
         CommonUtils.openSoftKeyBoard(mActivity);
         tv_dialog_pwd = (TextView) contentView.findViewById(R.id.tv_dialog_pwd);
         inputView = (PassWordInputView) contentView.findViewById(R.id.inputview_dialog);
-
+        inputView.clearFocus();
     }
 
     public void setListener() {
@@ -66,7 +80,11 @@ public class PwdDialog {
                         payPwd = tradPwd.toLowerCase();
                     }
                     CommonUtils.closeSoftKeyBoard(inputView.getWindowToken(), mActivity);
-                    turnToSuccessActivity();
+                    if (checkPwdListener != null) {
+                        checkPwdListener.checkPwd(payPwd);
+                    }
+                    //turnToSuccessActivity();
+
                 }
             }
         });
@@ -81,10 +99,21 @@ public class PwdDialog {
         });
     }
 
+    public interface OnCheckPwdListener {
+        void checkPwd(String payPwd);
+    }
+
+    private OnCheckPwdListener checkPwdListener;
+
+    public void setOnCheckPwdListener(OnCheckPwdListener checkPwdListener) {
+        this.checkPwdListener = checkPwdListener;
+    }
+
+
     //控制校验密码，2 失败  1 成功
 
     public void turnToSuccessActivity() {
-        ApiImpl.verifyPayPwd(mActivity, "11413713", payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+        ApiImpl.verifyPayPwd(mActivity, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
             @Override
             public void onSuccess(PayPwdResponse response) {
                 if (response.data != null) {
@@ -101,7 +130,7 @@ public class PwdDialog {
                             case statusType.CASH:
                             case statusType.RECHARGE:
                                 //取现充值需要验证手机
-                                VerifyActivity.startIt(mActivity, mStatusType);
+//                                VerifyActivity.startIt(mActivity, mStatusType);
                                 break;
                         }
                         mDialog.dismiss();
@@ -122,6 +151,12 @@ public class PwdDialog {
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
+    }
+
+    public void showPwdError(int remainTimes) {
+        PwdErrorDialog errorDialog = new PwdErrorDialog();
+        errorDialog.showDialog(mActivity, remainTimes);
+        inputView.clearResult();
     }
 
     /**

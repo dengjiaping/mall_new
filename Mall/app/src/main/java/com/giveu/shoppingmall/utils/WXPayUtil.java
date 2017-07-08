@@ -11,14 +11,14 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
  */
 public class WXPayUtil {
     private static IWXAPI wxApi;
-    private static final String APP_ID = "";
+    private static final String APP_ID = "wxf3536093a5f1ce76";
 
     private WXPayUtil() {
 
     }
 
     public static void init() {
-        wxApi = WXAPIFactory.createWXAPI(BaseApplication.getInstance(), null);
+        wxApi = WXAPIFactory.createWXAPI(BaseApplication.getInstance(), APP_ID,false);
         wxApi.registerApp(APP_ID);
     }
 

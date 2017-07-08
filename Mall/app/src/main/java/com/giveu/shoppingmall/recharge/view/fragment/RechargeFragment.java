@@ -21,20 +21,27 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.mynet.BaseBean;
-import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
+import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
+import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
+import com.giveu.shoppingmall.recharge.view.agent.IRechargeView;
 import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.WXPayUtil;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +49,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.giveu.shoppingmall.R.id.et_recharge;
-import static com.giveu.shoppingmall.R.id.gv_recharge;
 
 /**
  * 充值模块
  * Created by 508632 on 2016/12/13.
  */
 
-public class RechargeFragment extends BaseFragment {
+public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     LvCommonAdapter<RechargeResponse.PackageBean> rechargeAdapter;
     private RechargeResponse rechargeResponse;
@@ -60,11 +65,11 @@ public class RechargeFragment extends BaseFragment {
     RadioButton rbFlow;
     @BindView(R.id.rg_recharge)
     RadioGroup rgRecharge;
-    @BindView(et_recharge)
+    @BindView(R.id.et_recharge)
     EditText etRecharge;
     @BindView(R.id.tv_message)
     TextView tvMessage;
-    @BindView(gv_recharge)
+    @BindView(R.id.gv_recharge)
     NoScrollGridView gvRecharge;
     @BindView(R.id.iv_clear)
     ImageView ivClear;
@@ -75,13 +80,23 @@ public class RechargeFragment extends BaseFragment {
     private String username;
     //运营商
     private String oper;
+    private String salePrice;
+    private String mobile;
+    private int productType;
+    private long productId;
+    private String productName;
     //产品id
     private String pid;
+    PwdDialog pwdDialog;
 
     private int tabIndex;//0=话费 1=流量
     private boolean isVailable = false;//是否可点击
     private ArrayList<RechargeResponse.PackageBean> productList;
     private String currentOperator = "";
+    private RechargePresenter presenter;
+    private String orderNo;
+    private int paymentType;
+    private ChargeOrderDialog orderDialog;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +105,13 @@ public class RechargeFragment extends BaseFragment {
         baseLayout.hideBack();
         ButterKnife.bind(this, view);
         gvRecharge.setEnabled(false);
+        presenter = new RechargePresenter(this);
         return view;
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
@@ -115,10 +136,13 @@ public class RechargeFragment extends BaseFragment {
         gvRecharge.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int checkId, long l) {
-
-                ChargeOrderDialog dialog = new ChargeOrderDialog(mBaseContext, tvMessage.getText().toString(), rechargeAdapter.getItem(checkId).name, etRecharge.getText().toString(), StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice+""));
-                dialog.showDialog();
-                //优惠券
+                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                        rechargeAdapter.getItem(checkId).callTrafficId);
+                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                mobile = etRecharge.getText().toString();
+                productType = rechargeAdapter.getItem(checkId).productType;
+                productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                productName = rechargeAdapter.getItem(checkId).name;
             }
         });
     }
@@ -164,24 +188,8 @@ public class RechargeFragment extends BaseFragment {
                 }
             }
         });
-
-        ApiImpl.goodsCallTraffics(mBaseContext, new BaseRequestAgent.ResponseListener<RechargeResponse>() {
-            @Override
-            public void onSuccess(RechargeResponse response) {
-                //默认显示中国移动话费充值
-                rechargeResponse = response.data;
-                if (CommonUtils.isNotNullOrEmpty(response.data.call.cmccs)) {
-                    productList.addAll(response.data.call.cmccs);
-                    rechargeAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-
+        //获取充值产品
+        presenter.getProducts();
     }
 
     @Override
@@ -262,54 +270,41 @@ public class RechargeFragment extends BaseFragment {
                 String phone = editable.toString().replace(" ", "");
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
                 isVailable = true;
-                getPhoneInfo(phone);
+                //获取该手机号运营商
+                presenter.getPhoneInfo(phone);
             } else {
                 isVailable = false;
                 tvMessage.setText("");
-                changeItemHasPhone(rechargeAdapter.getData());
+                changeItemCanClick(rechargeAdapter.getData());
             }
         }
     };
 
 
     /**
-     * 获取该手机号运营商
-     */
-    private void getPhoneInfo(String phone) {
-        ApiImpl.goodsCallTrafficsSegment(mBaseContext, phone, new BaseRequestAgent.ResponseListener<SegmentResponse>() {
-            @Override
-            public void onSuccess(SegmentResponse response) {
-                tvMessage.setText(response.data.city + response.data.isp);
-                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
-                currentOperator = response.data.code;
-                showContentData();
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                tvMessage.setText("错误号码");
-                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
-            }
-        });
-    }
-
-    /**
      * 展示流量还是话费，并且区分运营商
      */
     private void showContentData() {
+
         switch (tabIndex) {
             case 0:
                 //话费充值
                 //中国移动
                 if ("0".equals(currentOperator)) {
-                    rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                        rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                    }
                 } else if ("1".equals(currentOperator)) {
                     //中国联通
-                    rechargeAdapter.setData(rechargeResponse.call.cuccs);
+                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                        rechargeAdapter.setData(rechargeResponse.call.cuccs);
+                    }
 
                 } else if ("2".equals(currentOperator)) {
                     //中国电信
-                    rechargeAdapter.setData(rechargeResponse.call.ctcs);
+                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                        rechargeAdapter.setData(rechargeResponse.call.ctcs);
+                    }
                 }
                 break;
 
@@ -317,29 +312,39 @@ public class RechargeFragment extends BaseFragment {
                 //流量充值
                 //中国移动
                 if ("0".equals(currentOperator)) {
-                    rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                        rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                    }
                 } else if ("1".equals(currentOperator)) {
                     //中国联通
-                    rechargeAdapter.setData(rechargeResponse.traffic.cuccs);
+                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                        rechargeAdapter.setData(rechargeResponse.traffic.cuccs);
+                    }
 
                 } else if ("2".equals(currentOperator)) {
                     //中国电信
-                    rechargeAdapter.setData(rechargeResponse.traffic.ctcs);
+                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                        rechargeAdapter.setData(rechargeResponse.traffic.ctcs);
+                    }
                 }
                 break;
         }
         if (StringUtils.isNull(currentOperator)) {
             if (tabIndex == 0) {
-                rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                if (rechargeResponse.call != null) {
+                    rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                }
             } else {
-                rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                if (rechargeResponse.traffic != null) {
+                    rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                }
             }
         }
-        changeItemHasPhone(rechargeAdapter.getData());
+        changeItemCanClick(rechargeAdapter.getData());
     }
 
     //设置gridView的Item是否可点击
-    private void changeItemHasPhone(List<RechargeResponse.PackageBean> data) {
+    private void changeItemCanClick(List<RechargeResponse.PackageBean> data) {
         if (data != null) {
             if (!isVailable) {
                 for (RechargeResponse.PackageBean products : data) {
@@ -359,7 +364,10 @@ public class RechargeFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == VerifyActivity.REUQEST_FINISH && resultCode == Activity.RESULT_OK) {
+            presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNo, paymentType);
+
+        } else if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             // ContentProvider展示数据类似一个单个数据库表
             // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
             ContentResolver reContentResolverol = mBaseContext.getContentResolver();
@@ -415,4 +423,86 @@ public class RechargeFragment extends BaseFragment {
         }
         return sb;
     }
+
+    @Override
+    public void showProducts(RechargeResponse data) {
+        //默认显示中国移动话费充值
+        rechargeResponse = data;
+        if (CommonUtils.isNotNullOrEmpty(data.call.cmccs)) {
+            productList.addAll(data.call.cmccs);
+            rechargeAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showPhoneInfo(SegmentResponse data) {
+        tvMessage.setText(data.city + data.isp);
+        tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
+        currentOperator = data.code;
+        showContentData();
+        phoneArea = data.city + data.isp;
+    }
+
+    @Override
+    public void showErrorInfo() {
+        tvMessage.setText("错误号码");
+        tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+    }
+
+    @Override
+    public void createOrderSuccess(final String orderNoResponse) {
+        //创建订单成功
+        orderDialog = new ChargeOrderDialog(mBaseContext, phoneArea, productName, mobile, salePrice);
+        orderDialog.setProductType(productType);
+        orderDialog.setOnConfirmListener(new ChargeOrderDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(int paymentType) {
+                RechargeFragment.this.paymentType = paymentType;
+                pwdDialog = new PwdDialog(mBaseContext);
+                pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                    @Override
+                    public void checkPwd(String payPwd) {
+                        presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
+                    }
+                });
+                pwdDialog.showDialog();
+                orderDialog.dissmissDialog();
+                RechargeFragment.this.orderNo = orderNoResponse;
+            }
+        });
+        orderDialog.showDialog();
+    }
+
+    @Override
+    public void confirmOrderSuccess(ConfirmOrderResponse data) {
+        //确认订单成功
+        if (data != null) {
+            IWXAPI iWxapi = WXPayUtil.getWxApi();
+            PayReq payReq = WXPayUtil.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
+            iWxapi.sendReq(payReq);
+        }else {
+            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice+"元",  salePrice+"元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+        }
+
+    }
+
+    @Override
+    public void confirmOrderFailed() {
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付" , salePrice+"元", salePrice+"元", null);
+    }
+
+    @Override
+    public void pwdSuccess() {
+        //交易密码校验成功
+        pwdDialog.dissmissDialog();
+        VerifyActivity.startIt(this, VerifyActivity.RECHARGE);
+    }
+
+    @Override
+    public void pwdError(int remainTimes) {
+        //交易密码错误,弹出密码错误框
+        pwdDialog.showPwdError(remainTimes);
+    }
+
+
 }

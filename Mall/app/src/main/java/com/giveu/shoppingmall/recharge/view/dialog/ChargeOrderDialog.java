@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
@@ -34,8 +33,10 @@ public class ChargeOrderDialog {
     //充值显示的价格（没使用优惠券的时候）
     public String OldPrice;
     Activity mActivity;
-    String paymentType = "即有钱包";//支付方式，默认
-    PwdDialog pwdDialog = null;
+    private TextView tvProduct;
+    String paymentTypeStr = "即有钱包";//支付方式，默认
+    int paymentType = 0;//支付方式，默认即有钱包
+
     public ChargeOrderDialog(Activity activity) {
         this.mActivity = activity;
 
@@ -60,12 +61,17 @@ public class ChargeOrderDialog {
         tv_price.setText(price);
         tv_sum.setText(price);
 
-        pwdDialog = new PwdDialog(mActivity,PwdDialog.statusType.RECHARGE);
+//        pwdDialog = new PwdDialog(mActivity, PwdDialog.statusType.RECHARGE);
     }
 
     public void showDialog() {
         mDialog.setCancelable(false);
         mDialog.show();
+    }
+
+    public void dissmissDialog() {
+        if (mActivity != null && !mActivity.isFinishing()&&mDialog.isShowing())
+            mDialog.dismiss();
     }
 
     private void initView(final View contentView) {
@@ -80,6 +86,7 @@ public class ChargeOrderDialog {
         tv_payment = (ClickEnabledTextView) contentView.findViewById(R.id.tv_payment);
         cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
         tv_payment.setClickEnabled(true);
+        tvProduct = (TextView) contentView.findViewById(R.id.tv_product);
 //
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
 //        isCheckBoxChecked = cb_agreement.isChecked();
@@ -87,6 +94,22 @@ public class ChargeOrderDialog {
 
         setListener();
 
+    }
+
+    public void setProductType(int productType){
+        switch (productType){
+            case 0:
+                tvProduct.setText("充值话费");
+                break;
+
+            case 1:
+                tvProduct.setText("充值流量");
+                break;
+
+            default:
+                tvProduct.setText("充值话费");
+                break;
+        }
     }
 
     private void setListener() {
@@ -112,17 +135,23 @@ public class ChargeOrderDialog {
                 }
             }
         });
-        final PaymentTypeDialog paymentTypeDialog = new PaymentTypeDialog(mActivity,  paymentType);
+        final PaymentTypeDialog paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeStr);
         ll_payment_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //选择支付方式
                 paymentTypeDialog.showDialog();
+                paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
+                    @Override
+                    public void onChooseType(int type) {
+                        paymentType = type;
+                    }
+                });
                 paymentTypeDialog.setdismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         tv_payment_type.setText(paymentTypeDialog.paymentType + "");
-                        CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(),mActivity);
+//                        CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(), mActivity);
                     }
                 });
 
@@ -134,19 +163,31 @@ public class ChargeOrderDialog {
             @Override
             public void onClick(View view) {
                 if (tv_payment.isClickEnabled()) {
-
-                    pwdDialog.showDialog();
+                    if (listener != null) {
+                        listener.onConfirm(paymentType);
+                    }
+/*                    pwdDialog.showDialog();
                     CommonUtils.openSoftKeyBoard(mActivity);
                     pwdDialog.setdismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialogInterface) {
                             CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(),mActivity);
                         }
-                    });
+                    });*/
                 } else {
                     ToastUtils.showShortToast("请勾选用户协议");
                 }
             }
         });
+    }
+
+    public interface OnConfirmListener {
+        void onConfirm(int paymentType);
+    }
+
+    private OnConfirmListener listener;
+
+    public void setOnConfirmListener(OnConfirmListener listener) {
+        this.listener = listener;
     }
 }

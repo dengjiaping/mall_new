@@ -38,4 +38,21 @@ public class SendSmsPresenter<T extends ISendSmsView> extends BasePresenter<T> {
             }
         });
     }
+
+    public void checkSMSCode(String phone, String code, String codeType) {
+        ApiImpl.chkValiCode(getView().getAct(), code, phone, codeType, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
+                    getView().checkSMSSuccess();
+                }
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
 }

@@ -8,4 +8,5 @@ import com.giveu.shoppingmall.base.IView;
 
 public interface ISendSmsView extends IView {
     void sendSMSSuccess();
+    void checkSMSSuccess();
 }

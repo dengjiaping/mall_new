@@ -106,6 +106,9 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());
         String jsonParams = new Gson().toJson(getParams());
+        if(getParams().isEmpty()){
+            jsonParams = "";
+        }
         String md5Str = MD5.MD5Encode(jsonParams + "!$*6uOuop@^&%,.$*ci(hf_&]|");
         if ( !TextUtils.isEmpty(md5Str)){
             headerMap.put("sign", md5Str.toLowerCase());

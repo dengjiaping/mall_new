@@ -128,7 +128,7 @@ public class NetworkImageView extends ImageView {
             return;
         }
 
-        // if there was an old request in this view, check if it needs to be canceled.
+        // if there was an old request in this view, checkPwd if it needs to be canceled.
         if (mImageContainer != null && mImageContainer.getRequestUrl() != null) {
             if (mImageContainer.getRequestUrl().equals(mUrl)) {
                 // if the request is from the same URL, return.
