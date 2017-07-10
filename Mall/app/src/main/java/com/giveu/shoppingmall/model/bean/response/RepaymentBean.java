@@ -4,7 +4,7 @@ package com.giveu.shoppingmall.model.bean.response;
  * Created by 513419 on 2017/6/22.
  */
 
-public class BillBean {
+public class RepaymentBean {
     public boolean isTitle;
     public boolean isChoose;
     public String repayDate;//还款日期
@@ -23,7 +23,7 @@ public class BillBean {
 
     @Override
     public String toString() {
-        return "BillBean{" +
+        return "RepaymentBean{" +
                 "isTitle=" + isTitle +
                 ", isChoose=" + isChoose +
                 ", repayDate='" + repayDate + '\'' +

@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:pwd_style="line"
-        />
+        app:text_visible="true" />
 
     <com.giveu.shoppingmall.widget.SendCodeTextView
         android:id="@+id/tv_send_code"

@@ -51,6 +51,7 @@ public class BaseApplication extends MultiDexApplication {
     public List<Activity> undestroyActivities;
     private static PauseOnScrollListener imageLoaderPauseOnScrollListener;
     private Timer tokenTimer;
+    private String beforePayActivity;
 
     @Override
     public void onCreate() {
@@ -103,6 +104,14 @@ public class BaseApplication extends MultiDexApplication {
 //                listener.onSuccess(provinceCityBean);
 //            }
 //        }
+    }
+
+    public String getBeforePayActivity() {
+        return beforePayActivity;
+    }
+
+    public void setBeforePayActivity(String beforePayActivity) {
+        this.beforePayActivity = beforePayActivity;
     }
 
     /**

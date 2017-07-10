@@ -26,6 +26,7 @@ import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -141,7 +142,7 @@ public class ApiImpl {
     }
 
     //校验短信验证码
-    public static void chkValiCode(Activity context, String code, String phone,String codeType, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void chkValiCode(Activity context, String code, String phone, String codeType, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code", "phone", "codeType"}, new String[]{code, phone, codeType});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_util_chkValiCode, BaseBean.class, context, responseListener);
     }
@@ -312,15 +313,21 @@ public class ApiImpl {
     }
 
     //确认充值订单
-    public static void confirmRechargeOrder(Activity context, String idPerson, String mobile, long productId, String orderNo, int payType, BaseRequestAgent.ResponseListener<ConfirmOrderResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType"}, new Object[]{Long.parseLong(idPerson), mobile, productId, orderNo, payType});
+    public static void confirmRechargeOrder(Activity context, String idPerson, String mobile, long productId, String orderNo, int payType, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmOrderResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType", "smsCode","smsMobile"}, new Object[]{Long.parseLong(idPerson), mobile, productId, orderNo, payType, smsCode,smsMobile});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_confirmRechargeOrder, ConfirmOrderResponse.class, context, responseListener);
     }
 
     //第三方支付成功调用充值
-    public static void thirdPayRecharge(Activity context, String idPerson, int orderDetailId, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void thirdPayRecharge(Activity context, String idPerson, long orderDetailId, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "orderDetailId", "orderNo"}, new Object[]{idPerson, orderDetailId, orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_thirdPayRecharge, BaseBean.class, context, responseListener);
+    }
+
+    //还款预下单
+    public static void createRepaymentOrder(Activity context, String idPerson, long amount, String clientIp, String payChannel, String productType, BaseRequestAgent.ResponseListener<RepaymentActionResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "amount", "clientIp", "payChannel", "productType", "source"}, new Object[]{StringUtils.string2Long(idPerson), amount, clientIp, payChannel, productType, "Android"});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_createRepaymentOrder, RepaymentActionResponse.class, context, responseListener);
     }
 }
 

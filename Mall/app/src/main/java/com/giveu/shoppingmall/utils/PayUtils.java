@@ -9,16 +9,17 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
  * Created by 513419 on 2017/7/4.
  * 微信支付，单例实现
  */
-public class WXPayUtil {
+public class PayUtils {
     private static IWXAPI wxApi;
     private static final String APP_ID = "wxf3536093a5f1ce76";
+    public static final String WX = "WECHAT_APP";
 
-    private WXPayUtil() {
+    private PayUtils() {
 
     }
 
     public static void init() {
-        wxApi = WXAPIFactory.createWXAPI(BaseApplication.getInstance(), APP_ID,false);
+        wxApi = WXAPIFactory.createWXAPI(BaseApplication.getInstance(), APP_ID, false);
         wxApi.registerApp(APP_ID);
     }
 

@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.InputType;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ public class PassWordInputView extends View {
     private int size;//默认每一格的大小
     private Paint mBorderPaint;//边界画笔
     private Paint mDotPaint;//掩盖点的画笔
+    private Paint textPaint;//绘制数字的画笔
     private int mBorderColor;//边界颜色
     private int mDotColor;//掩盖点的颜色
     private RectF mRoundRect;//外面的圆角矩形
@@ -44,6 +46,8 @@ public class PassWordInputView extends View {
     private float mFocusLineLength;//
     private int style;//0为矩形背景，1为下划线背景
     private ObjectAnimator mFocusAnim;//焦点转换动画
+    private boolean textVisible;
+    private int textSize;
     Context context;
 
     public PassWordInputView(Context context) {
@@ -83,6 +87,8 @@ public class PassWordInputView extends View {
             mDotColor = ta.getColor(R.styleable.PswInputView_dot_color, Color.GRAY);
             count = ta.getInt(R.styleable.PswInputView_count, 6);
             style = ta.getInt(R.styleable.PswInputView_pwd_style, 0);
+            textVisible = ta.getBoolean(R.styleable.PswInputView_text_visible, false);
+            textSize = ta.getDimensionPixelSize(R.styleable.PswInputView_text_size, 15);
             ta.recycle();
         } else {
             mBorderColor = Color.LTGRAY;
@@ -99,6 +105,10 @@ public class PassWordInputView extends View {
         mDotPaint.setStrokeWidth(3);
         mDotPaint.setStyle(Paint.Style.FILL);
         mDotPaint.setColor(mDotColor);
+        textPaint = new TextPaint();
+        textPaint.setColor(mDotColor);
+        textPaint.setTextSize(dp * textSize);//默认字体14sp，有需要再设置
+        textPaint.setAntiAlias(true);
         mRoundRect = new RectF();
         //   mRoundRadius=(int)(5*dp);
         mFocusLineLength = 0;
@@ -212,12 +222,27 @@ public class PassWordInputView extends View {
         }
         //画掩盖点,
         // 这是前面定义的变量 private ArrayList<Integer> result;//输入结果保存
-        int dotRadius = size / 6;//圆圈占格子的三分之一
-        for (int i = 0; i < result.size(); i++) {
-            final float x = (float) (size * (i + 0.5));
-            final float y = size / 2;
-            canvas.drawCircle(x, y, dotRadius, mDotPaint);
+        if (textVisible) {
+            for (int i = 0; i < result.size(); i++) {
+                float stringWidth = textPaint.measureText(result.get(i) + "");
+                float sx = (size - stringWidth) / 2;
+                if (i != 0) {
+                    sx += size * i;
+                }
+                //文字的y轴坐标
+                Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+                float y = height / 2 + (Math.abs(fontMetrics.ascent) - fontMetrics.descent) / 2;
+                canvas.drawText(result.get(i) + "", sx, y, textPaint);
+            }
+        } else {
+            int dotRadius = size / 6;//圆圈占格子的三分之一
+            for (int i = 0; i < result.size(); i++) {
+                final float x = (float) (size * (i + 0.5));
+                final float y = size / 2;
+                canvas.drawCircle(x, y, dotRadius, mDotPaint);
+            }
         }
+
  /*       //画提示线
         if (mFocusLineLength!=0){
             final float sx= (width-mFocusLineLength)/2;

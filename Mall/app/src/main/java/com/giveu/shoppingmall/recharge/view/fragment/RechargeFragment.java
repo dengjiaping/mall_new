@@ -27,21 +27,16 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
-import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
-import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.recharge.view.agent.IRechargeView;
 import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.WXPayUtil;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +80,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int productType;
     private long productId;
     private String productName;
+    private long orderDetailId;
     //产品id
     private String pid;
     PwdDialog pwdDialog;
@@ -366,10 +362,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == VerifyActivity.REUQEST_FINISH && resultCode == Activity.RESULT_OK) {
-            presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNo, paymentType);
-
-        } else if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             // ContentProvider展示数据类似一个单个数据库表
             // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
             ContentResolver reContentResolverol = mBaseContext.getContentResolver();
@@ -475,29 +468,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         orderDialog.showDialog();
     }
 
-    @Override
-    public void confirmOrderSuccess(ConfirmOrderResponse data) {
-        //确认订单成功
-        if (data != null) {
-            IWXAPI iWxapi = WXPayUtil.getWxApi();
-            PayReq payReq = WXPayUtil.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
-            iWxapi.sendReq(payReq);
-        } else {
-            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-        }
-
-    }
-
-    @Override
-    public void confirmOrderFailed() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
-    }
 
     @Override
     public void pwdSuccess() {
         //交易密码校验成功
         pwdDialog.dissmissDialog();
-        VerifyActivity.startIt(this, VerifyActivity.RECHARGE);
+        VerifyActivity.startItForRecharge(mBaseContext,mobile.replace(" ",""),productId,orderNo,paymentType,orderDetailId,salePrice);
     }
 
     @Override
@@ -505,6 +481,4 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //交易密码错误,弹出密码错误框
         pwdDialog.showPwdError(remainTimes);
     }
-
-
 }

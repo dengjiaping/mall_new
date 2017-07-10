@@ -1,6 +1,8 @@
 package com.giveu.shoppingmall.me.view.dialog;
 
 import android.app.Activity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -42,7 +44,7 @@ public class RepaymentDialog extends CustomDialog {
             @Override
             public void onClick(View v) {
                 //输入金额不为空并且金额大于0
-                if (StringUtils.isNotNull(etMoney.getText().toString()) && Integer.parseInt(etMoney.getText().toString()) > 0) {
+                if (StringUtils.isNotNull(etMoney.getText().toString()) && Double.parseDouble(etMoney.getText().toString()) > 0) {
                     if (listener != null) {
                         listener.onConfirm(etMoney.getText().toString());
                         CommonUtils.closeSoftKeyBoard(mAttachActivity);
@@ -53,6 +55,47 @@ public class RepaymentDialog extends CustomDialog {
                 }
 
             }
+        });
+
+        //限制最多输入两位小数，并且如果是小数点开头自动补全0
+        etMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (s.toString().contains(".")) {
+                    if (s.length() - 1 - s.toString().indexOf(".") > 2) {
+                        s = s.toString().subSequence(0,
+                                s.toString().indexOf(".") + 3);
+                        etMoney.setText(s);
+                        etMoney.setSelection(s.length());
+                    }
+                }
+                if (s.toString().startsWith(".")) {
+                    s = "0" + s;
+                    etMoney.setText(s);
+                    etMoney.setSelection(2);
+                }
+
+                if (s.toString().startsWith("0")
+                        && s.toString().trim().length() > 1) {
+                    if (!s.toString().substring(1, 2).equals(".")) {
+                        etMoney.setText(s.subSequence(0, 1));
+                        etMoney.setSelection(1);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
         });
     }
 
@@ -68,7 +111,7 @@ public class RepaymentDialog extends CustomDialog {
         this.listener = listener;
     }
 
-   public interface OnConfirmListener {
+    public interface OnConfirmListener {
         void onConfirm(String money);
     }
 }

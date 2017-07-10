@@ -4,11 +4,11 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.view.agent.IRechargeView;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -58,7 +58,7 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
         ApiImpl.createRechargeOrder(getView().getAct(), idPerson, mobile, productId, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-                if (getView() != null) {
+                if (getView() != null && response.data != null && StringUtils.isNotNull(response.data.toString())) {
                     getView().createOrderSuccess(response.data.toString());
                 }
 
@@ -69,38 +69,6 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
-    }
-
-    public void confirmRechargeOrder(String idPerson, String mobile, long productId, String orderNo, int payType) {
-        ApiImpl.confirmRechargeOrder(getView().getAct(), idPerson, mobile, productId, orderNo, payType, new BaseRequestAgent.ResponseListener<ConfirmOrderResponse>() {
-            @Override
-            public void onSuccess(ConfirmOrderResponse response) {
-                if (getView() != null) {
-                    getView().confirmOrderSuccess(response.data);
-                }
-
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-    }
-
-    public void thirdPayRecharge(String idPerson, int orderDetailId, String orderNo) {
-        ApiImpl.thirdPayRecharge(getView().getAct(), idPerson, orderDetailId, orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-            @Override
-            public void onSuccess(BaseBean response) {
-
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-
     }
 
     public void checkPwd(String idPerson, String tradPwd) {

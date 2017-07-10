@@ -9,7 +9,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.model.bean.response.BillBean;
+import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.TypeUtlis;
@@ -21,23 +21,23 @@ import java.util.List;
  * Created by 513419 on 2017/6/22.
  */
 
-public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
+public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
 
-    public BillAdapter(Context context, final List<BillBean> datas) {
+    public RepaymentAdapter(Context context, final List<RepaymentBean> datas) {
         super(context, datas);
-        addItemViewDelegate(new ItemViewDelegate<BillBean>() {
+        addItemViewDelegate(new ItemViewDelegate<RepaymentBean>() {
             @Override
             public int getItemViewLayoutId() {
                 return R.layout.lv_bill_title;
             }
 
             @Override
-            public boolean isForViewType(BillBean item, int position) {
+            public boolean isForViewType(RepaymentBean item, int position) {
                 return item.isTitle;
             }
 
             @Override
-            public void convert(final ViewHolder holder, final BillBean item, int position) {
+            public void convert(final ViewHolder holder, final RepaymentBean item, int position) {
                 final CheckBox cbChoose = holder.getView(R.id.cb_choose);
                 holder.setText(R.id.tv_title, TypeUtlis.getProductType(item.productType) + "：¥" + StringUtils.format2(item.repayAmount));
                 cbChoose.setChecked(item.isChoose);
@@ -45,8 +45,8 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                     @Override
                     public void onClick(View v) {
                         //遍历查询当前点击产品类型是否与上次勾选的一致，不一致给予提醒
-                        for (BillBean billBean : datas) {
-                            if (billBean.isChoose && !item.productType.equals(billBean.productType)) {
+                        for (RepaymentBean repaymentBean : datas) {
+                            if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
                                 cbChoose.setChecked(!cbChoose.isChecked());
                                 ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
                                 return;
@@ -59,7 +59,7 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                                 if (!cbChoose.isChecked()) {
                                     money = -money;
                                 }
-                                listener.moneyChange(money);
+                                listener.moneyChange(money,item.productType);
                             } catch (Exception e) {
 
                             }
@@ -69,8 +69,8 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                 holder.setOnClickListener(R.id.ll_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (BillBean billBean : datas) {
-                            if (billBean.isChoose && !item.productType.equals(billBean.productType)) {
+                        for (RepaymentBean repaymentBean : datas) {
+                            if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
                                 ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
                                 return;
                             }
@@ -78,34 +78,33 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                         cbChoose.setChecked(!cbChoose.isChecked());
                         item.isChoose = cbChoose.isChecked();
                         if (listener != null) {
-                            try {
-                                double money = Double.parseDouble(item.repayAmount);
-                                if (!item.isChoose) {
-                                    money = -money;
+                            double money = 0;
+                            //计算选中项的总金额
+                            for (RepaymentBean repaymentBean : mDatas) {
+                                if(repaymentBean.isChoose){
+                                    money+=StringUtils.string2Double(repaymentBean.repayAmount);
                                 }
-                                listener.moneyChange(money);
-                            } catch (Exception e) {
-
                             }
+                            listener.moneyChange(money, item.productType);
                         }
                     }
                 });
             }
         });
 
-        addItemViewDelegate(new ItemViewDelegate<BillBean>() {
+        addItemViewDelegate(new ItemViewDelegate<RepaymentBean>() {
             @Override
             public int getItemViewLayoutId() {
                 return R.layout.lv_bill_item;
             }
 
             @Override
-            public boolean isForViewType(BillBean item, int position) {
+            public boolean isForViewType(RepaymentBean item, int position) {
                 return !item.isTitle;
             }
 
             @Override
-            public void convert(ViewHolder holder, BillBean item, int position) {
+            public void convert(ViewHolder holder, RepaymentBean item, int position) {
                 if(StringUtils.isNotNull(item.paymentNum)){
                     holder.setText(R.id.tv_date, item.numInstalment+"/"+item.paymentNum+"期");
                 }else {
@@ -124,7 +123,7 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
     }
 
     public interface OnMoneyChangeListener {
-        void moneyChange(double money);
+        void moneyChange(double money, String productType);
     }
 
     private OnMoneyChangeListener listener;

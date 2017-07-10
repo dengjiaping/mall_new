@@ -11,10 +11,10 @@ import android.view.View;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
-import com.giveu.shoppingmall.me.presenter.BillListPresenter;
-import com.giveu.shoppingmall.me.view.agent.IBillIistView;
-import com.giveu.shoppingmall.me.view.fragment.BillFragment;
-import com.giveu.shoppingmall.model.bean.response.BillBean;
+import com.giveu.shoppingmall.me.presenter.RepaymentPresenter;
+import com.giveu.shoppingmall.me.view.agent.IRepaymentView;
+import com.giveu.shoppingmall.me.view.fragment.RepaymentFragment;
+import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -28,24 +28,24 @@ import butterknife.BindView;
  * Created by 513419 on 2017/6/22.
  */
 
-public class BillListActivity extends BaseActivity implements IBillIistView {
+public class RepaymentActivity extends BaseActivity implements IRepaymentView {
     @BindView(R.id.vp_bill)
     NoScrollViewPager vpBill;
-    private BillFragment currentMonthFragment;
-    private BillFragment nextMonthFragment;
+    private RepaymentFragment currentMonthFragment;
+    private RepaymentFragment nextMonthFragment;
     private BillFragmentAdapter fragmentAdapter;
     private ArrayList<Fragment> fragmentList;
-    private BillListPresenter presenter;
+    private RepaymentPresenter presenter;
 
     public static void startIt(Activity activity) {
-        Intent intent = new Intent(activity, BillListActivity.class);
+        Intent intent = new Intent(activity, RepaymentActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_bill_list);
-        baseLayout.setTitle("账单");
+        baseLayout.setTitle("还款");
         baseLayout.setRightTextColor(R.color.color_00bbc0);
         baseLayout.setRightTextAndListener("交易查询", new View.OnClickListener() {
             @Override
@@ -54,20 +54,20 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
             }
         });
         fragmentList = new ArrayList<>();
-        currentMonthFragment = new BillFragment();
+        currentMonthFragment = new RepaymentFragment();
         //传递参数
         Bundle currentBundle = new Bundle();
         currentBundle.putBoolean("isCurrentMonth", true);
         Bundle nextBundle = new Bundle();
         nextBundle.putBoolean("isCurrentMonth", false);
         currentMonthFragment.setArguments(currentBundle);
-        nextMonthFragment = new BillFragment();
+        nextMonthFragment = new RepaymentFragment();
         nextMonthFragment.setArguments(nextBundle);
         fragmentList.add(currentMonthFragment);
         fragmentList.add(nextMonthFragment);
         fragmentAdapter = new BillFragmentAdapter(getSupportFragmentManager(), fragmentList);
         vpBill.setAdapter(fragmentAdapter);
-        presenter = new BillListPresenter(this);
+        presenter = new RepaymentPresenter(this);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class BillListActivity extends BaseActivity implements IBillIistView {
     }
 
     @Override
-    public void showBillList(BillListResponse.HeaderBean headerBean, ArrayList<BillBean> currentMonthList, ArrayList<BillBean> nextMonthList) {
+    public void showBillList(BillListResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList) {
         //获取账单列表后刷新fragment数据
         currentMonthFragment.notifyDataSetChange(headerBean, currentMonthList);
         nextMonthFragment.notifyDataSetChange(headerBean, nextMonthList);

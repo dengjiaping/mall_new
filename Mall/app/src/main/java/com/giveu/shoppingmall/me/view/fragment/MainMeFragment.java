@@ -12,7 +12,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
-import com.giveu.shoppingmall.me.view.activity.BillListActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
@@ -145,7 +145,7 @@ public class MainMeFragment extends BaseFragment {
                 //登录并且有资质才可查看，否则先登录或先激活钱包
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        BillListActivity.startIt(mBaseContext);
+                        RepaymentActivity.startIt(mBaseContext);
                     } else {
                         WalletActivationFirstActivity.startIt(mBaseContext);
                     }

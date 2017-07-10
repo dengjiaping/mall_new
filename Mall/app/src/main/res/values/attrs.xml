@@ -36,6 +36,8 @@
         <attr name="count" format="integer" />
         <attr name="border_color" format="color" />
         <attr name="dot_color" format="color" />
+        <attr name="text_visible" format="boolean"/>
+        <attr name="text_size" format="dimension"/>
         <attr name="pwd_style">
             <flag name="rectangle" value="0x0" />
             <flag name="line" value="0x1" />

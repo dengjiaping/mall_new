@@ -40,7 +40,7 @@
         android:src="@drawable/shape_dash_line" />
 
     <TextView
-        android:id="@+id/tv_withdrawals"
+        android:id="@+id/tv_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="38dp"
@@ -51,7 +51,7 @@
         android:textSize="@dimen/ts_15" />
 
     <TextView
-        android:id="@+id/tv_large_withdrawals"
+        android:id="@+id/tv_pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="38dp"

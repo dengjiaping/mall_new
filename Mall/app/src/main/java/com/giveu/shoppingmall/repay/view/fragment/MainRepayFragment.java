@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.me.view.activity.BillListActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.repay.adpter.RepayAdapter;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
@@ -82,7 +82,7 @@ public class MainRepayFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 2 >= 0 && position - 2 < repayList.size()) {
-                    BillListActivity.startIt(mBaseContext);
+                    RepaymentActivity.startIt(mBaseContext);
                 }
 
             }
