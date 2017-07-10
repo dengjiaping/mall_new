@@ -16,7 +16,7 @@ import android.view.ViewGroup;
  * @Email lichfaker@gmail.com
  */
 public class HorizontalScaleScrollView extends BaseScaleView {
-    public final int LARGESCALE = 500;//每10格的一个大刻度
+    public final int LARGESCALE = 100;//每10格的一个大刻度
     Context context;
     public HorizontalScaleScrollView(Context context) {
         super(context);

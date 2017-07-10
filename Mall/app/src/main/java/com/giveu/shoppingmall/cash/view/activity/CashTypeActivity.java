@@ -26,14 +26,17 @@ import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
@@ -41,8 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.giveu.shoppingmall.R.id.et_input_amount;
 
 
 /**
@@ -52,7 +56,7 @@ import butterknife.OnClick;
 
 public class CashTypeActivity extends BaseActivity {
     HorizontalScaleScrollView scaleScrollView;
-    @BindView(R.id.et_input_amount)
+    @BindView(et_input_amount)
     EditText etInputAmount;
     @BindView(R.id.gv_staging_type)
     GridView gvStagingType;
@@ -105,9 +109,13 @@ public class CashTypeActivity extends BaseActivity {
                 boolean hide = (double) displayHeight / height > 0.8;
                 if (hide) {
                     //键盘消失监听
-                    setData();
+                    String input = StringUtils.getTextFromView(etInputAmount);
+                    if (StringUtils.isNotNull(input)) {
+                        chooseQuota = Double.parseDouble(input);
+                    }
                     if (chooseQuota >= 0 && chooseQuota <= 3000 && (chooseQuota % 50 == 0)) {
                         scaleScrollView.setCurScale((int) chooseQuota);
+                        setData();
                     }
                 }
             }
@@ -146,8 +154,11 @@ public class CashTypeActivity extends BaseActivity {
         String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
         if (StringUtils.isNotNull(availableCylimit)) {
             chooseQuota = Double.parseDouble(availableCylimit);
-            chooseQuota = 2000;
+            tvAvailableCredit.setText(String.valueOf(chooseQuota));//接收到的String转成double，填写到textView中
+            etInputAmount.setText(String.valueOf((int) chooseQuota));//接收到的String转成int，填写到editText中
+            scaleScrollView.setCurScale((int) chooseQuota);//刻度尺选择可用额度最大值
         }
+
     }
 
     private void initAdapter() {
@@ -196,7 +207,7 @@ public class CashTypeActivity extends BaseActivity {
         scaleScrollView.setOnScrollListener(new HorizontalScaleScrollView.OnScrollListener() {
             @Override
             public void onScaleScroll(int scale) {
-                etInputAmount.setText("" + scale * 50);
+                etInputAmount.setText("" + scale * 10);
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
             }
         });
@@ -224,8 +235,12 @@ public class CashTypeActivity extends BaseActivity {
                             if (checkId == i) {
                                 stagingTypeAdapter.getItem(i).isChecked = true;
                                 idProduct = stagingTypeAdapter.getItem(i).idProduct;
-                                showLoanAmount(idProduct, (int) chooseQuota);
-
+                                if (idProduct != 0) {
+                                    showLoanAmount(idProduct, (int) chooseQuota);
+                                    llShowData.setVisibility(View.VISIBLE);
+                                } else {
+                                    llShowData.setVisibility(View.GONE);
+                                }
                             } else {
                                 stagingTypeAdapter.getItem(i).isChecked = false;
                             }
@@ -285,7 +300,7 @@ public class CashTypeActivity extends BaseActivity {
         //   etInputAmount.setText(String.valueOf(chooseQuota));
         if (CommonUtils.isNullOrEmpty(productList)) {
             //获取产品数据（分期数）
-            ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getGlobleLimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {
+            ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getAvailableCylimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {
                 @Override
                 public void onSuccess(ProductResponse response) {
                     productList = response.data;
@@ -315,7 +330,7 @@ public class CashTypeActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank})
+    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -333,7 +348,6 @@ public class CashTypeActivity extends BaseActivity {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
-
                 //查看月供
                 break;
             case R.id.rl_add_bank_card:
@@ -342,12 +356,54 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.tv_ensure_bottom:
                 //确定
-                PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
+                final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
+                pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                    @Override
+                    public void checkPwd(String payPwd) {
+                        ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                                    @Override
+                                    public void onSuccess(PayPwdResponse response) {
+                                        pwdDialog.dissmissDialog();
+                                        if (response.data != null) {
+                                            PayPwdResponse pwdResponse = response.data;
+                                            if (pwdResponse.status) {
+                                                String creditType;
+                                                //取现需要验证手机
+                                                if (idProduct == 0) {//自行判断，idProduct=0则是随借随还（SH），有idProduct则是分期（SQ）
+                                                    creditType = "SH";
+                                                } else {
+                                                    creditType = "SQ";
+                                                }
+                                                VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int)chooseQuota), creditType, String.valueOf(idProduct), response.data.code);
+                                            } else {
+                                                //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
+                                                PwdErrorDialog errorDialog = new PwdErrorDialog();
+                                                errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
+                                            }
+
+                                            CommonUtils.closeSoftKeyBoard(mBaseContext);
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onError(BaseBean errorBean) {
+                                        CommonLoadingView.showErrorToast(errorBean);
+                                    }
+                                }
+                        );
+                    }
+                });
                 pwdDialog.showDialog();
                 break;
             case R.id.ll_choose_bank:
                 //银行卡列表
                 MyBankCardActivity.startIt(mBaseContext, true);
+                break;
+            case R.id.tv_cost:
+                //什么是咨询费
+                NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "什么是咨询费？");
+                dialog.showDialog();
                 break;
         }
 
@@ -383,11 +439,10 @@ public class CashTypeActivity extends BaseActivity {
 
         llShowData.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
+            //仅支持取现分期
             if (CommonUtils.isNullOrEmpty(products)) {
                 return;
             }
-            //仅支持取现分期
-            products.remove(0);
             p = products.get(stagingTypeAdapter.getCount() - 1);
             if (p != null) {
                 localIdProduct = p.idProduct;
@@ -402,6 +457,7 @@ public class CashTypeActivity extends BaseActivity {
             //支持随借随还及取现分期。用户勾选随借随还时，月供、还款计划、贷款本金字段隐藏
             products.add(noStageProduct);
             products.get(products.size() - 1).isShow = true;
+            products.get(products.size() - 1).isChecked = false;
             products.get(products.size() - 2).isChecked = true;
 
             p = products.get(stagingTypeAdapter.getCount() - 2);
@@ -461,12 +517,5 @@ public class CashTypeActivity extends BaseActivity {
         ViewGroup.LayoutParams params = myGridView.getLayoutParams();
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

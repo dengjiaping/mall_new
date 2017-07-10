@@ -275,7 +275,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             } else {
                 isVailable = false;
                 tvMessage.setText("");
-                changeItemCanClick(rechargeAdapter.getData());
+                if (rechargeAdapter != null) {
+                    changeItemCanClick(rechargeAdapter.getData());
+                }
             }
         }
     };
@@ -480,15 +482,15 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             IWXAPI iWxapi = WXPayUtil.getWxApi();
             PayReq payReq = WXPayUtil.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
             iWxapi.sendReq(payReq);
-        }else {
-            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice+"元",  salePrice+"元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+        } else {
+            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
         }
 
     }
 
     @Override
     public void confirmOrderFailed() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付" , salePrice+"元", salePrice+"元", null);
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
     }
 
     @Override

@@ -19,8 +19,11 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
+import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
@@ -54,10 +57,10 @@ public class MyBankCardActivity extends BaseActivity {
     @BindView(R.id.ll_default_bank_card)
     LinearLayout llDefaultBankCard;
 
-    public static void startIt(Activity mActivity,boolean needResult) {
+    public static void startIt(Activity mActivity, boolean needResult) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
         intent.putExtra("needResult", needResult);
-        mActivity.startActivityForResult(intent,1);
+        mActivity.startActivityForResult(intent, 1);
     }
 
     @Override
@@ -94,11 +97,11 @@ public class MyBankCardActivity extends BaseActivity {
         lvBankCard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                boolean needResult = getIntent().getBooleanExtra("needResult",false);
-                if(needResult){
+                boolean needResult = getIntent().getBooleanExtra("needResult", false);
+                if (needResult) {
                     showBankNoStyle(position);
                     finish();
-                }else{
+                } else {
                     final String id1 = String.valueOf(bankListAdapter.getItem(position).id);
                     dialogUtil.getDialogMode3("删除", "设置默认代扣卡", "取消", new View.OnClickListener() {
                         @Override
@@ -149,6 +152,7 @@ public class MyBankCardActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 传入点击项，返回4位尾数的银行卡号给上一页面
      *
@@ -172,27 +176,53 @@ public class MyBankCardActivity extends BaseActivity {
      * @param id
      */
     private void setDefaultCard(final String id) {
-        final PwdDialog pwdDialog = new PwdDialog(mBaseContext,PwdDialog.statusType.BANKCARD);
+        final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.BANKCARD);
         pwdDialog.showDialog();
         //验证成功的监听，拿到返回的code
-        pwdDialog.setOnVerifyPwdListener(new PwdDialog.OnVerifyPwdListener() {
+        pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
             @Override
-            public void onSuccess(String code) {
-                ApiImpl.setDefaultCard(mBaseContext,code, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                    @Override
-                    public void onSuccess(BaseBean response) {
-                        //设置默认代扣卡之后刷新列表
-                        setData();
-                        ToastUtils.showShortToast("设置默认代扣卡成功！");
-                    }
+            public void checkPwd(String payPwd) {
+                ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                            @Override
+                            public void onSuccess(PayPwdResponse response) {
+                                if (response.data != null) {
+                                    PayPwdResponse pwdResponse = response.data;
+                                    if (pwdResponse.status) {
+                                        //交易密码校验成功
+                                        ApiImpl.setDefaultCard(mBaseContext, pwdResponse.code, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                            @Override
+                                            public void onSuccess(BaseBean response) {
+                                                //设置默认代扣卡之后刷新列表
+                                                setData();
+                                                ToastUtils.showShortToast("设置默认代扣卡成功！");
+                                                pwdDialog.dissmissDialog();
+                                            }
 
-                    @Override
-                    public void onError(BaseBean errorBean) {
-                        CommonLoadingView.showErrorToast(errorBean);
-                    }
-                });
+                                            @Override
+                                            public void onError(BaseBean errorBean) {
+                                                CommonLoadingView.showErrorToast(errorBean);
+                                            }
+                                        });
+                                    } else {
+                                       // 交易密码校验成功,remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
+                                        PwdErrorDialog errorDialog = new PwdErrorDialog();
+                                        errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
+                                    }
+
+                                    CommonUtils.closeSoftKeyBoard(mBaseContext);
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(BaseBean errorBean) {
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
+                        }
+                );
             }
         });
+
     }
 
     /**

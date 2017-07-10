@@ -13,6 +13,9 @@ import com.giveu.shoppingmall.base.web.BaseWebViewActivity;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -287,7 +290,27 @@ public class StringUtils {
         }
         return result;
     }
+    /**
+     * 将"2016-11-26T00:00:00"变成2016-11-26 00:00
+     *
+     * @return
+     */
+    public static String cashFormatDate(String promiseRepayDate) {
+        String result = "";
+        if (isNotNull(promiseRepayDate)) {
+            Date date = new Date();
+            SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            try {
+                df1.format(df2.parse(promiseRepayDate));
+                result = df1.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
+        }
+        return result;
+    }
     public static String ToSBC(String input) {
         char c[] = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
@@ -320,5 +343,15 @@ public class StringUtils {
             e.printStackTrace();
         }
         return I;
+    }
+    //解析数据传参类型转换异常捕获（转long）
+    public static long string2Long(String longStr) {
+        long L = 0;
+        try {
+            L = Long.parseLong(longStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return L;
     }
 }

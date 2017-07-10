@@ -46,7 +46,7 @@ public abstract class BaseScaleView extends View {
 
     protected Scroller mScroller;
     protected int mScrollLastX;
-    protected int mValue = 50;//每格的数值（n格 * 数值）
+    protected int mValue = 10;//每格的数值（n格 * 数值）
 
     protected int mTempScale; // 用于判断滑动方向
     protected int mMidCountScale; //中间刻度
@@ -82,7 +82,7 @@ public abstract class BaseScaleView extends View {
         // 获取自定义属性
         TypedArray ta = getContext().obtainStyledAttributes(attrs, ATTR);
         mMin = ta.getInteger(LF_SCALE_MIN, 0);
-        mMax = ta.getInteger(LF_SCALE_MAX, 60);
+        mMax = ta.getInteger(LF_SCALE_MAX, 300);
         mScaleMargin = ta.getDimensionPixelOffset(LF_SCALE_MARGIN, 25);
         mScaleHeight = ta.getDimensionPixelOffset(LF_SCALE_HEIGHT, 20);
         ta.recycle();

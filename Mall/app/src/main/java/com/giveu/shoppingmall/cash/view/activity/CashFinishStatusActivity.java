@@ -54,13 +54,14 @@ public class CashFinishStatusActivity extends BaseActivity {
     LinearLayout llDate;
 
 
-    public static void startIt(Activity mActivity, String status, String hintMid, String cashAmount, String stageNumber, String cashDate) {
+    public static void startIt(Activity mActivity, String status, String hintMid, int cashAmount, int stageNumber, String cashDate, String creditType) {
         Intent intent = new Intent(mActivity, CashFinishStatusActivity.class);
         intent.putExtra("status", status);
         intent.putExtra("hintMid", hintMid);
         intent.putExtra("cashAmount", cashAmount);
         intent.putExtra("stageNumber", stageNumber);
         intent.putExtra("cashDate", cashDate);
+        intent.putExtra("creditType", creditType);
         mActivity.startActivity(intent);
     }
 
@@ -82,21 +83,32 @@ public class CashFinishStatusActivity extends BaseActivity {
         //中间状态提示语
         String hintMid = getIntent().getStringExtra("hintMid");
         //取现金额
-        String cashAmount = getIntent().getStringExtra("cashAmount");
+        int cashAmount = getIntent().getIntExtra("cashAmount", 0);
         //分期期数
-        String stageNumber = getIntent().getStringExtra("stageNumber");
+        int stageNumber = getIntent().getIntExtra("stageNumber", 0);
         //最迟还款日/下期还款日
         String cashDate = getIntent().getStringExtra("cashDate");
-
+        //SH:随借随还，SQ：分期
+        String creditType = getIntent().getStringExtra("creditType");
         switch (status) {
             case "success":
+                if ("SH".equals(creditType)) {
+                    //不分期
+                    llDateMid.setVisibility(View.GONE);
+                    tvDateNameBottom.setText("最迟还款日：");
+                }else if("SQ".equals(creditType)){
+                    llDateMid.setVisibility(View.VISIBLE);
+                    tvDateNameBottom.setText("下期还款日：");
+                }
                 llDate.setVisibility(View.VISIBLE);
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("取现操作成功");
                 llDateMid.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.VISIBLE);
-                tvDateTop.setText(cashAmount);
-                tvDateMid.setText(stageNumber);
+                tvDateTop.setText((double) cashAmount+"元");
+                tvDateMid.setText(stageNumber+"期");
+                cashDate = cashDate.substring(0, cashDate.indexOf("T"));//  "deductDate": "2017-08-21T00:00:00+08:00"
+                cashDate = cashDate.replaceAll("-", "/");
                 tvDateBottom.setText(cashDate);
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.INVISIBLE);
@@ -105,11 +117,7 @@ public class CashFinishStatusActivity extends BaseActivity {
                 tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);
 
-                if (true) {
-                    //不分期
-                    llDateMid.setVisibility(View.GONE);
-                    tvDateNameBottom.setText("最迟还款日：");
-                }
+
                 break;
             case "fail":
                 llDate.setVisibility(View.GONE);
