@@ -390,6 +390,13 @@ public class MainActivity extends BaseActivity {
         mContext.startActivity(i);
     }
 
+    public static void startItAfterPay(Context mContext, String payType) {
+        Intent i = new Intent(mContext, MainActivity.class);
+        i.putExtra(Const.whichFragmentInActMain, 0);
+        i.putExtra("payType", payType);
+        mContext.startActivity(i);
+    }
+
     public static String extraKey = "data";
     public static String lockPatternKey = "lockPatternKey";
     public static String needTurnToMessageActivity = "needTurnToMessageActivity";//是否需要跳转至消息列表
@@ -399,6 +406,11 @@ public class MainActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String data = intent.getStringExtra(extraKey);
+        //微信支付后回调时展示
+        String payType = intent.getStringExtra("payType");
+        if (StringUtils.isNotNull(payType)) {
+            rechargeFragment.afterWxPay();
+        }
 
     }
 

@@ -23,13 +23,32 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
             @Override
             public void onSuccess(InstalmentDetailResponse response) {
                 if (getView() != null) {
-                    getView().showInstalmentDetails(response.data,creditType);
+                    getView().showInstalmentDetails(response.data, creditType);
                 }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
                 CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
+
+    public void createRepaymentOrder(String idPerson, long amount, String clientIp, String payChannel, String productType) {
+        ApiImpl.createRepaymentOrder(getView().getAct(), idPerson, amount, clientIp, payChannel, productType, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
+                    getView().createOrderSuccess();
+                }
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    getView().createOrderFailed(errorBean.message);
+                }
             }
         });
     }

@@ -88,16 +88,20 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
         });
     }
 
-    public void thirdPayRecharge(String idPerson, int orderDetailId, String orderNo) {
+    public void thirdPayRecharge(String idPerson, long orderDetailId, String orderNo) {
         ApiImpl.thirdPayRecharge(getView().getAct(), idPerson, orderDetailId, orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-
+                if (getView() != null) {
+                    getView().thirdPaySuccess();
+                }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
+                if (getView() != null) {
+                    getView().thirdPayOrderFailed();
+                }
             }
         });
 

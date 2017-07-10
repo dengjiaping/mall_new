@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.giveu.shoppingmall.utils.LogUtil;
-import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.utils.WXPayUtil;
+import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -27,7 +27,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
         super.onCreate(savedInstanceState);
 //        ToastUtils.showShortToast("微信支付回调");
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
-        api = WXPayUtil.getWxApi();
+        api = PayUtils.getWxApi();
         api.handleIntent(getIntent(), this);
     }
 
@@ -40,17 +40,14 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onReq(BaseReq baseReq) {
-        LogUtil.e(baseReq.getType() + "");
-        if (baseReq.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-
-        }
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
-        ToastUtils.showShortToast("错误码"+baseResp.errCode);
-        LogUtil.e("onPayFinish,errCode=" + baseResp.errCode);
         if (baseResp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
+            if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
+                MainActivity.startItAfterPay(this, "Wx");
+            }
 
         }
     }

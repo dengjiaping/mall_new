@@ -42,7 +42,7 @@ public class RepaymentDialog extends CustomDialog {
             @Override
             public void onClick(View v) {
                 //输入金额不为空并且金额大于0
-                if (StringUtils.isNotNull(etMoney.getText().toString()) && Integer.parseInt(etMoney.getText().toString()) > 0) {
+                if (StringUtils.isNotNull(etMoney.getText().toString()) && Double.parseDouble(etMoney.getText().toString()) > 0) {
                     if (listener != null) {
                         listener.onConfirm(etMoney.getText().toString());
                         CommonUtils.closeSoftKeyBoard(mAttachActivity);

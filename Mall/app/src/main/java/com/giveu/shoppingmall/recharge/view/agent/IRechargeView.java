@@ -15,7 +15,8 @@ public interface IRechargeView extends IView {
     void showErrorInfo();
     void createOrderSuccess(String orderNo);
     void confirmOrderSuccess(ConfirmOrderResponse data);
-    void confirmOrderFailed();
+    void thirdPayOrderFailed();
+    void thirdPaySuccess();
     void pwdSuccess();
     void pwdError(int remainTimes);
 }

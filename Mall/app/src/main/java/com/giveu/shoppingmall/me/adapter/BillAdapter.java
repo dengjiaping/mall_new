@@ -59,7 +59,7 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                                 if (!cbChoose.isChecked()) {
                                     money = -money;
                                 }
-                                listener.moneyChange(money);
+                                listener.moneyChange(money,item.productType);
                             } catch (Exception e) {
 
                             }
@@ -83,7 +83,7 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
                                 if (!item.isChoose) {
                                     money = -money;
                                 }
-                                listener.moneyChange(money);
+                                listener.moneyChange(money, item.productType);
                             } catch (Exception e) {
 
                             }
@@ -124,7 +124,7 @@ public class BillAdapter extends MultiItemTypeAdapter<BillBean> {
     }
 
     public interface OnMoneyChangeListener {
-        void moneyChange(double money);
+        void moneyChange(double money, String productType);
     }
 
     private OnMoneyChangeListener listener;

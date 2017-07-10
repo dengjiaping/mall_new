@@ -25,6 +25,9 @@ import com.giveu.shoppingmall.model.bean.response.BillBean;
 import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.HardWareUtil;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
@@ -64,6 +67,7 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     private InstalmentDetailsPresenter presenter;
     private IntalmentDetailsDialog intalmentDetailsDialog; //还款明细对话框
     private OnlyConfirmDialog hintDialog;
+    private String productType;
 
 
     @Override
@@ -138,7 +142,8 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
                             break;
                         }
                     }
-                    repaymentDetailDialog.show();
+                    presenter.createRepaymentOrder(LoginHelper.getInstance().getIdPerson(), (long) (payMoney * 100), HardWareUtil.getHostIP(), PayUtils.WX, productType);
+//                    repaymentDetailDialog.show();
                 } else {
                     ToastUtils.showShortToast("请先勾选要还的款项");
                 }
@@ -198,9 +203,10 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
 
         billAdapter.setOnMoneyChangetListener(new BillAdapter.OnMoneyChangeListener() {
             @Override
-            public void moneyChange(double money) {
+            public void moneyChange(double money, String productType) {
                 payMoney = payMoney + money;
                 tvMoney.setText("还款金额：¥" + StringUtils.format2(payMoney + ""));
+                BillFragment.this.productType = productType;
                 canClick();
             }
         });
@@ -263,6 +269,19 @@ public class BillFragment extends BaseFragment implements IInstalmentDetailsView
     public void showInstalmentDetails(InstalmentDetailResponse data, String creditType) {
         intalmentDetailsDialog.setInstalmentDetailsData(data, creditType);
         intalmentDetailsDialog.show();
+    }
+
+    @Override
+    public void createOrderSuccess() {
+
+    }
+
+    @Override
+    public void createOrderFailed(String message) {
+        if (StringUtils.isNotNull(message)) {
+            hintDialog.setContent(message);
+            hintDialog.show();
+        }
     }
 
 

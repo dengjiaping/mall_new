@@ -22,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
@@ -38,7 +39,7 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.WXPayUtil;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -85,6 +86,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int productType;
     private long productId;
     private String productName;
+    private long orderDetailId;
     //产品id
     private String pid;
     PwdDialog pwdDialog;
@@ -477,18 +479,25 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void confirmOrderSuccess(ConfirmOrderResponse data) {
         //确认订单成功
         if (data != null) {
-            IWXAPI iWxapi = WXPayUtil.getWxApi();
-            PayReq payReq = WXPayUtil.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
+            BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
+            IWXAPI iWxapi = PayUtils.getWxApi();
+            PayReq payReq = PayUtils.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
             iWxapi.sendReq(payReq);
-        }else {
-            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice+"元",  salePrice+"元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+            orderDetailId = data.orderDetailId;
+        } else {
+            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
         }
 
     }
 
     @Override
-    public void confirmOrderFailed() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付" , salePrice+"元", salePrice+"元", null);
+    public void thirdPayOrderFailed() {
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+    }
+
+    @Override
+    public void thirdPaySuccess() {
+        RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
     }
 
     @Override
@@ -505,4 +514,11 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     }
 
 
+    /**
+     * 微信支付结果
+     *
+     */
+    public void afterWxPay() {
+        presenter.thirdPayRecharge(LoginHelper.getInstance().getIdPerson(), orderDetailId, orderNo);
+    }
 }
