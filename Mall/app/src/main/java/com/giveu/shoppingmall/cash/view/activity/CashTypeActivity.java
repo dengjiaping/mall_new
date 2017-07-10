@@ -294,10 +294,6 @@ public class CashTypeActivity extends BaseActivity {
 
     @Override
     public void setData() {
-
-        //选择的到账金额
-        //  chooseQuota = 4000;
-        //   etInputAmount.setText(String.valueOf(chooseQuota));
         if (CommonUtils.isNullOrEmpty(productList)) {
             //获取产品数据（分期数）
             ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getAvailableCylimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {

@@ -7,14 +7,20 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -78,11 +84,11 @@ public class AddBankCardFirstActivity extends BaseActivity {
     @Override
     public void setData() {
         etUsername.checkFormat(EditView.Style.NAME);
-        etBanknumber.checkFormat(19);
     }
 
     /**
      * 用于判断下一步按钮的颜色，是否可以点击
+     *
      * @param showToast
      */
     public void nextButtonCanClick(boolean showToast) {
@@ -91,9 +97,9 @@ public class AddBankCardFirstActivity extends BaseActivity {
         if (!StringUtils.checkUserNameAndTipError(username, showToast)) {
             return;
         }
-        if (!StringUtils.isCardNum(bankNumber)) {
+        if (StringUtils.isNull(bankNumber)) {
             if (showToast) {
-                ToastUtils.showShortToast("请输入正确的银行卡号");
+                ToastUtils.showShortToast("请输入银行卡号");
             }
             return;
         }
@@ -107,7 +113,25 @@ public class AddBankCardFirstActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (tvNext.isClickEnabled()) {
-            AddBankCardSecondActivity.startIt(mBaseContext);
+            String name = StringUtils.getTextFromView(etUsername);
+            String bankNo = StringUtils.getTextFromView(etBanknumber);
+            ApiImpl.identifyCard(mBaseContext, name, bankNo, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
+                @Override
+                public void onSuccess(IdentifyCardResponse response) {
+                    String bankCode = "";
+                    if (response != null) {
+                        if (response.data != null) {
+                            bankCode = response.data.bankCode;
+                        }
+                    }
+                    AddBankCardSecondActivity.startIt(mBaseContext, bankCode);
+                }
+
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
         } else {
             nextButtonCanClick(true);
         }

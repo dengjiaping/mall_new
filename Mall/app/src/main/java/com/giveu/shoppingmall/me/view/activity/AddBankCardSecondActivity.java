@@ -12,14 +12,13 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
-import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +46,12 @@ public class AddBankCardSecondActivity extends BaseActivity {
     SendCodeTextView tvSendCode;
     @BindView(R.id.tv_commit)
     ClickEnabledTextView tvCommit;
+
+    public static void startIt(Activity mActivity, String bankCode) {
+        Intent intent = new Intent(mActivity, AddBankCardSecondActivity.class);
+        intent.putExtra("bankCode", bankCode);
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -86,7 +91,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 if (StringUtils.checkPhoneNumberAndTipError(s.toString(), false)) {
                     tvSendCode.setBackgroundResource(R.color.title_color);
-                    if(!tvSendCode.isCounting()){
+                    if (!tvSendCode.isCounting()) {
                         tvSendCode.setEnabled(true);
                     }
                     tvCommit.setClickEnabled(false);
@@ -131,22 +136,22 @@ public class AddBankCardSecondActivity extends BaseActivity {
             return;
         }
         if (!bankName.matches("[\\u4e00-\\u9fa5]+$")) {
-            if(showToast){
+            if (showToast) {
                 ToastUtils.showShortToast("请输入正确的银行类别！");
             }
-            return ;
+            return;
         }
         if (!StringUtils.checkPhoneNumberAndTipError(bankPhone, showToast)) {
             return;
         }
         if (llSendCode != null) {
             String sendCode = StringUtils.getTextFromView(etSendCode);
-            if(StringUtils.isNull(sendCode)){
+            if (StringUtils.isNull(sendCode)) {
                 if (showToast) {
                     ToastUtils.showShortToast("请输入6位验证码！");
                 }
                 return;
-            }else if(sendCode.length() != 6){
+            } else if (sendCode.length() != 6) {
                 if (showToast) {
                     ToastUtils.showShortToast("请输入6位验证码！");
                 }
@@ -172,36 +177,32 @@ public class AddBankCardSecondActivity extends BaseActivity {
 
         switch (view.getId()) {
             case R.id.tv_send_code:
-                    tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
-                        @Override
-                        public void onEnd() {
-                             String bankPhone = StringUtils.getTextFromView(etBankPhone);
-                            if(StringUtils.checkPhoneNumberAndTipError(bankPhone,false)){
-                                tvSendCode.setBackgroundResource(R.color.title_color);
-                                tvSendCode.setEnabled(true);
-                            }else{
-                                tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
-                                tvSendCode.setEnabled(false);
-                            }
-
+                tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                    @Override
+                    public void onEnd() {
+                        String bankPhone = StringUtils.getTextFromView(etBankPhone);
+                        if (StringUtils.checkPhoneNumberAndTipError(bankPhone, false)) {
+                            tvSendCode.setBackgroundResource(R.color.title_color);
+                            tvSendCode.setEnabled(true);
+                        } else {
+                            tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
+                            tvSendCode.setEnabled(false);
                         }
-                    });
+
+                    }
+                });
                 break;
             case R.id.tv_commit:
                 if (tvCommit.isClickEnabled()) {
-                    NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "您已经绑定了该银行卡，请确认后重试");
-                    dialog.showDialog();
+//                    ApiImpl.identifyCard(mBaseContext,)
+//                    NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "您已经绑定了该银行卡，请确认后重试");
+//                    dialog.showDialog();
 
                 } else {
                     buttonCanClick(true);
                 }
                 break;
         }
-    }
-
-    public static void startIt(Activity mActivity) {
-        Intent intent = new Intent(mActivity, AddBankCardSecondActivity.class);
-        mActivity.startActivity(intent);
     }
 
     @Override

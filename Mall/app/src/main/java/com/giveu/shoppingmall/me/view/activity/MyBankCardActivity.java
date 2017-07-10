@@ -67,7 +67,13 @@ public class MyBankCardActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_add_bankcard);
         baseLayout.setTitle("我的银行卡");
-        baseLayout.setRightImage(R.drawable.ic_add_bank_card);
+        baseLayout.setRightImageAndListener(R.drawable.ic_add_bank_card, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //添加银行卡
+                AddBankCardFirstActivity.startIt(mBaseContext);
+            }
+        });
         llDefaultBankCard.requestFocus();
         dialogUtil = new CustomDialogUtil(mBaseContext);
         initAdapter();

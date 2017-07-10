@@ -49,7 +49,7 @@
             android:id="@+id/et_banknumber"
             style="@style/et_addcardinfo_styles"
             android:inputType="number"
-            android:maxLength="19"
+            android:maxLength="20"
             android:hint="请输入银行卡号" />
     </LinearLayout>
 

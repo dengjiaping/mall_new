@@ -97,4 +97,10 @@ public interface ApiUrl {
     String order_thirdPayRecharge = BASE_URL + "order/thirdPayRecharge";
     //还款预下单
     String personCenter_repayment_createRepaymentOrder = BASE_URL + "personCenter/repayment/createRepaymentOrder";
+    //获取支持的银行列表
+    String personCenter_bankCard_getUsableBankList = BASE_URL + "personCenter/bankCard/getUsableBankList";
+    //绑卡识别(卡bin)
+    String personCenter_bankCard_identifyCard = BASE_URL + "personCenter/bankCard/identifyCard";
+    //签约代扣协议(获取验证码)
+    String personCenter_bankCard_agreementApply = BASE_URL + "personCenter/bankCard/agreementApply";
 }
