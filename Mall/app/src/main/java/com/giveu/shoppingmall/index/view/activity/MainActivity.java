@@ -405,7 +405,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 设置手势密码的提示dialog
+     * 设置手势密码的提示dialog 
      */
     public void settingPatternOrFingerPrint() {
         if (LoginHelper.getInstance().shouldShowSetting()) {
