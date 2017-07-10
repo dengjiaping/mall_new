@@ -320,7 +320,8 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getPhone() {
-        return loginPersonInfo == null ? null : loginPersonInfo.phone;
+        return "15418512345";
+//        return loginPersonInfo == null ? null : loginPersonInfo.phone;
     }
 
     /**

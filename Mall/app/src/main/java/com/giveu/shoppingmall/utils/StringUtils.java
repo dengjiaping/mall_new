@@ -321,4 +321,14 @@ public class StringUtils {
         }
         return I;
     }
+    //解析数据传参类型转换异常捕获（转long）
+    public static long string2Long(String longStr) {
+        long L = 0;
+        try {
+            L = Long.parseLong(longStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return L;
+    }
 }

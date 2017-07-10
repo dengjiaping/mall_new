@@ -16,6 +16,8 @@ import com.giveu.shoppingmall.base.CustomDialog;
 public class RepaymentDetailDialog extends CustomDialog {
     private ImageView ivDismiss;
     private TextView tvConfirm;
+    private TextView tvProduct;
+    private TextView tvPay;
 
     public RepaymentDetailDialog(Activity context) {
         super(context, R.layout.dialog_repayment_detail, R.style.customerDialog, Gravity.CENTER, false);
@@ -26,6 +28,8 @@ public class RepaymentDetailDialog extends CustomDialog {
         super.initView(contentView);
         ivDismiss = (ImageView) contentView.findViewById(R.id.iv_dismiss);
         tvConfirm = (TextView) contentView.findViewById(R.id.tv_confirm);
+        tvProduct = (TextView) contentView.findViewById(R.id.tv_product);
+        tvPay = (TextView) contentView.findViewById(R.id.tv_pay);
         ivDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +46,14 @@ public class RepaymentDetailDialog extends CustomDialog {
                 dismiss();
             }
         });
+    }
+
+    public void setPayStr(String payStr) {
+        tvPay.setText("实际支付：¥" + payStr);
+    }
+
+    public void setProductAndMoney(String product, String money) {
+        tvProduct.setText("还款产品：" + product + "\n" + "还款金额：" + money);
     }
 
     @Override

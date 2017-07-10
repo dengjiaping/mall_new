@@ -160,7 +160,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
-            android:name=".me.view.activity.BillListActivity"
+            android:name=".me.view.activity.RepaymentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
             android:label="账单"
@@ -189,16 +189,17 @@
         <!--取现-->
         <activity
             android:name=".cash.view.activity.VerifyActivity"
-            android:label="验证" />
+            android:label="验证"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".cash.view.activity.CaseRecordActivity"
             android:label="取现记录" />
         <activity
             android:name=".cash.view.activity.CashTypeActivity"
-            android:windowSoftInputMode="adjustPan"
             android:label="取现类型页"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan" />
 
 
         <!--支付宝支付-->
@@ -215,8 +216,8 @@
 
         <activity
             android:name=".wxapi.WXPayEntryActivity"
-            android:launchMode="singleTop"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
 
         <!--图片选择列出所有图片-->
         <activity

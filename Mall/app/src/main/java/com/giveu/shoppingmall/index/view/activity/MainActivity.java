@@ -20,7 +20,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
-import com.giveu.shoppingmall.me.view.activity.BillListActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity {
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        BillListActivity.startIt(mBaseContext);
+                        RepaymentActivity.startIt(mBaseContext);
                         selectIconAndTextColor(3);
                     } else {
                         ToastUtils.showShortToast("请先开通钱包");
@@ -236,28 +236,28 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onSuccess(LoginResponse response) {
 /*                LoginResponse loginResponse = new LoginResponse();
-                loginResponse.activeDate = response.data.activeDate;
-                loginResponse.availableCyLimit = response.data.availableCyLimit;
-                loginResponse.availablePosLimit = response.data.availablePosLimit;
-                loginResponse.certNo = response.data.ident;
-                loginResponse.cyLimit = response.data.cyLimit;
-                loginResponse.endDate = response.data.endDate;
-                loginResponse.globleLimit = response.data.globleLimit;
-                loginResponse.idPerson = response.data.idPerson;
-                loginResponse.mobile = response.data.phone;
+                loginResponse.activeDate = wechatresponse.data.activeDate;
+                loginResponse.availableCyLimit = wechatresponse.data.availableCyLimit;
+                loginResponse.availablePosLimit = wechatresponse.data.availablePosLimit;
+                loginResponse.certNo = wechatresponse.data.ident;
+                loginResponse.cyLimit = wechatresponse.data.cyLimit;
+                loginResponse.endDate = wechatresponse.data.endDate;
+                loginResponse.globleLimit = wechatresponse.data.globleLimit;
+                loginResponse.idPerson = wechatresponse.data.idPerson;
+                loginResponse.mobile = wechatresponse.data.phone;
                 loginResponse.nickName = LoginHelper.getInstance().getUserName();
-                loginResponse.posLimit = response.data.posLimit;
-                loginResponse.realName = response.data.name;
-                //response.data.status为true，对应的是2（有资质），1为未激活
-                loginResponse.status = response.data.status;
+                loginResponse.posLimit = wechatresponse.data.posLimit;
+                loginResponse.realName = wechatresponse.data.name;
+                //wechatresponse.data.status为true，对应的是2（有资质），1为未激活
+                loginResponse.status = wechatresponse.data.status;
 //                loginResponse.statusDesc = LoginHelper.getInstance().getStatus();
                 loginResponse.userId = LoginHelper.getInstance().getUserId();
                 loginResponse.userName = LoginHelper.getInstance().getUserName();
                 loginResponse.userPic = LoginHelper.getInstance().getUserPic();
-                loginResponse.availableRechargeLimit = response.data.availableRechargeLimit;
-                loginResponse.creditCount = response.data.creditCount;
-                loginResponse.repayAmount = response.data.repayAmount;
-                loginResponse.repayDate = response.data.repayDate;
+                loginResponse.availableRechargeLimit = wechatresponse.data.availableRechargeLimit;
+                loginResponse.creditCount = wechatresponse.data.creditCount;
+                loginResponse.repayAmount = wechatresponse.data.repayAmount;
+                loginResponse.repayDate = wechatresponse.data.repayDate;
                 //更新个人信息，缓存在本地*/
                 response.data.accessToken = SharePrefUtil.getAppToken();
                 LoginHelper.getInstance().saveLoginStatus(response.data);
@@ -390,12 +390,6 @@ public class MainActivity extends BaseActivity {
         mContext.startActivity(i);
     }
 
-    public static void startItAfterPay(Context mContext, String payType) {
-        Intent i = new Intent(mContext, MainActivity.class);
-        i.putExtra(Const.whichFragmentInActMain, 0);
-        i.putExtra("payType", payType);
-        mContext.startActivity(i);
-    }
 
     public static String extraKey = "data";
     public static String lockPatternKey = "lockPatternKey";
@@ -408,10 +402,6 @@ public class MainActivity extends BaseActivity {
         String data = intent.getStringExtra(extraKey);
         //微信支付后回调时展示
         String payType = intent.getStringExtra("payType");
-        if (StringUtils.isNotNull(payType)) {
-            rechargeFragment.afterWxPay();
-        }
-
     }
 
     /**

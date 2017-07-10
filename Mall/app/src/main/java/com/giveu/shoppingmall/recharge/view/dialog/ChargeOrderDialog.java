@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -44,6 +45,10 @@ public class ChargeOrderDialog {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View contentView = inflater.inflate(R.layout.dialog_recharge, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
+        Window window = mDialog.getWindow();
+        if (window != null) {
+            window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
+        }
         initView(contentView);
     }
 
@@ -54,6 +59,10 @@ public class ChargeOrderDialog {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View contentView = inflater.inflate(R.layout.dialog_recharge, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
+        Window window = mDialog.getWindow();
+        if (window != null) {
+            window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
+        }
         initView(contentView);
         OldPrice = price.replace("￥", "");
         tv_recharge_amount.setText(rechargeAmount);
@@ -70,7 +79,7 @@ public class ChargeOrderDialog {
     }
 
     public void dissmissDialog() {
-        if (mActivity != null && !mActivity.isFinishing()&&mDialog.isShowing())
+        if (mActivity != null && !mActivity.isFinishing() && mDialog.isShowing())
             mDialog.dismiss();
     }
 
@@ -96,8 +105,8 @@ public class ChargeOrderDialog {
 
     }
 
-    public void setProductType(int productType){
-        switch (productType){
+    public void setProductType(int productType) {
+        switch (productType) {
             case 0:
                 tvProduct.setText("充值话费");
                 break;
@@ -111,6 +120,7 @@ public class ChargeOrderDialog {
                 break;
         }
     }
+
 
     private void setListener() {
 

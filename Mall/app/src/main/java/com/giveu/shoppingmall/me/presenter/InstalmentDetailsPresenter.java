@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -35,11 +36,11 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
     }
 
     public void createRepaymentOrder(String idPerson, long amount, String clientIp, String payChannel, String productType) {
-        ApiImpl.createRepaymentOrder(getView().getAct(), idPerson, amount, clientIp, payChannel, productType, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.createRepaymentOrder(getView().getAct(), idPerson, amount, clientIp, payChannel, productType, new BaseRequestAgent.ResponseListener<RepaymentActionResponse>() {
             @Override
-            public void onSuccess(BaseBean response) {
+            public void onSuccess(RepaymentActionResponse response) {
                 if (getView() != null) {
-                    getView().createOrderSuccess();
+                    getView().createOrderSuccess(response.data.wechatresponse);
                 }
 
             }

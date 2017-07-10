@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.utils.PayUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -45,10 +46,14 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onResp(BaseResp baseResp) {
         if (baseResp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
-                MainActivity.startItAfterPay(this, "Wx");
+            if (baseResp.errCode == 0) {
+                if (BaseApplication.getInstance().getBeforePayActivity().equals(VerifyActivity.class.getSimpleName())) {
+                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE);
+                }
+            } else {
+                ToastUtils.showShortToast("支付失败");
             }
-
+            finish();
         }
     }
 }

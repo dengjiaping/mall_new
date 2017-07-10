@@ -24,6 +24,7 @@ import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -301,8 +302,8 @@ public class ApiImpl {
     }
 
     //确认充值订单
-    public static void confirmRechargeOrder(Activity context, String idPerson, String mobile, long productId, String orderNo, int payType, BaseRequestAgent.ResponseListener<ConfirmOrderResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType"}, new Object[]{Long.parseLong(idPerson), mobile, productId, orderNo, payType});
+    public static void confirmRechargeOrder(Activity context, String idPerson, String mobile, long productId, String orderNo, int payType, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmOrderResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType", "smsCode","smsMobile"}, new Object[]{Long.parseLong(idPerson), mobile, productId, orderNo, payType, smsCode,smsMobile});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_confirmRechargeOrder, ConfirmOrderResponse.class, context, responseListener);
     }
 
@@ -313,9 +314,9 @@ public class ApiImpl {
     }
 
     //还款预下单
-    public static void createRepaymentOrder(Activity context, String idPerson, long amount, String clientIp, String payChannel, String productType, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "amount", "clientIp", "payChannel", "productType", "source"}, new Object[]{Long.parseLong(idPerson), amount, clientIp, payChannel, productType, "Android"});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_createRepaymentOrder, BaseBean.class, context, responseListener);
+    public static void createRepaymentOrder(Activity context, String idPerson, long amount, String clientIp, String payChannel, String productType, BaseRequestAgent.ResponseListener<RepaymentActionResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "amount", "clientIp", "payChannel", "productType", "source"}, new Object[]{StringUtils.string2Long(idPerson), amount, clientIp, payChannel, productType, "Android"});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_createRepaymentOrder, RepaymentActionResponse.class, context, responseListener);
     }
 }
 
