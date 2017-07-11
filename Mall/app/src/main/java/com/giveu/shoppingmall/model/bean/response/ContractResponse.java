@@ -37,7 +37,7 @@ public class ContractResponse extends BaseBean<ContractResponse> {
          */
 
         public String contractNo;
-        public int creditAmount;
+        public String creditAmount;
         public String creditStatus;
         public String creditType;
         public int currentInstalment;

@@ -29,7 +29,7 @@ public class TransactionAdapter extends LvCommonAdapter<ContractResponse.Contrac
         }
 
         holder.setText(R.id.tv_type, TypeUtlis.getCreditTypeText(item.creditType));
-        holder.setText(R.id.tv_creditAmount, item.creditAmount + "");
+        holder.setText(R.id.tv_creditAmount, item.creditAmount);
         holder.setText(R.id.tv_state, TypeUtlis.getCreditStatusText(item.creditStatus));
     }
 }

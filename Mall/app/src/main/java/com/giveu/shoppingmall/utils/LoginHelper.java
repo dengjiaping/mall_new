@@ -40,6 +40,9 @@ public class LoginHelper extends AbsSharePref {
     public static final String TOTAL_COST = "totalCost";
     public static final String HAS_DEFAULT_CARD = "hasDefaultCard";
     public static final String REMAINING_TIMES = "remainingTimes";//手势或指纹剩余提醒次数
+    public static final String BANK_NAME = "bankName";
+    public static final String BANK_ICON_URL = "bankIconUrl";
+    public static final String DEFAULT_CARD = "defaultCard";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -62,13 +65,17 @@ public class LoginHelper extends AbsSharePref {
         personInfo.globleLimit = getString(GLOBLE_LIMIT, "");
         personInfo.idPerson = getString(ID_PERSON, "");
         personInfo.phone = getString(PHONE, "");
-        personInfo.availableCyLimit = getString(AVAILABLE_CYLIMIT, "");
-        personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "");
-        personInfo.cyLimit = getString(CYLIMIT, "");
-        personInfo.posLimit = getString(POS_LIMIT, "");
+        personInfo.availableCyLimit = getString(AVAILABLE_CYLIMIT, "0");
+        personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "0");
+        personInfo.cyLimit = getString(CYLIMIT, "0");
+        personInfo.posLimit = getString(POS_LIMIT, "0");
         personInfo.name = getString(NAME, "");
         personInfo.hasDefaultCard = getBoolean(HAS_DEFAULT_CARD, false);
+        personInfo.availableRechargeLimit = getString(AVAILABLE_RECHARGE_LIMIT, "0");
         personInfo.totalCost = getString(TOTAL_COST, "");
+        personInfo.bankName = getString(BANK_NAME, "");
+        personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
+        personInfo.defaultCard = getString(DEFAULT_CARD, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -104,6 +111,9 @@ public class LoginHelper extends AbsSharePref {
         putString(REPAY_DATE, personInfo.repayDate);
         putBoolean(HAS_DEFAULT_CARD, personInfo.hasDefaultCard);
         putString(TOTAL_COST, personInfo.totalCost);
+        putString(BANK_NAME, personInfo.bankName);
+        putString(BANK_ICON_URL, personInfo.bankIconUrl);
+        putString(DEFAULT_CARD, personInfo.defaultCard);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -140,6 +150,15 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 最大充值额度
+     *
+     * @return
+     */
+    public String getAvailableRechargeLimit() {
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availableRechargeLimit;
+    }
+
+    /**
      * 设置手势或指纹提醒
      *
      * @return
@@ -165,6 +184,34 @@ public class LoginHelper extends AbsSharePref {
 
 //        return true;
 
+    }
+
+    /**
+     * 默认银行卡名称
+     *
+     * @return
+     */
+    public String getBankName() {
+        return loginPersonInfo == null ? null : loginPersonInfo.bankName;
+
+    }
+
+    /**
+     * 默认银行卡Icon的url
+     *
+     * @return
+     */
+    public String getBankIconUrl() {
+        return loginPersonInfo == null ? null : loginPersonInfo.bankIconUrl;
+    }
+
+    /**
+     * 默认银行卡号
+     *
+     * @return
+     */
+    public String getDefaultCard() {
+        return loginPersonInfo == null ? null : loginPersonInfo.defaultCard;
     }
 
 
@@ -193,6 +240,7 @@ public class LoginHelper extends AbsSharePref {
 
     /**
      * 是否有默认银行卡
+     *
      * @return
      */
     public boolean hasDefaultCard() {
@@ -233,7 +281,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getGlobleLimit() {
-        return loginPersonInfo == null ? null : loginPersonInfo.globleLimit;
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.globleLimit;
     }
 
     /**
@@ -251,7 +299,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getAvailableCylimit() {
-        return loginPersonInfo == null ? null : loginPersonInfo.availableCyLimit;
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availableCyLimit;
     }
 
     /**
@@ -302,7 +350,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getAvailablePoslimit() {
-        return loginPersonInfo == null ? null : loginPersonInfo.availablePosLimit;
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availablePosLimit;
     }
 
     /**
@@ -311,7 +359,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getPosLimit() {
-        return loginPersonInfo == null ? null : loginPersonInfo.posLimit;
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.posLimit;
     }
 
     /**
@@ -321,7 +369,7 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getIdPerson() {
         return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
-        //      return "11413705";
+//        return "11413705";
     }
 
 

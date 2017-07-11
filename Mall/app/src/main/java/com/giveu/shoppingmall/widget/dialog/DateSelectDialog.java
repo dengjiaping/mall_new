@@ -183,18 +183,18 @@ public class DateSelectDialog extends CustomDialog {
     }
 
     public String getCurrentYearAndMonth(String dividerFlag) {
-        if (dividerFlag == null ||dividerFlag.isEmpty()) {
-            return currentSelectYear + "年" + currentSelectMonth + "月";
+        if (dividerFlag == null || dividerFlag.isEmpty()) {
+            return currentSelectYear + "年" + String.format("%02d", (currentSelectMonth)) + "月";
         } else {
-            return currentSelectYear + dividerFlag + currentSelectMonth;
+            return currentSelectYear + dividerFlag + String.format("%02d", currentSelectMonth);
         }
     }
 
     public String getCurrentYearAndMonthAndDay(String dividerFlag) {
-        if (dividerFlag == null ||dividerFlag.isEmpty()) {
-            return currentSelectYear + "年" + currentSelectMonth + "月" + currentSelectDay + "日";
+        if (dividerFlag == null || dividerFlag.isEmpty()) {
+            return currentSelectYear + "年" + String.format("%02d", currentSelectMonth) + "月" + String.format("%02d", currentSelectDay) + "日";
         } else {
-            return currentSelectYear + dividerFlag + currentSelectMonth + dividerFlag + currentSelectDay;
+            return currentSelectYear + dividerFlag + String.format("%02d", currentSelectMonth) + dividerFlag + String.format("%02d", currentSelectDay);
         }
     }
 

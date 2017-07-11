@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
@@ -20,6 +21,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -48,7 +50,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     boolean isForClosePattern;
     private LoginPresenter presenter;
     private boolean isForSetting;
-    private boolean isForClose;
 
     /**
      * 是否需要关闭指纹及手势解锁
@@ -76,7 +77,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         setContentView(R.layout.activity_verify_pwd);
         isForClosePattern = getIntent().getBooleanExtra("isForClose", false);
         isForSetting = getIntent().getBooleanExtra("isForSetting", false);
-        isForClose = getIntent().getBooleanExtra("isForClose", false);
         if (isForSetting) {
             tvChangeAccount.setVisibility(View.GONE);
         }
@@ -136,6 +136,8 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
                     tvLogin.setClickEnabled(true);
+                } else {
+                    tvLogin.setClickEnabled(false);
                 }
             }
         });
@@ -154,7 +156,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             return;
         }
         CommonUtils.closeSoftKeyBoard(this);
-        presenter.login(LoginHelper.getInstance().getPhone(), etPwd.getText().toString());
+        presenter.login(LoginHelper.getInstance().getPhone(), MD5.MD5Encode(etPwd.getText().toString()));
     }
 
 
@@ -169,13 +171,16 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             //密码验证成功后设置手势密码
             CreateGestureActivity.startIt(mBaseContext);
         } else {
-            if (isForClose) {
+            if (isForClosePattern) {
                 //清除手势密码
                 SharePrefUtil.setPatternPwd("");
                 SharePrefUtil.setFingerPrint(false);
                 //重新计时
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 setResult(RESULT_OK);
+            }
+            if (!isForClosePattern) {
+                MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
             }
             finish();
         }
@@ -195,7 +200,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     @Override
     public void onBackPressed() {
         //解锁界面的返回，那么需要关闭所有页面，不然会返回到解锁前的前一个页面
-        if (isForClose || isForSetting) {
+        if (isForClosePattern || isForSetting) {
             super.onBackPressed();
         } else {
             BaseApplication.getInstance().finishAllActivity();

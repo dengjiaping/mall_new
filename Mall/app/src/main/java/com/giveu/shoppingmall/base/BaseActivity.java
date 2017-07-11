@@ -256,6 +256,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     }
 
+
     /**
      * 处理图案锁的逻辑
      */
@@ -274,8 +275,8 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 }
                 clearLockPatternExtraIntent();
                 return;
-            } else if (LoginActivity.class.getName().equals(className)) {
-                //从登录页面过来的
+            } else if (LoginActivity.class.getName().equals(className)||VerifyPwdActivity.class.getName().equals(className)) {
+                //从登录页面过来的或密码解锁界面
                 if (TextUtils.isEmpty(SharePrefUtil.getPatternPwd()) || !SharePrefUtil.hasFingerPrint()) {
                     //如果没有设置手势，第一次提示设置
                     ((MainActivity) this).settingPatternOrFingerPrint();
@@ -300,6 +301,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     public void clearLockPatternExtraIntent() {
         getIntent().putExtra(MainActivity.lockPatternKey, "");
     }
+
 
     /**
      * 判断当前activity超时是否需要锁屏

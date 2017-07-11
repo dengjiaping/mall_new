@@ -42,7 +42,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     @BindView(R.id.tv_phone)
     TextView tvPhone;
     private VerifyPresenter presenter;
-    public static final int REUQEST_FINISH = 10000;
     private String statusType;
     private String codeType = "";
     private String smsCode;
@@ -101,12 +100,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         mContext.startActivity(i);
     }
 
-//    public static void startIt(Fragment fragment, String statusType) {
-//        Intent intent = new Intent(fragment.getActivity(), VerifyActivity.class);
-//        intent.putExtra("statusType", statusType);
-//        fragment.startActivityForResult(intent, REUQEST_FINISH);
-//    }
-
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_verify);
@@ -155,31 +148,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                                     paymentType, result, LoginHelper.getInstance().getPhone());
                             break;
                     }
-       /*             if ("123456".equals(result)) {
-                        Random random = new Random();
-                        int randomNum = random.nextInt(2) + 1;
-                        switch (statusType) {
-                            case PwdDialog.statusType.CASH:
-                                //跳转取现状态页
-                                if (randomNum == 1) {
-                                    CashFinishStatusActivity.startIt(mBaseContext, "fail", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null, null, null);
-                                } else {
-                                    CashFinishStatusActivity.startIt(mBaseContext, "success", null, "3000.00元", "9期", "2017/05/18");
-                                }
-                                break;
-                            case PwdDialog.statusType.RECHARGE:
-                                //跳转充值状态页
-                                if (randomNum == 1) {
-                                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", "100.00元", "98.00元", null);
-                                } else {
-                                    RechargeStatusActivity.startIt(mBaseContext, "success", null, "100.00元", "98.00元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-                                }
-                                break;
-                        }
-                        finish();
-                    } else {
-                        ToastUtils.showShortToast("验证码错误");
-                    }*/
                 }
             }
         });
@@ -222,7 +190,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
     @Override
     public void checkSMSSuccess() {
-        // setResult(RESULT_OK);
         switch (statusType) {
             case CASH:
                 String creditAmount = getIntent().getStringExtra("creditAmount");
@@ -237,27 +204,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                             EnchashmentCreditResponse ecResponse = response.data;
                             CashFinishStatusActivity.startIt(mBaseContext, response.result, response.message, ecResponse.creditAmount, ecResponse.repayNum, ecResponse.deductDate, creditType);
                         }
-//                        Random random = new Random();
-//                        int randomNum = random.nextInt(2) + 1;
-//                        switch (statusType) {
-//                            case PwdDialog.statusType.CASH:
-//                                //跳转取现状态页
-//                                if (randomNum == 1) {
-//                                    CashFinishStatusActivity.startIt(mBaseContext, "fail", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null, null, null);
-//                                } else {
-//
-//                                }
-//                                break;
-//                            case PwdDialog.statusType.RECHARGE:
-//                                //跳转充值状态页
-//                                if (randomNum == 1) {
-//                                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", "100.00元", "98.00元", null);
-//                                } else {
-//                                    RechargeStatusActivity.startIt(mBaseContext, "success", null, "100.00元", "98.00元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-//                                }
-//                                break;
-//                        }
-//                        finish();
                     }
 
                     @Override
@@ -303,10 +249,10 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
      */
     public void rechargeAfterWxPay(boolean paySuccess) {
 //        presenter.thirdPayRecharge(LoginHelper.getInstance().getIdPerson(), orderDetailId, orderNo);
-        if(paySuccess){
+        if (paySuccess) {
             RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
             finish();
-        }else {
+        } else {
             RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
             finish();
         }
@@ -316,7 +262,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String payType = intent.getStringExtra("payType");
-        boolean paySuccess = intent.getBooleanExtra("paySuccess",false);
+        boolean paySuccess = intent.getBooleanExtra("paySuccess", false);
         if (RECHARGE.equals(payType)) {
             rechargeAfterWxPay(paySuccess);
         }
