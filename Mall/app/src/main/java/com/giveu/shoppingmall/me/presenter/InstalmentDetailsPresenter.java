@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -40,7 +41,7 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
             @Override
             public void onSuccess(RepaymentActionResponse response) {
                 if (getView() != null) {
-                    getView().createOrderSuccess(response.data.wechatresponse);
+                    getView().createOrderSuccess(response.data.wechatresponse,response.data.payId);
                 }
 
             }
@@ -50,6 +51,22 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
                 if (getView() != null) {
                     getView().createOrderFailed(errorBean.message);
                 }
+            }
+        });
+    }
+
+    public void payQuery(String payId) {
+        ApiImpl.payQuery(getView().getAct(), payId, new BaseRequestAgent.ResponseListener<PayQueryResponse>() {
+            @Override
+            public void onSuccess(PayQueryResponse response) {
+                if (getView() != null) {
+                    getView().paySuccess();
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
             }
         });
     }

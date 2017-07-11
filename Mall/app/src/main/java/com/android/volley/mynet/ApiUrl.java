@@ -103,4 +103,6 @@ public interface ApiUrl {
     String personCenter_bankCard_identifyCard = BASE_URL + "personCenter/bankCard/identifyCard";
     //签约代扣协议(获取验证码)
     String personCenter_bankCard_agreementApply = BASE_URL + "personCenter/bankCard/agreementApply";
+    //还款结果查询
+    String pay_query = BASE_URL + "pay/query";
 }

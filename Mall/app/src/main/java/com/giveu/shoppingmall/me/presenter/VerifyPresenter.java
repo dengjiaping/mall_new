@@ -5,7 +5,6 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
  * Created by 513419 on 2017/7/10.
@@ -28,12 +27,14 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
 
             @Override
             public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
+                if (getView() != null) {
+                    getView().confirmOrderFail();
+                }
             }
         });
     }
 
-    public void thirdPayRecharge(String idPerson, long orderDetailId, String orderNo) {
+/*    public void thirdPayRecharge(String idPerson, long orderDetailId, String orderNo) {
         ApiImpl.thirdPayRecharge(getView().getAct(), idPerson, orderDetailId, orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
@@ -45,10 +46,10 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
             @Override
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
-                    getView().thirdPayOrderFailed();
+                    getView().confirmOrderFail();
                 }
             }
         });
 
-    }
+    }*/
 }

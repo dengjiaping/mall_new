@@ -163,7 +163,8 @@
             android:name=".me.view.activity.RepaymentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
-            android:label="账单"
+            android:launchMode="singleTask"
+            android:label="还款"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity

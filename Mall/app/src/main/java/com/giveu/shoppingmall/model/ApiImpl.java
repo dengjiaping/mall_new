@@ -11,7 +11,6 @@ import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.BankListResponse;
-import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
@@ -23,12 +22,14 @@ import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
+import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -224,9 +225,9 @@ public class ApiImpl {
     }
 
     //还款首页
-    public static void getBillList(Activity context, String idPerson, BaseRequestAgent.ResponseListener<BillListResponse> responseListener) {
+    public static void getRepayment(Activity context, String idPerson, BaseRequestAgent.ResponseListener<RepaymentResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Long.parseLong(idPerson)});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getRepaymentInfo, BillListResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getRepaymentInfo, RepaymentResponse.class, context, responseListener);
     }
 
     //还款明细
@@ -351,6 +352,13 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankCode", "bankNo", "idPerson", "phone"}, new Object[]{bankCode, bankNo, StringUtils.string2Long(idPerson), phone});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_agreementApply, IdentifyCardResponse.class, context, responseListener);
     }
+
+    //还款结果查询
+    public static void payQuery(Activity context, String payId, BaseRequestAgent.ResponseListener<PayQueryResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"payId"}, new Object[]{payId});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.pay_query, PayQueryResponse.class, context, responseListener);
+    }
+
 }
 
 

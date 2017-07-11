@@ -20,21 +20,4 @@ public class RepaymentBean {
     public String type;//红包类别
     public String numInstalment;//期次
     public String paymentNum;//期数
-
-    @Override
-    public String toString() {
-        return "RepaymentBean{" +
-                "isTitle=" + isTitle +
-                ", isChoose=" + isChoose +
-                ", repayDate='" + repayDate + '\'' +
-                ", contractId='" + contractId + '\'' +
-                ", contractNo='" + contractNo + '\'' +
-                ", isWithholding=" + isWithholding +
-                ", creditType='" + creditType + '\'' +
-                ", repayAmount=" + repayAmount +
-                ", id='" + id + '\'' +
-                ", price='" + price + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
 }

@@ -8,7 +8,7 @@ import java.util.List;
  * Created by 513419 on 2017/7/3.
  */
 
-public class BillListResponse extends BaseBean<BillListResponse> {
+public class RepaymentResponse extends BaseBean<RepaymentResponse> {
 
     public HeaderBean important;//头部数据
     public ProductBean product;
