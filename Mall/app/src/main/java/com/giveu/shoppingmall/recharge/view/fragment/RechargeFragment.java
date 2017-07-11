@@ -286,7 +286,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             if (editable.length() == 13) {
                 String phone = editable.toString().replace(" ", "");
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
-                isVailable = true;
                 //获取该手机号运营商
                 presenter.getPhoneInfo(phone);
             } else {
@@ -461,6 +460,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void showPhoneInfo(SegmentResponse data) {
+        isVailable = true;
         tvMessage.setText(data.city + data.isp);
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
         currentOperator = data.code;

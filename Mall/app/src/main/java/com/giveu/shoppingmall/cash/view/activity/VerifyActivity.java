@@ -227,6 +227,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             iWxapi.sendReq(payReq);
             orderDetailId = data.orderDetailId;
         } else {
+            //充值成功后，需更新额度，因此更新个人信息
+            BaseApplication.getInstance().fetchUserInfo();
             RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
             finish();
         }

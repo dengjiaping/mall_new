@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
-import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
@@ -70,7 +69,6 @@ public class MainActivity extends BaseActivity {
     //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
-    private boolean hasFetchUserInfo;
 
     @BindView(R.id.mainViewPager)
     ViewPager mViewPager;
@@ -210,21 +208,6 @@ public class MainActivity extends BaseActivity {
         doApkUpgrade();
     }
 
-    public void getUserInfo() {
-        ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<LoginResponse>() {
-            @Override
-            public void onSuccess(LoginResponse response) {
-                response.data.accessToken = SharePrefUtil.getAppToken();
-                LoginHelper.getInstance().saveLoginStatus(response.data);
-                hasFetchUserInfo = true;
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-            }
-        });
-    }
-
     private class MainActivityAdapter extends FragmentStatePagerAdapter {
         private ArrayList<Fragment> fragments;
 
@@ -276,17 +259,6 @@ public class MainActivity extends BaseActivity {
             //上传设备号至服务器
             ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
         }
-
-        /**
-         * 只有已登录并且钱包资质用户才能查询个人信息
-         */
-        if (LoginHelper.getInstance().hasLogin() && LoginHelper.getInstance().hasQualifications() && !hasFetchUserInfo) {
-            getUserInfo();
-        } else {
-            //保证不是每次onResume都会调个人信息接口，只有切换账户或者开通了钱包资质才获取个人信息
-            hasFetchUserInfo = false;
-        }
-
     }
 
     DownloadApkUtils downloadApkUtils = null;
@@ -352,7 +324,7 @@ public class MainActivity extends BaseActivity {
     //找回密码（重置密码）
 
     /**
-     * 设置手势密码的提示dialog 
+     * 设置手势密码的提示dialog
      */
     public void settingPatternOrFingerPrint() {
         if (LoginHelper.getInstance().shouldShowSetting()) {
