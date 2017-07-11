@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -47,12 +48,25 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     public void onResp(BaseResp baseResp) {
         if (baseResp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             if (baseResp.errCode == 0) {
+                //进入微信支付的上一个界面
                 if (BaseApplication.getInstance().getBeforePayActivity().equals(VerifyActivity.class.getSimpleName())) {
-                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE);
+                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE, true);
+                } else if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {
+                    RepaymentActivity.startItAfterPay(this);
                 }
             } else {
-                ToastUtils.showShortToast("支付失败");
+                if (BaseApplication.getInstance().getBeforePayActivity().equals(VerifyActivity.class.getSimpleName())) {
+                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE, false);
+                }
+                if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {
+                    if (baseResp.errCode == -2) {
+                        ToastUtils.showShortToast("支付取消");
+                    } else {
+                        ToastUtils.showShortToast("支付失败");
+                    }
+                }
             }
+            BaseApplication.getInstance().setBeforePayActivity("");
             finish();
         }
     }

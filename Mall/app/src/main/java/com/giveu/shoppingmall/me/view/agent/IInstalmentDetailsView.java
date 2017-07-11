@@ -2,7 +2,6 @@ package com.giveu.shoppingmall.me.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
-import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.model.bean.response.WxPayParamsResponse;
 
 /**
@@ -13,7 +12,9 @@ public interface IInstalmentDetailsView extends IView {
 
     void showInstalmentDetails(InstalmentDetailResponse data, String creditType);
 
-    void createOrderSuccess(WxPayParamsResponse wxPayParamsResponse);
+    void createOrderSuccess(WxPayParamsResponse wxPayParamsResponse, String payId);
 
     void createOrderFailed(String message);
+
+    void paySuccess();
 }

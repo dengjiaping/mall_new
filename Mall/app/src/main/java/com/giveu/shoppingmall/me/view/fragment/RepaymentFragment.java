@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -22,9 +21,9 @@ import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.me.view.dialog.IntalmentDetailsDialog;
 import com.giveu.shoppingmall.me.view.dialog.RepaymentDetailDialog;
 import com.giveu.shoppingmall.me.view.dialog.RepaymentDialog;
-import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
-import com.giveu.shoppingmall.model.bean.response.BillListResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
 import com.giveu.shoppingmall.model.bean.response.WxPayParamsResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.HardWareUtil;
@@ -61,8 +60,6 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     TextView tvConfirm;
     private RepaymentDialog repaymentDialog;
     private RepaymentDetailDialog repaymentDetailDialog;
-    private int pageIndex = 1;
-    private final int pageSize = 10;
     private boolean isCurrentMonth;
     private RepaymentActivity mActivity;
     private ViewHolder headerHolder;
@@ -73,6 +70,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     private IntalmentDetailsDialog intalmentDetailsDialog; //还款明细对话框
     private OnlyConfirmDialog resultDialog;//错误信息提示框
     private String productType;
+    private String payId;
 
 
     @Override
@@ -118,17 +116,15 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             case R.id.iv_change_money:
                 if (canClick()) {
                     repaymentDialog.show();
-                } else {
-                    ToastUtils.showShortToast("请先勾选要还的款项");
                 }
                 break;
 
             case R.id.tv_confirm:
                 if (canClick()) {
-                    //判断选中的是什么类型，再判断最大可还金额
+                    //判断选中的是什么类型，再判断最大可还金额,并给出提示
                     for (RepaymentBean repaymentBean : billList) {
                         //分期产品
-                        if (repaymentBean.isChoose && "o".equalsIgnoreCase(repaymentBean.productType)) {
+                        if (repaymentBean.isChoose && TypeUtlis.CERDIT_PRODUCT.equalsIgnoreCase(repaymentBean.productType)) {
                             if (payMoney > othersTotalAmount) {
                                 SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于分期产品剩余待还期款总额", "¥" + StringUtils.format2(othersTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
                                 resultDialog.setContent(colorStr);
@@ -136,10 +132,10 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                                 return;
                             }
                             break;
-                        } else if (repaymentBean.isChoose && "c".equalsIgnoreCase(repaymentBean.productType)) {
+                        } else if (repaymentBean.isChoose && TypeUtlis.CASH.equalsIgnoreCase(repaymentBean.productType)) {
                             //零花钱产品
                             if (payMoney > cycleTotalAmount) {
-                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于零花钱剩余待还期款总额", "¥" + StringUtils.format2(othersTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
+                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于零花钱剩余待还期款总额", "¥" + StringUtils.format2(cycleTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
                                 resultDialog.setContent(colorStr);
                                 resultDialog.show();
                                 return;
@@ -148,9 +144,6 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                         }
                     }
                     presenter.createRepaymentOrder(LoginHelper.getInstance().getIdPerson(), (long) (payMoney * 100), HardWareUtil.getHostIP(), PayUtils.WX, productType);
-//                    repaymentDetailDialog.show();
-                } else {
-                    ToastUtils.showShortToast("请先勾选要还的款项");
                 }
                 break;
 
@@ -216,20 +209,6 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             }
         });
 
-
-        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                pageIndex = 1;
-                ptrlv.setPullLoadEnable(false);
-
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                ptrlv.setPullRefreshEnable(true);
-            }
-        });
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -245,7 +224,10 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     }
 
-    public void notifyDataSetChange(BillListResponse.HeaderBean headerBean, ArrayList<RepaymentBean> billBeenList) {
+    public void notifyDataSetChange(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> billBeenList) {
+        tvMoney.setText("还款金额：¥" + StringUtils.format2(0 + ""));
+        payMoney = 0;
+        tvConfirm.setBackgroundResource(R.drawable.shape_grey_without_corner);
         if (headerBean != null) {
             cycleTotalAmount = headerBean.cycleTotalAmount;
             othersTotalAmount = headerBean.othersTotalAmount;
@@ -265,6 +247,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             billList.clear();
             billList.addAll(billBeenList);
             repaymentAdapter.notifyDataSetChanged();
+            baseLayout.hideEmpty();
         } else {
             baseLayout.showEmpty(144, 62, "抱歉，没有账单哦");
         }
@@ -277,14 +260,16 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     }
 
     @Override
-    public void createOrderSuccess(final WxPayParamsResponse response) {
-        repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(payMoney + ""));
-        repaymentDetailDialog.setPayStr(StringUtils.format2(payMoney + ""));
+    public void createOrderSuccess(final WxPayParamsResponse response, String payId) {
+        this.payId = payId;
+        //还款金额
         if (TypeUtlis.CERDIT_PRODUCT.equalsIgnoreCase(productType)) {
-            repaymentDetailDialog.setPayStr(StringUtils.format2(othersTotalAmount + ""));
+            repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(othersTotalAmount + ""));
         } else if (TypeUtlis.CASH.equalsIgnoreCase(productType)) {
-            repaymentDetailDialog.setPayStr(StringUtils.format2(cycleTotalAmount + ""));
+            repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(cycleTotalAmount + ""));
         }
+        //实际支付
+        repaymentDetailDialog.setPayStr(StringUtils.format2(payMoney + ""));
         repaymentDetailDialog.setOnConfirmListener(new RepaymentDetailDialog.OnConfirmListener() {
             @Override
             public void onConfirm() {
@@ -305,6 +290,21 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             resultDialog.setContent(message);
             resultDialog.show();
         }
+    }
+
+    public void payQuery() {
+        if (StringUtils.isNotNull(payId)) {
+            presenter.payQuery(payId);
+        }
+        //查询后payId置空，使查询时其他fragement，此fragment不执行查询
+        payId = "";
+    }
+
+    @Override
+    public void paySuccess() {
+        ToastUtils.showShortToast("还款成功");
+        //支付成功后刷新还款数据
+        mActivity.setData();
     }
 
 

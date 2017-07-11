@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.me.view.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,8 +15,8 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.RepaymentPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRepaymentView;
 import com.giveu.shoppingmall.me.view.fragment.RepaymentFragment;
+import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
-import com.giveu.shoppingmall.model.bean.response.BillListResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
@@ -33,13 +34,23 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
     NoScrollViewPager vpBill;
     private RepaymentFragment currentMonthFragment;
     private RepaymentFragment nextMonthFragment;
-    private BillFragmentAdapter fragmentAdapter;
+    private RepaymentFragmentAdapter fragmentAdapter;
     private ArrayList<Fragment> fragmentList;
     private RepaymentPresenter presenter;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, RepaymentActivity.class);
         activity.startActivity(intent);
+    }
+
+    /**
+     * 微信支付完成，因为launch模式为singleTask，所以不会走onCreate方法，直接onNewIntent
+     *
+     * @param mContext
+     */
+    public static void startItAfterPay(Context mContext) {
+        Intent i = new Intent(mContext, RepaymentActivity.class);
+        mContext.startActivity(i);
     }
 
     @Override
@@ -65,7 +76,7 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         nextMonthFragment.setArguments(nextBundle);
         fragmentList.add(currentMonthFragment);
         fragmentList.add(nextMonthFragment);
-        fragmentAdapter = new BillFragmentAdapter(getSupportFragmentManager(), fragmentList);
+        fragmentAdapter = new RepaymentFragmentAdapter(getSupportFragmentManager(), fragmentList);
         vpBill.setAdapter(fragmentAdapter);
         presenter = new RepaymentPresenter(this);
     }
@@ -78,7 +89,7 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
     @Override
     public void setData() {
         //调一次接口可获取当月和下月的数据，并进行拆分
-        presenter.getBillList(LoginHelper.getInstance().getIdPerson());
+        presenter.getRepayment(LoginHelper.getInstance().getIdPerson());
     }
 
     @Override
@@ -91,17 +102,17 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
     }
 
     @Override
-    public void showBillList(BillListResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList) {
+    public void showRepayment(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList) {
         //获取账单列表后刷新fragment数据
         currentMonthFragment.notifyDataSetChange(headerBean, currentMonthList);
         nextMonthFragment.notifyDataSetChange(headerBean, nextMonthList);
     }
 
 
-    private class BillFragmentAdapter extends FragmentStatePagerAdapter {
+    private class RepaymentFragmentAdapter extends FragmentStatePagerAdapter {
         private ArrayList<Fragment> fragments;
 
-        public BillFragmentAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+        public RepaymentFragmentAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);
             this.fragments = fragments;
         }
@@ -114,6 +125,17 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         @Override
         public int getCount() {
             return fragments.size();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (currentMonthFragment != null) {
+            currentMonthFragment.payQuery();
+        }
+        if (nextMonthFragment != null) {
+            nextMonthFragment.payQuery();
         }
     }
 }

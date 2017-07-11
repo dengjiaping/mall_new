@@ -105,4 +105,7 @@ public interface ApiUrl {
     String personCenter_bankCard_agreementApply = BASE_URL + "personCenter/bankCard/agreementApply";
     //新增银行卡
     String personCenter_bankCard_addBankCard = BASE_URL + "personCenter/bankCard/addBankCard";
+    //还款结果查询
+    String pay_query = BASE_URL + "pay/query";
 }
+

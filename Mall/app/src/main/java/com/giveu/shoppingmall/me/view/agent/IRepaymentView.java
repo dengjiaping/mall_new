@@ -2,7 +2,7 @@ package com.giveu.shoppingmall.me.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
 import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
-import com.giveu.shoppingmall.model.bean.response.BillListResponse;
+import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 
 import java.util.ArrayList;
 
@@ -11,5 +11,5 @@ import java.util.ArrayList;
  */
 
 public interface IRepaymentView extends IView {
-    void showBillList(BillListResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList);
+    void showRepayment(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList);
 }

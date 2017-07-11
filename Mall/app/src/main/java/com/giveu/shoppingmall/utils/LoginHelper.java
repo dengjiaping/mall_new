@@ -28,7 +28,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String PHONE = "phone";
     public static final String NICK_NAME = "nickName";
     public static final String POS_LIMIT = "posLimit";
-    public static final String name = "name";
+    public static final String NAME = "NAME";
     public static final String STATUS = "status";
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "userName";
@@ -38,6 +38,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String REPAY_AMOUNT = "repayAmount";
     public static final String REPAY_DATE = "repayDate";
     public static final String TOTAL_COST = "totalCost";
+    public static final String HAS_DEFAULT_CARD = "hasDefaultCard";
     public static final String REMAINING_TIMES = "remainingTimes";//手势或指纹剩余提醒次数
 
     public static LoginHelper getInstance() {
@@ -65,7 +66,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.availablePosLimit = getString(AVAILABLE_POSLIMIT, "");
         personInfo.cyLimit = getString(CYLIMIT, "");
         personInfo.posLimit = getString(POS_LIMIT, "");
-        personInfo.name = getString(name, "");
+        personInfo.name = getString(NAME, "");
+        personInfo.hasDefaultCard = getBoolean(HAS_DEFAULT_CARD, false);
         personInfo.totalCost = getString(TOTAL_COST, "");
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -91,7 +93,7 @@ public class LoginHelper extends AbsSharePref {
         putString(PHONE, personInfo.phone);
         putString(NICK_NAME, personInfo.nickName);
         putString(POS_LIMIT, personInfo.posLimit);
-        putString(name, personInfo.name);
+        putString(NAME, personInfo.name);
         putBoolean(STATUS, personInfo.status);
         putString(USER_ID, personInfo.userId);
         putString(USER_NAME, personInfo.userName);
@@ -100,6 +102,7 @@ public class LoginHelper extends AbsSharePref {
         putString(CREDIT_COUNT, personInfo.creditCount);
         putString(REPAY_AMOUNT, personInfo.repayAmount);
         putString(REPAY_DATE, personInfo.repayDate);
+        putBoolean(HAS_DEFAULT_CARD, personInfo.hasDefaultCard);
         putString(TOTAL_COST, personInfo.totalCost);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
@@ -186,6 +189,14 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getTotalCost() {
         return loginPersonInfo == null ? null : loginPersonInfo.totalCost;
+    }
+
+    /**
+     * 是否有默认银行卡
+     * @return
+     */
+    public boolean hasDefaultCard() {
+        return loginPersonInfo != null && loginPersonInfo.hasDefaultCard;
     }
 
 
@@ -311,7 +322,7 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getIdPerson() {
         return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
-  //      return "11413705";
+        //      return "11413705";
     }
 
 

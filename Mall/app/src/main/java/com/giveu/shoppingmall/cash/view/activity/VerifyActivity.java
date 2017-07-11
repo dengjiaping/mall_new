@@ -11,15 +11,13 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
-import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
@@ -91,15 +89,15 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     }
 
     /**
-     * 微信支付完成
+     * 微信支付完成，因为launch模式为singleTask，所以不会走onCreate方法，直接onNewIntent
      *
      * @param mContext
      * @param payType
      */
-    public static void startItAfterPay(Context mContext, String payType) {
-        Intent i = new Intent(mContext, MainActivity.class);
-        i.putExtra(Const.whichFragmentInActMain, 0);
+    public static void startItAfterPay(Context mContext, String payType, boolean paySuccess) {
+        Intent i = new Intent(mContext, VerifyActivity.class);
         i.putExtra("payType", payType);
+        i.putExtra("paySuccess", paySuccess);
         mContext.startActivity(i);
     }
 
@@ -154,7 +152,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
                         case RECHARGE:
                             presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile, productId, orderNo,
-                                    paymentType, result,LoginHelper.getInstance().getPhone());
+                                    paymentType, result, LoginHelper.getInstance().getPhone());
                             break;
                     }
        /*             if ("123456".equals(result)) {
@@ -289,30 +287,38 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     }
 
     @Override
-    public void thirdPayOrderFailed() {
+    public void confirmOrderFail() {
         RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
         finish();
     }
 
-    @Override
+/*    @Override
     public void thirdPaySuccess() {
         RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
         finish();
-    }
+    }*/
 
     /**
      * 手机充值微信支付结果
      */
-    public void rechargeAfterWxPay() {
-        presenter.thirdPayRecharge(LoginHelper.getInstance().getIdPerson(), orderDetailId, orderNo);
+    public void rechargeAfterWxPay(boolean paySuccess) {
+//        presenter.thirdPayRecharge(LoginHelper.getInstance().getIdPerson(), orderDetailId, orderNo);
+        if(paySuccess){
+            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+            finish();
+        }else {
+            RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+            finish();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String payType = intent.getStringExtra("payType");
+        boolean paySuccess = intent.getBooleanExtra("paySuccess",false);
         if (RECHARGE.equals(payType)) {
-            rechargeAfterWxPay();
+            rechargeAfterWxPay(paySuccess);
         }
     }
 }

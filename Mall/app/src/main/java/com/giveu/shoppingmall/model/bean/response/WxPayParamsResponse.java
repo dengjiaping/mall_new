@@ -7,11 +7,11 @@ import com.android.volley.mynet.BaseBean;
  */
 
 public class WxPayParamsResponse<T extends WxPayParamsResponse> extends BaseBean<T> {
-    public String appid;
     public String noncestr;
     public String packageValue;
     public String partnerid;
     public String prepayid;
+    public String payId;
     public String sign;
     public String timestamp;
 }

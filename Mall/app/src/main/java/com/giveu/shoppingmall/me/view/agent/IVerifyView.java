@@ -8,6 +8,5 @@ import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 
 public interface IVerifyView extends ISendSmsView{
     void confirmOrderSuccess(ConfirmOrderResponse data);
-    void thirdPayOrderFailed();
-    void thirdPaySuccess();
+    void confirmOrderFail();
 }
