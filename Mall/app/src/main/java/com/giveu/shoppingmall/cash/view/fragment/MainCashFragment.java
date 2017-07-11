@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
+import com.giveu.shoppingmall.utils.LoginHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,10 +55,13 @@ public class MainCashFragment extends BaseFragment {
         tvLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (false) {
+                String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+                if ("0".equals(availableCylimit)) {
+                    //取现额度为0
                     quotaDialog.showDialog();
                 } else {
-                    CashTypeActivity.startIt(mBaseContext);
+                    CashTypeActivity.startIt(mBaseContext, "5000");
+                  //  CashTypeActivity.startIt(mBaseContext, availableCylimit);
                 }
             }
         });

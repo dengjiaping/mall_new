@@ -15,7 +15,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
+import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,11 +55,18 @@ public class AddBankCardSecondActivity extends BaseActivity {
     ClickEnabledTextView tvCommit;
     String bankName;
     String bankPhone;
+    String orderNo;
+    String smsSeq;
+    String bankNo;
+    String sendCode;
 
-    public static void startIt(Activity mActivity, String bankCode, String bankNo) {
+    public static void startIt(Activity mActivity, String bankCode, String bankNo, String bankName, String bankPerson) {
         Intent intent = new Intent(mActivity, AddBankCardSecondActivity.class);
         intent.putExtra("bankCode", bankCode);
         intent.putExtra("bankNo", bankNo);
+        intent.putExtra("bankName", bankName);
+        intent.putExtra("bankName", bankName);
+        intent.putExtra("bankPerson", bankPerson);
         mActivity.startActivity(intent);
     }
 
@@ -68,6 +76,8 @@ public class AddBankCardSecondActivity extends BaseActivity {
         CommonUtils.openSoftKeyBoard(mBaseContext);
         baseLayout.setTitle("添加银行卡");
         tvSendCode.setSendTextColor(true);
+        bankName = getIntent().getStringExtra("bankName");
+        etBankName.setText(bankName);
         CommonUtils.setTextWithSpan(checkboxDesc, false, "我同意代扣还款并遵守合同中相关约定", "《代扣服务协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +89,8 @@ public class AddBankCardSecondActivity extends BaseActivity {
     @Override
     public void setListener() {
         etBankName.checkFormat(EditView.Style.BANKNAME);
+        int length = StringUtils.getTextFromView(etBankName).length();
+        etBankName.setSelection(length);
         etSendCode.checkFormat(6);
         etBankPhone.checkFormat(11);
         etBankName.addTextChangedListener(new TextChangeListener() {
@@ -154,7 +166,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
             return;
         }
         if (llSendCode != null) {
-            String sendCode = StringUtils.getTextFromView(etSendCode);
+            sendCode = StringUtils.getTextFromView(etSendCode);
             if (StringUtils.isNull(sendCode)) {
                 if (showToast) {
                     ToastUtils.showShortToast("请输入6位验证码！");
@@ -186,37 +198,72 @@ public class AddBankCardSecondActivity extends BaseActivity {
 
         switch (view.getId()) {
             case R.id.tv_send_code:
-                tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                String bankCode = getIntent().getStringExtra("bankCode");
+                bankNo = getIntent().getStringExtra("bankNo");
+                bankCode = StringUtils.nullToEmptyString(bankCode);
+                bankNo = StringUtils.nullToEmptyString(bankNo);
+                ApiImpl.agreementApply(mBaseContext, bankCode, bankNo, LoginHelper.getInstance().getIdPerson(), bankPhone, new BaseRequestAgent.ResponseListener<AgreementApplyResponse>() {
                     @Override
-                    public void onEnd() {
-                        String bankPhone = StringUtils.getTextFromView(etBankPhone);
-                        if (StringUtils.checkPhoneNumberAndTipError(bankPhone, false)) {
-                            tvSendCode.setBackgroundResource(R.color.title_color);
-                            tvSendCode.setEnabled(true);
-                        } else {
-                            tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
-                            tvSendCode.setEnabled(false);
+                    public void onSuccess(AgreementApplyResponse response) {
+                        if (response != null) {
+                            if (response.data != null) {
+                                smsSeq = response.data.smsSeq;
+                                orderNo = response.data.orderNo;
+                            }
                         }
+                        tvSendCode.startCount(new SendCodeTextView.CountEndListener() {
+                            @Override
+                            public void onEnd() {
+                                String bankPhone = StringUtils.getTextFromView(etBankPhone);
+                                if (StringUtils.checkPhoneNumberAndTipError(bankPhone, false)) {
+                                    tvSendCode.setBackgroundResource(R.color.title_color);
+                                    tvSendCode.setEnabled(true);
+                                } else {
+                                    tvSendCode.setBackgroundResource(R.color.color_d8d8d8);
+                                    tvSendCode.setEnabled(false);
+                                }
 
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
+
                 break;
             case R.id.tv_commit:
                 if (tvCommit.isClickEnabled()) {
-                    String bankCode = getIntent().getStringExtra("bankCode");
-                    String bankNo = getIntent().getStringExtra("bankNo");
-                    bankCode = StringUtils.nullToEmptyString(bankCode);
-                    bankNo = StringUtils.nullToEmptyString(bankNo);
-                    ApiImpl.agreementApply(mBaseContext, bankCode, bankNo, LoginHelper.getInstance().getIdPerson(), bankPhone, new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
-                        @Override
-                        public void onSuccess(IdentifyCardResponse response) {
+                    String bankPerson = getIntent().getStringExtra("bankPerson");
+                    bankPerson = StringUtils.nullToEmptyString(bankPerson);
+                    String isDefault;
+                    if (true) {
+                        //0 不是默认代扣卡 1 是默认代扣卡
+                        isDefault = "0";
+                    } else {
+                        isDefault = "1";
+                    }
+                    ApiImpl.addBankCard(mBaseContext, bankPhone, bankName, bankNo, bankPerson, sendCode, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getIdent(), isDefault, orderNo, "1", smsSeq, new BaseRequestAgent.ResponseListener<AgreementApplyResponse>() {
+                        NormalHintDialog dialog;
 
+                        @Override
+                        public void onSuccess(AgreementApplyResponse response) {
+                            dialog = new NormalHintDialog(mBaseContext, "银行卡添加成功，\n已自动设置为默认卡");
+                            dialog.showDialog();
+                            dialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                @Override
+                                public void onDismiss() {
+                                    MyBankCardActivity.startIt(mBaseContext);
+                                }
+                            });
                         }
 
                         @Override
                         public void onError(BaseBean errorBean) {
                             if (errorBean != null) {
-                                NormalHintDialog dialog = new NormalHintDialog(mBaseContext, errorBean.message);
+                                dialog = new NormalHintDialog(mBaseContext, errorBean.message);
                                 dialog.showDialog();
                             }
                         }

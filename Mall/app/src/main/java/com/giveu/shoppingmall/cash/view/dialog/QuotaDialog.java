@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 
 /**
+ * 取现额度为0的弹窗
  * Created by 101900 on 2017/3/6.
  */
 

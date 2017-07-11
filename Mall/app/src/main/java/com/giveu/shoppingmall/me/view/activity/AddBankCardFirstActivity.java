@@ -20,7 +20,7 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -113,23 +113,30 @@ public class AddBankCardFirstActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (tvNext.isClickEnabled()) {
-            String name = StringUtils.getTextFromView(etUsername);
+            CommonUtils.closeSoftKeyBoard(etBanknumber.getWindowToken(), mBaseContext);
+            final String name = StringUtils.getTextFromView(etUsername);
             final String bankNo = StringUtils.getTextFromView(etBanknumber);
             ApiImpl.identifyCard(mBaseContext, name, bankNo, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
                 @Override
                 public void onSuccess(IdentifyCardResponse response) {
                     String bankCode = "";
+                    String bankName = "";
                     if (response != null) {
                         if (response.data != null) {
                             bankCode = response.data.bankCode;
+                            bankName = response.data.bankName;
                         }
                     }
-                    AddBankCardSecondActivity.startIt(mBaseContext, bankCode,bankNo);
+                    AddBankCardSecondActivity.startIt(mBaseContext, bankCode, bankNo, bankName, name);
                 }
 
                 @Override
                 public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
+                    if (errorBean != null) {
+                        NormalHintDialog dialog = new NormalHintDialog(mBaseContext, errorBean.message);
+                        dialog.showDialog();
+
+                    }
                 }
             });
         } else {

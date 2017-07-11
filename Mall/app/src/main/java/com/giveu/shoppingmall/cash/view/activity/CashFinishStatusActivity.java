@@ -146,13 +146,13 @@ public class CashFinishStatusActivity extends BaseActivity {
                         CaseRecordActivity.startIt(mBaseContext);
                         break;
                     case "fail":
-                        CashTypeActivity.startIt(mBaseContext);
+                        CashTypeActivity.startIt(mBaseContext,null);
                         break;
                 }
                 break;
             case R.id.tv_back:
                 //返回
-                CashTypeActivity.startIt(mBaseContext);
+                CashTypeActivity.startIt(mBaseContext,null);
                 break;
         }
     }

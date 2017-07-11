@@ -8,7 +8,7 @@
         android:id="@+id/tv_staging_type"
         android:layout_width="match_parent"
         android:layout_height="31dp"
-        android:background="@drawable/shape_ordinary_normal"
+        android:background="@drawable/shape_cash_item_normal_small"
         android:gravity="center"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"

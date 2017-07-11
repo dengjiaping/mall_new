@@ -322,6 +322,7 @@
             android:label="修改手机号" />
         <activity
             android:name=".me.view.activity.MyBankCardActivity"
+            android:launchMode="singleTask"
             android:label="我的银行卡" />
         <activity
             android:name=".recharge.view.activity.RechargeStatusActivity"

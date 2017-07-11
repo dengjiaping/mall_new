@@ -20,9 +20,10 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ll_bg_top"
                 android:layout_width="match_parent"
                 android:layout_height="149dp"
-                android:background="@color/title_color"
+                android:background="@drawable/shape_cash_bg_small"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 

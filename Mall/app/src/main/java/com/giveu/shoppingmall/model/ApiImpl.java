@@ -8,6 +8,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.BankListResponse;
@@ -347,9 +348,15 @@ public class ApiImpl {
     }
 
     //签约代扣协议(获取验证码)
-    public static void agreementApply(Activity context, String bankCode, String bankNo, String idPerson, String phone, BaseRequestAgent.ResponseListener<IdentifyCardResponse> responseListener) {
+    public static void agreementApply(Activity context, String bankCode, String bankNo, String idPerson, String phone, BaseRequestAgent.ResponseListener<AgreementApplyResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankCode", "bankNo", "idPerson", "phone"}, new Object[]{bankCode, bankNo, StringUtils.string2Long(idPerson), phone});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_agreementApply, IdentifyCardResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_agreementApply, AgreementApplyResponse.class, context, responseListener);
+    }
+
+    //新增银行卡
+    public static void addBankCard(Activity context, String bankBindPhone, String bankName, String bankNo, String bankPerson, String code, String idPerson, String ident, String isDefault, String orderNo, String payType, String smsSeq, BaseRequestAgent.ResponseListener<AgreementApplyResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankBindPhone", "bankName", "bankNo", "bankPerson", "code", "idPerson", "ident", "isDefault", "orderNo", "payType", "smsSeq"}, new Object[]{bankBindPhone, bankName, bankNo, bankPerson, code, StringUtils.string2Long(idPerson), ident, StringUtils.string2Int(isDefault), orderNo, payType, smsSeq});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_addBankCard, AgreementApplyResponse.class, context, responseListener);
     }
 }
 

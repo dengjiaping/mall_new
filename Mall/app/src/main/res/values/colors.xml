@@ -20,6 +20,7 @@
     <color name="color_00b5d9">#00b5d9</color>
     <color name="color_00a0a4">#00a0a4</color>
     <color name="color_00a9ac">#00a9ac</color>
+    <color name="color_00c9cd">#00c9cd</color>
     <color name="color_008488">#008488</color>
     <color name="color_e5e5e5">#e5e5e5</color>
     <color name="color_9b9b9b">#9b9b9b</color>
@@ -44,6 +45,11 @@
     <color name="top_bar_bg">#ffffff</color>
     <color name="orange">#ff7a01</color>
     <color name="color_ff5900">#ff5900</color>
+    <color name="color_fe8d50">#fe8d50</color>
+    <color name="color_fed13a">#fed13a</color>
+    <color name="color_fe8e4e">#fe8e4e</color>
+    <color name="color_febb41">#febb41</color>
+    <color name="color_fe984a">#fe984a</color>
     <color name="color_9d0013">#9d0013</color>
     <color name="blue">#047cff</color>
 
@@ -61,7 +67,8 @@
     <color name="color_f0ffff">#f0ffff</color>
     <color name="color_71ebee">#71ebee</color>
     <color name="color_007376">#007376</color>
-    <color name="color_00bfc5">#00bfc5</color>
+    <color name="color_00bfc5">#00bfc5</color>00B7BB
+    <color name="color_00b7bb">#00b7bb</color>
     <color name="color_00b5d8">#00b5d8</color>
     <color name="color_f4b800">#f4b800</color>
     <color name="color_a17b06">#a17b06</color>

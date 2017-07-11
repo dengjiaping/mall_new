@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 public class HorizontalScaleScrollView extends BaseScaleView {
     public final int LARGESCALE = 100;//每10格的一个大刻度
     Context context;
+    public String color;
+
     public HorizontalScaleScrollView(Context context) {
         super(context);
         this.context = context;
@@ -80,10 +82,14 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
     }
 
+    public void setPointerColor(String pointerColor) {
+        color = pointerColor;
+    }
+
     @Override
     protected void onDrawPointer(Canvas canvas, Paint paint) {
-
-        paint.setColor(Color.parseColor("#00B8BC"));
+        color = "".equals(color) ? "#00B8BC" : color;
+        paint.setColor(Color.parseColor(color));
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         //每一屏幕刻度的个数/2
@@ -109,8 +115,9 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
 
     }
+
     //滑动停下的监听事件
-    public interface OnMoveStopListener{
+    public interface OnMoveStopListener {
         void stop();
     }
 
@@ -159,7 +166,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
                 int finalX = (mCountScale - mMidCountScale) * mScaleMargin;
                 mScroller.setFinalX(finalX); //纠正指针位置
                 postInvalidate();
-                if(listener != null){
+                if (listener != null) {
                     listener.stop();
                 }
                 return true;

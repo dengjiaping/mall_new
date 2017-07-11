@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -41,8 +43,6 @@ import butterknife.BindView;
  */
 
 public class MyBankCardActivity extends BaseActivity {
-
-
     @BindView(R.id.lv_bank_card)
     ListView lvBankCard;
     LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter;
@@ -56,10 +56,21 @@ public class MyBankCardActivity extends BaseActivity {
     List<BankCardListResponse.BankInfoListBean> bankInfoList;
     @BindView(R.id.ll_default_bank_card)
     LinearLayout llDefaultBankCard;
+    String defalutBankName;
+    String defalutBankCardNo;
+    @BindView(R.id.iv_bank)
+    ImageView ivBank;
+
+    public static void startIt(Activity mActivity) {
+        Intent intent = new Intent(mActivity, MyBankCardActivity.class);
+        mActivity.setResult(RESULT_OK);
+        mActivity.startActivityForResult(intent, 2);
+    }
 
     public static void startIt(Activity mActivity, boolean needResult) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
         intent.putExtra("needResult", needResult);
+        mActivity.setResult(RESULT_OK);
         mActivity.startActivityForResult(intent, 1);
     }
 
@@ -87,10 +98,12 @@ public class MyBankCardActivity extends BaseActivity {
         bankListAdapter = new LvCommonAdapter<BankCardListResponse.BankInfoListBean>(mBaseContext, R.layout.lv_bank_card_item, bankInfoList) {
             @Override
             protected void convert(ViewHolder viewHolder, BankCardListResponse.BankInfoListBean item, int position) {
-                TextView tv_bank_name = viewHolder.getView(R.id.tv_bank_name);
-                TextView tv_bank_card_no = viewHolder.getView(R.id.tv_bank_card_no);
-                tv_bank_name.setText(StringUtils.nullToEmptyString(item.bankName));
-                tv_bank_card_no.setText(StringUtils.nullToEmptyString(changeBankNoStyle(item.bankNo)));
+                TextView tvBankName = viewHolder.getView(R.id.tv_bank_name);
+                TextView tvBankCardNo = viewHolder.getView(R.id.tv_bank_card_no);
+                ImageView ivBankItem = viewHolder.getView(R.id.iv_bank_item);
+                tvBankName.setText(StringUtils.nullToEmptyString(item.bankName));
+                tvBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(item.bankNo)));
+             //   ImageUtils.loadImage(item.url, R.drawable.defalut_img_88_88, ivBankItem);
             }
         };
         lvBankCard.setAdapter(bankListAdapter);
@@ -98,18 +111,35 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setListener() {
+        final boolean needResult = getIntent().getBooleanExtra("needResult", false);
         super.setListener();
-        //短按 选择后显示在上一页面
+        //needResult=true 取现页短按选择默认卡回上一页面显示出来
+        llDefaultBankCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (needResult) {
+                    Intent data = new Intent(mBaseContext, CashTypeActivity.class);
+                    if (defalutBankCardNo.length() >= 4) {
+                        defalutBankCardNo = defalutBankCardNo.substring(defalutBankCardNo.length() - 4, defalutBankCardNo.length());
+                    }
+                    String bankName = defalutBankName + "(尾号" + defalutBankCardNo + ")";
+                    data.putExtra("bankName", bankName);
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
+            }
+        });
+        //needResult=true 取现页短按选择其他卡回上一页面显示出来
         lvBankCard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                boolean needResult = getIntent().getBooleanExtra("needResult", false);
+
                 if (needResult) {
                     showBankNoStyle(position);
                     finish();
                 } else {
                     final String id1 = String.valueOf(bankListAdapter.getItem(position).id);
-                    dialogUtil.getDialogMode3("删除", "设置默认代扣卡", "取消", new View.OnClickListener() {
+                    dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //删除银行卡
@@ -119,7 +149,7 @@ public class MyBankCardActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             //设置默认代扣卡
-                            setDefaultCard(id1);
+                            showsetDefaultCardDialog(id1);
                         }
                     }, null).show();
                 }
@@ -141,7 +171,7 @@ public class MyBankCardActivity extends BaseActivity {
                 }
 
                 final String id2 = String.valueOf(bankListAdapter.getItem(position).id);
-                dialogUtil.getDialogMode3("删除", "设置默认代扣卡", "取消", new View.OnClickListener() {
+                dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //删除银行卡
@@ -151,7 +181,7 @@ public class MyBankCardActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         //设置默认代扣卡
-                        setDefaultCard(id2);
+                        showsetDefaultCardDialog(id2);
                     }
                 }, null).show();
                 return true;
@@ -210,7 +240,7 @@ public class MyBankCardActivity extends BaseActivity {
                                             }
                                         });
                                     } else {
-                                       // 交易密码校验成功,remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
+                                        // 交易密码校验成功,remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
                                         errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
                                     }
@@ -232,6 +262,22 @@ public class MyBankCardActivity extends BaseActivity {
     }
 
     /**
+     * 显示设置默认卡的Dialog
+     *
+     * @param id
+     */
+    public void showsetDefaultCardDialog(final String id) {
+        CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
+        customDialogUtil.getDialogMode1("提示", "是否要删除该银行卡？", "确定", "取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除
+                setDefaultCard(id);
+            }
+        }, null).show();
+    }
+
+    /**
      * 显示删除银行卡的Dialog
      *
      * @param bankListAdapter
@@ -240,7 +286,7 @@ public class MyBankCardActivity extends BaseActivity {
      */
     public void showDeleteBankCardDialog(final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter, final String id, final int position) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否要删除该银行卡？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogMode1("提示", "是否替换默认代扣卡？", "确定", "取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //删除
@@ -285,8 +331,11 @@ public class MyBankCardActivity extends BaseActivity {
                         BankCardListResponse.BankInfoListBean item = bankInfoList.get(i);
                         if (1 == item.isDefault) {
                             //除默认代扣卡的其他银行卡
-                            tvDefalutBankName.setText(StringUtils.nullToEmptyString(item.bankName));
-                            tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(item.bankNo)));
+                            defalutBankName = item.bankName;
+                            defalutBankCardNo = item.bankNo;
+                            tvDefalutBankName.setText(StringUtils.nullToEmptyString(defalutBankName));
+                            tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(defalutBankCardNo)));
+                       //     ImageUtils.loadImage(item.url, R.drawable.defalut_img_88_88, ivBank);
                             bankInfoList.remove(i);
                         }
                     }
@@ -318,4 +367,18 @@ public class MyBankCardActivity extends BaseActivity {
         return "* * * *   * * * *   * * * *   " + bankNo;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            setData();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

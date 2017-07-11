@@ -241,6 +241,7 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getAvailableCylimit() {
         return loginPersonInfo == null ? null : loginPersonInfo.availableCyLimit;
+       // return "0";
     }
 
     /**
