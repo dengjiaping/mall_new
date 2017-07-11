@@ -140,6 +140,15 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 最大充值额度
+     *
+     * @return  
+     */
+    public String getAvailableRechargeLimit() {
+        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availableRechargeLimit;
+    }
+
+    /**
      * 设置手势或指纹提醒
      *
      * @return
