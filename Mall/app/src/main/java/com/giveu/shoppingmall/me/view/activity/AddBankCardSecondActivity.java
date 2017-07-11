@@ -10,15 +10,21 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,10 +52,13 @@ public class AddBankCardSecondActivity extends BaseActivity {
     SendCodeTextView tvSendCode;
     @BindView(R.id.tv_commit)
     ClickEnabledTextView tvCommit;
+    String bankName;
+    String bankPhone;
 
-    public static void startIt(Activity mActivity, String bankCode) {
+    public static void startIt(Activity mActivity, String bankCode, String bankNo) {
         Intent intent = new Intent(mActivity, AddBankCardSecondActivity.class);
         intent.putExtra("bankCode", bankCode);
+        intent.putExtra("bankNo", bankNo);
         mActivity.startActivity(intent);
     }
 
@@ -127,8 +136,8 @@ public class AddBankCardSecondActivity extends BaseActivity {
 
 
     public void buttonCanClick(boolean showToast) {
-        String bankName = StringUtils.getTextFromView(etBankName);
-        String bankPhone = StringUtils.getTextFromView(etBankPhone);
+        bankName = StringUtils.getTextFromView(etBankName);
+        bankPhone = StringUtils.getTextFromView(etBankPhone);
         if (StringUtils.isNull(bankName)) {
             if (showToast) {
                 ToastUtils.showShortToast("请输入银行类别！");
@@ -194,10 +203,24 @@ public class AddBankCardSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_commit:
                 if (tvCommit.isClickEnabled()) {
-//                    ApiImpl.identifyCard(mBaseContext,)
-//                    NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "您已经绑定了该银行卡，请确认后重试");
-//                    dialog.showDialog();
+                    String bankCode = getIntent().getStringExtra("bankCode");
+                    String bankNo = getIntent().getStringExtra("bankNo");
+                    bankCode = StringUtils.nullToEmptyString(bankCode);
+                    bankNo = StringUtils.nullToEmptyString(bankNo);
+                    ApiImpl.agreementApply(mBaseContext, bankCode, bankNo, LoginHelper.getInstance().getIdPerson(), bankPhone, new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
+                        @Override
+                        public void onSuccess(IdentifyCardResponse response) {
 
+                        }
+
+                        @Override
+                        public void onError(BaseBean errorBean) {
+                            if (errorBean != null) {
+                                NormalHintDialog dialog = new NormalHintDialog(mBaseContext, errorBean.message);
+                                dialog.showDialog();
+                            }
+                        }
+                    });
                 } else {
                     buttonCanClick(true);
                 }

@@ -114,7 +114,7 @@ public class AddBankCardFirstActivity extends BaseActivity {
         super.onClick(view);
         if (tvNext.isClickEnabled()) {
             String name = StringUtils.getTextFromView(etUsername);
-            String bankNo = StringUtils.getTextFromView(etBanknumber);
+            final String bankNo = StringUtils.getTextFromView(etBanknumber);
             ApiImpl.identifyCard(mBaseContext, name, bankNo, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
                 @Override
                 public void onSuccess(IdentifyCardResponse response) {
@@ -124,7 +124,7 @@ public class AddBankCardFirstActivity extends BaseActivity {
                             bankCode = response.data.bankCode;
                         }
                     }
-                    AddBankCardSecondActivity.startIt(mBaseContext, bankCode);
+                    AddBankCardSecondActivity.startIt(mBaseContext, bankCode,bankNo);
                 }
 
                 @Override
