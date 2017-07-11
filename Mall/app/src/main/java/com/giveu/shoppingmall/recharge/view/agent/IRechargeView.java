@@ -11,7 +11,7 @@ import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 public interface IRechargeView extends IView {
     void showProducts(RechargeResponse data);
     void showPhoneInfo(SegmentResponse data);
-    void showErrorInfo();
+    void showErrorInfo(String message);
     void createOrderSuccess(String orderNo);
     void pwdSuccess();
     void pwdError(int remainTimes);

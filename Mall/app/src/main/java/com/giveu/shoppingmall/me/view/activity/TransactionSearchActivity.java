@@ -68,10 +68,9 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     private ObjectAnimator showAlphaAnimator;
     private ObjectAnimator hideAlphaAnimator;
     private int pageIndex = 1;
-    private final int pageSize = 10;
+    private final int pageSize = 20;
     private String creditStatus;
     private String creditType;
-    private String idPerson;
     private String loanDate;
     private String timeType;
     //区分搜索框的数据和真正要进行查询时的值
@@ -92,7 +91,15 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_search);
         baseLayout.setTitle("交易查询");
-        baseLayout.goneRightImage();
+        baseLayout.showRightImage();
+        llSearch.setVisibility(View.GONE);
+        //屏蔽查询结果点击事件，不设置的话，在搜索界面点击会触发下面view的点击事件
+        llSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         baseLayout.setRightImageAndListener(R.drawable.ic_transaction_search, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +155,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
-                    selCreditStatus = TypeUtlis.getCreditStatusValue(stateList.get(integer));
+                    selCreditStatus = TypeUtlis.getCreditStatusValue(categoryList.get(integer));
                     canClick();
                 }
             }
@@ -167,6 +174,8 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         presenter = new TransactionPresenter(this);
         //默认是按月查询
         selTimeType = "Month";
+        //所有数据
+        presenter.searchContract("","",LoginHelper.getInstance().getIdPerson(),"",pageIndex,pageSize,"");
     }
 
     @Override
@@ -258,10 +267,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             case R.id.tv_search:
                 //搜索交易记录
                 if (tvSearch.isClickEnabled()) {
+                    pageIndex = 1;
                     searchTransaction();
                     hideSearchView();
                     baseLayout.showRightImage();
                     transactionList.clear();
+                    ptrlv.setPullLoadEnable(false);
                     transactionAdapter.notifyDataSetChanged();
                 }
                 break;

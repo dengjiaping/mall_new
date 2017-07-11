@@ -45,6 +45,9 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String ident;
     public String name;
     public String nickName;
+    public String bankName;
+    public String bankIconUrl;
+    public String defaultCard;
     public String phone;
     public String posLimit;
     public String repayAmount;

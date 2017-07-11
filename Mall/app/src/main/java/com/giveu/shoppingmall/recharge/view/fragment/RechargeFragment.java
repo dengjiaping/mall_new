@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
@@ -36,7 +37,9 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
+import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +77,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     //用户名
     private String username;
     //运营商
-    private String oper;
     private String salePrice;
     private String mobile;
     private int productType;
@@ -84,6 +86,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     //产品id
     private String pid;
     PwdDialog pwdDialog;
+    private OnlyConfirmDialog warnningDialog;
 
     private int tabIndex;//0=话费 1=流量
     private boolean isVailable = false;//是否可点击
@@ -102,6 +105,10 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         ButterKnife.bind(this, view);
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
+        warnningDialog = new OnlyConfirmDialog(mBaseContext);
+        double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
+        warnningDialog.setContent("您已超出每月500元充值上限（已消费"
+                + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
         return view;
     }
 
@@ -132,13 +139,27 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         gvRecharge.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int checkId, long l) {
-                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                        rechargeAdapter.getItem(checkId).callTrafficId);
-                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                mobile = etRecharge.getText().toString();
-                productType = rechargeAdapter.getItem(checkId).productType;
-                productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                productName = rechargeAdapter.getItem(checkId).name;
+                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入充值
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        //可用金额是否大于充值产品金额
+                        if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
+                            warnningDialog.show();
+                        } else {
+                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                            mobile = etRecharge.getText().toString();
+                            productType = rechargeAdapter.getItem(checkId).productType;
+                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                            productName = rechargeAdapter.getItem(checkId).name;
+                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                    rechargeAdapter.getItem(checkId).callTrafficId);
+                        }
+
+                    } else {
+                        ToastUtils.showShortToast("请先开通钱包");
+                        WalletActivationFirstActivity.startIt(mBaseContext);
+                    }
+                }
             }
         });
     }
@@ -265,7 +286,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             if (editable.length() == 13) {
                 String phone = editable.toString().replace(" ", "");
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
-                isVailable = true;
                 //获取该手机号运营商
                 presenter.getPhoneInfo(phone);
             } else {
@@ -426,11 +446,21 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (CommonUtils.isNotNullOrEmpty(data.call.cmccs)) {
             productList.addAll(data.call.cmccs);
             rechargeAdapter.notifyDataSetChanged();
+            if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
+                //自动填充空格，并查询手机信息
+                StringBuilder ownerPhone = new StringBuilder(LoginHelper.getInstance().getPhone());
+                ownerPhone.insert(3, " ");
+                ownerPhone.insert(8, " ");
+                etRecharge.setText(ownerPhone.toString());
+                etRecharge.setSelection(ownerPhone.length());
+                presenter.getPhoneInfo(LoginHelper.getInstance().getPhone());
+            }
         }
     }
 
     @Override
     public void showPhoneInfo(SegmentResponse data) {
+        isVailable = true;
         tvMessage.setText(data.city + data.isp);
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
         currentOperator = data.code;
@@ -439,8 +469,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     }
 
     @Override
-    public void showErrorInfo() {
-        tvMessage.setText("错误号码");
+    public void showErrorInfo(String message) {
+        tvMessage.setText(message);
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
     }
 
@@ -473,7 +503,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void pwdSuccess() {
         //交易密码校验成功
         pwdDialog.dissmissDialog();
-        VerifyActivity.startItForRecharge(mBaseContext,mobile.replace(" ",""),productId,orderNo,paymentType,orderDetailId,salePrice);
+        VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, orderDetailId, salePrice);
     }
 
     @Override

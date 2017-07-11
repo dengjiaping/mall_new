@@ -8,13 +8,17 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.android.volley.mynet.ApiUrl;
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -112,6 +116,22 @@ public class BaseApplication extends MultiDexApplication {
 
     public void setBeforePayActivity(String beforePayActivity) {
         this.beforePayActivity = beforePayActivity;
+    }
+
+    public void fetchUserInfo() {
+        if (LoginHelper.getInstance().hasLogin()) {
+            ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<LoginResponse>() {
+                @Override
+                public void onSuccess(LoginResponse response) {
+                    response.data.accessToken = SharePrefUtil.getAppToken();
+                    LoginHelper.getInstance().saveLoginStatus(response.data);
+                }
+
+                @Override
+                public void onError(BaseBean errorBean) {
+                }
+            });
+        }
     }
 
     /**

@@ -20,13 +20,12 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
-import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
-import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
@@ -70,7 +69,6 @@ public class MainActivity extends BaseActivity {
     //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
-    private boolean hasFetchUserInfo;
 
     @BindView(R.id.mainViewPager)
     ViewPager mViewPager;
@@ -203,71 +201,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setListener() {
-/*        buttomBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
-                switch (checkId) {
-                    case R.id.rb0:
-                        mViewPager.setCurrentItem(0, false);
-                        break;
-                    case R.id.rb1:
-                        mViewPager.setCurrentItem(1, false);
-                        break;
-                    case R.id.rb2:
-                        mViewPager.setCurrentItem(2, false);
-                        break;
-                    case R.id.rb3:
-                        mViewPager.setCurrentItem(3, false);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });*/
     }
 
     @Override
     public void setData() {
         doApkUpgrade();
-    }
-
-    public void getUserInfo() {
-        ApiImpl.getUserInfo(null, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<LoginResponse>() {
-            @Override
-            public void onSuccess(LoginResponse response) {
-/*                LoginResponse loginResponse = new LoginResponse();
-                loginResponse.activeDate = wechatresponse.data.activeDate;
-                loginResponse.availableCyLimit = wechatresponse.data.availableCyLimit;
-                loginResponse.availablePosLimit = wechatresponse.data.availablePosLimit;
-                loginResponse.certNo = wechatresponse.data.ident;
-                loginResponse.cyLimit = wechatresponse.data.cyLimit;
-                loginResponse.endDate = wechatresponse.data.endDate;
-                loginResponse.globleLimit = wechatresponse.data.globleLimit;
-                loginResponse.idPerson = wechatresponse.data.idPerson;
-                loginResponse.mobile = wechatresponse.data.phone;
-                loginResponse.nickName = LoginHelper.getInstance().getUserName();
-                loginResponse.posLimit = wechatresponse.data.posLimit;
-                loginResponse.realName = wechatresponse.data.name;
-                //wechatresponse.data.status为true，对应的是2（有资质），1为未激活
-                loginResponse.status = wechatresponse.data.status;
-//                loginResponse.statusDesc = LoginHelper.getInstance().getStatus();
-                loginResponse.userId = LoginHelper.getInstance().getUserId();
-                loginResponse.userName = LoginHelper.getInstance().getUserName();
-                loginResponse.userPic = LoginHelper.getInstance().getUserPic();
-                loginResponse.availableRechargeLimit = wechatresponse.data.availableRechargeLimit;
-                loginResponse.creditCount = wechatresponse.data.creditCount;
-                loginResponse.repayAmount = wechatresponse.data.repayAmount;
-                loginResponse.repayDate = wechatresponse.data.repayDate;
-                //更新个人信息，缓存在本地*/
-                response.data.accessToken = SharePrefUtil.getAppToken();
-                LoginHelper.getInstance().saveLoginStatus(response.data);
-                hasFetchUserInfo = true;
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-            }
-        });
     }
 
     private class MainActivityAdapter extends FragmentStatePagerAdapter {
@@ -321,17 +259,6 @@ public class MainActivity extends BaseActivity {
             //上传设备号至服务器
             ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
         }
-
-        /**
-         * 只有已登录并且钱包资质用户才能查询个人信息
-         */
-        if (LoginHelper.getInstance().hasLogin() && LoginHelper.getInstance().hasQualifications() && !hasFetchUserInfo) {
-            getUserInfo();
-        } else {
-            //保证不是每次onResume都会调个人信息接口，只有切换账户或者开通了钱包资质才获取个人信息
-            hasFetchUserInfo = false;
-        }
-
     }
 
     DownloadApkUtils downloadApkUtils = null;
@@ -396,16 +323,8 @@ public class MainActivity extends BaseActivity {
     public static String needTurnToMessageActivity = "needTurnToMessageActivity";//是否需要跳转至消息列表
     //找回密码（重置密码）
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        String data = intent.getStringExtra(extraKey);
-        //微信支付后回调时展示
-        String payType = intent.getStringExtra("payType");
-    }
-
     /**
-     * 设置手势密码的提示dialog 
+     * 设置手势密码的提示dialog
      */
     public void settingPatternOrFingerPrint() {
         if (LoginHelper.getInstance().shouldShowSetting()) {
@@ -417,6 +336,12 @@ public class MainActivity extends BaseActivity {
             }
             LoginHelper.getInstance().reduceRemingTimes();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
 }

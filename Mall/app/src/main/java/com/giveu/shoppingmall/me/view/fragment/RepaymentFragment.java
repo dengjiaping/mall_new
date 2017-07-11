@@ -303,7 +303,8 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     @Override
     public void paySuccess() {
         ToastUtils.showShortToast("还款成功");
-        //支付成功后刷新还款数据
+        //支付成功后刷新还款数据,需更新额度，因此更新个人信息
+        BaseApplication.getInstance().fetchUserInfo();
         mActivity.setData();
     }
 

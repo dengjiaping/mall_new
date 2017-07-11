@@ -28,16 +28,16 @@
             android:textSize="@dimen/ts_21" />
 
 
-            <TextView
-                android:id="@+id/tv_hint_mid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="很抱歉，本次支付失败，请重新发起支付"
-                android:textColor="@color/color_a4a4a4"
-                android:textSize="@dimen/ts_14"
-                android:visibility="invisible" />
+        <TextView
+            android:id="@+id/tv_hint_mid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="很抱歉，本次支付失败，请重新发起支付"
+            android:textColor="@color/color_a4a4a4"
+            android:textSize="@dimen/ts_14"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/ll_date"
@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
@@ -102,8 +103,8 @@
                 android:id="@+id/ll_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginLeft="@dimen/default_layout_screen_gap">
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_date_name_bottom"
@@ -122,6 +123,7 @@
                     android:textSize="@dimen/ts_16" />
 
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
@@ -145,7 +147,8 @@
             style="@style/click_enabled_bt"
             android:layout_marginTop="56dp"
             android:background="@drawable/selector_login"
-            android:text="查看充值订单" />
+            android:text="查看充值订单"
+            android:visibility="gone" />
 
         <com.giveu.shoppingmall.widget.ClickEnabledTextView
             android:id="@+id/tv_back"

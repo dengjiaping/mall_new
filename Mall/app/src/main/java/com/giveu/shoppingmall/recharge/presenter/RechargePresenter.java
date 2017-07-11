@@ -47,8 +47,8 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
 
             @Override
             public void onError(BaseBean errorBean) {
-                if (getView() != null) {
-                    getView().showErrorInfo();
+                if (getView() != null&&errorBean!=null) {
+                    getView().showErrorInfo(errorBean.message);
                 }
             }
         });
