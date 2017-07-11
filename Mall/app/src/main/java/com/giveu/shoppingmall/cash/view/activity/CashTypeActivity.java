@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -119,14 +120,14 @@ public class CashTypeActivity extends BaseActivity {
                         ToastUtils.showShortToast("取现不少于100元");
                         return;
                     }
-                    if (chooseQuota % 10 == 0) {
+                    if (chooseQuota % 10 != 0) {
                         ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
                         return;
                     }
-                    if (chooseQuota >= 0 && chooseQuota <= 3000 && (chooseQuota % 50 == 0)) {
+
                         scaleScrollView.setCurScale((int) chooseQuota);
                         setData();
-                    }
+
                 }
             }
 
@@ -164,7 +165,12 @@ public class CashTypeActivity extends BaseActivity {
         decorView = (ViewGroup) getWindow().getDecorView();
         String availableCylimit = getIntent().getStringExtra("availableCylimit");
         if (StringUtils.isNotNull(availableCylimit)) {
-            if(Double.parseDouble(availableCylimit) > 3000){
+            int cylimit = (int)Double.parseDouble(availableCylimit);
+            //刻度尺默认最大额度
+            scaleScrollView.setMax(cylimit/10);
+            scaleScrollView.requestLayout();
+            scaleScrollView.setCurScale(cylimit-scaleScrollView.getScale());
+            if(cylimit > 3000){
                 isLargeAmount = true;
             }else{
                 isLargeAmount = false;
@@ -172,6 +178,12 @@ public class CashTypeActivity extends BaseActivity {
             chooseQuota = Double.parseDouble(availableCylimit);
             tvAvailableCredit.setText(String.valueOf(chooseQuota));//接收到的String转成double，填写到textView中
             etInputAmount.setText(String.valueOf((int) chooseQuota));//接收到的String转成int，填写到editText中
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scaleScrollView.setCurScale((int) chooseQuota);
+                }
+            },100);
             scaleScrollView.setCurScale((int) chooseQuota);//刻度尺选择可用额度最大值
         }
         if (isLargeAmount) {

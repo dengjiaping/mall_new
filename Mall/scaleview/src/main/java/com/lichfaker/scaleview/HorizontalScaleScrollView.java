@@ -40,7 +40,10 @@ public class HorizontalScaleScrollView extends BaseScaleView {
     }
 
     @Override
-    protected void initVar() {
+    public void initVar() {
+        if(mMax == 0){
+            setMax(300);
+        }
         mRectWidth = (mMax - mMin) * mScaleMargin;
         mRectHeight = mScaleHeight * 8;
         mScaleMaxHeight = mScaleHeight * 2;
@@ -48,6 +51,19 @@ public class HorizontalScaleScrollView extends BaseScaleView {
         // 设置layoutParams
         ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(mRectWidth, mRectHeight);
         this.setLayoutParams(lp);
+    }
+
+    public void setMax(int max) {
+        mMax = max;
+//        mRectWidth = (mMax - mMin) * mScaleMargin;
+//        mRectHeight = mScaleHeight * 8;
+//        mScaleMaxHeight = mScaleHeight * 2;
+//        // 设置layoutParams
+//        //  ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(mRectWidth, mRectHeight);
+//        ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
+//        param.width = mRectWidth;
+//        param.height = mRectHeight;
+//        this.setLayoutParams(param);
     }
 
     @Override
@@ -82,9 +98,24 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
     }
 
+    /**
+     * 设置指针颜色
+     *
+     * @param pointerColor
+     */
     public void setPointerColor(String pointerColor) {
         color = pointerColor;
     }
+
+    /**
+     * 获取初始值
+     *
+     * @return
+     */
+    public int getScale() {
+        return mCountScale;
+    }
+
 
     @Override
     protected void onDrawPointer(Canvas canvas, Paint paint) {
@@ -100,6 +131,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
         int tmpCountScale = (int) Math.rint((double) finalX / (double) mScaleMargin); //四舍五入取整
         //总刻度
         mCountScale = tmpCountScale + countScale + mMin;
+
         if (mScrollListener != null) { //回调方法
             mScrollListener.onScaleScroll(mCountScale);
         }

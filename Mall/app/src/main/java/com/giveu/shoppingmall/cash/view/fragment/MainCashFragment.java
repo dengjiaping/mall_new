@@ -60,8 +60,8 @@ public class MainCashFragment extends BaseFragment {
                     //取现额度为0
                     quotaDialog.showDialog();
                 } else {
-                    CashTypeActivity.startIt(mBaseContext, "5000");
-                  //  CashTypeActivity.startIt(mBaseContext, availableCylimit);
+                  //  CashTypeActivity.startIt(mBaseContext, "5000");
+                    CashTypeActivity.startIt(mBaseContext, availableCylimit);
                 }
             }
         });
