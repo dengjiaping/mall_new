@@ -72,7 +72,7 @@ public class BaseApplication extends MultiDexApplication {
         initTokenDaemon();
         initProvinceList();
         initShareSDK();
-        fetchUserInfo();
+       // fetchUserInfo();
     }
 
     private void initShareSDK() {

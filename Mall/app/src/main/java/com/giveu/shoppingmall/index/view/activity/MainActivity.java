@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity {
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
+        BaseApplication.getInstance().fetchUserInfo();
     }
 
 

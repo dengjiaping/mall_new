@@ -15,6 +15,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
@@ -24,6 +25,7 @@ import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -58,8 +60,11 @@ public class MyBankCardActivity extends BaseActivity {
     LinearLayout llDefaultBankCard;
     String defalutBankName;
     String defalutBankCardNo;
+    String defalutBankIconUrl;
     @BindView(R.id.iv_bank)
     ImageView ivBank;
+    @BindView(R.id.ll_my_card)
+    LinearLayout llMyCard;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
@@ -103,7 +108,7 @@ public class MyBankCardActivity extends BaseActivity {
                 ImageView ivBankItem = viewHolder.getView(R.id.iv_bank_item);
                 tvBankName.setText(StringUtils.nullToEmptyString(item.bankName));
                 tvBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(item.bankNo)));
-              //  ImageUtils.loadImage(item.bankIconUrl, R.drawable.defalut_img_88_88, ivBankItem);
+                ImageUtils.loadImage(item.bankIconUrl, R.color.transparent, ivBankItem);
             }
         };
         lvBankCard.setAdapter(bankListAdapter);
@@ -117,6 +122,17 @@ public class MyBankCardActivity extends BaseActivity {
         llDefaultBankCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                ApiImpl.deleteBankInfo(mBaseContext, "164050", LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+//                    @Override
+//                    public void onSuccess(BaseBean response) {
+//                        ToastUtils.showShortToast("删除成功！");
+//                    }
+//
+//                    @Override
+//                    public void onError(BaseBean errorBean) {
+//                        CommonLoadingView.showErrorToast(errorBean);
+//                    }
+//                });
                 if (needResult) {
                     Intent data = new Intent(mBaseContext, CashTypeActivity.class);
                     if (defalutBankCardNo.length() >= 4) {
@@ -124,6 +140,7 @@ public class MyBankCardActivity extends BaseActivity {
                     }
                     String bankName = defalutBankName + "(尾号" + defalutBankCardNo + ")";
                     data.putExtra("bankName", bankName);
+                    data.putExtra("defalutBankIconUrl", defalutBankIconUrl);
                     setResult(RESULT_OK, data);
                     finish();
                 }
@@ -225,7 +242,7 @@ public class MyBankCardActivity extends BaseActivity {
                                     PayPwdResponse pwdResponse = response.data;
                                     if (pwdResponse.status) {
                                         //交易密码校验成功
-                                        ApiImpl.setDefaultCard(mBaseContext, pwdResponse.code, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                        ApiImpl.setDefaultCard(mBaseContext, pwdResponse.code, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
                                             @Override
                                             public void onSuccess(BaseBean response) {
                                                 //设置默认代扣卡之后刷新列表
@@ -247,7 +264,8 @@ public class MyBankCardActivity extends BaseActivity {
 
                                     CommonUtils.closeSoftKeyBoard(mBaseContext);
                                 }
-
+                                //更新用户信息
+                                BaseApplication.getInstance().fetchUserInfo();
                             }
 
                             @Override
@@ -268,10 +286,10 @@ public class MyBankCardActivity extends BaseActivity {
      */
     public void showsetDefaultCardDialog(final String id) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否要删除该银行卡？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogMode1("提示", "是否替换默认代扣卡？", "确定", "取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //删除
+                //设置默认卡
                 setDefaultCard(id);
             }
         }, null).show();
@@ -286,7 +304,7 @@ public class MyBankCardActivity extends BaseActivity {
      */
     public void showDeleteBankCardDialog(final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter, final String id, final int position) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否替换默认代扣卡？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogMode1("提示", "是否要删除该银行卡？", "确定", "取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //删除
@@ -302,14 +320,14 @@ public class MyBankCardActivity extends BaseActivity {
      * @param position
      */
     public void deleteBankCard(String id, final int position, final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter) {
-        ApiImpl.deleteBankInfo(mBaseContext, id, 11413713, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteBankInfo(mBaseContext, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (bankListAdapter != null && bankListAdapter.getCount() > 0) {
                     bankListAdapter.getData().remove(position);
                     bankListAdapter.notifyDataSetChanged();
+                    ToastUtils.showShortToast("删除成功！");
                 }
-                ToastUtils.showShortToast("删除成功！");
             }
 
             @Override
@@ -322,25 +340,29 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getBankCardInfo(mBaseContext, 11413713, new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
+        ApiImpl.getBankCardInfo(mBaseContext, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
             @Override
             public void onSuccess(BankCardListResponse response) {
                 bankInfoList = response.data.bankInfoList;
                 if (CommonUtils.isNotNullOrEmpty(bankInfoList)) {
+                    llMyCard.setVisibility(View.VISIBLE);
                     for (int i = 0; i < bankInfoList.size(); i++) {
                         BankCardListResponse.BankInfoListBean item = bankInfoList.get(i);
                         if (1 == item.isDefault) {
                             //除默认代扣卡的其他银行卡
                             defalutBankName = item.bankName;
                             defalutBankCardNo = item.bankNo;
+                            defalutBankIconUrl = item.bankIconUrl;
                             tvDefalutBankName.setText(StringUtils.nullToEmptyString(defalutBankName));
                             tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(defalutBankCardNo)));
-                       //     ImageUtils.loadImage(item.url, R.drawable.defalut_img_88_88, ivBank);
+                            ImageUtils.loadImage(item.bankIconUrl, R.color.transparent, ivBank);
                             bankInfoList.remove(i);
                         }
                     }
                     bankListAdapter.setData(bankInfoList);
                     bankListAdapter.notifyDataSetChanged();
+                } else {
+                    llMyCard.setVisibility(View.GONE);
                 }
             }
 

@@ -61,7 +61,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     String orderNo;
     String sendSouce;
     String smsSeq;
-    int idPerson;
+    String idPerson;
     String ident;
     String name;
     String bankNo;
@@ -69,7 +69,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     private String latitude;
     private String longitude;
     LocationUtils locationUtils;//定位方法
-    public static void startIt(Activity mActivity, String name, String ident, int idPerson, String bankNo, String phone) {
+    public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("ident", ident);
@@ -85,7 +85,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         baseLayout.setTitle("钱包激活");
         CommonUtils.openSoftKeyBoard(mBaseContext);
         tvSendCode.setSendTextColor(false);
-        idPerson = getIntent().getIntExtra("idPerson", 0);
+        idPerson = getIntent().getStringExtra("idPerson");
         ident = getIntent().getStringExtra("ident");
         name = getIntent().getStringExtra("name");
         bankNo = getIntent().getStringExtra("bankNo");
@@ -228,12 +228,12 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(WalletActivationResponse response) {
-                            ActivationStatusActivity.startShowResult(mBaseContext, response.data,idPerson);
+                            ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data,idPerson);
                         }
 
                         @Override
                         public void onError(BaseBean errorBean) {
-                            CommonLoadingView.showErrorToast(errorBean);
+                            ActivationStatusActivity.startShowResultFail(mBaseContext,errorBean.message,errorBean.result);
                         }
                     });
                 } else {

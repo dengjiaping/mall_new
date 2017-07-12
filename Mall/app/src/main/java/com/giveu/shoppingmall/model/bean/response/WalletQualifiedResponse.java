@@ -17,7 +17,7 @@ public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
      */
 
     public String bankNo;
-    public int idPerson;
+    public String idPerson;
     public String ident;
     public String name;
     public String phone;

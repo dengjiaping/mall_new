@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/iv_bank_item"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:layout_marginTop="15dp"

@@ -45,7 +45,7 @@ public class BankActivity extends BaseActivity {
                 ImageView ivBank = viewHolder.getView(R.id.iv_bank);
                 if (item != null) {
                     tvBank.setText(item.dicName);
-                    ImageUtils.loadImage(item.url, R.drawable.defalut_img_88_88, ivBank);
+                    ImageUtils.loadImage(item.url, R.color.transparent, ivBank);
                 }
             }
         };

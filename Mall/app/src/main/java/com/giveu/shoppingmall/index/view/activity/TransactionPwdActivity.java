@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -28,11 +29,10 @@ import butterknife.BindView;
 public class TransactionPwdActivity extends BaseActivity {
     @BindView(R.id.tv_string)
     TextView tvString;
-
-    String firstPwd;
     @BindView(R.id.input_view_pwd)
     PassWordInputView inputViewPwd;
-    int idPerson;
+    String firstPwd;
+    String idPerson;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class TransactionPwdActivity extends BaseActivity {
         CommonUtils.openSoftKeyBoard(mBaseContext);
     }
 
-    public static void startIt(Activity mActivity, int idPerson) {
+    public static void startIt(Activity mActivity, String idPerson) {
         Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
@@ -56,7 +56,7 @@ public class TransactionPwdActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        idPerson = getIntent().getIntExtra("idPerson", 0);
+        idPerson = getIntent().getStringExtra("idPerson");
     }
 
     public void setListener() {
@@ -84,7 +84,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 if (StringUtils.isNull(smsCode)) {
                                     return;
                                 }
-                                ApiImpl.resetPayPwd(mBaseContext, confirmPwd, 11413713, newPwd, phone, smsCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                ApiImpl.resetPayPwd(mBaseContext, confirmPwd, LoginHelper.getInstance().getIdPerson(), newPwd, phone, smsCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ActivationStatusActivity.startSetPwd(mBaseContext);
@@ -97,7 +97,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 });
                             } else {
                                 //激活钱包，设置交易密码
-                                ApiImpl.setPayPwd(mBaseContext, confirmPwd, 11413713, newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                ApiImpl.setPayPwd(mBaseContext, confirmPwd, LoginHelper.getInstance().getIdPerson(), newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ActivationStatusActivity.startSetPwd(mBaseContext);

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -36,6 +37,7 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -47,9 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 /**
  * 取现类型页
@@ -86,6 +86,8 @@ public class CashTypeActivity extends BaseActivity {
     LinearLayout llBgTop;
     @BindView(R.id.cb_desc)
     CheckBox cbDesc;
+    @BindView(R.id.iv_bank)
+    ImageView ivBank;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     List<ProductResponse> data;
@@ -154,8 +156,26 @@ public class CashTypeActivity extends BaseActivity {
                 CaseRecordActivity.startIt(mBaseContext);
             }
         });
-
-
+        LoginHelper instance = LoginHelper.getInstance();
+        String bankName = instance.getBankName();
+        String bankNo = instance.getDefaultCard();
+        String bankIcon = instance.getBankIconUrl();
+        boolean hasDefaultCard = instance.hasDefaultCard();
+        if(hasDefaultCard){
+            //默认卡可用
+            rlAddBankCard.setVisibility(View.GONE);
+            llChooseBank.setVisibility(View.VISIBLE);
+            if (bankNo.length() >= 4) {
+                bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
+            }
+             bankName = bankName + "(尾号" + bankNo + ")";
+            tvBankName.setText(bankName);
+            ImageUtils.loadImage(bankIcon, R.color.transparent, ivBank);
+        }else{
+            //默认卡不可用
+            rlAddBankCard.setVisibility(View.VISIBLE);
+            llChooseBank.setVisibility(View.GONE);
+        }
         //按日计息选项
         noStageProduct = new ProductResponse(0, 0, false, false);
         statusBarHeight = DensityUtils.getStatusBarHeight();
@@ -586,6 +606,12 @@ public class CashTypeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1) {
             tvBankName.setText(data.getStringExtra("bankName"));
+            String defalutBankIconUrl = data.getStringExtra("defalutBankIconUrl");
+            if(StringUtils.isNotNull(defalutBankIconUrl)){
+                ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
+            }
+            //更新用户信息
+            setData();
         }
     }
 
@@ -621,12 +647,5 @@ public class CashTypeActivity extends BaseActivity {
         ViewGroup.LayoutParams params = myGridView.getLayoutParams();
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

@@ -158,8 +158,8 @@ public class ApiImpl {
     }
 
     //钱包激活发送短信接口
-    public static void sendActivateSmsCode(Activity context, String bankNo, int idPerson, String ident, String name, String phone, BaseRequestAgent.ResponseListener<SmsCodeResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "name", "phone"}, new Object[]{bankNo, idPerson, ident, name, phone});
+    public static void sendActivateSmsCode(Activity context, String bankNo, String idPerson, String ident, String name, String phone, BaseRequestAgent.ResponseListener<SmsCodeResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "name", "phone"}, new Object[]{bankNo, StringUtils.string2Long(idPerson), ident, name, phone});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_sendActivateSmsCode, SmsCodeResponse.class, context, responseListener);
     }
 
@@ -170,8 +170,8 @@ public class ApiImpl {
     }
 
     //钱包激活
-    public static void activateWallet(Activity context, String bankNo, int idPerson, String ident, String latitude, String longitude, String orderNo, String phone, String realName, String sendSource, String smsCode, String smsSeq, BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "orderNo", "phone", "realName", "sendSource", "smsCode", "smsSeq", "userId"}, new Object[]{bankNo, idPerson, ident, latitude, longitude, orderNo, phone, realName, sendSource, smsCode, smsSeq, Integer.parseInt(LoginHelper.getInstance().getUserId())});
+    public static void activateWallet(Activity context, String bankNo, String idPerson, String ident, String latitude, String longitude, String orderNo, String phone, String realName, String sendSource, String smsCode, String smsSeq, BaseRequestAgent.ResponseListener<WalletActivationResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankNo", "idPerson", "ident", "latitude", "longitude", "orderNo", "phone", "realName", "sendSource", "smsCode", "smsSeq", "userId"}, new Object[]{bankNo, StringUtils.string2Long(idPerson), ident, latitude, longitude, orderNo, phone, realName, sendSource, smsCode, smsSeq, Integer.parseInt(LoginHelper.getInstance().getUserId())});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_activateWallet, WalletActivationResponse.class, context, responseListener);
     }
 
@@ -195,14 +195,14 @@ public class ApiImpl {
     }
 
     //设置交易密码
-    public static void setPayPwd(Activity context, String confirmPwd, int idPerson, String newPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd"}, new Object[]{confirmPwd, idPerson, newPwd});
+    public static void setPayPwd(Activity context, String confirmPwd, String idPerson, String newPwd, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd"}, new Object[]{confirmPwd, StringUtils.string2Long(idPerson), newPwd});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_setPayPwd, BaseBean.class, context, responseListener);
     }
 
     //找回交易密码（重置密码）
-    public static void resetPayPwd(Activity context, String confirmPwd, int idPerson, String newPwd, String phone, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd", "phone", "smsCode"}, new Object[]{confirmPwd, idPerson, newPwd, phone, smsCode});
+    public static void resetPayPwd(Activity context, String confirmPwd, String idPerson, String newPwd, String phone, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"confirmPwd", "idPerson", "newPwd", "phone", "smsCode"}, new Object[]{confirmPwd, StringUtils.string2Long(idPerson), newPwd, phone, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_resetPayPwd, BaseBean.class, context, responseListener);
     }
 
@@ -219,9 +219,9 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_updatePhone, BaseBean.class, context, responseListener);
     }
 
-    //修改手机号
-    public static void getBankCardInfo(Activity context, int idPerson, BaseRequestAgent.ResponseListener<BankCardListResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{idPerson});
+    //查询绑卡列表
+    public static void getBankCardInfo(Activity context,String idPerson, BaseRequestAgent.ResponseListener<BankCardListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_getBankInfo, BankCardListResponse.class, context, responseListener);
     }
 
@@ -256,14 +256,14 @@ public class ApiImpl {
     }
 
     //删除银行卡
-    public static void deleteBankInfo(Activity context, String id, int idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, idPerson});
+    public static void deleteBankInfo(Activity context, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_deleteBankInfo, BaseBean.class, context, responseListener);
     }
 
     //设置默认代扣卡
-    public static void setDefaultCard(Activity context, String code, String id, int idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code", "id", "idPerson"}, new Object[]{code, id, idPerson});
+    public static void setDefaultCard(Activity context, String code, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code", "id", "idPerson"}, new Object[]{code, id, StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_setDefaultCard, BaseBean.class, context, responseListener);
     }
 

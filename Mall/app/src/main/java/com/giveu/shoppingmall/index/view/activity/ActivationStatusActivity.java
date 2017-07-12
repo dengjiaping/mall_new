@@ -42,6 +42,7 @@ public class ActivationStatusActivity extends BaseActivity {
     TextView tvStatus;
     public final int BACK = 1;
     public final int SETPWD = 2;
+    public final int REPEAT = 3;
 
     //钱包激活设置交易密码
     public static void startSetPwd(Activity mActivity) {
@@ -49,8 +50,8 @@ public class ActivationStatusActivity extends BaseActivity {
         mActivity.startActivity(intent);
     }
 
-    //显示结果
-    public static void startShowResult(Activity mActivity, WalletActivationResponse response, int idPerson) {
+    //显示成功结果
+    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
             intent.putExtra("status", response.result);
@@ -62,10 +63,18 @@ public class ActivationStatusActivity extends BaseActivity {
                 //消费额度
                 intent.putExtra("posLimit", response.data.posLimit);
                 //额度为0的提示语
-                intent.putExtra("midHint", response.data.lab);
+                intent.putExtra("lab", response.data.lab);
             }
         }
         intent.putExtra("idPerson", idPerson);
+        mActivity.startActivity(intent);
+    }
+
+    //显示失败结果
+    public static void startShowResultFail(Activity mActivity, String message, String status) {
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        intent.putExtra("message", message);
+        intent.putExtra("status", status);
         mActivity.startActivity(intent);
     }
 
@@ -89,14 +98,17 @@ public class ActivationStatusActivity extends BaseActivity {
         switch (tag) {
             case SETPWD:
                 //设置交易密码
-                int idPerson = getIntent().getIntExtra("idPerson", 0);
+                String idPerson = getIntent().getStringExtra("idPerson");
                 TransactionPwdActivity.startIt(mBaseContext, idPerson);
 
                 break;
             case BACK:
                 //返回
                 MainActivity.startIt(mBaseContext);
-
+                break;
+            case REPEAT:
+                //重新激活钱包
+                MainActivity.startIt(mBaseContext);
                 break;
         }
     }
@@ -104,14 +116,13 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
-        double globleLimit = getIntent().getDoubleExtra("globleLimit", 0.00);
-        double cyLimit = getIntent().getDoubleExtra("cyLimit", 0.00);
-        double posLimit = getIntent().getDoubleExtra("posLimit", 0.00);
-        String midHint = StringUtils.nullToEmptyString(getIntent().getStringExtra("midHint"));
-        // status = null;
         switch (status) {
             case "success":
                 //激活成功
+                double globleLimit = getIntent().getDoubleExtra("globleLimit", 0.00);
+                double cyLimit = getIntent().getDoubleExtra("cyLimit", 0.00);
+                double posLimit = getIntent().getDoubleExtra("posLimit", 0.00);
+                String lab = StringUtils.nullToEmptyString(getIntent().getStringExtra("lab"));
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
                 tvGlobleLimit.setText(String.valueOf(globleLimit));
@@ -121,14 +132,19 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvStatus.setText("激活成功");
                 tvSetTransactionPwd.setText("设置交易密码");
                 tvSetTransactionPwd.setTag(SETPWD);
+                tvHintBottom.setVisibility(View.VISIBLE);
+                tvHintBottom.setText(lab);
                 break;
             case "fail":
                 // 激活失败，无额度，含中间提示语
+                String message = StringUtils.nullToEmptyString(getIntent().getStringExtra("message"));
                 llDate.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
+                tvHintMid.setText(message);
                 ivStatus.setImageResource(R.drawable.ic_activation_fail);
                 tvStatus.setText("激活失败");
-                tvHintMid.setText(midHint);
+                tvSetTransactionPwd.setTag(REPEAT);
+                tvHintBottom.setVisibility(View.GONE);
                 tvSetTransactionPwd.setText("重新激活钱包");
                 break;
             default:
