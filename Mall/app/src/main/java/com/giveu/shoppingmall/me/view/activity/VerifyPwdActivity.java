@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
@@ -50,13 +51,18 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     boolean isForClosePattern;
     private LoginPresenter presenter;
     private boolean isForSetting;
+    private boolean needFinishAll;
+    private FingerPrintHelper fingerHelper;
 
     /**
      * 是否需要关闭指纹及手势解锁
+     *
+     * @param needFinishAll 是否需要关闭所有的activity，用于解锁时的判断，避免返回界面不关闭所有界面，以致绕过解锁
      */
-    public static void startIt(Activity context, boolean isForClosePattern) {
+    public static void startIt(Activity context, boolean isForClosePattern, boolean needFinishAll) {
         Intent intent = new Intent(context, VerifyPwdActivity.class);
-        intent.putExtra("isForClose", isForClosePattern);
+        intent.putExtra("isForClosePattern", isForClosePattern);
+        intent.putExtra("needFinishAll", needFinishAll);
         context.startActivityForResult(intent, 10);
     }
 
@@ -65,56 +71,33 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
      *
      * @param context
      * @param isForSetting
+     * @param isForClosePattern 关闭还是开启
      */
-    public static void startItForSetting(Activity context, boolean isForSetting) {
+    public static void startItForSetting(Activity context, boolean isForSetting, boolean isForClosePattern) {
         Intent intent = new Intent(context, VerifyPwdActivity.class);
         intent.putExtra("isForSetting", isForSetting);
+        intent.putExtra("isForClosePattern", isForClosePattern);
         context.startActivity(intent);
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_verify_pwd);
-        isForClosePattern = getIntent().getBooleanExtra("isForClose", false);
+        isForClosePattern = getIntent().getBooleanExtra("isForClosePattern", false);
         isForSetting = getIntent().getBooleanExtra("isForSetting", false);
+        needFinishAll = getIntent().getBooleanExtra("needFinishAll", false);
         if (isForSetting) {
             tvChangeAccount.setVisibility(View.GONE);
         }
-
         baseLayout.hideBack();
         presenter = new LoginPresenter(this);
-/*        SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
-        baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
-/*
-        SpannableString titleText;
-        if (isForClosePattern){
-            //页面的作用是关闭手势
-            titleText = StringUtils.getColorSpannable("", "关闭手势", R.color.color_4a4a4a, R.color.color_4a4a4a);
-        }else{
-            //页面的作用是解锁
-            if (TextUtils.isEmpty(SharePrefUtil.getInstance().getPatternPwd())){
-                //没有手势密码，那么这个页面的作用就是解锁不允许关闭
-                SpannableString rigthText = StringUtils.getColorSpannable("", "切换账号", R.color.color_00adb2, R.color.color_00adb2);
-                baseLayout.setRightTextAndListener(rigthText, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        CommonUtils.startActivity(mBaseContext, LoginActivity.class);
-                        finish();
-                    }
-                });
-            }
-            titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
-        }*/
         baseLayout.setTitle("登录");
         tv_userId.setText(LoginHelper.getInstance().getPhone());
         if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
             ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
         }
+        fingerHelper = new FingerPrintHelper(mBaseContext);
+
     }
 
     @Override
@@ -168,9 +151,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     @Override
     public void onLoginSuccess(LoginResponse data) {
         if (isForSetting) {
-            //密码验证成功后设置手势密码
-            CreateGestureActivity.startIt(mBaseContext);
-        } else {
+            //关闭手势
             if (isForClosePattern) {
                 //清除手势密码
                 SharePrefUtil.setPatternPwd("");
@@ -178,10 +159,21 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
                 //重新计时
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 setResult(RESULT_OK);
+                finish();
+            } else {
+                //指纹可用，只是设置指纹，不可用则使用手势
+                if (fingerHelper.isHardwareEnable()) {
+                    FingerPrintActivity.startIt(mBaseContext, true);
+                } else {
+                    CreateGestureActivity.startIt(mBaseContext);
+                }
             }
-            if (!isForClosePattern) {
-                MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
-            }
+        } else {
+            SharePrefUtil.setPatternPwd("");
+            SharePrefUtil.setFingerPrint(false);
+            //重新计时
+            BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
+            MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
             finish();
         }
 
@@ -200,7 +192,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     @Override
     public void onBackPressed() {
         //解锁界面的返回，那么需要关闭所有页面，不然会返回到解锁前的前一个页面
-        if (isForClosePattern || isForSetting) {
+        if (isForSetting || (isForClosePattern && !needFinishAll)) {
             super.onBackPressed();
         } else {
             BaseApplication.getInstance().finishAllActivity();

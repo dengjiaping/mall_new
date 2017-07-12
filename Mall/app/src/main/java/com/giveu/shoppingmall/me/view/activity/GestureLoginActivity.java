@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
 import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
 
@@ -69,7 +67,7 @@ public class GestureLoginActivity extends BaseActivity {
             baseLayout.setRightTextAndListener("关闭", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VerifyPwdActivity.startIt(mBaseContext, true);
+                    VerifyPwdActivity.startIt(mBaseContext, true, false);
                 }
             });
 //            SpannableString titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
@@ -143,7 +141,7 @@ public class GestureLoginActivity extends BaseActivity {
      */
     @OnClick(R.id.tv_change_login)
     void forgetGesturePassword() {
-        VerifyPwdActivity.startIt(GestureLoginActivity.this, isClosePattern);
+        VerifyPwdActivity.startIt(GestureLoginActivity.this, isClosePattern, false);
     }
 
     private enum Status {
@@ -178,22 +176,10 @@ public class GestureLoginActivity extends BaseActivity {
         mContext.startActivityForResult(intent, 10);
     }
 
-    // 返回键事件
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK && !isClosePattern) {
-//            弹框确认退出应用
-            final CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-            customDialogUtil.getDialogMode1("提示", "应用已锁定，请输入手势密码解锁", "取消", "忘记密码", null, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    VerifyPwdActivity.startIt(GestureLoginActivity.this, isClosePattern);
-                }
-            }).show();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        super.onBackPressed();
+        BaseApplication.getInstance().finishAllActivity();
     }
 
     @Override

@@ -138,7 +138,9 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.tv_status:
-                WalletActivationFirstActivity.startIt(mBaseContext);
+                if(LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    WalletActivationFirstActivity.startIt(mBaseContext);
+                }
                 break;
 
             case R.id.ll_bill:
@@ -153,11 +155,15 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_help:
-                ContactUsActivity.startIt(mBaseContext);
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    ContactUsActivity.startIt(mBaseContext);
+                }
                 break;
 
             case R.id.ll_account_manage:
-                AccountManagementActivity.startIt(mBaseContext);
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    AccountManagementActivity.startIt(mBaseContext);
+                }
                 break;
 
             case R.id.ll_quota:

@@ -234,7 +234,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
-//            dealLockPattern();
+            dealLockPattern();
         }
     }
 
@@ -271,11 +271,11 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                     //如果设置过密码
                     GestureLoginActivity.startIt(this);
                 } else {
-                    VerifyPwdActivity.startIt(mBaseContext, false);
+                    VerifyPwdActivity.startIt(mBaseContext, false, true);
                 }
                 clearLockPatternExtraIntent();
                 return;
-            } else if (LoginActivity.class.getName().equals(className)||VerifyPwdActivity.class.getName().equals(className)) {
+            } else if (LoginActivity.class.getName().equals(className) || VerifyPwdActivity.class.getName().equals(className)) {
                 //从登录页面过来的或密码解锁界面
                 if (TextUtils.isEmpty(SharePrefUtil.getPatternPwd()) || !SharePrefUtil.hasFingerPrint()) {
                     //如果没有设置手势，第一次提示设置
@@ -293,7 +293,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 //如果设置过密码
                 GestureLoginActivity.startIt(this);
             } else {
-                VerifyPwdActivity.startIt(mBaseContext, false);
+                VerifyPwdActivity.startIt(mBaseContext, false, true);
             }
         }
     }

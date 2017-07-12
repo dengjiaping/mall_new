@@ -1,17 +1,21 @@
 package com.giveu.shoppingmall.me.view.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
@@ -27,9 +31,13 @@ public class FingerPrintActivity extends BaseActivity {
     TextView tvChangeLogin;
     @BindView(R.id.tv_finger)
     TextView tvFinger;
+    @BindView(R.id.tv_message)
+    TextView tvMessage;
     private FingerPrintHelper fingerHelper;
     private boolean isForSetting;
     private ConfirmDialog settingDialog;
+    private ObjectAnimator translateAnim;
+    private int failCount;
 
     /**
      * @param activity
@@ -38,7 +46,7 @@ public class FingerPrintActivity extends BaseActivity {
     public static void startIt(Activity activity, boolean isForSetting) {
         Intent intent = new Intent(activity, FingerPrintActivity.class);
         intent.putExtra("isForSetting", isForSetting);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, CreateGestureActivity.REQUEST_FINISH);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class FingerPrintActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!isForSetting) {
-                    VerifyPwdActivity.startIt(mBaseContext, false);
+                    VerifyPwdActivity.startIt(mBaseContext, true, false);
                 } else {
                     finish();
                 }
@@ -71,6 +79,7 @@ public class FingerPrintActivity extends BaseActivity {
         });
         initDialog();
         fingerHelper = new FingerPrintHelper(mBaseContext);
+        initAnim();
     }
 
     private void initDialog() {
@@ -91,6 +100,26 @@ public class FingerPrintActivity extends BaseActivity {
                 settingDialog.dismiss();
             }
         });
+    }
+
+    private void initAnim() {
+        translateAnim = ObjectAnimator.ofFloat(tvMessage, "translationX", 0.0f, -50, 0f, 50f, 0f);
+        translateAnim.setDuration(1000);//动画时间
+        translateAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                fingerHelper.onResumeIdentify();
+                fingerHelper.startIdentify();
+                super.onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                fingerHelper.onPauseIdentify();
+            }
+        });
+        translateAnim.setInterpolator(new BounceInterpolator());//实现反复移动的效果
     }
 
 
@@ -114,6 +143,15 @@ public class FingerPrintActivity extends BaseActivity {
 
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (translateAnim != null) {
+            translateAnim.end();
+            translateAnim = null;
+        }
+    }
+
+    @Override
     public void setData() {
     }
 
@@ -123,10 +161,14 @@ public class FingerPrintActivity extends BaseActivity {
         fingerHelper.setOnFingerMathchListener(new FingerPrintHelper.OnFingerMathchListener() {
             @Override
             public void onSuccess() {
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 if (isForSetting) {
-                    ToastUtils.showShortToast("指纹设置成功");
+                    tvMessage.setText("指纹设置成功");
                     SharePrefUtil.setFingerPrint(true);
+                    setResult(RESULT_OK);
+                } else {
+                    tvMessage.setText("指纹解锁成功");
                 }
                 fingerHelper.onPauseIdentify();
                 finish();
@@ -134,19 +176,27 @@ public class FingerPrintActivity extends BaseActivity {
 
             @Override
             public void onFailed() {
-
+                //可能连续失败次数太多，下次进来会直接回调onFailed，因此需根据失败次数给出相应提示
+                if (failCount == 0) {
+                    tvMessage.setText("指纹识别暂不可用，请稍后重试");
+                } else {
+                    failCount = 0;
+                    tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.red_f3323b));
+                    if (isForSetting) {
+                        tvMessage.setText("指纹设置失败");
+                    } else {
+                        tvMessage.setText("指纹识别失败");
+                        //指纹解锁失败，跳转至密码验证
+                    }
+                }
             }
 
             @Override
             public void onNotMatch() {
-                if (isForSetting) {
-                    ToastUtils.showShortToast("指纹设置失败");
-                } else {
-                    //指纹解锁失败，跳转至密码验证
-                    ToastUtils.showShortToast("指纹密码错误");
-                    VerifyPwdActivity.startIt(mBaseContext, true);
-                }
-                finish();
+                failCount++;
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.red_f3323b));
+                tvMessage.setText("指纹密码错误");
+                translateAnim.start();
             }
         });
     }
@@ -156,5 +206,14 @@ public class FingerPrintActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         LoginActivity.startIt(mBaseContext);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isForSetting) {
+            super.onBackPressed();
+        } else {
+            BaseApplication.getInstance().finishAllActivity();
+        }
     }
 }
