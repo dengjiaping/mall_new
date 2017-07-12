@@ -50,7 +50,7 @@ public class SecurityCenterActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd())) {
+        if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd()) || SharePrefUtil.hasFingerPrint()) {
             switchGesture.setImageResource(R.drawable.ios_switch_checked);
         } else {
             switchGesture.setImageResource(R.drawable.ios_switch_unchecked);
@@ -61,7 +61,7 @@ public class SecurityCenterActivity extends BaseActivity {
     public void setData() {
         fingerHelper = new FingerPrintHelper(mBaseContext);
         if (fingerHelper.isHardwareEnable()) {
-            tvLockType.setText("手势与指纹");
+            tvLockType.setText("指纹");
         } else {
             tvLockType.setText("手势");
         }
@@ -105,14 +105,13 @@ public class SecurityCenterActivity extends BaseActivity {
                 RequestPasswordActivity.startIt(mBaseContext, true);
                 break;
             case R.id.iv_switch:
-                if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd())) {
+                if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd()) || SharePrefUtil.hasFingerPrint()) {
                     //去关闭
-                    VerifyPwdActivity.startIt(mBaseContext, true);
+                    VerifyPwdActivity.startItForSetting(mBaseContext, true, true);
                 } else {
                     //去开启
-                    VerifyPwdActivity.startItForSetting(mBaseContext, true);
+                    VerifyPwdActivity.startItForSetting(mBaseContext, true, false);
                 }
-                //手势与指纹
                 break;
         }
     }

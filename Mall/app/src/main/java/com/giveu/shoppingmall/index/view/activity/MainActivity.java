@@ -160,11 +160,11 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.ll_cash:
+                selectIconAndTextColor(1);
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         mViewPager.setCurrentItem(1, false);
-                        selectIconAndTextColor(1);
                     } else {
                         ToastUtils.showShortToast("请先开通钱包");
                         mViewPager.setCurrentItem(2);
@@ -174,11 +174,11 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.ll_repayment:
+                selectIconAndTextColor(3);
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         RepaymentActivity.startIt(mBaseContext);
-                        selectIconAndTextColor(3);
                     } else {
                         ToastUtils.showShortToast("请先开通钱包");
                         mViewPager.setCurrentItem(2);
@@ -248,8 +248,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         //从账单返回主界面时需刷新tab的图标和字体颜色
-        setImageView(ivRepayment, R.drawable.ic_repayment);
-        setTextColor(tvRepayment, R.color.color_9b9b9b);
+        resetIconAndTextColor();
         selectIconAndTextColor(mViewPager.getCurrentItem());
         if (downloadApkUtils != null) {
             downloadApkUtils.onActivityResume();
@@ -257,7 +256,7 @@ public class MainActivity extends BaseActivity {
 
         if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {
             //上传设备号至服务器
-            ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
+//            ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
         }
     }
 

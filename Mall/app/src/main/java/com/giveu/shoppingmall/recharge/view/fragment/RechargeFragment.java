@@ -106,9 +106,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
-        double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
-        warnningDialog.setContent("您已超出每月500元充值上限（已消费"
-                + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
         return view;
     }
 
@@ -144,6 +141,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         //可用金额是否大于充值产品金额
                         if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
+                            double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
+                            warnningDialog.setContent("您已超出每月500元充值上限（已消费"
+                                    + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
                             warnningDialog.show();
                         } else {
                             salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
@@ -402,14 +402,16 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
                             + contactId, null, null);
-            while (phone.moveToNext()) {
+            while (phone != null && phone.moveToNext()) {
                 //填入号码
                 String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 StringBuilder sb = phoneNumberFormat(usernumber);
                 etRecharge.setText(sb);
                 etRecharge.setSelection(sb.length());
             }
-            phone.close();
+            if (phone != null) {
+                phone.close();
+            }
         }
     }
 
