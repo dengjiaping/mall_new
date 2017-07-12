@@ -129,7 +129,7 @@ public class ApiImpl {
 
     //获取用户信息
     public static void getUserInfo(Activity context, String idPerson, String userId, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "userId"}, new Object[]{Long.parseLong(idPerson), userId});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "userId"}, new Object[]{StringUtils.string2Long(idPerson), userId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getUserInfo, LoginResponse.class, context, responseListener);
     }
 
