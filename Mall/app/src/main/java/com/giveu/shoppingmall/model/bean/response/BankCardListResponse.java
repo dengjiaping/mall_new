@@ -29,6 +29,7 @@ public class BankCardListResponse extends BaseBean<BankCardListResponse> {
         public String bankNo;
         public String bankName;
         public String bankCode;
+        public String bankIconUrl;
         public String bankBindPhone;
         public String bankPerson;
         public int idPerson;

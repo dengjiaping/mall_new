@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 import butterknife.BindView;
@@ -147,13 +148,13 @@ public class CashFinishStatusActivity extends BaseActivity {
                         CaseRecordActivity.startIt(mBaseContext);
                         break;
                     case "fail":
-                        CashTypeActivity.startIt(mBaseContext,null);
+                        MainActivity.startIt(mBaseContext);
                         break;
                 }
                 break;
             case R.id.tv_back:
                 //返回
-                CashTypeActivity.startIt(mBaseContext,null);
+                MainActivity.startIt(mBaseContext);
                 break;
         }
     }

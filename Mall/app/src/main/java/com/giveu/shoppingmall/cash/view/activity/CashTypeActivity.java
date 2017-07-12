@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -82,6 +84,8 @@ public class CashTypeActivity extends BaseActivity {
     LinearLayout llShowData;
     @BindView(R.id.ll_bg_top)
     LinearLayout llBgTop;
+    @BindView(R.id.cb_desc)
+    CheckBox cbDesc;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     List<ProductResponse> data;
@@ -117,25 +121,17 @@ public class CashTypeActivity extends BaseActivity {
                     if (StringUtils.isNotNull(input)) {
                         chooseQuota = Double.parseDouble(input);
                     }
-                    if (chooseQuota < 100) {
-                        ToastUtils.showShortToast("取现不少于100元");
-                        return;
+                    if (ensureBtnCanclick()) {
+                        //符合条件 刷新界面
+                        scaleScrollView.setCurScale((int) chooseQuota);
+                        setData();
                     }
-                    if (chooseQuota % 10 != 0) {
-                        ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
-                        return;
-                    }
-
-                    scaleScrollView.setCurScale((int) chooseQuota);
-                    setData();
-
                 }
             }
-
             previousKeyboardHeight = keyboardHeight;
-
         }
     };
+
 
     public static void startIt(Activity mActivity, String availableCylimit) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
@@ -172,8 +168,8 @@ public class CashTypeActivity extends BaseActivity {
             scaleScrollView.requestLayout();
             //指针滑动指定位置
             int maxIndex = cylimit - scaleScrollView.getScale();
-            if(maxIndex % 10 != 0){//如可用额度为364需要转换成360（取现金额以10为单位）
-                maxIndex = (maxIndex / 10)*10;
+            if (maxIndex % 10 != 0) {//如可用额度为364需要转换成360（取现金额以10为单位）
+                maxIndex = (maxIndex / 10) * 10;
             }
             scaleScrollView.setCurScale(maxIndex);
             if (cylimit > 3000) {
@@ -242,6 +238,18 @@ public class CashTypeActivity extends BaseActivity {
             }
         };
         gvStagingType.setAdapter(stagingTypeAdapter);
+    }
+
+    public boolean ensureBtnCanclick() {
+        if (chooseQuota < 100) {
+            ToastUtils.showShortToast("取现不少于100元");
+            return false;
+        }
+        if (chooseQuota % 10 != 0) {
+            ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -415,6 +423,7 @@ public class CashTypeActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
+                //查看月供
                 ApiImpl.rpmDetail(mBaseContext, idProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
@@ -427,7 +436,6 @@ public class CashTypeActivity extends BaseActivity {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
-                //查看月供
                 break;
             case R.id.rl_add_bank_card:
                 //添加银行卡
@@ -435,6 +443,13 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.tv_ensure_bottom:
                 //确定
+                if (!ensureBtnCanclick()) {
+                    return;
+                }
+                if (!cbDesc.isChecked()) {
+                    ToastUtils.showShortToast("请勾选协议！");
+                    return;
+                }
                 final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
                 pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
                     @Override
@@ -606,5 +621,12 @@ public class CashTypeActivity extends BaseActivity {
         ViewGroup.LayoutParams params = myGridView.getLayoutParams();
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

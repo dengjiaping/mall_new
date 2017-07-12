@@ -103,7 +103,7 @@ public class MyBankCardActivity extends BaseActivity {
                 ImageView ivBankItem = viewHolder.getView(R.id.iv_bank_item);
                 tvBankName.setText(StringUtils.nullToEmptyString(item.bankName));
                 tvBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(item.bankNo)));
-             //   ImageUtils.loadImage(item.url, R.drawable.defalut_img_88_88, ivBankItem);
+              //  ImageUtils.loadImage(item.bankIconUrl, R.drawable.defalut_img_88_88, ivBankItem);
             }
         };
         lvBankCard.setAdapter(bankListAdapter);
