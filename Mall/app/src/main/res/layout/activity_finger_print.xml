@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
         android:gravity="center"
-        android:text="点击指纹解锁"
+        android:text="使用指纹解锁"
         android:textColor="@color/black"
         android:textSize="@dimen/ts_20" />
 
@@ -18,8 +18,8 @@
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_below="@id/tv_finger"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_14" />
@@ -39,9 +39,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="102dp"
-        android:src="@drawable/ic_finger_print"
         android:layout_below="@+id/tv_finger"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="102dp"
+        android:src="@drawable/ic_finger_print" />
 
 </RelativeLayout>
