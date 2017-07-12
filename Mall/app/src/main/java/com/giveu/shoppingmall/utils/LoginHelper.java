@@ -306,6 +306,17 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 更新可消费额度
+     * @param usehAmount 使用的金额
+     */
+    public void setAvailablePoslimit(int usehAmount) {
+        if(loginPersonInfo != null){
+            loginPersonInfo.availablePosLimit = String.valueOf(Double.parseDouble(loginPersonInfo.availablePosLimit)- usehAmount);
+            putString(AVAILABLE_CYLIMIT, loginPersonInfo.availableCyLimit);
+        }
+    }
+
+    /**
      * 获取可消费额度
      *
      * @return

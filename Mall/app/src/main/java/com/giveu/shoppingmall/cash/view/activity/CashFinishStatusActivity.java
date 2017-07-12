@@ -113,6 +113,7 @@ public class CashFinishStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.INVISIBLE);
                 tvBtnTop.setText("查看放款进度");
+                tvBtnTop.setVisibility(View.VISIBLE);
                 tvBack.setVisibility(View.VISIBLE);
                 tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);

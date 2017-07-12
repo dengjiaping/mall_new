@@ -203,6 +203,9 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                         if (response.data != null) {
                             EnchashmentCreditResponse ecResponse = response.data;
                             CashFinishStatusActivity.startIt(mBaseContext, response.result, response.message, ecResponse.creditAmount, ecResponse.repayNum, ecResponse.deductDate, creditType);
+                            //更新取现可用额度
+                            LoginHelper.getInstance().setAvailablePoslimit(ecResponse.creditAmount);
+                            BaseApplication.getInstance().fetchUserInfo();
                         }
                     }
 

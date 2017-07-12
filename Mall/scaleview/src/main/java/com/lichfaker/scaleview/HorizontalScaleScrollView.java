@@ -41,7 +41,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
     @Override
     public void initVar() {
-        if(mMax == 0){
+        if (mMax == 0) {
             setMax(300);
         }
         mRectWidth = (mMax - mMin) * mScaleMargin;
@@ -54,16 +54,11 @@ public class HorizontalScaleScrollView extends BaseScaleView {
     }
 
     public void setMax(int max) {
-        mMax = max;
-//        mRectWidth = (mMax - mMin) * mScaleMargin;
-//        mRectHeight = mScaleHeight * 8;
-//        mScaleMaxHeight = mScaleHeight * 2;
-//        // 设置layoutParams
-//        //  ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(mRectWidth, mRectHeight);
-//        ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
-//        param.width = mRectWidth;
-//        param.height = mRectHeight;
-//        this.setLayoutParams(param);
+        if (max >= 3000) {
+            mMax = 1000;//TODO:根据需求定，目前默认10000元 (大额)
+        } else {
+            mMax = 300;//小额
+        }
     }
 
     @Override
