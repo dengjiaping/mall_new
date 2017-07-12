@@ -161,7 +161,7 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
-     * 减少提醒次数
+     * 减少设置指纹或手势提醒次数
      */
     public void reduceRemingTimes() {
         putInt(REMAINING_TIMES, getInt(REMAINING_TIMES, 0) - 1);
@@ -333,7 +333,6 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getIdPerson() {
         return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
-        //      return "11413705";
     }
 
 
@@ -343,9 +342,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getPhone() {
-
-        //return loginPersonInfo == null ? null : loginPersonInfo.phone;
-        return "15418512345";
+        return loginPersonInfo == null ? null : loginPersonInfo.phone;
     }
 
     /**

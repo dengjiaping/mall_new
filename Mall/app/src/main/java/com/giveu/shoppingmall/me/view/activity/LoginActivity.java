@@ -293,7 +293,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                         mAnimatorTranslateY.setInterpolator(new LinearInterpolator());
                         mAnimatorTranslateY.start();
                     }
-                    llThirdLogin.setVisibility(View.VISIBLE);
+                    llThirdLogin.setVisibility(View.INVISIBLE);
                 }
             }
         });

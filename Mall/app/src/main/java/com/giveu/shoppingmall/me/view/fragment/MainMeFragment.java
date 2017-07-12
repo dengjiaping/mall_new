@@ -67,12 +67,12 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.setTitle("个人中心");
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
-        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
+       /* baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        });*/
         ButterKnife.bind(this, view);
         return view;
     }
