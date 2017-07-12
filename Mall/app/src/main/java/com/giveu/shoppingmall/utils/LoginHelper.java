@@ -381,7 +381,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getIdPerson() {
-        return loginPersonInfo == null ? "" : loginPersonInfo.idPerson;
+        return loginPersonInfo == null ? "0" : loginPersonInfo.idPerson;
     }
 
 

@@ -129,7 +129,7 @@ public class ApiImpl {
 
     //获取用户信息
     public static void getUserInfo(Activity context, String idPerson, String userId, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "userId"}, new Object[]{Long.parseLong(idPerson), userId});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "userId"}, new Object[]{StringUtils.string2Long(idPerson), userId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getUserInfo, LoginResponse.class, context, responseListener);
     }
 
@@ -227,7 +227,7 @@ public class ApiImpl {
 
     //还款首页
     public static void getRepayment(Activity context, String idPerson, BaseRequestAgent.ResponseListener<RepaymentResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{Long.parseLong(idPerson)});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_repayment_getRepaymentInfo, RepaymentResponse.class, context, responseListener);
     }
 
@@ -315,13 +315,13 @@ public class ApiImpl {
 
     //创建充值订单
     public static void createRechargeOrder(Activity context, String idPerson, String mobile, long productId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId"}, new Object[]{Long.parseLong(idPerson), mobile, productId});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId"}, new Object[]{StringUtils.string2Long(idPerson), mobile, productId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_createRechargeOrder, BaseBean.class, context, responseListener);
     }
 
     //确认充值订单
     public static void confirmRechargeOrder(Activity context, String idPerson, String mobile, long productId, String orderNo, int payType, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmOrderResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType", "smsCode", "smsMobile"}, new Object[]{Long.parseLong(idPerson), mobile, productId, orderNo, payType, smsCode, smsMobile});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "mobile", "productId", "orderNo", "payType", "smsCode", "smsMobile"}, new Object[]{StringUtils.string2Long(idPerson), mobile, productId, orderNo, payType, smsCode, smsMobile});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.order_confirmRechargeOrder, ConfirmOrderResponse.class, context, responseListener);
     }
 

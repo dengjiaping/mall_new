@@ -161,10 +161,10 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.ll_cash:
-                selectIconAndTextColor(1);
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
+                        selectIconAndTextColor(1);
                         mViewPager.setCurrentItem(1, false);
                     } else {
                         ToastUtils.showShortToast("请先开通钱包");
@@ -175,10 +175,10 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.ll_repayment:
-                selectIconAndTextColor(3);
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
+                        selectIconAndTextColor(3);
                         RepaymentActivity.startIt(mBaseContext);
                     } else {
                         ToastUtils.showShortToast("请先开通钱包");
