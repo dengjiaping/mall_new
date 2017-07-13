@@ -63,6 +63,7 @@ public class CreditDetailActivity extends BaseActivity implements ICreditDetailV
     @Override
     public void setData() {
         idCredit = getIntent().getStringExtra("idCredit");
+        //获取分期明细
         presenter.getCreditDetail(idCredit);
     }
 
@@ -97,6 +98,7 @@ public class CreditDetailActivity extends BaseActivity implements ICreditDetailV
 
     @Override
     public void showCreditDetail(List<ListInstalmentResponse.Instalment> instalmentList) {
+        //显示分期明细
         if (CommonUtils.isNotNullOrEmpty(instalmentList)) {
             creditList.addAll(instalmentList);
             creditAdapter.notifyDataSetChanged();

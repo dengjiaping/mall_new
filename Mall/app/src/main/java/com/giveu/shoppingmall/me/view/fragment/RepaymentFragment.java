@@ -63,7 +63,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     private boolean isCurrentMonth;
     private RepaymentActivity mActivity;
     private ViewHolder headerHolder;
-    private double payMoney;
+    private double payMoney;//还款金额
     private double cycleTotalAmount;//零花钱总欠款
     private double othersTotalAmount;//分期产品总欠款
     private InstalmentDetailsPresenter presenter;
@@ -79,6 +79,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         ButterKnife.bind(this, view);
         baseLayout.setTitleBarAndStatusBar(false, false);
         mActivity = (RepaymentActivity) mBaseContext;
+        //当月应还款的headerview
         View headerView = inflater.inflate(R.layout.lv_bill_header, null);
         headerHolder = new ViewHolder(headerView);
         isCurrentMonth = getArguments().getBoolean("isCurrentMonth", true);
@@ -97,9 +98,11 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         billList = new ArrayList<>();
         repaymentAdapter = new RepaymentAdapter(mBaseContext, billList);
         ptrlv.setAdapter(repaymentAdapter);
+        //设置刷新，加载不可用
         ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
         ptrlv.setPullLoadEnable(false);
         ptrlv.getRefreshableView().addHeaderView(headerView);
+        //初始化弹框
         intalmentDetailsDialog = new IntalmentDetailsDialog(mBaseContext);
         presenter = new InstalmentDetailsPresenter(this);
         repaymentDialog = new RepaymentDialog(mBaseContext);
@@ -143,6 +146,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                             break;
                         }
                     }
+                    //创建还款订单
                     presenter.createRepaymentOrder(LoginHelper.getInstance().getIdPerson(), (long) (payMoney * 100), HardWareUtil.getHostIP(), PayUtils.WX, productType);
                 }
                 break;
@@ -178,6 +182,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         repaymentDialog.setOnConfirmListener(new RepaymentDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String money) {
+                //修改金额后显示
                 tvMoney.setText("还款金额：¥" + StringUtils.format2(money));
                 payMoney = Double.parseDouble(money);
                 canClick();
@@ -202,9 +207,11 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         repaymentAdapter.setOnMoneyChangetListener(new RepaymentAdapter.OnMoneyChangeListener() {
             @Override
             public void moneyChange(double money, String productType) {
+                //当选中金额改变时，更新显示，并设置选中的产品类型（分期产品还是取现随借岁患）
                 payMoney = money;
                 tvMoney.setText("还款金额：¥" + StringUtils.format2(payMoney + ""));
                 RepaymentFragment.this.productType = productType;
+                //判断此时是否可点击，若未选中任何一项是不可点击的
                 canClick();
             }
         });
@@ -214,6 +221,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 2 >= 0 && position - 2 < billList.size()) {
                     if (!billList.get(position - 2).isTitle) {
+                        //获取还款明细
                         RepaymentBean repaymentBean = billList.get(position - 2);
                         presenter.getInstalmentDetails(repaymentBean.contractId, isCurrentMonth, repaymentBean.numInstalment, repaymentBean.productType, repaymentBean.creditType);
                     }
@@ -225,6 +233,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     }
 
     public void notifyDataSetChange(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> billBeenList) {
+        //这里的数据是有RepaymentActivity传过来的，用于初始化数据
         tvMoney.setText("还款金额：¥" + StringUtils.format2(0 + ""));
         payMoney = 0;
         tvConfirm.setBackgroundResource(R.drawable.shape_grey_without_corner);
@@ -237,6 +246,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             } else {
                 headerHolder.tvDate.setText("最后还款日：--");
             }
+            //根据boolean值决定是否显示已逾期图片
             if (headerBean.isOverduce) {
                 headerHolder.ivOverDue.setVisibility(View.VISIBLE);
             } else {
@@ -249,18 +259,21 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             repaymentAdapter.notifyDataSetChanged();
             baseLayout.hideEmpty();
         } else {
+            //数据为空时显示空布局
             baseLayout.showEmpty(144, 62, "抱歉，没有账单哦");
         }
     }
 
     @Override
     public void showInstalmentDetails(InstalmentDetailResponse data, String creditType) {
+        //显示还款明细
         intalmentDetailsDialog.setInstalmentDetailsData(data, creditType);
         intalmentDetailsDialog.show();
     }
 
     @Override
     public void createOrderSuccess(final WxPayParamsResponse response, String payId) {
+        //这里存储payId，在微信支付成功后调用确认是否还款成功的接口时使用
         this.payId = payId;
         //还款金额
         if (TypeUtlis.CERDIT_PRODUCT.equalsIgnoreCase(productType)) {
@@ -273,10 +286,12 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         repaymentDetailDialog.setOnConfirmListener(new RepaymentDetailDialog.OnConfirmListener() {
             @Override
             public void onConfirm() {
+                //跳转至微信支付
                 IWXAPI iWxapi = PayUtils.getWxApi();
                 PayReq payReq = PayUtils.getRayReq(response.partnerid, response.prepayid, response.packageValue,
                         response.noncestr, response.timestamp, response.sign);
                 iWxapi.sendReq(payReq);
+                //记录跳转支付前的activity是哪个，以便在支付完成后做相应的操作
                 BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
             }
         });
@@ -286,6 +301,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     @Override
     public void createOrderFailed(String message) {
+        //创建订单失败
         if (StringUtils.isNotNull(message)) {
             resultDialog.setContent(message);
             resultDialog.show();
@@ -293,6 +309,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     }
 
     public void payQuery() {
+        //查询支付是否成功，微信支付后调用
         if (StringUtils.isNotNull(payId)) {
             presenter.payQuery(payId);
         }
@@ -302,6 +319,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     @Override
     public void paySuccess() {
+        //还款成功回调
         ToastUtils.showShortToast("还款成功");
         //支付成功后刷新还款数据,需更新额度，因此更新个人信息
         BaseApplication.getInstance().fetchUserInfo();

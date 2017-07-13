@@ -80,6 +80,7 @@ public class TransactionDetailActivity extends BaseActivity implements ITransact
 
     @OnClick(R.id.ll_credit_detail)
     public void onCreditDetail() {
+        //分期明细
         CreditDetailActivity.startIt(mBaseContext, idCredit);
     }
 
