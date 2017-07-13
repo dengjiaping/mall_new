@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -39,12 +40,12 @@ public class MainCashFragment extends BaseFragment {
         baseLayout.setTitle("我要取现");
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.hideBack();
-//        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CaseRecordActivity.startIt(mBaseContext);
-//            }
-//        });
+        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CaseRecordActivity.startIt(mBaseContext);
+            }
+        });
         quotaDialog = new QuotaDialog(mBaseContext);
         ButterKnife.bind(this, view);
         return view;

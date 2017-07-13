@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="22dp"
                 android:background="@color/color_20d8d8d8"
-                android:text="文案文案"
+                android:text="随借随还"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_12" />
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="22dp"
                 android:background="@color/color_20d8d8d8"
-                android:text="文案文案"
+                android:text="分期取现"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_12" />
 
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/color_20d8d8d8"
-                android:text="文案文案"
+                android:text="立等可取"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_12" />
         </LinearLayout>

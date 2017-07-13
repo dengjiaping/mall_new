@@ -97,6 +97,8 @@ public class WalletActivationSecondActivity extends BaseActivity {
         if (StringUtils.isNotNull(phone)) {
             etPhone.setText(phone);
         }
+        locationUtils = new LocationUtils(mBaseContext);
+        locationUtils.startLocation();
     }
 
     @Override
@@ -133,7 +135,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
 
     @Override
     public void setData() {
-         locationUtils = new LocationUtils(mBaseContext);
+
         if (StringUtils.isNotNull(StringUtils.getTextFromView(etBankNo))) {
             etBankNo.setSelection(etBankNo.length());
         }

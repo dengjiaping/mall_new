@@ -53,7 +53,12 @@ public class CashFinishStatusActivity extends BaseActivity {
     LinearLayout llDateMid;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
-
+    public static void startIt(Activity mActivity, String status, String hintMid) {
+        Intent intent = new Intent(mActivity, CashFinishStatusActivity.class);
+        intent.putExtra("status", status);
+        intent.putExtra("hintMid", hintMid);
+        mActivity.startActivity(intent);
+    }
 
     public static void startIt(Activity mActivity, String status, String hintMid, int cashAmount, int stageNumber, String cashDate, String creditType) {
         Intent intent = new Intent(mActivity, CashFinishStatusActivity.class);

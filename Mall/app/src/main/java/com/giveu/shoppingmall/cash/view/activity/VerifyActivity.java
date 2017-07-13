@@ -22,7 +22,6 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 
@@ -136,7 +135,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             @Override
             public void onInputFinish(String result) {
                 if (6 == result.length()) {
-
                     smsCode = result;
                     switch (statusType) {
                         case CASH:
@@ -211,7 +209,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        CommonLoadingView.showErrorToast(errorBean);
+                        CashFinishStatusActivity.startIt(mBaseContext, errorBean.result, errorBean.message);
                     }
                 });
                 break;

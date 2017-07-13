@@ -108,7 +108,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
             case REPEAT:
                 //重新激活钱包
-                MainActivity.startIt(mBaseContext);
+                WalletActivationFirstActivity.startIt(mBaseContext);
                 break;
         }
     }
