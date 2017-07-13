@@ -349,11 +349,11 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         }
         if (StringUtils.isNull(currentOperator)) {
             if (tabIndex == 0) {
-                if (rechargeResponse.call != null) {
+                if (rechargeResponse != null && rechargeResponse.call != null) {
                     rechargeAdapter.setData(rechargeResponse.call.cmccs);
                 }
             } else {
-                if (rechargeResponse.traffic != null) {
+                if (rechargeResponse != null && rechargeResponse.traffic != null) {
                     rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
                 }
             }

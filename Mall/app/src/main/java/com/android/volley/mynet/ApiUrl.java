@@ -14,6 +14,10 @@ public interface ApiUrl {
         String zhi_ma_xin_yong = "http://zhima.dafysz.com/Home/SignIn?idenNo=%s&name=%s&idCredit=0&deviceType=0";//芝麻信用
     }
 
+
+    //帮助与反馈全路径url
+    String helpfeedback_queryQuestionInfo = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/queryQuestionInfo";
+
     //广告页
     String activity_getImageInfo = BASE_URL + "activity/getImageInfo";
     String token_getToken = BASE_URL + "personCenter/token/applyToken";
