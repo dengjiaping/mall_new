@@ -11,6 +11,8 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
+import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
 import com.giveu.shoppingmall.me.presenter.QuotaPresenter;
 import com.giveu.shoppingmall.me.view.agent.IQuotaView;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -43,6 +45,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
     private TextView tvHint;
     private TextView tvKnow;
     private QuotaPresenter presenter;
+    private QuotaDialog quotaDialog;//额度为0的弹窗
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, QuotaActivity.class);
@@ -58,6 +61,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
         tvWithdrawalsMoney.setText("¥" + StringUtils.format2(LoginHelper.getInstance().getAvailableCylimit()));
         tvConsumableMoney.setText("¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit()));
         tvAvailableMoney.setText("¥" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()));
+        quotaDialog = new QuotaDialog(mBaseContext);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
      *
      * @param flag
      */
-    private void showTotalDialog(int flag) {
+    private void showTotalDialog(final int flag) {
 
         if (totalDialog == null) {
             totalDialog = new CustomDialog(mBaseContext, R.layout.dialog_avaialbe_credit
@@ -91,6 +95,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
                 tvWithdrawals.setText("可用额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()) + "\n总授信额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getGlobleLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
                 tvHint.setVisibility(View.GONE);
+                tvKnow.setText("知道了");
                 break;
 
             case 2:
@@ -99,18 +104,29 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
 //                tvLargeWithdrawals.setVisibility(View.VISIBLE);
 //                tvLargeWithdrawals.setText("大额现金分期可用额度：" + "¥4000.00" + "\n大额现金分期总额度：" + " ¥8000.00");
                 tvHint.setVisibility(View.GONE);
+                tvKnow.setText("去取现");
                 break;
 
             case 3:
                 tvWithdrawals.setText("消费可用额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit())
                         + "\n消费总额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getPosLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
-                tvHint.setVisibility(View.GONE);
+                tvHint.setVisibility(View.VISIBLE);
+                tvKnow.setText("知道了");
                 break;
         }
         tvKnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (flag == 2) {
+                    String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+                    if ("0".equals(availableCylimit)) {
+                        //取现额度为0
+                        quotaDialog.showDialog();
+                    } else {
+                        CashTypeActivity.startIt(mBaseContext, availableCylimit);
+                    }
+                }
                 totalDialog.dismiss();
             }
         });

@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="38dp"
         android:layout_marginRight="38dp"
-        android:text="保持良好信用，有机会获得最高*万元的大额取现额度"
+        android:text="即有商城即将上线，敬请期待"
         android:textColor="#4d000000"
         android:textSize="@dimen/ts_12" />
 

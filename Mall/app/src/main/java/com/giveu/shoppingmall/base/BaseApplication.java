@@ -10,11 +10,13 @@ import android.text.TextUtils;
 import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.giveu.shoppingmall.EventBusIndex;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
@@ -32,6 +34,8 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -73,6 +77,8 @@ public class BaseApplication extends MultiDexApplication {
         initProvinceList();
         initShareSDK();
         fetchUserInfo();
+        //添加索引到EventBus默认的单例中
+        EventBus.builder().addIndex(new EventBusIndex()).installDefaultEventBus();
     }
 
     private void initShareSDK() {
@@ -126,6 +132,8 @@ public class BaseApplication extends MultiDexApplication {
                 public void onSuccess(LoginResponse response) {
                     response.data.accessToken = SharePrefUtil.getAppToken();
                     LoginHelper.getInstance().saveLoginStatus(response.data);
+                    //发送通知，使订阅者更新ui
+                    EventBusUtils.poseEvent(response.data);
                 }
 
                 @Override

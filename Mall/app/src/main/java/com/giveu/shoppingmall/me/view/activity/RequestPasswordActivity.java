@@ -85,7 +85,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             @Override
             public void onClick(View v) {
                 callDialog.dismiss();
-                CommonUtils.callPhone(mBaseContext, "40088888888");
+                CommonUtils.callPhone(mBaseContext, "4001868888");
             }
         });
     }

@@ -12,14 +12,18 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
-import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
+import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +77,7 @@ public class MainMeFragment extends BaseFragment {
 
             }
         });*/
+        registerEventBus();
         ButterKnife.bind(this, view);
         return view;
     }
@@ -80,6 +85,13 @@ public class MainMeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateUserUi();
+    }
+
+    /**
+     * 更新用户信息UI
+     */
+    private void updateUserUi() {
         //用户已登录
         if (LoginHelper.getInstance().hasLogin()) {
             if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
@@ -114,6 +126,11 @@ public class MainMeFragment extends BaseFragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateUserInfo(LoginResponse response) {
+        updateUserUi();
+    }
+
     @Override
     protected void setListener() {
     }
@@ -138,7 +155,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.tv_status:
-                if(LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     WalletActivationFirstActivity.startIt(mBaseContext);
                 }
                 break;
