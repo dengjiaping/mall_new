@@ -53,6 +53,7 @@ public class WelcomeActivity extends BaseActivity{
 		imgUrls.add(R.drawable.welcome_01);
 		imgUrls.add(R.drawable.welcome_02);
 		imgUrls.add(R.drawable.welcome_03);
+		imgUrls.add(R.drawable.welcome_04);
 
 		welcomePagerAdapter.setData(imgUrls);
 		viewpager.setAdapter(welcomePagerAdapter);

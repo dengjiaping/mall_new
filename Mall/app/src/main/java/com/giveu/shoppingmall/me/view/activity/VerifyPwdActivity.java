@@ -91,7 +91,11 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         }
         baseLayout.hideBack();
         presenter = new LoginPresenter(this);
-        baseLayout.setTitle("登录");
+        if(isForSetting){
+            baseLayout.setTitle("验证登录密码");
+        }else {
+            baseLayout.setTitle("登录");
+        }
         tv_userId.setText(LoginHelper.getInstance().getPhone());
         if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
             ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
@@ -159,7 +163,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
                 //重新计时
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 setResult(RESULT_OK);
-                finish();
             } else {
                 //指纹可用，只是设置指纹，不可用则使用手势
                 if (fingerHelper.isHardwareEnable()) {
@@ -174,9 +177,8 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             //重新计时
             BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
             MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
-            finish();
         }
-
+        finish();
     }
 
     @Override
