@@ -30,6 +30,7 @@ import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RepayCostResponse;
@@ -44,6 +45,9 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.lichfaker.scaleview.HorizontalScaleScrollView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +104,7 @@ public class CashTypeActivity extends BaseActivity {
     private int idProduct = 0;
     private boolean isLargeAmount = false;//是否是大额
     String availableCylimit;
+    int localIdProduct = 0;//选择的期数产品id
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         int previousKeyboardHeight = -1;
 
@@ -135,9 +140,8 @@ public class CashTypeActivity extends BaseActivity {
     };
 
 
-    public static void startIt(Activity mActivity, String availableCylimit) {
+    public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
-        intent.putExtra("availableCylimit", availableCylimit);
         mActivity.startActivity(intent);
     }
 
@@ -161,17 +165,17 @@ public class CashTypeActivity extends BaseActivity {
         String bankNo = instance.getDefaultCard();
         String bankIcon = instance.getBankIconUrl();
         boolean hasDefaultCard = instance.hasDefaultCard();
-        if(hasDefaultCard){
+        if (hasDefaultCard) {
             //默认卡可用
             rlAddBankCard.setVisibility(View.GONE);
             llChooseBank.setVisibility(View.VISIBLE);
             if (bankNo.length() >= 4) {
                 bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
             }
-             bankName = bankName + "(尾号" + bankNo + ")";
+            bankName = bankName + "(尾号" + bankNo + ")";
             tvBankName.setText(bankName);
             ImageUtils.loadImage(bankIcon, R.color.transparent, ivBank);
-        }else{
+        } else {
             //默认卡不可用
             rlAddBankCard.setVisibility(View.VISIBLE);
             llChooseBank.setVisibility(View.GONE);
@@ -180,7 +184,7 @@ public class CashTypeActivity extends BaseActivity {
         noStageProduct = new ProductResponse(0, 0, false, false);
         statusBarHeight = DensityUtils.getStatusBarHeight();
         decorView = (ViewGroup) getWindow().getDecorView();
-        availableCylimit = getIntent().getStringExtra("availableCylimit");
+        availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
         if (StringUtils.isNotNull(availableCylimit)) {
             int cylimit = (int) Double.parseDouble(availableCylimit);
             //刻度尺默认最大额度
@@ -224,6 +228,7 @@ public class CashTypeActivity extends BaseActivity {
             scaleScrollView.setPointerColor("#00B7BB");
         }
         initAdapter(isLargeAmount);
+        registerEventBus();//注册EventBus
     }
 
     private void initAdapter(final boolean isLargeAmount) {
@@ -437,6 +442,12 @@ public class CashTypeActivity extends BaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateUserInfo(LoginResponse response) {
+        availableCylimit = getIntent().getStringExtra("availableCylimit");
+    }
+
+
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
     public void onClick(View view) {
@@ -444,7 +455,7 @@ public class CashTypeActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
                 //查看月供
-                ApiImpl.rpmDetail(mBaseContext, idProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                ApiImpl.rpmDetail(mBaseContext, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
                         MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext, response.data);
@@ -546,7 +557,7 @@ public class CashTypeActivity extends BaseActivity {
 
             }
         }
-        int localIdProduct = 0;
+
         stagingTypeAdapter.setData(data);
         List<ProductResponse> products = stagingTypeAdapter.getData();
         ProductResponse p;
@@ -607,7 +618,7 @@ public class CashTypeActivity extends BaseActivity {
         if (resultCode == RESULT_OK && requestCode == 1) {
             tvBankName.setText(data.getStringExtra("bankName"));
             String defalutBankIconUrl = data.getStringExtra("defalutBankIconUrl");
-            if(StringUtils.isNotNull(defalutBankIconUrl)){
+            if (StringUtils.isNotNull(defalutBankIconUrl)) {
                 ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
             }
             //更新用户信息

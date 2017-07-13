@@ -62,7 +62,7 @@ public class MainCashFragment extends BaseFragment {
                     quotaDialog.showDialog();
                 } else {
                   //  CashTypeActivity.startIt(mBaseContext, "5000");
-                    CashTypeActivity.startIt(mBaseContext, availableCylimit);
+                    CashTypeActivity.startIt(mBaseContext);
                 }
             }
         });

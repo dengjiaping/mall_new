@@ -14,7 +14,7 @@
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
         android:layout_marginTop="39dp"
-        android:text="若注册手机号码已停用，无法收到验证码，请拨打客服热线人工申诉：400-8888-8888"
+        android:text="若注册手机号码已停用，无法收到验证码，请拨打客服热线人工申诉：400-186-8888"
         android:textColor="@color/color_030303"
         android:textSize="@dimen/ts_16" />
 
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="拨打电话"
+        android:text="拨打热线电话"
         android:textColor="@color/color_00bbc0"
         android:textSize="@dimen/ts_18" />
 

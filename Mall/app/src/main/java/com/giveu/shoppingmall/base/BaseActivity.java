@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.VerifyPwdActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.CrashReportUtil;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.SystemBarHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -42,6 +43,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     public BaseActivity mBaseContext;
     private BasePresenter[] mAllPresenters = new BasePresenter[]{};
     protected Bundle mSavedInstanceState;
+    private boolean registerEventBus;
 
     /**
      * 当使用mvp模式时实现这个方法
@@ -73,10 +75,15 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 setTranslucentStatus(this);
             }
 
+
             initView(mSavedInstanceState);
             addPresenters();
             setListener();
             setData();
+            if (registerEventBus) {
+                //注册
+                EventBusUtils.register(mBaseContext);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,6 +101,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     public void onReload() {
 
     }
+
 
     /**
      * @return true=使用状态栏一体化，false=不使用
@@ -317,6 +325,13 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         return true;
     }
 
+    /**
+     * 注册EventBus
+     */
+    protected void registerEventBus() {
+        registerEventBus = true;
+    }
+
 
     @Override
     protected void onStop() {
@@ -332,6 +347,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onDestroy, mAllPresenters);
         //关闭软键盘
         CommonUtils.closeSoftKeyBoard(this);
+        if (registerEventBus) {
+            //反注册
+            EventBusUtils.unregister(mBaseContext);
+        }
         super.onDestroy();
     }
 

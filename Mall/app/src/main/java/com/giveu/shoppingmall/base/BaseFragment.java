@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.widget.dialog.LoadingDialog;
 
 /**
@@ -28,6 +29,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private boolean isVisible;                  //是否可见状态
     private boolean isViewPrepared;             //标志位，View已经初始化完成。
     private boolean isDataInit = true;         //是否第一次加载
+    private boolean registerEventBus;
+
 
 
     @Nullable
@@ -45,7 +48,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         isDataInit = true;
         isViewPrepared = true;
         lazyLoad();
-
+        if (registerEventBus) {
+            //注册
+            EventBusUtils.register(this);
+        }
         return baseLayout;
     }
 
@@ -146,6 +152,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     public abstract void initDataDelay();
 
+    /**
+     * 注册EventBus
+     */
+    protected void registerEventBus() {
+        registerEventBus = true;
+    }
 
     @Override
     public void showLoading() {
@@ -165,7 +177,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onDestroy, mAllPresenters);
-
+        if (registerEventBus) {
+            //反注册
+            EventBusUtils.unregister(this);
+        }
         super.onDestroy();
     }
 

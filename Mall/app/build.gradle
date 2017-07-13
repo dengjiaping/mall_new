@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 def releaseTime() {
     return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+8"))
 }
@@ -29,9 +30,14 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
-                JPUSH_PKGNAME : project.APPLICATION_ID,
-                JPUSH_CHANNEL : "3COrder" //用户渠道统计的渠道名称
+                JPUSH_PKGNAME: project.APPLICATION_ID,
+                JPUSH_CHANNEL: "3COrder" //用户渠道统计的渠道名称
         ]
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [eventBusIndex: 'com.giveu.shoppingmall.EventBusIndex']
+            }
+        }
 //        externalNativeBuild {
 //            cmake {
 //                cppFlags ""
@@ -42,6 +48,8 @@ android {
         configurations {
             compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
         }
+
+
     }
 
     signingConfigs {
@@ -103,10 +111,12 @@ android {
     // 友盟多渠道打包
     productFlavors {
         official_offline {
-            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY : "b64d5a0ca0016d26ba61d8de"]//开发环境
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: "b64d5a0ca0016d26ba61d8de"]
+//开发环境
         }
         official_online {
-            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY : "b5e4f8517ab6f247c796db74"]//正式环境
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: "b5e4f8517ab6f247c796db74"]
+//正式环境
         }
 
     }
@@ -150,6 +160,9 @@ dependencies {
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 //    compile files('libs/umeng-analytics-v6.1.0.jar')
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //EventBus索引，性能优化
+    annotationProcessor  'org.greenrobot:eventbus-annotation-processor:3.0.1'
     compile project(':cropimage_library')
     //极光推送
     compile 'cn.jiguang.sdk:jpush:3.0.5'
