@@ -2,12 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_white_corners"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scaleType="fitXY"
-    android:src="@drawable/bg_cash_cost"/>
-   
+
+    <ImageView
+        android:id="@+id/iv_cost_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_cash_cost" />
+
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
+        android:id="@+id/tv_ensure"
+        style="@style/click_enabled_bt"
+        android:layout_marginBottom="20dp"
+        android:text="知道了" />
 </LinearLayout>

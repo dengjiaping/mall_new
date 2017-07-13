@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LocationUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.LocationListener;
@@ -27,6 +28,7 @@ import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
@@ -69,6 +71,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
     private String latitude;
     private String longitude;
     LocationUtils locationUtils;//定位方法
+    NormalHintDialog walletActivationDialog;
+    NormalHintDialog changePhoneDialog;
+
     public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
@@ -99,6 +104,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         }
         locationUtils = new LocationUtils(mBaseContext);
         locationUtils.startLocation();
+        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致！\n", "激活成功后，请通过绑定手机+登陆密码登陆");
     }
 
     @Override
@@ -225,17 +231,27 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-
-                    locationUtils.startLocation();
+                    locationUtils.startLocation();//定位获取经纬度
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
-                        public void onSuccess(WalletActivationResponse response) {
-                            ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data,idPerson);
+                        public void onSuccess(final WalletActivationResponse response) {
+                            if (!phone.equals(LoginHelper.getInstance().getPhone())) {
+                                //激活填写手机号与注册不一致
+                                walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                    @Override
+                                    public void onDismiss() {
+                                        ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data, idPerson);
+                                    }
+                                });
+                                walletActivationDialog.showDialog();
+                            } else {
+                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data, idPerson);
+                            }
                         }
 
                         @Override
                         public void onError(BaseBean errorBean) {
-                            ActivationStatusActivity.startShowResultFail(mBaseContext,errorBean.message,errorBean.result);
+                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean.message, errorBean.result);
                         }
                     });
                 } else {
@@ -295,7 +311,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         if (tvSendCode != null) {
             tvSendCode.onDestory();
         }
-        if(locationUtils != null){
+        if (locationUtils != null) {
             locationUtils.destory();
         }
     }

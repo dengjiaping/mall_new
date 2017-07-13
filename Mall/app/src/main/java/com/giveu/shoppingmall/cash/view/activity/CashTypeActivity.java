@@ -24,6 +24,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
@@ -41,7 +42,6 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
@@ -516,7 +516,7 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.tv_cost:
                 //什么是咨询费
-                NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "什么是咨询费？");
+                CostDialog dialog = new CostDialog(mBaseContext);
                 dialog.showDialog();
                 break;
         }

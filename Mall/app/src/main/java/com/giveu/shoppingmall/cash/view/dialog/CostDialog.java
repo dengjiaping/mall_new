@@ -5,10 +5,13 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+
 
 /**
  * Created by 101900 on 2017/7/13.
@@ -33,9 +36,17 @@ public class CostDialog {
     }
 
     public void initView(View convertView){
-        ClickEnabledTextView tv_back = (ClickEnabledTextView) convertView.findViewById(R.id.tv_back);
-        tv_back.setBackgroundResource(R.drawable.selector_login);
-        tv_back.setOnClickListener(new View.OnClickListener() {
+
+        ClickEnabledTextView tvEnsure = (ClickEnabledTextView) convertView.findViewById(R.id.tv_ensure);
+        ImageView ivCostBg = (ImageView) convertView.findViewById(R.id.iv_cost_bg);
+
+        tvEnsure.setBackgroundResource(R.drawable.selector_login);
+        int width = ivCostBg.getWidth();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivCostBg.getLayoutParams();
+        layoutParams.height = (638 * width / 700);
+        ivCostBg.setLayoutParams(layoutParams);
+
+        tvEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDialog.dismiss();
