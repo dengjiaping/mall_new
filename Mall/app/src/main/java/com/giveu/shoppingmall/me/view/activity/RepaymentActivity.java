@@ -66,7 +66,7 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         });
         fragmentList = new ArrayList<>();
         currentMonthFragment = new RepaymentFragment();
-        //传递参数
+        //传递参数,以区分当月还是下月
         Bundle currentBundle = new Bundle();
         currentBundle.putBoolean("isCurrentMonth", true);
         Bundle nextBundle = new Bundle();

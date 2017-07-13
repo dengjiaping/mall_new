@@ -128,6 +128,7 @@ public class MainMeFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
+        //调用个人信息接口后，收到通知，更新个人信息的显示
         updateUserUi();
     }
 
@@ -184,6 +185,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_quota:
+                //激活钱包用户直接查看额度，否则先去激活钱包
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         QuotaActivity.startIt(mBaseContext);

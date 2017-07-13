@@ -366,6 +366,11 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.pay_query, PayQueryResponse.class, context, responseListener);
     }
 
+    public static void queryQuestionInfo(Activity context, String ident, String name, String status, String pageNum,String userId, BaseRequestAgent.ResponseListener<AgreementApplyResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"ident", "name", "status", "pageNum","userId"}, new Object[]{ident, name,status,pageNum, StringUtils.string2Long(userId)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.helpfeedback_queryQuestionInfo, AgreementApplyResponse.class, context, responseListener);
+    }
+
 }
 
 

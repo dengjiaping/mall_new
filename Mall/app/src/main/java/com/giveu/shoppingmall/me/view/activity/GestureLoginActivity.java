@@ -141,7 +141,7 @@ public class GestureLoginActivity extends BaseActivity {
      */
     @OnClick(R.id.tv_change_login)
     void forgetGesturePassword() {
-        VerifyPwdActivity.startIt(GestureLoginActivity.this, isClosePattern, false);
+        LoginActivity.startIt(mBaseContext);
     }
 
     private enum Status {

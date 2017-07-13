@@ -175,7 +175,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 tv1.setText(item.name);
                 tv2.setText("售价￥" + item.salePrice);
                 LinearLayout ll_recharge_item = viewHolder.getView(R.id.ll_recharge_item);
-                if (!item.hasPhone) {
+                if (!item.clickEnable) {
                     tv1.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
                     tv2.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
                     ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_default);
@@ -347,13 +347,14 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 }
                 break;
         }
+        //如果当前并没有输入手机号，默认显示移动的产品
         if (StringUtils.isNull(currentOperator)) {
             if (tabIndex == 0) {
-                if (rechargeResponse.call != null) {
+                if (rechargeResponse != null && rechargeResponse.call != null) {
                     rechargeAdapter.setData(rechargeResponse.call.cmccs);
                 }
             } else {
-                if (rechargeResponse.traffic != null) {
+                if (rechargeResponse != null && rechargeResponse.traffic != null) {
                     rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
                 }
             }
@@ -366,12 +367,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (data != null) {
             if (!isVailable) {
                 for (RechargeResponse.PackageBean products : data) {
-                    products.hasPhone = false;
+                    products.clickEnable = false;
                 }
                 gvRecharge.setEnabled(false);
             } else {//绿色
                 for (RechargeResponse.PackageBean products : data) {
-                    products.hasPhone = true;
+                    products.clickEnable = true;
                 }
                 gvRecharge.setEnabled(true);
             }
@@ -462,6 +463,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void showPhoneInfo(SegmentResponse data) {
+        //查询手机归属地成功的回调
         isVailable = true;
         tvMessage.setText(data.city + data.isp);
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
@@ -472,6 +474,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void showErrorInfo(String message) {
+        //查询手机归属地失败后的回调
         tvMessage.setText(message);
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
     }

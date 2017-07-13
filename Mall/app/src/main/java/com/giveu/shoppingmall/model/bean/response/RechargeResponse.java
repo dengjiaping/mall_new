@@ -39,7 +39,7 @@ public class RechargeResponse extends BaseBean<RechargeResponse> {
         public long callTrafficId;
         public int productType;
         public double salePrice;
-        public boolean hasPhone;
+        public boolean clickEnable;
     }
 
     public static class TrafficBean {

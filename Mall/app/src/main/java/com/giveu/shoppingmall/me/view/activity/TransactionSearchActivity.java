@@ -69,11 +69,12 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
     private ObjectAnimator hideAlphaAnimator;
     private int pageIndex = 1;
     private final int pageSize = 20;
+    //调用查询时使用这些参数
     private String creditStatus;
     private String creditType;
     private String loanDate;
     private String timeType;
-    //区分搜索框的数据和真正要进行查询时的值
+    //区分搜索框的数据和真正要进行查询时的值，在未点击搜索时不改变上面的值
     private String selCreditStatus;
     private String selCreditType;
     private String selLoanDate;
@@ -107,6 +108,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 if (llSearch.getVisibility() == View.GONE) {
                     llSearch.setVisibility(View.VISIBLE);
                 }
+                //显示搜索界面
                 showSearchView();
             }
         });
@@ -123,6 +125,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         categoryList.add("未结清");
 
 
+        //产品类型 ，流式布局的adapter
         stateAdapter = new TagAdapter<String>(stateList) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
@@ -142,6 +145,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             }
         });
         tfState.setAdapter(stateAdapter);
+        //产品状态
         categoryAdapter = new TagAdapter<String>(categoryList) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
@@ -174,7 +178,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         presenter = new TransactionPresenter(this);
         //默认是按月查询
         selTimeType = "Month";
-        //所有数据
+        //查询所有数据
         presenter.searchContract("","",LoginHelper.getInstance().getIdPerson(),"",pageIndex,pageSize,"");
     }
 
@@ -192,6 +196,10 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         hideAlphaAnimator = ObjectAnimator.ofFloat(llSearch, "alpha", 1f, 0f).setDuration(500);
     }
 
+    /**
+     * 是否能点击查询
+     * @return
+     */
     private boolean canClick() {
         if (tfState.getSelectedList().size() > 0 && tfCategory.getSelectedList().size() > 0) {
             tvSearch.setClickEnabled(true);
@@ -234,6 +242,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         super.onClick(view);
         switch (view.getId()) {
             case R.id.view_blank:
+                //点击空白处收起搜索框，并显示搜索按钮
                 hideSearchView();
                 baseLayout.showRightImage();
                 break;
@@ -255,6 +264,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
                 break;
 
             case R.id.ll_choose_date:
+                //选择日期的类型
                 if (currentTypeIsMonth) {
                     dateSelectDialog.hideDay();
                     dateSelectDialog.show();
@@ -297,6 +307,9 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         }
     }
 
+    /**
+     * 搜索交易记录
+     */
     public void searchTransaction() {
         creditStatus = selCreditStatus;
         creditType = selCreditType;
@@ -352,6 +365,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 1 >= 0 && position - 1 < transactionList.size()) {
+                    //交易明细
                     ContractResponse.Contract contract = transactionList.get(position - 1);
                     TransactionDetailActivity.startIt(mBaseContext, contract.idCredit, contract.creditType);
                 }
