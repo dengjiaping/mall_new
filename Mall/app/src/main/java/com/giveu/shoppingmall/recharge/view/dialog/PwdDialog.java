@@ -78,8 +78,6 @@ public class PwdDialog {
                         checkPwdListener.checkPwd(payPwd);
                         inputView.clearResult();
                     }
-                    //turnToSuccessActivity();
-
                 }
             }
         });
@@ -103,50 +101,6 @@ public class PwdDialog {
     public void setOnCheckPwdListener(OnCheckPwdListener checkPwdListener) {
         this.checkPwdListener = checkPwdListener;
     }
-
-
-    //控制校验密码，2 失败  1 成功
-
-//    public void turnToSuccessActivity() {
-//        ApiImpl.verifyPayPwd(mActivity, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
-//            @Override
-//            public void onSuccess(PayPwdResponse response) {
-//                if (response.data != null) {
-//                    PayPwdResponse pwdResponse = response.data;
-//                    if (pwdResponse.status) {
-//                        //密码正确
-//                        switch (mStatusType) {
-//                            case statusType.BANKCARD:
-//                                //银行卡换默认代扣卡不需要验证手机
-//                                if (listener != null) {
-//                                    listener.onSuccess(pwdResponse.code);
-//                                }
-//                                break;
-//                            case statusType.CASH:
-//                            case statusType.RECHARGE:
-//                                //取现充值需要验证手机
-//                                VerifyActivity.startIt(mActivity, mStatusType);
-//                                break;
-//                        }
-//                        mDialog.dismiss();
-//                        inputView.clearResult();
-//                    } else {
-//                        //TODO: 1-2 重试密码 3 冻结密码需要找回密码
-//                        PwdErrorDialog errorDialog = new PwdErrorDialog();
-//                        errorDialog.showDialog(mActivity, pwdResponse.remainTimes);
-//                        inputView.clearResult();
-//                    }
-//
-//                    CommonUtils.closeSoftKeyBoard(mActivity);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(BaseBean errorBean) {
-//                CommonLoadingView.showErrorToast(errorBean);
-//            }
-//        });
-//    }
 
     public void showPwdError(int remainTimes) {
         PwdErrorDialog errorDialog = new PwdErrorDialog();

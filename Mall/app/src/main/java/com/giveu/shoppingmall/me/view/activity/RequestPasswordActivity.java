@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -74,7 +75,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             etPhone.setText(LoginHelper.getInstance().getPhone());
             etPhone.setSelection(etPhone.getText().toString().length());
             etVertificationCode.requestFocus();
-           // tvSendCode.performClick();
+            // tvSendCode.performClick();
         }
     }
 
@@ -183,7 +184,13 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     @Override
     public void skipToChangePassword(String randCode) {
         //找回登录密码，非钱包资质用户跳转至密码重置
-        SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
+        if (isForTrade) {
+            //找回交易密码
+            TransactionPwdActivity.startItWithCode(mBaseContext, etPhone.getText().toString(), etVertificationCode.getText().toString());
+        } else {
+            //找回登录密码
+            SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
+        }
     }
 
     @Override

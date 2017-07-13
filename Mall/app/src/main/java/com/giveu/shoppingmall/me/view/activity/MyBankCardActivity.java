@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
+import com.giveu.shoppingmall.event.AddCardEvent;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
@@ -32,11 +33,13 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -68,8 +71,8 @@ public class MyBankCardActivity extends BaseActivity {
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
-        mActivity.setResult(RESULT_OK);
-        mActivity.startActivityForResult(intent, 2);
+//        mActivity.setResult(RESULT_OK);
+        mActivity.startActivity(intent);
     }
 
     public static void startIt(Activity mActivity, boolean needResult) {
@@ -93,6 +96,7 @@ public class MyBankCardActivity extends BaseActivity {
         llDefaultBankCard.requestFocus();
         dialogUtil = new CustomDialogUtil(mBaseContext);
         initAdapter();
+        registerEventBus();//注册EventBus
     }
 
     /**
@@ -122,7 +126,7 @@ public class MyBankCardActivity extends BaseActivity {
         llDefaultBankCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ApiImpl.deleteBankInfo(mBaseContext, "164050", LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+//                ApiImpl.deleteBankInfo(mBaseContext, "164053", LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
 //                    @Override
 //                    public void onSuccess(BaseBean response) {
 //                        ToastUtils.showShortToast("删除成功！");
@@ -206,6 +210,10 @@ public class MyBankCardActivity extends BaseActivity {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshBank(AddCardEvent event) {
+        setData();
+    }
     /**
      * 传入点击项，返回4位尾数的银行卡号给上一页面
      *
@@ -220,6 +228,7 @@ public class MyBankCardActivity extends BaseActivity {
         }
         String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
         data.putExtra("bankName", bankName);
+        data.putExtra("defalutBankIconUrl", bankCardResponse.bankIconUrl);
         setResult(RESULT_OK, data);
     }
 
@@ -389,18 +398,12 @@ public class MyBankCardActivity extends BaseActivity {
         return "* * * *   * * * *   * * * *   " + bankNo;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2 && resultCode == RESULT_OK) {
-            setData();
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 2 && resultCode == RESULT_OK) {
+//            setData();
+//        }
+//    }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

@@ -356,6 +356,15 @@ public class LoginHelper extends AbsSharePref {
             putString(AVAILABLE_CYLIMIT, loginPersonInfo.availableCyLimit);
         }
     }
+    /**
+     * 设置是否有默认卡
+     */
+    public void setHasDefaultCard(String isDefalut) {
+        if(loginPersonInfo != null){
+            loginPersonInfo.defaultCard = isDefalut;
+            putString(DEFAULT_CARD, loginPersonInfo.defaultCard);
+        }
+    }
 
     /**
      * 获取可消费额度

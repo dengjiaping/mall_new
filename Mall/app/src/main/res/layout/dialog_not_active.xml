@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white_corners"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="30秒激活即有钱包"
+        android:textColor="@color/color_1c2838"
+        android:textSize="@dimen/ts_28" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:text="您尚未激活即有钱包，完善个人信息，轻松获取最高万元信用消费额度。"
+        android:textColor="@color/color_767876"
+        android:textSize="@dimen/ts_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/shape_bottom_white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_left"
+            style="@style/dialog_pwd_tv"
+            android:background="@drawable/shape_dialog_pwd_left"
+            android:textColor="@color/color_767876"
+            android:text="稍后再说" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            style="@style/dialog_pwd_tv"
+            android:background="@drawable/shape_dialog_pwd_right"
+            android:textColor="@color/title_color"
+            android:text="立即激活" />
+    </LinearLayout>
+</LinearLayout>

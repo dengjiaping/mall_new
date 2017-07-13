@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
@@ -38,13 +36,8 @@ public class CostDialog {
     public void initView(View convertView){
 
         ClickEnabledTextView tvEnsure = (ClickEnabledTextView) convertView.findViewById(R.id.tv_ensure);
-        ImageView ivCostBg = (ImageView) convertView.findViewById(R.id.iv_cost_bg);
 
         tvEnsure.setBackgroundResource(R.drawable.selector_login);
-        int width = ivCostBg.getWidth();
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivCostBg.getLayoutParams();
-        layoutParams.height = (638 * width / 700);
-        ivCostBg.setLayoutParams(layoutParams);
 
         tvEnsure.setOnClickListener(new View.OnClickListener() {
             @Override

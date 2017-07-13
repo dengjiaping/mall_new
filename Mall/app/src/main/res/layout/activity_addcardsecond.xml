@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="我同意代扣还款并遵守合同中相关约定《代扣服务协议》"
+            android:text="本人同意代扣还款并出具本《代扣服务授权书》"
             android:textColor="@color/title_color"
             android:textSize="@dimen/ts_11" />
     </LinearLayout>

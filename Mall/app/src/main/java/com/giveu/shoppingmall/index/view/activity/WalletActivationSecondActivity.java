@@ -15,6 +15,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
@@ -104,7 +105,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         }
         locationUtils = new LocationUtils(mBaseContext);
         locationUtils.startLocation();
-        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致！\n", "激活成功后，请通过绑定手机+登陆密码登陆");
+        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
     }
 
     @Override
@@ -240,13 +241,14 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                 walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
                                     @Override
                                     public void onDismiss() {
-                                        ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data, idPerson);
+                                        ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                                     }
                                 });
                                 walletActivationDialog.showDialog();
                             } else {
-                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response.data, idPerson);
+                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                             }
+                            BaseApplication.getInstance().fetchUserInfo();//刷新状态
                         }
 
                         @Override

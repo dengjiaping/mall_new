@@ -200,7 +200,7 @@
             android:name=".cash.view.activity.CashTypeActivity"
             android:label="取现类型页"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
 
         <!--支付宝支付-->

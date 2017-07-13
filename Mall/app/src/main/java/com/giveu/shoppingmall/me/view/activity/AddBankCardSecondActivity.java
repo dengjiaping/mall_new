@@ -14,9 +14,11 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.event.AddCardEvent;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -78,7 +80,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
         tvSendCode.setSendTextColor(true);
         bankName = getIntent().getStringExtra("bankName");
         etBankName.setText(bankName);
-        CommonUtils.setTextWithSpan(checkboxDesc, false, "我同意代扣还款并遵守合同中相关约定", "《代扣服务协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+        CommonUtils.setTextWithSpan(checkboxDesc, false, "本人同意代扣还款并出具本", "《代扣服务授权书》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //代扣协议
@@ -238,19 +240,20 @@ public class AddBankCardSecondActivity extends BaseActivity {
                 if (tvCommit.isClickEnabled()) {
                     String bankPerson = getIntent().getStringExtra("bankPerson");
                     bankPerson = StringUtils.nullToEmptyString(bankPerson);
-                    String isDefault;
-                    if (true) {
-                        //0 不是默认代扣卡 1 是默认代扣卡
-                        isDefault = "0";
+                     String isDefault;
+                    if (LoginHelper.getInstance().hasDefaultCard()) {
+                        //有默认卡
+                        isDefault = "0";//当前设置其他卡
                     } else {
-                        isDefault = "1";
+                        //无默认卡
+                        isDefault = "1";//当前设置默认卡
                     }
                     ApiImpl.addBankCard(mBaseContext, bankPhone, bankName, bankNo, bankPerson, sendCode, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getIdent(), isDefault, orderNo, "1", smsSeq, new BaseRequestAgent.ResponseListener<AgreementApplyResponse>() {
                         NormalHintDialog dialog;
 
                         @Override
                         public void onSuccess(AgreementApplyResponse response) {
-                            dialog = new NormalHintDialog(mBaseContext, "银行卡添加成功，\n已自动设置为默认卡");
+                            dialog = new NormalHintDialog(mBaseContext, response.message);
                             dialog.showDialog();
                             dialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
                                 @Override
@@ -258,6 +261,9 @@ public class AddBankCardSecondActivity extends BaseActivity {
                                     MyBankCardActivity.startIt(mBaseContext);
                                 }
                             });
+                            //添加银行卡成功，hasDefault设为“1”，表示有默认卡
+                            LoginHelper.getInstance().setHasDefaultCard("1");
+                            EventBusUtils.poseEvent(new AddCardEvent());
                         }
 
                         @Override

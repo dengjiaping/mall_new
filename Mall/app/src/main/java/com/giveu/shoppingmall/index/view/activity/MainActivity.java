@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
@@ -75,7 +76,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.rb1)
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
-
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class MainActivity extends BaseActivity {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
 //            startActivity(intent);
         }
+        notActiveDialog = new NotActiveDialog();
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
@@ -167,7 +169,7 @@ public class MainActivity extends BaseActivity {
                         selectIconAndTextColor(1);
                         mViewPager.setCurrentItem(1, false);
                     } else {
-                        ToastUtils.showShortToast("请先开通钱包");
+                        notActiveDialog.showDialog(mBaseContext);
                         mViewPager.setCurrentItem(2);
                         selectIconAndTextColor(2);
                     }
@@ -181,7 +183,7 @@ public class MainActivity extends BaseActivity {
                         selectIconAndTextColor(3);
                         RepaymentActivity.startIt(mBaseContext);
                     } else {
-                        ToastUtils.showShortToast("请先开通钱包");
+                        notActiveDialog.showDialog(mBaseContext);
                         mViewPager.setCurrentItem(2);
                         selectIconAndTextColor(2);
                     }

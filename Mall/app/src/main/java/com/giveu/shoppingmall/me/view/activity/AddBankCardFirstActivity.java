@@ -57,6 +57,7 @@ public class AddBankCardFirstActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //打开银行列表
+                CommonUtils.closeSoftKeyBoard(mBaseContext);
                 BankActivity.startIt(mBaseContext);
             }
         });
