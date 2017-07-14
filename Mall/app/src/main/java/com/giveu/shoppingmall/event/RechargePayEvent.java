@@ -5,9 +5,9 @@ package com.giveu.shoppingmall.event;
  */
 
 public class RechargePayEvent {
-   public boolean paySuccess;
+   public int payStatus;
 
-    public RechargePayEvent(boolean paySuccess) {
-        this.paySuccess = paySuccess;
+    public RechargePayEvent(int payStatus) {
+        this.payStatus = payStatus;
     }
 }

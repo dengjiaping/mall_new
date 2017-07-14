@@ -54,7 +54,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 //进入微信支付的上一个界面,这个是充值界面过来的
                 if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
                     //充值成功，发送通知
-                    EventBusUtils.poseEvent(new RechargePayEvent(true));
+                    EventBusUtils.poseEvent(new RechargePayEvent(0));
                 } else if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {
                     //还款过来的
                     RepaymentActivity.startItAfterPay(this);
@@ -62,10 +62,11 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             } else {
                 if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
                     if (baseResp.errCode == -2) {
+                        EventBusUtils.poseEvent(new RechargePayEvent(-2));
                         ToastUtils.showShortToast("支付取消");
                     } else {
                         //充值失败
-                        EventBusUtils.poseEvent(new RechargePayEvent(false));
+                        EventBusUtils.poseEvent(new RechargePayEvent(-1));
                     }
                 }
                 if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {

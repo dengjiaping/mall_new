@@ -28,6 +28,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.event.RechargePayEvent;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
@@ -549,13 +550,27 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void orderDialogShow(OrderDialogEvent event) {
+        if (orderDialog != null) {
+            orderDialog.showDialog();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void wxPayStatus(RechargePayEvent event) {
         //微信支付后收到通知
         if (event != null) {
-            if (event.paySuccess) {
+            if (event.payStatus == 0) {
+                //微信支付成功
                 RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-            } else {
+            } else if (event.payStatus == -1) {
+                //微信支付失败
                 RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+            } else if (event.payStatus == -2) {
+                //微信支付取消,显示订单信息
+                if (orderDialog != null) {
+                    orderDialog.showDialog();
+                }
             }
         }
 
