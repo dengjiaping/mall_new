@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.me.view.activity.IdentifyActivity;
+import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
 
@@ -47,6 +50,13 @@ public class ActivationStatusActivity extends BaseActivity {
     //钱包激活设置交易密码
     public static void startSetPwd(Activity mActivity) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        mActivity.startActivity(intent);
+    }
+
+    //用于finish之前页面
+    public static void startSetPwd(Activity mActivity,String flag) {
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        intent.putExtra("flag",flag);
         mActivity.startActivity(intent);
     }
     //显示成功结果
@@ -102,6 +112,12 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
             case BACK:
                 //返回
+                String flag = getIntent().getStringExtra("flag");
+                if(flag.equals("transaction")){
+                    BaseApplication.getInstance().finishActivity(IdentifyActivity.class);
+                    BaseApplication.getInstance().finishActivity(TransactionPwdActivity.class);
+                    BaseApplication.getInstance().finishActivity(RequestPasswordActivity.class);
+                }
                 finish();
                 break;
             case REPEAT:

@@ -88,6 +88,8 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
                             //本地验证通过
                             String smsCode = getIntent().getStringExtra("smsCode");
                             TransactionPwdActivity.startItWithCode(mBaseContext, mobile, smsCode);
+                        }else{
+                            ToastUtils.showShortToast("姓名身份证验证失败！");
                         }
                     }else{
                         ToastUtils.showShortToast("姓名身份证验证失败！");

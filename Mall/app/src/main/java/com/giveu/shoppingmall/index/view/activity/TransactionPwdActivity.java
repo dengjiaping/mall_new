@@ -88,7 +88,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 ApiImpl.resetPayPwd(mBaseContext, confirmPwd, LoginHelper.getInstance().getIdPerson(), newPwd, phone, smsCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
-                                        ActivationStatusActivity.startSetPwd(mBaseContext);
+                                        ActivationStatusActivity.startSetPwd(mBaseContext,"transaction");
                                         finish();
                                     }
 
