@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.index.view.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -101,7 +102,7 @@ public class MainActivity extends BaseActivity {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
 //            startActivity(intent);
         }
-        notActiveDialog = new NotActiveDialog();
+        notActiveDialog = new NotActiveDialog(mBaseContext);
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
@@ -151,6 +152,8 @@ public class MainActivity extends BaseActivity {
         imageView.setImageResource(imageId);
     }
 
+    int tabId = 0;//记录上一次点击的是哪个tab
+
     @OnClick({R.id.ll_recharge, R.id.ll_cash, R.id.ll_repayment, R.id.ll_me})
     @Override
     public void onClick(View view) {
@@ -160,41 +163,46 @@ public class MainActivity extends BaseActivity {
             case R.id.ll_recharge:
                 mViewPager.setCurrentItem(0, false);
                 selectIconAndTextColor(0);
+                tabId = 0;
                 break;
 
             case R.id.ll_cash:
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        selectIconAndTextColor(1);
                         mViewPager.setCurrentItem(1, false);
+                        selectIconAndTextColor(1);
                     } else {
-                        notActiveDialog.showDialog(mBaseContext);
-                        mViewPager.setCurrentItem(2);
-                        selectIconAndTextColor(2);
+                        notActiveDialog.showDialog();
+                        selectIconAndTextColor(1);
+//                        mViewPager.setCurrentItem(2);
+//                        selectIconAndTextColor(2);
                     }
+
                 }
+
+                tabId = 1;
                 break;
 
             case R.id.ll_repayment:
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        selectIconAndTextColor(3);
                         RepaymentActivity.startIt(mBaseContext);
                     } else {
-                        notActiveDialog.showDialog(mBaseContext);
-                        mViewPager.setCurrentItem(2);
-                        selectIconAndTextColor(2);
+                        notActiveDialog.showDialog();
                     }
+                    selectIconAndTextColor(3);
                 }
 //                mViewPager.setCurrentItem(2, false);
 //                selectIconAndTextColor(2);
+                tabId = 3;
                 break;
 
             case R.id.ll_me:
                 mViewPager.setCurrentItem(2, false);
                 selectIconAndTextColor(2);
+                tabId = 2;
                 break;
 
             default:
@@ -204,6 +212,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setListener() {
+        notActiveDialog.setdismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                resetIconAndTextColor();
+                selectIconAndTextColor(mViewPager.getCurrentItem());
+            }
+        });
     }
 
     @Override

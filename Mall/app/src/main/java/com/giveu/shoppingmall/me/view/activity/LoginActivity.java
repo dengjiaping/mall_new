@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -195,6 +196,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         //统计登录次数
         MobclickAgent.onEvent(mBaseContext, "Forward");
         MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
+        EventBusUtils.poseEvent(data);
         finish();
     }
 

@@ -27,7 +27,8 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
-import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
@@ -37,9 +38,11 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +99,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private String orderNo;
     private int paymentType;
     private ChargeOrderDialog orderDialog;
-
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_recharge, null);
@@ -106,6 +109,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
+        registerEventBus();
         return view;
     }
 
@@ -156,12 +161,17 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                         }
 
                     } else {
-                        ToastUtils.showShortToast("请先开通钱包");
-                        WalletActivationFirstActivity.startIt(mBaseContext);
+                        notActiveDialog.showDialog();
                     }
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateUserInfo(LoginResponse response) {
+        //更新手机号
+        initPhoneAndQuery();
     }
 
     @Override
@@ -449,17 +459,25 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (CommonUtils.isNotNullOrEmpty(data.call.cmccs)) {
             productList.addAll(data.call.cmccs);
             rechargeAdapter.notifyDataSetChanged();
-            if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
-                //自动填充空格，并查询手机信息
-                StringBuilder ownerPhone = new StringBuilder(LoginHelper.getInstance().getPhone());
-                ownerPhone.insert(3, " ");
-                ownerPhone.insert(8, " ");
-                etRecharge.setText(ownerPhone.toString());
-                etRecharge.setSelection(ownerPhone.length());
-                presenter.getPhoneInfo(LoginHelper.getInstance().getPhone());
-            }
+           initPhoneAndQuery();
         }
     }
+
+    /**
+     * 自动填充手机并查询归属地
+     */
+    public void initPhoneAndQuery(){
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
+            //自动填充空格，并查询手机信息
+            StringBuilder ownerPhone = new StringBuilder(LoginHelper.getInstance().getPhone());
+            ownerPhone.insert(3, " ");
+            ownerPhone.insert(8, " ");
+            etRecharge.setText(ownerPhone.toString());
+            etRecharge.setSelection(ownerPhone.length());
+            presenter.getPhoneInfo(LoginHelper.getInstance().getPhone());
+        }
+    }
+
 
     @Override
     public void showPhoneInfo(SegmentResponse data) {
