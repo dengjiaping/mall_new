@@ -22,24 +22,31 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RechargePayEvent;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
+import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.recharge.view.agent.IRechargeView;
 import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -505,14 +512,20 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     warnningDialog.show();
                 } else {
                     RechargeFragment.this.paymentType = paymentType;
-                    pwdDialog = new PwdDialog(mBaseContext);
-                    pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
-                        @Override
-                        public void checkPwd(String payPwd) {
-                            presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
-                        }
-                    });
-                    pwdDialog.showDialog();
+                    if (paymentType == 0) {
+                        //钱包支付
+                        pwdDialog = new PwdDialog(mBaseContext);
+                        pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                            @Override
+                            public void checkPwd(String payPwd) {
+                                presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
+                            }
+                        });
+                        pwdDialog.showDialog();
+                    } else if (paymentType == 1) {
+                        //微信支付
+                        presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNoResponse, paymentType, "", "");
+                    }
                     orderDialog.dissmissDialog();
                     RechargeFragment.this.orderNo = orderNoResponse;
                 }
@@ -533,5 +546,33 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void pwdError(int remainTimes) {
         //交易密码错误,弹出密码错误框
         pwdDialog.showPwdError(remainTimes);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void wxPayStatus(RechargePayEvent event) {
+        //微信支付后收到通知
+        if (event != null) {
+            if (event.paySuccess) {
+                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+            } else {
+                RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+            }
+        }
+
+    }
+
+    @Override
+    public void confirmOrderSuccess(ConfirmOrderResponse data) {
+        if (data != null) {
+            BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
+            IWXAPI iWxapi = PayUtils.getWxApi();
+            PayReq payReq = PayUtils.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
+            iWxapi.sendReq(payReq);
+        }
+    }
+
+    @Override
+    public void confirmOrderFail() {
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
     }
 }

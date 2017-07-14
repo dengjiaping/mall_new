@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.recharge.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 
@@ -15,4 +16,6 @@ public interface IRechargeView extends IView {
     void createOrderSuccess(String orderNo);
     void pwdSuccess();
     void pwdError(int remainTimes);
+    void confirmOrderSuccess(ConfirmOrderResponse data);
+    void confirmOrderFail();
 }
