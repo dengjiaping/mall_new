@@ -185,7 +185,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_quota:
-                //激活钱包用户直接查看额度，否则先去激活钱包
+                //激活钱包用户直接查看额度，否则先去激活
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         QuotaActivity.startIt(mBaseContext);
