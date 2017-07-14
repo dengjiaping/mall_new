@@ -100,6 +100,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int paymentType;
     private ChargeOrderDialog orderDialog;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_recharge, null);
@@ -144,22 +145,13 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入充值
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        //可用金额是否大于充值产品金额
-                        if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
-                            double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
-                            warnningDialog.setContent("您已超出每月500元充值上限（已消费"
-                                    + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
-                            warnningDialog.show();
-                        } else {
-                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                            mobile = etRecharge.getText().toString();
-                            productType = rechargeAdapter.getItem(checkId).productType;
-                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                            productName = rechargeAdapter.getItem(checkId).name;
-                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                    rechargeAdapter.getItem(checkId).callTrafficId);
-                        }
-
+                        salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                        mobile = etRecharge.getText().toString();
+                        productType = rechargeAdapter.getItem(checkId).productType;
+                        productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                        productName = rechargeAdapter.getItem(checkId).name;
+                        presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                rechargeAdapter.getItem(checkId).callTrafficId);
                     } else {
                         notActiveDialog.showDialog();
                     }
@@ -459,14 +451,14 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (CommonUtils.isNotNullOrEmpty(data.call.cmccs)) {
             productList.addAll(data.call.cmccs);
             rechargeAdapter.notifyDataSetChanged();
-           initPhoneAndQuery();
+            initPhoneAndQuery();
         }
     }
 
     /**
      * 自动填充手机并查询归属地
      */
-    public void initPhoneAndQuery(){
+    public void initPhoneAndQuery() {
         if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
             //自动填充空格，并查询手机信息
             StringBuilder ownerPhone = new StringBuilder(LoginHelper.getInstance().getPhone());
@@ -505,17 +497,25 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         orderDialog.setOnConfirmListener(new ChargeOrderDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int paymentType) {
-                RechargeFragment.this.paymentType = paymentType;
-                pwdDialog = new PwdDialog(mBaseContext);
-                pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
-                    @Override
-                    public void checkPwd(String payPwd) {
-                        presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
-                    }
-                });
-                pwdDialog.showDialog();
-                orderDialog.dissmissDialog();
-                RechargeFragment.this.orderNo = orderNoResponse;
+                //钱包可用金额是否大于充值产品金额
+                if (paymentType == 1 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
+                    double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
+                    warnningDialog.setContent("您已超出每月500元充值上限（已消费"
+                            + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
+                    warnningDialog.show();
+                } else {
+                    RechargeFragment.this.paymentType = paymentType;
+                    pwdDialog = new PwdDialog(mBaseContext);
+                    pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                        @Override
+                        public void checkPwd(String payPwd) {
+                            presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
+                        }
+                    });
+                    pwdDialog.showDialog();
+                    orderDialog.dissmissDialog();
+                    RechargeFragment.this.orderNo = orderNoResponse;
+                }
             }
         });
         orderDialog.showDialog();
