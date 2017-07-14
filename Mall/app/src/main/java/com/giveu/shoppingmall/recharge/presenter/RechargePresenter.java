@@ -4,6 +4,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
@@ -88,6 +89,25 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
             @Override
             public void onError(BaseBean errorBean) {
                 CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
+
+    public void confirmRechargeOrder(String idPerson, String mobile, long productId, String orderNo, int payType, String smsCode, String phone) {
+        ApiImpl.confirmRechargeOrder(getView().getAct(), idPerson, mobile, productId, orderNo, payType, smsCode,phone, new BaseRequestAgent.ResponseListener<ConfirmOrderResponse>() {
+            @Override
+            public void onSuccess(ConfirmOrderResponse response) {
+                if (getView() != null) {
+                    getView().confirmOrderSuccess(response.data);
+                }
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    getView().confirmOrderFail();
+                }
             }
         });
     }

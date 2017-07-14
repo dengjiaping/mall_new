@@ -25,6 +25,6 @@ public class TransactionDetailResponse extends BaseBean<TransactionDetailRespons
     public String dueDate;
     public String goodsName;
     public String idCredit;
-    public int lastPrincipal;
+    public String lastPrincipal;
     public int paymentNum;
 }

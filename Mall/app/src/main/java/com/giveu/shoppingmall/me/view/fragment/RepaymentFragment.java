@@ -21,9 +21,9 @@ import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.me.view.dialog.IntalmentDetailsDialog;
 import com.giveu.shoppingmall.me.view.dialog.RepaymentDetailDialog;
 import com.giveu.shoppingmall.me.view.dialog.RepaymentDialog;
-import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
+import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.WxPayParamsResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.HardWareUtil;
@@ -112,10 +112,11 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     }
 
 
-    @OnClick({R.id.ll_change_money, R.id.tv_confirm})
+    @OnClick({R.id.ll_change_money, R.id.tv_confirm, R.id.iv_change_money})
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
+            case R.id.iv_change_money:
             case R.id.ll_change_money:
                 if (canClick()) {
                     repaymentDialog.show();

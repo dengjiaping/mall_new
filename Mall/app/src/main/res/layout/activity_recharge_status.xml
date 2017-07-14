@@ -148,7 +148,7 @@
             android:layout_marginTop="56dp"
             android:background="@drawable/selector_login"
             android:text="查看充值订单"
-            android:visibility="gone" />
+            />
 
         <com.giveu.shoppingmall.widget.ClickEnabledTextView
             android:id="@+id/tv_back"

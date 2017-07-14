@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RechargePayEvent;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -47,16 +49,25 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onResp(BaseResp baseResp) {
         if (baseResp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
+            //支付成功
             if (baseResp.errCode == 0) {
-                //进入微信支付的上一个界面
-                if (BaseApplication.getInstance().getBeforePayActivity().equals(VerifyActivity.class.getSimpleName())) {
-                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE, true);
+                //进入微信支付的上一个界面,这个是充值界面过来的
+                if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
+                    //充值成功，发送通知
+                    EventBusUtils.poseEvent(new RechargePayEvent(0));
                 } else if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {
+                    //还款过来的
                     RepaymentActivity.startItAfterPay(this);
                 }
             } else {
-                if (BaseApplication.getInstance().getBeforePayActivity().equals(VerifyActivity.class.getSimpleName())) {
-                    VerifyActivity.startItAfterPay(this, VerifyActivity.RECHARGE, false);
+                if (BaseApplication.getInstance().getBeforePayActivity().equals(MainActivity.class.getSimpleName())) {
+                    if (baseResp.errCode == -2) {
+                        EventBusUtils.poseEvent(new RechargePayEvent(-2));
+                        ToastUtils.showShortToast("支付取消");
+                    } else {
+                        //充值失败
+                        EventBusUtils.poseEvent(new RechargePayEvent(-1));
+                    }
                 }
                 if (BaseApplication.getInstance().getBeforePayActivity().equals(RepaymentActivity.class.getSimpleName())) {
                     if (baseResp.errCode == -2) {

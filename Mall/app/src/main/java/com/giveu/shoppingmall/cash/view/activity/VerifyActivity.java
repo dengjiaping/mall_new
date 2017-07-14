@@ -1,7 +1,6 @@
 package com.giveu.shoppingmall.cash.view.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,11 +18,8 @@ import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -52,7 +48,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public static final String CASH = "cash";
     public static final String RECHARGE = "recharge";
     public static final String BANKCARD = "bankCard";
-    private long orderDetailId;
     private String salePrice;
 
     public static void startIt(Activity activity, String statusType, String creditAmount, String creditType, String idProduct, String randCode) {
@@ -84,19 +79,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         intent.putExtra("salePrice", salePrice);
         intent.putExtra("orderNo", orderNo);
         activity.startActivity(intent);
-    }
-
-    /**
-     * 微信支付完成，因为launch模式为singleTask，所以不会走onCreate方法，直接onNewIntent
-     *
-     * @param mContext
-     * @param payType
-     */
-    public static void startItAfterPay(Context mContext, String payType, boolean paySuccess) {
-        Intent i = new Intent(mContext, VerifyActivity.class);
-        i.putExtra("payType", payType);
-        i.putExtra("paySuccess", paySuccess);
-        mContext.startActivity(i);
     }
 
     @Override
@@ -221,18 +203,10 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
     @Override
     public void confirmOrderSuccess(ConfirmOrderResponse data) {
-        if (data != null) {
-            BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
-            IWXAPI iWxapi = PayUtils.getWxApi();
-            PayReq payReq = PayUtils.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
-            iWxapi.sendReq(payReq);
-            orderDetailId = data.orderDetailId;
-        } else {
-            //充值成功后，需更新额度，因此更新个人信息
-            BaseApplication.getInstance().fetchUserInfo();
-            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-            finish();
-        }
+        //充值成功后，需更新额度，因此更新个人信息
+        BaseApplication.getInstance().fetchUserInfo();
+        RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+        finish();
     }
 
     @Override
@@ -241,33 +215,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         finish();
     }
 
-/*    @Override
-    public void thirdPaySuccess() {
-        RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-        finish();
-    }*/
-
-    /**
-     * 手机充值微信支付结果
-     */
-    public void rechargeAfterWxPay(boolean paySuccess) {
-//        presenter.thirdPayRecharge(LoginHelper.getInstance().getIdPerson(), orderDetailId, orderNo);
-        if (paySuccess) {
-            RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
-            finish();
-        } else {
-            RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
-            finish();
-        }
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        String payType = intent.getStringExtra("payType");
-        boolean paySuccess = intent.getBooleanExtra("paySuccess", false);
-        if (RECHARGE.equals(payType)) {
-            rechargeAfterWxPay(paySuccess);
-        }
     }
 }
