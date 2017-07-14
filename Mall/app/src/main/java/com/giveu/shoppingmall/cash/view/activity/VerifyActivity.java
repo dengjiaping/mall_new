@@ -69,13 +69,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
      * @param orderNo
      * @param paymentType
      */
-    public static void startItForRecharge(Activity activity, String mobile, long productId, String orderNo, int paymentType, long orderDetailId, String salePrice) {
+    public static void startItForRecharge(Activity activity, String mobile, long productId, String orderNo, int paymentType, String salePrice) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("statusType", RECHARGE);
         intent.putExtra("mobile", mobile);
         intent.putExtra("productId", productId);
         intent.putExtra("paymentType", paymentType);
-        intent.putExtra("orderDetailId", orderDetailId);
         intent.putExtra("salePrice", salePrice);
         intent.putExtra("orderNo", orderNo);
         activity.startActivity(intent);
