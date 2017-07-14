@@ -36,7 +36,7 @@ public class DebugConfig {
 		}
 	}
 
-	private static String DOMAIN_TEST = "http://10.10.11.140:9000/";//域名
+	private static String DOMAIN_TEST = "http://testdfshop.dafycredit.cn:9000/";//域名
 	private static String DOMAIN_ONLINE = "http://3c.dafysz.cn/";//域名
 
 
