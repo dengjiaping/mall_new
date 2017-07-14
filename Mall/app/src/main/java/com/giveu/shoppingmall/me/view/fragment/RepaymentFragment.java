@@ -112,10 +112,11 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     }
 
 
-    @OnClick({R.id.ll_change_money, R.id.tv_confirm})
+    @OnClick({R.id.ll_change_money, R.id.tv_confirm, R.id.iv_change_money})
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
+            case R.id.iv_change_money:
             case R.id.ll_change_money:
                 if (canClick()) {
                     repaymentDialog.show();

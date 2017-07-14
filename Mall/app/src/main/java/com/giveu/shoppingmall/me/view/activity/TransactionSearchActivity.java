@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
@@ -174,12 +175,9 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         dateSelectDialog = new DateSelectDialog(mBaseContext);
         //设置时间默认值
         tvChooseDate.setText(dateSelectDialog.getCurrentYearAndMonth(null));
-        selLoanDate = dateSelectDialog.getCurrentYearAndMonth("/");
         presenter = new TransactionPresenter(this);
-        //默认是按月查询
-        selTimeType = "Month";
         //查询所有数据
-        presenter.searchContract("","",LoginHelper.getInstance().getIdPerson(),"",pageIndex,pageSize,"");
+        presenter.searchContract("", "", LoginHelper.getInstance().getIdPerson(), "", pageIndex, pageSize, "");
     }
 
     @Override
@@ -198,6 +196,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
 
     /**
      * 是否能点击查询
+     *
      * @return
      */
     private boolean canClick() {
@@ -276,6 +275,14 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
 
             case R.id.tv_search:
                 //搜索交易记录
+                if (StringUtils.isNull(selTimeType)) {
+                    //默认是按月查询
+                    selTimeType = "Month";
+                }
+                if (StringUtils.isNull(selLoanDate)) {
+                    //当前时间
+                    selLoanDate = dateSelectDialog.getCurrentYearAndMonth("/");
+                }
                 if (tvSearch.isClickEnabled()) {
                     pageIndex = 1;
                     searchTransaction();
@@ -419,6 +426,8 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             pageIndex++;
         } else {
             if (pageIndex == 1) {
+                transactionList.clear();
+                transactionAdapter.notifyDataSetChanged();
                 baseLayout.showEmpty("暂无交易记录");
                 ptrlv.setPullLoadEnable(false);
             } else {
