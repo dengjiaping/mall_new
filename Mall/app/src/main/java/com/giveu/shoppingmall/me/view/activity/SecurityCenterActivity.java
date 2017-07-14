@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
@@ -35,6 +37,7 @@ public class SecurityCenterActivity extends BaseActivity {
     @BindView(R.id.tv_lock_type)
     TextView tvLockType;
     private FingerPrintHelper fingerHelper;
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, SecurityCenterActivity.class);
@@ -45,6 +48,7 @@ public class SecurityCenterActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_security_center);
         baseLayout.setTitle("安全中心");
+        notActiveDialog = new NotActiveDialog(mBaseContext);
     }
 
     @Override
@@ -67,6 +71,7 @@ public class SecurityCenterActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void setListener() {
         super.setListener();
@@ -79,30 +84,19 @@ public class SecurityCenterActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_change_phone_number:
                 //修改手机号
-//                if (true) {
-//                    //有资质的
-//                    TransactionInputActivity.startIt(mBaseContext);
-//                } else {
-//                    //没有资质的
-//                    ChangePhoneNumberActivity.startIt(mBaseContext);
-//                }
-//                if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
-//                    WalletActivationFirstActivity.startIt(mBaseContext);
-//                    return;
-//                }
-                TransactionInputActivity.startIt(mBaseContext);
+                if (isWallActivationAndPwd()) {//激活并设置了交易密码
+                    TransactionInputActivity.startIt(mBaseContext);
+                }
                 break;
             case R.id.ll_change_login_pwd:
                 //修改登录密码
                 RequestPasswordActivity.startIt(mBaseContext);
                 break;
             case R.id.ll_change_transaction_pwd:
-//                if(StringUtils.isNull(LoginHelper.getInstance().getIdPerson())){
-//                    ToastUtils.showShortToast("没有钱包资质");
-//                    return;
-//                }
                 //修改交易密码
-                RequestPasswordActivity.startIt(mBaseContext, true);
+                if (isWallActivationAndPwd()) {//激活并设置了交易密码
+                    RequestPasswordActivity.startIt(mBaseContext, true);
+                }
                 break;
             case R.id.iv_switch:
                 if (StringUtils.isNotNull(SharePrefUtil.getPatternPwd()) || SharePrefUtil.hasFingerPrint()) {
@@ -113,6 +107,24 @@ public class SecurityCenterActivity extends BaseActivity {
                     VerifyPwdActivity.startItForSetting(mBaseContext, true, false);
                 }
                 break;
+        }
+    }
+
+    /**
+     * 是否激活钱包并且设置了交易密码，没有激活跳转激活，激活没有设置密码跳转设置交易密码
+     */
+    public boolean isWallActivationAndPwd() {
+        if (LoginHelper.getInstance().hasQualifications()) {
+            MyBankCardActivity.startIt(mBaseContext, false);
+            //判断是否设置了交易密码
+            if (LoginHelper.getInstance().hasSetPwd()) {
+                TransactionInputActivity.startIt(mBaseContext);
+                return false;
+            }
+            return true;
+        } else {
+            notActiveDialog.showDialog();
+            return false;
         }
     }
 }

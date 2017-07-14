@@ -54,7 +54,7 @@ public class HorizontalScaleScrollView extends BaseScaleView {
     }
 
     public void setMax(int max) {
-        if (max >= 3000) {
+        if (max > 3000) {
             mMax = 1000;//TODO:根据需求定，目前默认10000元 (大额)
         } else {
             mMax = 300;//小额

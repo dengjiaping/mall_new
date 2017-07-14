@@ -22,7 +22,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="6dp"
-        android:text="费率0.55元/天"
+        android:text="日综合息费0.55%"
         android:textColor="@color/title_color"
         android:textSize="@dimen/ts_11"
         android:visibility="visible" />

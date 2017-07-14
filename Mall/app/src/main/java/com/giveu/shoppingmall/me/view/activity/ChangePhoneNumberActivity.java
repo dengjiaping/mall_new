@@ -152,7 +152,6 @@ public class ChangePhoneNumberActivity extends BaseActivity {
                 break;
             case R.id.tv_finish:
                 if (tvFinish.isClickEnabled()) {
-
                     ApiImpl.updatePhone(mBaseContext, LoginHelper.getInstance().getIdPerson(), phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
                         public void onSuccess(BaseBean response) {

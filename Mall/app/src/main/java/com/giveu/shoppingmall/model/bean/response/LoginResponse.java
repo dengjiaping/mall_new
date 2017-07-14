@@ -58,4 +58,5 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String userPic;
     public String totalCost;
     public boolean hasDefaultCard;
+    public boolean isSetPwd;
 }

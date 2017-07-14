@@ -43,6 +43,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String BANK_NAME = "bankName";
     public static final String BANK_ICON_URL = "bankIconUrl";
     public static final String DEFAULT_CARD = "defaultCard";
+    public static final String ISSETPWD = "isSetPwd";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -76,6 +77,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.bankName = getString(BANK_NAME, "");
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
+        personInfo.hasDefaultCard = getBoolean(ISSETPWD, false);
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -114,6 +116,7 @@ public class LoginHelper extends AbsSharePref {
         putString(BANK_NAME, personInfo.bankName);
         putString(BANK_ICON_URL, personInfo.bankIconUrl);
         putString(DEFAULT_CARD, personInfo.defaultCard);
+        putBoolean(ISSETPWD, personInfo.isSetPwd);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -248,7 +251,13 @@ public class LoginHelper extends AbsSharePref {
     public boolean hasDefaultCard() {
         return loginPersonInfo != null && loginPersonInfo.hasDefaultCard;
     }
-
+    /**
+     * 是否已经设置交易密码
+     * @return
+     */
+    public boolean hasSetPwd() {
+        return loginPersonInfo != null && loginPersonInfo.isSetPwd;
+    }
 
     /**
      * 获取用户真实姓名

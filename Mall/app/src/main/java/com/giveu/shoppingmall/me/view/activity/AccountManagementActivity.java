@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -43,6 +44,7 @@ public class AccountManagementActivity extends BaseActivity {
     TextView tvPhone;
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, AccountManagementActivity.class);
@@ -64,6 +66,7 @@ public class AccountManagementActivity extends BaseActivity {
                 tvUserName.setText(LoginHelper.getInstance().getPhone());
             }
         }
+        notActiveDialog = new NotActiveDialog(mBaseContext);
         ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
 
@@ -83,7 +86,11 @@ public class AccountManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_bank_card:
                 //我的银行卡
-                MyBankCardActivity.startIt(mBaseContext,false);
+                if (LoginHelper.getInstance().hasQualifications()) {//是否激活钱包
+                    MyBankCardActivity.startIt(mBaseContext, false);
+                } else {
+                    notActiveDialog.showDialog();
+                }
                 break;
             case R.id.ll_security_center:
                 //安全中心

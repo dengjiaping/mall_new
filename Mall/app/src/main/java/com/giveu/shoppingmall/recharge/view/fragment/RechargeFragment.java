@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
@@ -144,22 +145,26 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入充值
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        //可用金额是否大于充值产品金额
-                        if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
-                            double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
-                            warnningDialog.setContent("您已超出每月500元充值上限（已消费"
-                                    + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
-                            warnningDialog.show();
+                        //判断是否设置了交易密码
+                        if (LoginHelper.getInstance().hasSetPwd()) {
+                            //可用金额是否大于充值产品金额
+                            if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
+                                double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
+                                warnningDialog.setContent("您已超出每月500元充值上限（已消费"
+                                        + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
+                                warnningDialog.show();
+                            } else {
+                                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                                mobile = etRecharge.getText().toString();
+                                productType = rechargeAdapter.getItem(checkId).productType;
+                                productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                                productName = rechargeAdapter.getItem(checkId).name;
+                                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                        rechargeAdapter.getItem(checkId).callTrafficId);
+                            }
                         } else {
-                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                            mobile = etRecharge.getText().toString();
-                            productType = rechargeAdapter.getItem(checkId).productType;
-                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                            productName = rechargeAdapter.getItem(checkId).name;
-                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                    rechargeAdapter.getItem(checkId).callTrafficId);
+                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                         }
-
                     } else {
                         notActiveDialog.showDialog();
                     }

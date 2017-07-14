@@ -18,9 +18,9 @@ public class WalletActivationResponse extends BaseBean<WalletActivationResponse>
      * posLimit : 0
      */
 
-    public int cyLimit;
-    public int globleLimit;
+    public String cyLimit;
+    public String globleLimit;
     public boolean isPhoneChage;
     public String lab;
-    public int posLimit;
+    public String posLimit;
 }
