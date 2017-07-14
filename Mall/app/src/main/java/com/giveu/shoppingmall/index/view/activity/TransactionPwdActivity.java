@@ -10,6 +10,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -44,7 +45,7 @@ public class TransactionPwdActivity extends BaseActivity {
     public static void startIt(Activity mActivity, String idPerson) {
         Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
         intent.putExtra("idPerson", idPerson);
-        mActivity.startActivity(intent);
+        mActivity.startActivityForResult(intent, 101);
     }
 
     public static void startItWithCode(Activity mActivity, String phone, String smsCode) {
@@ -88,6 +89,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ActivationStatusActivity.startSetPwd(mBaseContext);
+                                        finish();
                                     }
 
                                     @Override
@@ -97,10 +99,13 @@ public class TransactionPwdActivity extends BaseActivity {
                                 });
                             } else {
                                 //激活钱包，设置交易密码
-                                ApiImpl.setPayPwd(mBaseContext, confirmPwd, LoginHelper.getInstance().getIdPerson(), newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                ApiImpl.setPayPwd(mBaseContext, confirmPwd, idPerson, newPwd, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
+                                        setResult(RESULT_OK);
+                                        BaseApplication.getInstance().fetchUserInfo();
                                         ActivationStatusActivity.startSetPwd(mBaseContext);
+                                        finish();
                                     }
 
                                     @Override

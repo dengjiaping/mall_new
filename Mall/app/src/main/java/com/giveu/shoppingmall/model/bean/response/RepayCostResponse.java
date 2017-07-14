@@ -15,7 +15,7 @@ public class RepayCostResponse extends BaseBean<RepayCostResponse> {
      * monthPay : 1064.49
      */
 
-    public int cost;
-    public int drawMoney;
+    public double cost;
+    public double drawMoney;
     public double monthPay;
 }

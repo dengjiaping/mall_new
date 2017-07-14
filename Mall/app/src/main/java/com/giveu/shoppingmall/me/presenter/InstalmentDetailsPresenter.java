@@ -5,6 +5,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IInstalmentDetailsView;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
@@ -70,4 +71,6 @@ public class InstalmentDetailsPresenter extends BasePresenter<IInstalmentDetails
             }
         });
     }
+
+
 }

@@ -26,6 +26,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -193,8 +194,7 @@ public class CashTypeActivity extends BaseActivity {
         noStageProduct = new ProductResponse(0, 0, false, false);
         statusBarHeight = DensityUtils.getStatusBarHeight();
         decorView = (ViewGroup) getWindow().getDecorView();
-//        availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-        availableCylimit = "3965.0";
+       availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
         if (StringUtils.isNotNull(availableCylimit)) {
             int cylimit = (int) Double.parseDouble(availableCylimit);
             //刻度尺默认最大额度
@@ -265,7 +265,7 @@ public class CashTypeActivity extends BaseActivity {
                 if (item.isShow) {
                     tv_cost_fee.setVisibility(View.VISIBLE);
                     if (StringUtils.isNotNull(costFee)) {
-                        tv_cost_fee.setText("费率" + costFee + "元/天");
+                        tv_cost_fee.setText("日综合息费" + costFee + "%");
                     }
                 } else {
                     tv_cost_fee.setVisibility(View.GONE);
@@ -329,7 +329,8 @@ public class CashTypeActivity extends BaseActivity {
             public void stop() {
                 chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
                 if (chooseQuota < 100) {
-                    chooseQuota = Double.parseDouble(availableCylimit);
+                    chooseQuota = Double.parseDouble("100.0");
+                    ToastUtils.showShortToast("取现不少于100元");
                 }
                 scaleScrollView.setCurScale((int) chooseQuota);
                 setData();
@@ -536,7 +537,12 @@ public class CashTypeActivity extends BaseActivity {
                         );
                     }
                 });
-                pwdDialog.showDialog();
+                //判断是否设置了交易密码
+                if (LoginHelper.getInstance().hasSetPwd()) {
+                    pwdDialog.showDialog();
+                } else {
+                    TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                }
                 break;
             case R.id.ll_choose_bank:
                 //银行卡列表

@@ -49,7 +49,6 @@ public class ActivationStatusActivity extends BaseActivity {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         mActivity.startActivity(intent);
     }
-
     //显示成功结果
     public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
@@ -100,11 +99,10 @@ public class ActivationStatusActivity extends BaseActivity {
                 //设置交易密码
                 String idPerson = getIntent().getStringExtra("idPerson");
                 TransactionPwdActivity.startIt(mBaseContext, idPerson);
-
                 break;
             case BACK:
                 //返回
-                MainActivity.startIt(mBaseContext);
+                finish();
                 break;
             case REPEAT:
                 //重新激活钱包
@@ -119,9 +117,9 @@ public class ActivationStatusActivity extends BaseActivity {
         switch (status) {
             case "success":
                 //激活成功
-                double globleLimit = getIntent().getDoubleExtra("globleLimit", 0.00);
-                double cyLimit = getIntent().getDoubleExtra("cyLimit", 0.00);
-                double posLimit = getIntent().getDoubleExtra("posLimit", 0.00);
+                String globleLimit = getIntent().getStringExtra("globleLimit");
+                String cyLimit = getIntent().getStringExtra("cyLimit");
+                String posLimit = getIntent().getStringExtra("posLimit");
                 String lab = StringUtils.nullToEmptyString(getIntent().getStringExtra("lab"));
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
@@ -158,6 +156,14 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvSetTransactionPwd.setText("返回");
                 tvSetTransactionPwd.setTag(BACK);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 101){
+            finish();
         }
     }
 }

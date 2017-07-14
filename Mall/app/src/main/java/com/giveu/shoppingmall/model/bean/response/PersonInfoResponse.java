@@ -42,5 +42,5 @@ public class PersonInfoResponse extends BaseBean<PersonInfoResponse> {
     public String posLimit;
     public String repayAmount;
     public String repayDate;
-    public boolean status;
+    public boolean isSetPwd;
 }

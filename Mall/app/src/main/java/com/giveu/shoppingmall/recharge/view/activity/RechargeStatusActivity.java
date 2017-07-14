@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.event.OrderDialogEvent;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 import butterknife.BindView;
@@ -79,6 +80,7 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvHintBottom.setText(hintBottom);
                 tvHintMid.setVisibility(View.INVISIBLE);
                 tvBtnTop.setText("查看充值订单");
+                tvBtnTop.setVisibility(View.GONE);
                 tvBack.setVisibility(View.VISIBLE);
                 tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);
@@ -110,13 +112,14 @@ public class RechargeStatusActivity extends BaseActivity {
                         //跳转订单页
                         break;
                     case "fail":
+                        EventBusUtils.poseEvent(new OrderDialogEvent());
                         finish();
                         break;
                 }
                 break;
             case R.id.tv_back:
                 //返回
-                MainActivity.startIt(mBaseContext);
+                finish();
                 break;
         }
     }

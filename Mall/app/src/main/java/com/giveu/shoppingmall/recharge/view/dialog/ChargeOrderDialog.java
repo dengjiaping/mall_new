@@ -75,7 +75,9 @@ public class ChargeOrderDialog {
 
     public void showDialog() {
         mDialog.setCancelable(false);
-        mDialog.show();
+        if (mActivity != null && !mActivity.isFinishing() && !mDialog.isShowing()) {
+            mDialog.show();
+        }
     }
 
     public void dissmissDialog() {

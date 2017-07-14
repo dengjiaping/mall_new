@@ -184,7 +184,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
 
         if (!checkbox.isChecked()) {
             if (showToast) {
-                ToastUtils.showShortToast("请勾选代扣服务协议！");
+                ToastUtils.showShortToast("请勾选代扣服务授权书！");
             }
             return;
         }

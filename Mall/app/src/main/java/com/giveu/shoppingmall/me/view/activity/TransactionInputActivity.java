@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -53,7 +54,7 @@ public class TransactionInputActivity extends BaseActivity {
                     String tradPwd = MD5.MD5Encode(result);
                     if (StringUtils.isNotNull(tradPwd)){
                         tradPwd = tradPwd.toLowerCase();
-                        ApiImpl.verifyPayPwd(mBaseContext, "11413713", tradPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                        ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), tradPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
                             @Override
                             public void onSuccess(PayPwdResponse response) {
                                 if (response.data != null) {

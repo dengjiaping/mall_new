@@ -22,24 +22,33 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.OrderDialogEvent;
+import com.giveu.shoppingmall.event.RechargePayEvent;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.recharge.presenter.RechargePresenter;
+import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.recharge.view.agent.IRechargeView;
 import com.giveu.shoppingmall.recharge.view.dialog.ChargeOrderDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -85,7 +94,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int productType;
     private long productId;
     private String productName;
-    private long orderDetailId;
     //产品id
     private String pid;
     PwdDialog pwdDialog;
@@ -145,13 +153,26 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入充值
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                        mobile = etRecharge.getText().toString();
-                        productType = rechargeAdapter.getItem(checkId).productType;
-                        productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                        productName = rechargeAdapter.getItem(checkId).name;
-                        presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                rechargeAdapter.getItem(checkId).callTrafficId);
+                        //判断是否设置了交易密码
+                        if (LoginHelper.getInstance().hasSetPwd()) {
+                            //可用金额是否大于充值产品金额
+                            if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
+                                double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
+                                warnningDialog.setContent("您已超出每月500元充值上限（已消费"
+                                        + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
+                                warnningDialog.show();
+                            } else {
+                                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                                mobile = etRecharge.getText().toString();
+                                productType = rechargeAdapter.getItem(checkId).productType;
+                                productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                                productName = rechargeAdapter.getItem(checkId).name;
+                                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                        rechargeAdapter.getItem(checkId).callTrafficId);
+                            }
+                        } else {
+                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                        }
                     } else {
                         notActiveDialog.showDialog();
                     }
@@ -305,6 +326,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
      * 展示流量还是话费，并且区分运营商
      */
     private void showContentData() {
+        if (rechargeAdapter == null) {
+            return;
+        }
 
         switch (tabIndex) {
             case 0:
@@ -361,7 +385,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 }
             }
         }
-        changeItemCanClick(rechargeAdapter.getData());
+        if (rechargeAdapter != null) {
+            changeItemCanClick(rechargeAdapter.getData());
+        }
     }
 
     //设置gridView的Item是否可点击
@@ -505,14 +531,20 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     warnningDialog.show();
                 } else {
                     RechargeFragment.this.paymentType = paymentType;
-                    pwdDialog = new PwdDialog(mBaseContext);
-                    pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
-                        @Override
-                        public void checkPwd(String payPwd) {
-                            presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
-                        }
-                    });
-                    pwdDialog.showDialog();
+                    if (paymentType == 0) {
+                        //钱包支付
+                        pwdDialog = new PwdDialog(mBaseContext);
+                        pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                            @Override
+                            public void checkPwd(String payPwd) {
+                                presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
+                            }
+                        });
+                        pwdDialog.showDialog();
+                    } else if (paymentType == 1) {
+                        //微信支付
+                        presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNoResponse, paymentType, "", "");
+                    }
                     orderDialog.dissmissDialog();
                     RechargeFragment.this.orderNo = orderNoResponse;
                 }
@@ -526,12 +558,54 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void pwdSuccess() {
         //交易密码校验成功
         pwdDialog.dissmissDialog();
-        VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, orderDetailId, salePrice);
+        VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, salePrice);
     }
 
     @Override
     public void pwdError(int remainTimes) {
         //交易密码错误,弹出密码错误框
         pwdDialog.showPwdError(remainTimes);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void orderDialogShow(OrderDialogEvent event) {
+        if (orderDialog != null) {
+            orderDialog.showDialog();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void wxPayStatus(RechargePayEvent event) {
+        //微信支付后收到通知
+        if (event != null) {
+            if (event.payStatus == 0) {
+                //微信支付成功
+                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+            } else if (event.payStatus == -1) {
+                //微信支付失败
+                RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+            } else if (event.payStatus == -2) {
+                //微信支付取消,显示订单信息
+                if (orderDialog != null) {
+                    orderDialog.showDialog();
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void confirmOrderSuccess(ConfirmOrderResponse data) {
+        if (data != null) {
+            BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
+            IWXAPI iWxapi = PayUtils.getWxApi();
+            PayReq payReq = PayUtils.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
+            iWxapi.sendReq(payReq);
+        }
+    }
+
+    @Override
+    public void confirmOrderFail() {
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
     }
 }

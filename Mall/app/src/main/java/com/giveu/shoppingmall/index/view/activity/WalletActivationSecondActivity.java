@@ -21,7 +21,6 @@ import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LocationUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.LocationListener;
@@ -73,8 +72,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
     private String longitude;
     LocationUtils locationUtils;//定位方法
     NormalHintDialog walletActivationDialog;
-    NormalHintDialog changePhoneDialog;
-
     public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
@@ -82,7 +79,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         intent.putExtra("idPerson", idPerson);
         intent.putExtra("bankNo", bankNo);
         intent.putExtra("phone", phone);
-        mActivity.startActivity(intent);
+        mActivity.startActivityForResult(intent, 100);
     }
 
     @Override
@@ -236,26 +233,34 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(final WalletActivationResponse response) {
-                            if (!phone.equals(LoginHelper.getInstance().getPhone())) {
-                                //激活填写手机号与注册不一致
-                                walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
-                                    @Override
-                                    public void onDismiss() {
+                            if(response != null){
+                                if(response.data != null){
+                                    WalletActivationResponse wallResponse = response.data;
+                                    if(wallResponse.isPhoneChage){
+                                        //修改了手机号
+                                        walletActivationDialog.showDialog();
+                                        walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                            @Override
+                                            public void onDismiss() {
+                                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
+                                            }
+                                        });
+                                    }else{
                                         ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                                     }
-                                });
-                                walletActivationDialog.showDialog();
-                            } else {
-                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
+                                    setResult(RESULT_OK);
+                                    BaseApplication.getInstance().fetchUserInfo();//刷新状态
+                                    finish();
+                                }
                             }
-                            BaseApplication.getInstance().fetchUserInfo();//刷新状态
                         }
-
                         @Override
                         public void onError(BaseBean errorBean) {
                             ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean.message, errorBean.result);
+                            finish();
                         }
                     });
+
                 } else {
                     buttonCanClick(true);
                 }

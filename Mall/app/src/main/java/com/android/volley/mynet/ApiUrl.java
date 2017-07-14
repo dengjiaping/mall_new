@@ -12,8 +12,8 @@ public interface ApiUrl {
 
     interface WebUrl {
         String zhi_ma_xin_yong = "http://zhima.dafysz.com/Home/SignIn?idenNo=%s&name=%s&idCredit=0&deviceType=0";//芝麻信用
+        String commonProblem = "http://wx.dafycredit.cn/question/";
     }
-
 
     //帮助与反馈全路径url
     String helpfeedback_queryQuestionInfo = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/queryQuestionInfo";
