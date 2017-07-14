@@ -93,7 +93,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int productType;
     private long productId;
     private String productName;
-    private long orderDetailId;
     //产品id
     private String pid;
     PwdDialog pwdDialog;
@@ -540,7 +539,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void pwdSuccess() {
         //交易密码校验成功
         pwdDialog.dissmissDialog();
-        VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, orderDetailId, salePrice);
+        VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, salePrice);
     }
 
     @Override
