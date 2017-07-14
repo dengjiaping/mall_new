@@ -329,7 +329,8 @@ public class CashTypeActivity extends BaseActivity {
             public void stop() {
                 chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
                 if (chooseQuota < 100) {
-                    chooseQuota = Double.parseDouble(availableCylimit);
+                    chooseQuota = Double.parseDouble("100.0");
+                    ToastUtils.showShortToast("取现不少于100元");
                 }
                 scaleScrollView.setCurScale((int) chooseQuota);
                 setData();

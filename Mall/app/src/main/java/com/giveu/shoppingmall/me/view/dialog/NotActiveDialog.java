@@ -61,6 +61,7 @@ public class NotActiveDialog {
                     return;
                 }
                 WalletActivationFirstActivity.startIt(mActivity);
+                mDialog.dismiss();
             }
         });
     }

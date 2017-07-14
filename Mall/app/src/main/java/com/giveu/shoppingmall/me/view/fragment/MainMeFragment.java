@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -64,6 +65,7 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llPayStatus;
     @BindView(R.id.tv_see)
     TextView tvSee;
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.setTitle("个人中心");
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
+        notActiveDialog = new NotActiveDialog(mBaseContext);
        /* baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,7 +170,7 @@ public class MainMeFragment extends BaseFragment {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         RepaymentActivity.startIt(mBaseContext);
                     } else {
-                        WalletActivationFirstActivity.startIt(mBaseContext);
+                        notActiveDialog.showDialog();
                     }
                 }
                 break;
@@ -190,11 +193,10 @@ public class MainMeFragment extends BaseFragment {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         QuotaActivity.startIt(mBaseContext);
                     } else {
-                        WalletActivationFirstActivity.startIt(mBaseContext);
+                        notActiveDialog.showDialog();
                     }
                 }
                 break;
-
             default:
                 break;
 

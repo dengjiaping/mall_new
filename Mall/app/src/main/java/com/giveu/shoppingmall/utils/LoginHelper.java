@@ -77,7 +77,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.bankName = getString(BANK_NAME, "");
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
-        personInfo.hasDefaultCard = getBoolean(ISSETPWD, false);
+        personInfo.isSetPwd = getBoolean(ISSETPWD, false);
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -418,7 +418,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getUserId() {
-        return loginPersonInfo == null ? null : loginPersonInfo.userId;
+        return loginPersonInfo == null ? "0" : loginPersonInfo.userId;
     }
 
     /**

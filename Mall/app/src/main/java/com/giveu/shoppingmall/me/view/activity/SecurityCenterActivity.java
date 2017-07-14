@@ -115,9 +115,8 @@ public class SecurityCenterActivity extends BaseActivity {
      */
     public boolean isWallActivationAndPwd() {
         if (LoginHelper.getInstance().hasQualifications()) {
-            MyBankCardActivity.startIt(mBaseContext, false);
             //判断是否设置了交易密码
-            if (LoginHelper.getInstance().hasSetPwd()) {
+            if (!LoginHelper.getInstance().hasSetPwd()) {//没有设置交易密码
                 TransactionInputActivity.startIt(mBaseContext);
                 return false;
             }

@@ -54,11 +54,12 @@
 
             <EditText
                 android:id="@+id/et_input_amount"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@null"
                 android:inputType="number"
+                android:gravity="center"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/ts_34"
                 tools:text="50" />

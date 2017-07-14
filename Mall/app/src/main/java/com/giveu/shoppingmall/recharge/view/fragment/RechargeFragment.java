@@ -327,6 +327,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
      * 展示流量还是话费，并且区分运营商
      */
     private void showContentData() {
+        if (rechargeAdapter == null) {
+            return;
+        }
 
         switch (tabIndex) {
             case 0:
@@ -383,7 +386,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 }
             }
         }
-        changeItemCanClick(rechargeAdapter.getData());
+        if (rechargeAdapter != null) {
+            changeItemCanClick(rechargeAdapter.getData());
+        }
     }
 
     //设置gridView的Item是否可点击
