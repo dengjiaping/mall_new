@@ -355,6 +355,8 @@ public class MyBankCardActivity extends BaseActivity {
                 bankInfoList = response.data.bankInfoList;
                 if (CommonUtils.isNotNullOrEmpty(bankInfoList)) {
                     llMyCard.setVisibility(View.VISIBLE);
+                    //控制初始化默认银行卡界面
+                    boolean hasDefaultBank = false;
                     for (int i = 0; i < bankInfoList.size(); i++) {
                         BankCardListResponse.BankInfoListBean item = bankInfoList.get(i);
                         if (1 == item.isDefault) {
@@ -362,12 +364,21 @@ public class MyBankCardActivity extends BaseActivity {
                             defalutBankName = item.bankName;
                             defalutBankCardNo = item.bankNo;
                             defalutBankIconUrl = item.bankIconUrl;
-                            tvDefalutBankName.setText(StringUtils.nullToEmptyString(defalutBankName));
-                            tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(defalutBankCardNo)));
-                            ImageUtils.loadImage(item.bankIconUrl, R.color.transparent, ivBank);
+
                             bankInfoList.remove(i);
+                            hasDefaultBank = true;
+                            break;
                         }
                     }
+                    if (hasDefaultBank){
+                        llDefaultBankCard.setVisibility(View.VISIBLE);
+                        tvDefalutBankName.setText(StringUtils.nullToEmptyString(defalutBankName));
+                        tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(defalutBankCardNo)));
+                        ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
+                    }else{
+                        llDefaultBankCard.setVisibility(View.GONE);
+                    }
+                    //设置其他银行卡列表数据
                     bankListAdapter.setData(bankInfoList);
                     bankListAdapter.notifyDataSetChanged();
                 } else {
