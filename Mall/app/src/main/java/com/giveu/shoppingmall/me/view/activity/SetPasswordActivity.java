@@ -75,8 +75,8 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         etConfirmPwd.setMaxLength(16);
         etPwd.checkFormat(8);
         etConfirmPwd.checkFormat(8);
-        etPwd.setPasswordInputStyle();
-        etConfirmPwd.setPasswordInputStyle();
+//        etPwd.setPasswordInputStyle();
+//        etConfirmPwd.setPasswordInputStyle();
         presenter = new SetPasswordPresenter(this);
     }
 
@@ -133,10 +133,8 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
 
     private boolean canClick(boolean showToast) {
         tvComplete.setClickEnabled(false);
-        if (etPwd.getText().toString().length() < 8) {
-            if (showToast) {
-                ToastUtils.showShortToast("请设置8-16位字母数字组合密码");
-            }
+
+        if (!StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString(), showToast)) {
             return false;
         }
         if (!etConfirmPwd.getText().toString().equals(etPwd.getText().toString())) {
