@@ -139,7 +139,13 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
                 break;
             case R.id.tv_next:
                 if (canClick(true)) {
-                    presenter.checkSms(etPhone.getText().toString(), etVertificationCode.getText().toString());
+                    if (isForTrade) {
+                        //找回交易密码, 直接跳到下一个页面，下一个页面接口会一起校验短信验证码
+                        IdentifyActivity.startIt(mBaseContext, "", etPhone.getText().toString(), etVertificationCode.getText().toString(), isForTrade);
+                    } else {
+                        //登录密码
+                        presenter.checkSms(etPhone.getText().toString(), etVertificationCode.getText().toString());
+                    }
                 }
                 break;
             case R.id.tv_unreceived:
@@ -177,20 +183,14 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
 
     @Override
     public void skipToIdentify(String randCode) {
-        //找回密码，钱包资质用户跳转至身份证填写
+        //找回登录密码，钱包资质用户跳转至身份证填写
         IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), etVertificationCode.getText().toString(), isForTrade);
     }
 
     @Override
     public void skipToChangePassword(String randCode) {
         //找回登录密码，非钱包资质用户跳转至密码重置
-        if (isForTrade) {
-            //找回交易密码
-            TransactionPwdActivity.startItWithCode(mBaseContext, etPhone.getText().toString(), etVertificationCode.getText().toString());
-        } else {
-            //找回登录密码
-            SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
-        }
+        SetPasswordActivity.startItWithRandCode(mBaseContext, false, etPhone.getText().toString(), randCode);
     }
 
     @Override
