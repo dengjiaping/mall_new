@@ -17,6 +17,8 @@ public interface ApiUrl {
 
     //帮助与反馈全路径url
     String helpfeedback_queryQuestionInfo = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/queryQuestionInfo";
+    //反馈
+    String helpfeedback_addQuestionMessage = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/addQuestionMessage";
 
     //广告页
     String activity_getImageInfo = BASE_URL + "activity/getImageInfo";

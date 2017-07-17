@@ -16,8 +16,8 @@ public class FeedBackPresenter extends BasePresenter<IFeedBackView> {
         super(view);
     }
 
-    public void getFeedBackRecord(String ident, String name, String status, int pageNum,String userId){
-        ApiImpl.queryQuestionInfo(getView().getAct(), ident, name, status, pageNum, userId, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void getFeedBackRecord(String source, String status, int pageNum,String userId){
+        ApiImpl.queryQuestionInfo(getView().getAct(), source, status, pageNum, userId, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
 

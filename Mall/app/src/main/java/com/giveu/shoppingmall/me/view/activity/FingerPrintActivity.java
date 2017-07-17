@@ -198,7 +198,9 @@ public class FingerPrintActivity extends BaseActivity {
                 failCount++;
                 tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.red_f3323b));
                 tvMessage.setText("指纹密码错误");
-                translateAnim.start();
+                if (translateAnim != null) {
+                    translateAnim.start();
+                }
             }
         });
     }

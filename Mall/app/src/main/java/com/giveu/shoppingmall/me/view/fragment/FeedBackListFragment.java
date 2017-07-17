@@ -105,8 +105,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
 //        if (isSecondFrg) {
 //            state = "1";
 //        }
-        presenter.getFeedBackRecord(LoginHelper.getInstance().getIdent(), LoginHelper.getInstance().getName(),
-                "1", 1, LoginHelper.getInstance().getUserId());
+        presenter.getFeedBackRecord("w","0", 1, LoginHelper.getInstance().getUserId());
         FeedBackListResponse response1 = new FeedBackListResponse();
         FeedBackListResponse response2 = new FeedBackListResponse();
         FeedBackListResponse response3 = new FeedBackListResponse();

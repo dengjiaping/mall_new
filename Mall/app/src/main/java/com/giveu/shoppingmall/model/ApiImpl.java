@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
@@ -43,6 +44,7 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -220,7 +222,7 @@ public class ApiImpl {
     }
 
     //查询绑卡列表
-    public static void getBankCardInfo(Activity context,String idPerson, BaseRequestAgent.ResponseListener<BankCardListResponse> responseListener) {
+    public static void getBankCardInfo(Activity context, String idPerson, BaseRequestAgent.ResponseListener<BankCardListResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_getBankInfo, BankCardListResponse.class, context, responseListener);
     }
@@ -367,9 +369,18 @@ public class ApiImpl {
     }
 
     //异常反馈记录
-    public static void queryQuestionInfo(Activity context, String ident, String name, String status, int pageNum,String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"ident", "name", "status", "pageNum","userId"}, new Object[]{ident, name,status,pageNum, StringUtils.string2Long(userId)});
+    public static void queryQuestionInfo(Activity context, String source, String status, int pageNum, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"token", "source", "status", "pageNum", "userId"}, new Object[]{SharePrefUtil.getAppToken(), source, status, pageNum, StringUtils.string2Long(userId)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.helpfeedback_queryQuestionInfo, BaseBean.class, context, responseListener);
+    }
+
+    //反馈
+    public static void addQuestionMessage(String files, List<String> photoList, String type, String content, String ident, String name,
+                                          String nickname, String phone, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, String> requestParams2 = BaseRequestAgent.getRequestParams(
+                new String[]{"type", "content", "ident", "name", "nickname", "phone", "token", "userId"},
+                new String[]{type, content, ident, name, nickname, phone, SharePrefUtil.getAppToken(), userId});
+        FileUpload.uploadFileForOwnPlatformApi(files, photoList, requestParams2, ApiUrl.helpfeedback_addQuestionMessage, BaseBean.class, responseListener);
     }
 
 }
