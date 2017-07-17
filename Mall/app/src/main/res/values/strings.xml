@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">即有商城</string>
+    <string name="app_name">即有钱包</string>
     <string name="tip_nodata">暂无数据</string>
     <string name="tips_exit">再按一次退出程序</string>
     <!-- 上拉刷新Just use standard Pull Down String when pulling up. These can be set for languages which require it -->

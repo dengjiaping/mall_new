@@ -25,11 +25,21 @@ public abstract class BaseScaleView extends View {
             R.attr.lf_scale_view_height,
     };
 
-    public static final @StyleableRes int LF_SCALE_MIN = 0;
-    public static final @StyleableRes int LF_SCALE_MAX = 1;
-    public static final @StyleableRes int LF_SCALE_MARGIN = 2;
-    public static final @StyleableRes int LF_SCALE_HEIGHT = 3;
-    public static final @StyleableRes int LF_SCALE_CURRENT = 4;
+    public static final
+    @StyleableRes
+    int LF_SCALE_MIN = 0;
+    public static final
+    @StyleableRes
+    int LF_SCALE_MAX = 1;
+    public static final
+    @StyleableRes
+    int LF_SCALE_MARGIN = 2;
+    public static final
+    @StyleableRes
+    int LF_SCALE_HEIGHT = 3;
+    public static final
+    @StyleableRes
+    int LF_SCALE_CURRENT = 4;
 
     protected int mMax; //最大刻度
     protected int mMin; // 最小刻度
@@ -128,7 +138,10 @@ public abstract class BaseScaleView extends View {
     public abstract void scrollToScale(int val);
 
     public void setCurScale(int val) {
-        if (val >= mMin && val <= mMax*mValue) {
+        if (val % mValue != 0) {//如可用额度为364需要转换成360（取现金额以10为单位）
+            val = (val / mValue) * mValue;
+        }
+        if (val >= mMin && val <= mMax * mValue) {
             scrollToScale(val);
             postInvalidate();
         }

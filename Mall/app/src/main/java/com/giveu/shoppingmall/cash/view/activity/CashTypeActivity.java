@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -93,61 +93,21 @@ public class CashTypeActivity extends BaseActivity {
     CheckBox cbDesc;
     @BindView(R.id.iv_bank)
     ImageView ivBank;
+    @BindView(R.id.tv_cost_fee)
+    TextView tvCostFee;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
-    List<ProductResponse> data;
-    String costFee;//费率
     public final int MAXAMOUNT = 3000;//最大取现金额
     public final int MINAMOUNT = 300;//最小取现金额
     private ViewGroup decorView;
     ProductResponse noStageProduct;
-    private int statusBarHeight;
     private int idProduct = 0;
     private boolean isLargeAmount = false;//是否是大额
     String availableCylimit;
     int localIdProduct = 0;//选择的期数产品id
     boolean isChooseProduct = false;//是否选择了分期产品 false没选择
     boolean keyBordIsShow = false;
-    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        int previousKeyboardHeight = -1;
-
-        @Override
-        public void onGlobalLayout() {
-            Rect rect = new Rect();
-            int displayHeight = 0;
-            decorView.getWindowVisibleDisplayFrame(rect);
-            if (rect.top == 0) {
-                displayHeight = rect.bottom - statusBarHeight;
-            } else {
-                displayHeight = rect.bottom - rect.top;
-            }
-            int height = decorView.getHeight();
-            final int keyboardHeight = height - rect.bottom;
-            if (previousKeyboardHeight != keyboardHeight) {
-                boolean hide = (double) displayHeight / height > 0.8;
-                if (hide) {
-                    //键盘消失监听
-                    if (keyBordIsShow) {
-                        //第一次进来
-                        String input = StringUtils.getTextFromView(etInputAmount);
-                        if (StringUtils.isNotNull(input)) {
-                            chooseQuota = Double.parseDouble(input);
-                            if (ensureBtnCanclick(chooseQuota)) {//满足条件
-                                scaleScrollView.setCurScale((int) chooseQuota);
-                                setData();
-
-                            }
-                        }
-                    }else{
-                        keyBordIsShow = true;
-                    }
-
-                }
-
-            }
-            previousKeyboardHeight = keyboardHeight;
-        }
-    };
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
 
     public static void startIt(Activity mActivity) {
@@ -155,21 +115,128 @@ public class CashTypeActivity extends BaseActivity {
         mActivity.startActivity(intent);
     }
 
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_cash_type);
-        baseLayout.setTitle("我要取现");
         scaleScrollView = (HorizontalScaleScrollView) findViewById(R.id.horizontalScale);
-        baseLayout.setTopBarBgDrawble(R.color.title_color);
-        baseLayout.setRightTextColor(R.color.white);
-        baseLayout.setTitleTextColor(R.color.white);
-        baseLayout.setBackImage(R.drawable.back);
-        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+        initTitle();
+        initDefaultBankCardLayout();
+        //按日计息选项
+        noStageProduct = new ProductResponse(0, 0, false);
+        decorView = (ViewGroup) getWindow().getDecorView();
+        availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+        if (StringUtils.isNotNull(availableCylimit)) {
+            int cylimit = (int) Double.parseDouble(availableCylimit);
+
+            tvAvailableCredit.setText(availableCylimit);//接收到的String转成double，填写到textView中
+            chooseQuota = Double.parseDouble(availableCylimit);
+            etInputAmount.setText(String.valueOf((int) chooseQuota));//接收到的String转成int，填写到editText中
+
+            initScaleScrollView(cylimit);
+            initColorByCylimit(cylimit);
+            setKeyBordDismissListener();
+            initAdapter(isLargeAmount);
+            registerEventBus();//注册EventBus
+        }
+    }
+
+    /**
+     * 根据取现额度初始化当前页的字体背景颜色
+     *
+     * @param cylimit
+     */
+    public void initColorByCylimit(int cylimit) {
+        if (cylimit > 3000) {
+            isLargeAmount = true;
+        } else {
+            isLargeAmount = false;
+        }
+        if (isLargeAmount) {
+            //大额显示橙色
+            etInputAmount.setTextColor(getResources().getColor(R.color.color_fe8d50));
+            llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_large);
+            baseLayout.setTopBarBgDrawble(R.color.color_febb41);
+            tvEnsureBottom.setBackgroundResource(R.color.color_fe984a);
+            scaleScrollView.setPointerColor("#FE8E4E");
+        } else {
+            //小额显示蓝色
+            etInputAmount.setTextColor(getResources().getColor(R.color.title_color));
+            llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_small);
+            baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
+            tvEnsureBottom.setBackgroundResource(R.color.color_00bbc0);
+            scaleScrollView.setPointerColor("#00B7BB");
+        }
+    }
+
+    /**
+     * 初始化刻度尺控件
+     */
+    private void initScaleScrollView(final int cylimit) {
+        //刻度尺默认最大额度
+        scaleScrollView.setMax(cylimit);
+        scaleScrollView.requestLayout();
+        //指针滑动指定位置
+        scaleScrollView.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-                CaseRecordActivity.startIt(mBaseContext);
+            public void run() {
+                int maxCylimit = (int) Double.parseDouble(availableCylimit);
+                scaleScrollView.setCurScale(maxCylimit);//刻度尺选择可用额度最大值
             }
         });
+    }
+
+    /**
+     * 键盘消失的监听，输完金额键盘消失后显示分期数据
+     */
+
+    public void setKeyBordDismissListener() {
+        final int statusBarHeight = DensityUtils.getStatusBarHeight();
+        globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            int previousKeyboardHeight = -1;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                int displayHeight = 0;
+                decorView.getWindowVisibleDisplayFrame(rect);
+                if (rect.top == 0) {
+                    displayHeight = rect.bottom - statusBarHeight;
+                } else {
+                    displayHeight = rect.bottom - rect.top;
+                }
+                int height = decorView.getHeight();
+                final int keyboardHeight = height - rect.bottom;
+                if (previousKeyboardHeight != keyboardHeight) {
+                    boolean hide = (double) displayHeight / height > 0.8;
+                    if (hide) {
+                        //键盘消失监听
+                        if (keyBordIsShow) {
+                            //第一次进来
+                            String input = StringUtils.getTextFromView(etInputAmount);
+                            if (StringUtils.isNotNull(input)) {
+                                chooseQuota = Double.parseDouble(input);
+                                if (ensureBtnCanclick(chooseQuota)) {//满足条件
+                                    scaleScrollView.setCurScale((int) chooseQuota);
+                                    setData();
+                                }
+                            }
+                        } else {
+                            keyBordIsShow = true;
+                        }
+
+                    }
+
+                }
+                previousKeyboardHeight = keyboardHeight;
+            }
+        };
+    }
+
+    /**
+     * 显示默认银行卡界面，如果没有显示添加银行卡
+     */
+    private void initDefaultBankCardLayout() {
         LoginHelper instance = LoginHelper.getInstance();
         String bankName = instance.getBankName();
         String bankNo = instance.getDefaultCard();
@@ -190,64 +257,30 @@ public class CashTypeActivity extends BaseActivity {
             rlAddBankCard.setVisibility(View.VISIBLE);
             llChooseBank.setVisibility(View.GONE);
         }
-        //按日计息选项
-        noStageProduct = new ProductResponse(0, 0, false, false);
-        statusBarHeight = DensityUtils.getStatusBarHeight();
-        decorView = (ViewGroup) getWindow().getDecorView();
-       availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-        if (StringUtils.isNotNull(availableCylimit)) {
-            int cylimit = (int) Double.parseDouble(availableCylimit);
-            //刻度尺默认最大额度
-            scaleScrollView.setMax(cylimit);
-            scaleScrollView.requestLayout();
-            //指针滑动指定位置
+    }
 
-            if (cylimit > 3000) {
-                isLargeAmount = true;
-            } else {
-                isLargeAmount = false;
+    /**
+     * 设置标题的背景字体颜色
+     */
+    private void initTitle() {
+        baseLayout.setTitle("我要取现");
+        baseLayout.setTopBarBgDrawble(R.color.title_color);
+        baseLayout.setRightTextColor(R.color.white);
+        baseLayout.setTitleTextColor(R.color.white);
+        baseLayout.setBackImage(R.drawable.back);
+        baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CaseRecordActivity.startIt(mBaseContext);
             }
-            chooseQuota = Double.parseDouble(availableCylimit);
-            tvAvailableCredit.setText(String.valueOf(chooseQuota));//接收到的String转成double，填写到textView中
-            etInputAmount.setText(String.valueOf((int) chooseQuota));//接收到的String转成int，填写到editText中
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    int maxCylimit = (int) Double.parseDouble(availableCylimit);
-                    if (maxCylimit % 10 != 0) {//如可用额度为364需要转换成360（取现金额以10为单位）
-                        maxCylimit = (maxCylimit / 10) * 10;
-                    }
-                    scaleScrollView.setCurScale(maxCylimit);//刻度尺选择可用额度最大值
-                }
-            }, 100);
-        }
-        if (isLargeAmount) {
-            //大额
-            etInputAmount.setTextColor(getResources().getColor(R.color.color_fe8d50));
-            llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_large);
-            baseLayout.setTopBarBgDrawble(R.color.color_febb41);
-            tvEnsureBottom.setBackgroundResource(R.color.color_fe984a);
-            scaleScrollView.setPointerColor("#FE8E4E");
-        } else {
-            //小额
-            etInputAmount.setTextColor(getResources().getColor(R.color.title_color));
-            llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_small);
-            baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
-            tvEnsureBottom.setBackgroundResource(R.color.color_00bbc0);
-            scaleScrollView.setPointerColor("#00B7BB");
-        }
-        initAdapter(isLargeAmount);
-        registerEventBus();//注册EventBus
+        });
     }
 
     private void initAdapter(final boolean isLargeAmount) {
-        data = new ArrayList<>();
-        stagingTypeAdapter = new LvCommonAdapter<ProductResponse>(mBaseContext, R.layout.tv_cash_type_item, data) {
+        stagingTypeAdapter = new LvCommonAdapter<ProductResponse>(mBaseContext, R.layout.tv_cash_type_item, new ArrayList<ProductResponse>()) {
             @Override
             protected void convert(ViewHolder viewHolder, ProductResponse item, int position) {
                 TextView tvStagingType = viewHolder.getView(R.id.tv_staging_type);
-                TextView tv_cost_fee = viewHolder.getView(R.id.tv_cost_fee);
 
                 if (item.paymentNum == 0) {
                     tvStagingType.setText("按日计息");
@@ -262,14 +295,7 @@ public class CashTypeActivity extends BaseActivity {
                 } else {
                     setGvItemNotClick(tvStagingType, isLargeAmount);
                 }
-                if (item.isShow) {
-                    tv_cost_fee.setVisibility(View.VISIBLE);
-                    if (StringUtils.isNotNull(costFee)) {
-                        tv_cost_fee.setText("日综合息费" + costFee + "%");
-                    }
-                } else {
-                    tv_cost_fee.setVisibility(View.GONE);
-                }
+
             }
         };
         gvStagingType.setAdapter(stagingTypeAdapter);
@@ -440,19 +466,24 @@ public class CashTypeActivity extends BaseActivity {
         } else {
             setStageNumberData(chooseQuota);
         }
-        if (StringUtils.isNull(costFee)) {
-            ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
-                @Override
-                public void onSuccess(CostFeeResponse response) {
-                    costFee = String.valueOf(response.data.costFee);
-                }
+        getCostFee();
+    }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+    //获取按日计息费率
+    private void getCostFee() {
+        ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
+            @Override
+            public void onSuccess(CostFeeResponse response) {
+                String costFee = String.valueOf(response.data.costFee);//按日计息费率
+                costFee = StringUtils.isNull(costFee) ? "" : "日综合息费" + costFee + "%";
+                tvCostFee.setText(costFee);
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -497,6 +528,12 @@ public class CashTypeActivity extends BaseActivity {
                 }
                 if (!cbDesc.isChecked()) {
                     ToastUtils.showShortToast("请勾选协议！");
+                    return;
+                }
+                double chooseAmount = Double.parseDouble(availableCylimit);
+                if (chooseQuota > chooseAmount) {
+                    //选择的金额大于可用额度
+                    ToastUtils.showLongToast("取现可用额度不足");
                     return;
                 }
                 final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
@@ -564,9 +601,7 @@ public class CashTypeActivity extends BaseActivity {
      * @return
      */
     public void setStageNumberData(final double chooseQuota) {
-        data.clear();
-        stagingTypeAdapter.notifyDataSetChanged();
-
+        List<ProductResponse> data = new ArrayList();
         if (CommonUtils.isNotNullOrEmpty(productList)) {
             for (ProductResponse product : productList) {
                 if (product == null) {
@@ -574,30 +609,26 @@ public class CashTypeActivity extends BaseActivity {
                 }
                 //TODO：当选择1000这个分界线时，有待确认需求
                 if (chooseQuota > product.creditFrom && chooseQuota <= product.creditTo) {
-                    ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false, false);
+                    ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
                     data.add(p);
                 }
-
             }
         }
 
-        stagingTypeAdapter.setData(data);
-        List<ProductResponse> products = stagingTypeAdapter.getData();
         ProductResponse p;
 
-        llShowData.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
             //仅支持取现分期(>3000)
-            if (CommonUtils.isNullOrEmpty(products)) {
+            if (CommonUtils.isNullOrEmpty(data)) {
                 isChooseProduct = false;
                 llShowData.setVisibility(View.GONE);
                 return;
             }
-            p = products.get(stagingTypeAdapter.getCount() - 1);
+            p = data.get(stagingTypeAdapter.getCount() - 1);
             if (p != null) {
                 localIdProduct = p.idProduct;
             }
-            for (ProductResponse product : products) {
+            for (ProductResponse product : data) {
                 if (product.paymentNum == 18) {
                     product.isChecked = true;
                 } else {
@@ -606,39 +637,60 @@ public class CashTypeActivity extends BaseActivity {
             }
             showLoanAmount(localIdProduct, (int) chooseQuota);
             isLargeAmount = true;//标记大额
+            tvCostFee.setVisibility(View.GONE);
         } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
             //支持随借随还及取现分期(300-3000)
-            if (CommonUtils.isNullOrEmpty(products)) {
+            if (CommonUtils.isNullOrEmpty(data)) {
                 //分期产品list为空
-                products.add(noStageProduct);
-                products.get(0).isShow = true;
-                products.get(0).isChecked = true;
+                data.add(noStageProduct);
+                data.get(0).isChecked = true;
                 llShowData.setVisibility(View.GONE);
             } else {
-                llShowData.setVisibility(View.VISIBLE);
-                products.add(noStageProduct);
-                products.get(products.size() - 1).isShow = true;
-                products.get(products.size() - 1).isChecked = false;
-                products.get(products.size() - 2).isChecked = true;
-                p = products.get(stagingTypeAdapter.getCount() - 2);
+                data.add(noStageProduct);
+                //   data.get(data.size() - 1).isShow = true;
+                data.get(data.size() - 1).isChecked = false;
+                data.get(data.size() - 2).isChecked = true;
+                p = data.get(data.size() - 2);
                 localIdProduct = p.idProduct;
                 showLoanAmount(localIdProduct, (int) chooseQuota);
+                tvCostFee.setLayoutParams(setCostFeeLayout(data));
+                tvCostFee.setVisibility(View.VISIBLE);
             }
             showMonthly(localIdProduct);
             isLargeAmount = false;//标记小额
             isChooseProduct = true;//默认会选择按日计息，即使没有分期产品
         } else {
             //仅支持随借随还(<300)
-            products.add(noStageProduct);
-            products.get(0).isShow = true;
-            products.get(0).isChecked = true;
+            data.add(noStageProduct);
+            data.get(0).isChecked = true;
             llShowData.setVisibility(View.GONE);
             isLargeAmount = false;//标记小额
             isChooseProduct = true;//默认选择按日计息
+            tvCostFee.setVisibility(View.VISIBLE);
+            tvCostFee.setLayoutParams(setCostFeeLayout(data));
         }
+        stagingTypeAdapter.setData(data);
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);
 
+    }
+
+    /**
+     * 计算按日计息的费率的显示位置
+     * @return
+     */
+    public LinearLayout.LayoutParams setCostFeeLayout(List<ProductResponse> data){
+        LinearLayout.LayoutParams layoutParams;
+        if (data.size() % 4 == 0) {
+            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, DensityUtils.dip2px(5), DensityUtils.dip2px(10), DensityUtils.dip2px(21));
+            tvCostFee.setGravity(Gravity.RIGHT);
+        } else {
+            int width = (data.size() % 4-1) * (DensityUtils.getWidth() / 4) + 10;
+            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(width, DensityUtils.dip2px(5), 0, DensityUtils.dip2px(21));
+        }
+        return layoutParams;
     }
 
     @Override
@@ -688,4 +740,5 @@ public class CashTypeActivity extends BaseActivity {
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
     }
+
 }

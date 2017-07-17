@@ -27,13 +27,11 @@ public class ProductResponse extends BaseBean<List<ProductResponse>> {
     public String prodName;
     public int idProduct;
     public int productType;
-    public boolean isChecked = false;//是否选中
-    public boolean isShow = false;//是否显示费率
+    public boolean isChecked = false;//false 没有选中
 
-    public ProductResponse(int paymentNum, int idProduct, boolean isChecked, boolean isShow) {
+    public ProductResponse(int paymentNum, int idProduct, boolean isChecked) {
         this.paymentNum = paymentNum;
         this.idProduct = idProduct;
         this.isChecked = isChecked;
-        this.isShow = isShow;
     }
 }

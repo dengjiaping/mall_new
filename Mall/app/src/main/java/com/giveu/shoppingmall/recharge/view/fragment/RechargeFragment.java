@@ -420,6 +420,10 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             Uri contactData = data.getData();
             // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
             Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
+            if(cursor.getCount() == 0){
+                ToastUtils.showLongToast("请开启读取通讯录权限后重试");
+                return;
+            }
             cursor.moveToFirst();
             // 获得DATA表中的名字
             username = cursor.getString(cursor
