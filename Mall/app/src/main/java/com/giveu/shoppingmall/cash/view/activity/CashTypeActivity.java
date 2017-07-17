@@ -620,9 +620,17 @@ public class CashTypeActivity extends BaseActivity {
                     return;
                 }
                 //300-1000,1000-3000,选择1000，属于1000-3000
-                if (chooseQuota >= product.creditFrom && chooseQuota < product.creditTo) {
-                    ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
-                    data.add(p);
+                if(chooseQuota == 3000){
+                    //特殊情况，等于3000
+                    if (chooseQuota >= product.creditFrom && chooseQuota <= product.creditTo) {
+                        ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
+                        data.add(p);
+                    }
+                }else{
+                    if (chooseQuota >= product.creditFrom && chooseQuota < product.creditTo) {
+                        ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
+                        data.add(p);
+                    }
                 }
             }
         }
@@ -693,7 +701,7 @@ public class CashTypeActivity extends BaseActivity {
      * @return
      */
     public LinearLayout.LayoutParams getCostFeeLayoutParams(List<ProductResponse> data) {
-        if (CommonUtils.isNullOrEmpty(data)) {
+        if (CommonUtils.isNotNullOrEmpty(data)) {
             LinearLayout.LayoutParams layoutParams;
             if (data.size() % 4 == 0) {
                 layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
