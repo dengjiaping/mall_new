@@ -45,6 +45,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -541,8 +542,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                             }
                         });
                         pwdDialog.showDialog();
-                    } else if (paymentType == 1) {
-                        //微信支付
+                    } else {
+                        //微信支付或支付宝支付
                         presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNoResponse, paymentType, "", "");
                     }
                     orderDialog.dissmissDialog();
@@ -596,11 +597,32 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void confirmOrderSuccess(ConfirmOrderResponse data) {
-        if (data != null) {
+        if (data != null && data.payType == 1) {
             BaseApplication.getInstance().setBeforePayActivity(mBaseContext.getClass().getSimpleName());
             IWXAPI iWxapi = PayUtils.getWxApi();
             PayReq payReq = PayUtils.getRayReq(data.partnerid, data.prepayid, data.packageValue, data.noncestr, data.timestamp, data.sign);
             iWxapi.sendReq(payReq);
+        }else if(data != null && data.payType == 2){
+            PayUtils.AliPay(mBaseContext, data.alipay, new PayUtils.AliPayThread.OnPayListener() {
+                @Override
+                public void onSuccess() {
+                    RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+                }
+
+                @Override
+                public void onFail() {
+                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+                }
+
+                @Override
+                public void onCancel() {
+                    ToastUtils.showShortToast("支付取消");
+                    //支付宝支付取消,显示订单信息
+                    if (orderDialog != null) {
+                        orderDialog.showDialog();
+                    }
+                }
+            });
         }
     }
 

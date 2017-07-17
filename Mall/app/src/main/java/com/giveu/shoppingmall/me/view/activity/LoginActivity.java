@@ -191,6 +191,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     @Override
     public void onLoginSuccess(LoginResponse data) {
+        //重新登录后要先清空之前的登录信息，使用户有两次设置指纹或手势的机会,再重新保存用户信息
+        LoginHelper.getInstance().logout();
         ToastUtils.showLongToast("登录成功");
         LoginHelper.getInstance().saveLoginStatus(data);
         //统计登录次数

@@ -52,7 +52,7 @@ public class CreateGestureActivity extends BaseActivity {
         setContentView(R.layout.activity_create_gesture);
 
         SpannableString titleText = StringUtils.getColorSpannable("", "手势密码设置", R.color.color_4a4a4a, R.color.color_4a4a4a);
-        baseLayout.setTitle("解锁");
+        baseLayout.setTitle("设置");
         baseLayout.hideBack();
         SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
         baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
