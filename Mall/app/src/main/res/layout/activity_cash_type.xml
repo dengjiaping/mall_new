@@ -58,8 +58,8 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@null"
-                android:inputType="number"
                 android:gravity="center"
+                android:inputType="number"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/ts_34"
                 tools:text="50" />
@@ -103,10 +103,22 @@
                     android:layout_marginLeft="9dp"
                     android:layout_marginRight="9dp"
                     android:layout_marginTop="23dp"
-                    android:layout_marginBottom="21dp"
                     android:gravity="center"
                     android:numColumns="4"
                     android:verticalSpacing="6dp" />
+
+                <TextView
+                    android:id="@+id/tv_cost_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="21dp"
+                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                    android:layout_marginTop="5dp"
+                    android:text="日综合息费0.55%"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/ts_11"
+                    android:visibility="visible" />
+
                 <LinearLayout
                     android:id="@+id/ll_show_data"
                     android:layout_width="match_parent"

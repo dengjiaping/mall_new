@@ -360,7 +360,7 @@ public class MyBankCardActivity extends BaseActivity {
                     for (int i = 0; i < bankInfoList.size(); i++) {
                         BankCardListResponse.BankInfoListBean item = bankInfoList.get(i);
                         if (1 == item.isDefault) {
-                            //除默认代扣卡的其他银行卡
+                            //默认代扣卡设置
                             defalutBankName = item.bankName;
                             defalutBankCardNo = item.bankNo;
                             defalutBankIconUrl = item.bankIconUrl;

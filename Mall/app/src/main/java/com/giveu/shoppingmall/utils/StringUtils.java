@@ -15,7 +15,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -298,12 +297,10 @@ public class StringUtils {
     public static String cashFormatDate(String promiseRepayDate) {
         String result = "";
         if (isNotNull(promiseRepayDate)) {
-            Date date = new Date();
             SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             try {
-                df1.format(df2.parse(promiseRepayDate));
-                result = df1.format(date);
+                result = df1.format(df2.parse(promiseRepayDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

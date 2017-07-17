@@ -15,15 +15,4 @@
         android:text="按日计息"
         android:layout_gravity="center"
         android:textColor="@color/title_color" />
-    <TextView
-        android:id="@+id/tv_cost_fee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="6dp"
-        android:text="日综合息费0.55%"
-        android:textColor="@color/title_color"
-        android:textSize="@dimen/ts_11"
-        android:visibility="visible" />
 </LinearLayout>
