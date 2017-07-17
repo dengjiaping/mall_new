@@ -45,6 +45,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -142,6 +143,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             @Override
             public void onClick(View v) {
                 //跳转通讯录
+
                 startActivityForResult(new Intent(Intent.ACTION_PICK,
                         ContactsContract.Contacts.CONTENT_URI), 0);
             }
@@ -419,6 +421,10 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             Uri contactData = data.getData();
             // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
             Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
+            if(cursor.getCount() == 0){
+                ToastUtils.showShortToast("通讯录没有联系人");
+                return;
+            }
             cursor.moveToFirst();
             // 获得DATA表中的名字
             username = cursor.getString(cursor
