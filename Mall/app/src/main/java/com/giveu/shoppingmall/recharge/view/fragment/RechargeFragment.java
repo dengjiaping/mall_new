@@ -440,8 +440,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 //填入号码
                 String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 StringBuilder sb = phoneNumberFormat(usernumber);
-                etRecharge.setText(sb);
-                etRecharge.setSelection(sb.length());
+                if(usernumber.length() > 11){
+                    ToastUtils.showShortToast("手机号码格式有误");
+                }else{
+                    etRecharge.setText(sb);
+                    etRecharge.setSelection(sb.length());
+                }
             }
             if (phone != null) {
                 phone.close();

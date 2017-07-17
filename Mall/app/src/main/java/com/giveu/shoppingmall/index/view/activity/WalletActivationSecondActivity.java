@@ -29,6 +29,7 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
+import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
@@ -72,6 +73,9 @@ public class WalletActivationSecondActivity extends BaseActivity {
     private String longitude;
     LocationUtils locationUtils;//定位方法
     NormalHintDialog walletActivationDialog;
+    private PermissionDialog permissionDialog;
+    private int hasLocationTimes = 0;
+
     public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
         intent.putExtra("name", name);
@@ -103,6 +107,16 @@ public class WalletActivationSecondActivity extends BaseActivity {
         locationUtils = new LocationUtils(mBaseContext);
         locationUtils.startLocation();
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
+        initPermissionDialog();
+    }
+
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("请在系统设置中开启地位服务");
+        permissionDialog.setNeedFinish(false);
+        permissionDialog.setConfirmStr("去设置");
+        permissionDialog.setCancleStr("暂不");
+        permissionDialog.setTitle("定位服务未开启");
     }
 
     @Override
@@ -132,7 +146,23 @@ public class WalletActivationSecondActivity extends BaseActivity {
 
             @Override
             public void onFail(Object o) {
-                ToastUtils.showShortToast("定位失败！");
+                hasLocationTimes++;
+                if (hasLocationTimes == 2) {
+                    int errorCode = ((AMapLocation) o).getErrorCode();
+                    switch (errorCode) {
+                        case 10:
+                        case 12:
+                        case 13:
+                            permissionDialog.show();
+                            break;
+                        default:
+                            break;
+                    }
+                    locationUtils.stopLocation();
+                } else {
+                    ToastUtils.showLongToast("正在定位");
+                    locationUtils.startLocation();
+                }
             }
         });
     }
@@ -233,10 +263,10 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(final WalletActivationResponse response) {
-                            if(response != null){
-                                if(response.data != null){
+                            if (response != null) {
+                                if (response.data != null) {
                                     WalletActivationResponse wallResponse = response.data;
-                                    if(wallResponse.isPhoneChage){
+                                    if (wallResponse.isPhoneChage) {
                                         //修改了手机号
                                         walletActivationDialog.showDialog();
                                         walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
@@ -245,7 +275,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                                 ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                                             }
                                         });
-                                    }else{
+                                    } else {
                                         ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                                     }
                                     setResult(RESULT_OK);
@@ -254,6 +284,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                 }
                             }
                         }
+
                         @Override
                         public void onError(BaseBean errorBean) {
                             ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean.message, errorBean.result);

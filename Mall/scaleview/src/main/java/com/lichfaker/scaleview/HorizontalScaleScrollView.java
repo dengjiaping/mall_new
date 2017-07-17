@@ -2,7 +2,6 @@ package com.lichfaker.scaleview;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -18,7 +17,7 @@ import android.view.ViewGroup;
 public class HorizontalScaleScrollView extends BaseScaleView {
     public final int LARGESCALE = 100;//每10格的一个大刻度
     Context context;
-    public String color;
+    public int colorId = 0;
 
     public HorizontalScaleScrollView(Context context) {
         super(context);
@@ -96,10 +95,10 @@ public class HorizontalScaleScrollView extends BaseScaleView {
     /**
      * 设置指针颜色
      *
-     * @param pointerColor
+     * @param pointerColorId
      */
-    public void setPointerColor(String pointerColor) {
-        color = pointerColor;
+    public void setPointerColor(int pointerColorId) {
+        colorId = pointerColorId;
     }
 
     /**
@@ -114,8 +113,8 @@ public class HorizontalScaleScrollView extends BaseScaleView {
 
     @Override
     protected void onDrawPointer(Canvas canvas, Paint paint) {
-        color = "".equals(color) ? "#00B8BC" : color;
-        paint.setColor(Color.parseColor(color));
+        colorId = 0 == colorId ? R.color.color_00b8bc : colorId;
+        paint.setColor(getResources().getColor(colorId));
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         //每一屏幕刻度的个数/2
