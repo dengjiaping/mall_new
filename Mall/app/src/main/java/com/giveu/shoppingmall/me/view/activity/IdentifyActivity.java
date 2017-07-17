@@ -59,7 +59,6 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
         } else {
             baseLayout.setTitle("找回登录密码");
         }
-        randCode = getIntent().getStringExtra("randCode");
         presenter = new IdentifyPresenter(this);
     }
 
@@ -77,6 +76,7 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     public void nextStep() {
         if (canClick(true)) {
             if (isForTrade) {
+                //找回交易密码
                 String ident = StringUtils.getTextFromView(etIdentNo);
                 String userName = StringUtils.getTextFromView(etUsername);
                 if (LoginHelper.getInstance() != null) {
