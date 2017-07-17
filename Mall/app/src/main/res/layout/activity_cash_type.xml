@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_cash_type"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -39,7 +38,6 @@
                     android:id="@+id/tv_available_credit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3000.00"
                     android:textColor="@color/white"
                     android:textSize="@dimen/ts_34" />
             </LinearLayout>
@@ -61,8 +59,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/ts_34"
-                tools:text="50" />
+                android:textSize="@dimen/ts_34" />
 
             <View
                 android:layout_width="match_parent"
@@ -114,10 +111,9 @@
                     android:layout_marginBottom="21dp"
                     android:layout_marginLeft="@dimen/default_layout_screen_gap"
                     android:layout_marginTop="5dp"
-                    android:text="日综合息费0.55%"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/ts_11"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/ll_show_data"
@@ -142,7 +138,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                            android:text="提款金额：2200"
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_18" />
 
@@ -150,7 +145,6 @@
                             android:id="@+id/tv_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="（含咨询费￥200）"
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/ts_11" />
                     </LinearLayout>
@@ -169,7 +163,6 @@
                         android:layout_height="51dp"
                         android:layout_marginLeft="@dimen/default_layout_screen_gap"
                         android:gravity="center_vertical"
-                        android:text="月供：389元"
                         android:textColor="@color/color_4a4a4a"
                         android:textSize="@dimen/ts_18" />
                 </LinearLayout>
@@ -219,8 +212,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                    android:layout_marginRight="@dimen/default_layout_screen_gap"
-                    android:src="@drawable/ic_gongshang" />
+                    android:layout_marginRight="@dimen/default_layout_screen_gap" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -242,7 +234,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="中国银行（尾号8901）"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/ts_12" />
                 </LinearLayout>
@@ -277,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="已阅读并同意《************》"
+                    android:text="已阅读并同意《***************》"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/ts_11" />
             </LinearLayout>

@@ -97,8 +97,8 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvCostFee;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
-    public final int MAXAMOUNT = 3000;//最大取现金额
-    public final int MINAMOUNT = 300;//最小取现金额
+    public final int MAXAMOUNT = 3000;//3000是大额小额取现分界值
+    public final int MINAMOUNT = 300;//低于300仅支持随借随还
     private ViewGroup decorView;
     ProductResponse noStageProduct;
     private int idProduct = 0;
@@ -122,8 +122,6 @@ public class CashTypeActivity extends BaseActivity {
         scaleScrollView = (HorizontalScaleScrollView) findViewById(R.id.horizontalScale);
         initTitle();
         initDefaultBankCardLayout();
-        //按日计息选项
-        noStageProduct = new ProductResponse(0, 0, false);
         decorView = (ViewGroup) getWindow().getDecorView();
         availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
         if (StringUtils.isNotNull(availableCylimit)) {
@@ -147,7 +145,7 @@ public class CashTypeActivity extends BaseActivity {
      * @param cylimit
      */
     public void initColorByCylimit(int cylimit) {
-        if (cylimit > 3000) {
+        if (cylimit > MAXAMOUNT) {
             isLargeAmount = true;
         } else {
             isLargeAmount = false;
@@ -158,14 +156,14 @@ public class CashTypeActivity extends BaseActivity {
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_large);
             baseLayout.setTopBarBgDrawble(R.color.color_febb41);
             tvEnsureBottom.setBackgroundResource(R.color.color_fe984a);
-            scaleScrollView.setPointerColor("#FE8E4E");
+            scaleScrollView.setPointerColor(R.color.color_fe8e4e);
         } else {
             //小额显示蓝色
             etInputAmount.setTextColor(getResources().getColor(R.color.title_color));
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_small);
             baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
             tvEnsureBottom.setBackgroundResource(R.color.color_00bbc0);
-            scaleScrollView.setPointerColor("#00B7BB");
+            scaleScrollView.setPointerColor(R.color.color_00b7bb);
         }
     }
 
@@ -297,6 +295,40 @@ public class CashTypeActivity extends BaseActivity {
                 }
 
             }
+
+            /**
+             * 设置分期数按钮的颜色(点击)
+             *
+             * @param isLargeAmount
+             */
+            private void setGvItemClick(TextView textView, boolean isLargeAmount) {
+                if (isLargeAmount) {
+                    //大额
+                    textView.setTextColor(getResources().getColor(R.color.white));
+                    textView.setBackgroundResource(R.drawable.shape_cash_item_press_large);
+                } else {
+                    //小额
+                    textView.setTextColor(getResources().getColor(R.color.white));
+                    textView.setBackgroundResource(R.drawable.shape_cash_item_press_small);
+                }
+            }
+
+            /**
+             * 设置分期数按钮的颜色(未点击)
+             *
+             * @param isLargeAmount
+             */
+            private void setGvItemNotClick(TextView textView, boolean isLargeAmount) {
+                if (isLargeAmount) {
+                    //大额
+                    textView.setTextColor(getResources().getColor(R.color.color_fe8d50));
+                    textView.setBackgroundResource(R.drawable.shape_cash_item_normal_large);
+                } else {
+                    //小额
+                    textView.setTextColor(getResources().getColor(R.color.title_color));
+                    textView.setBackgroundResource(R.drawable.shape_cash_item_normal_small);
+                }
+            }
         };
         gvStagingType.setAdapter(stagingTypeAdapter);
     }
@@ -313,39 +345,6 @@ public class CashTypeActivity extends BaseActivity {
         return true;
     }
 
-    /**
-     * 设置分期数按钮的颜色(点击)
-     *
-     * @param isLargeAmount
-     */
-    private void setGvItemClick(TextView textView, boolean isLargeAmount) {
-        if (isLargeAmount) {
-            //大额
-            textView.setTextColor(getResources().getColor(R.color.white));
-            textView.setBackgroundResource(R.drawable.shape_cash_item_press_large);
-        } else {
-            //小额
-            textView.setTextColor(getResources().getColor(R.color.white));
-            textView.setBackgroundResource(R.drawable.shape_cash_item_press_small);
-        }
-    }
-
-    /**
-     * 设置分期数按钮的颜色(未点击)
-     *
-     * @param isLargeAmount
-     */
-    private void setGvItemNotClick(TextView textView, boolean isLargeAmount) {
-        if (isLargeAmount) {
-            //大额
-            textView.setTextColor(getResources().getColor(R.color.color_fe8d50));
-            textView.setBackgroundResource(R.drawable.shape_cash_item_normal_large);
-        } else {
-            //小额
-            textView.setTextColor(getResources().getColor(R.color.title_color));
-            textView.setBackgroundResource(R.drawable.shape_cash_item_normal_small);
-        }
-    }
 
     @Override
     public void setListener() {
@@ -432,11 +431,23 @@ public class CashTypeActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 如果显示的数据和本地不一样则刷新
+     */
+    public void refrashUI(){
+        String cylimit = StringUtils.getTextFromView(tvAvailableCredit);
+        if (!cylimit.equals(LoginHelper.getInstance().getAvailableCylimit())) {
+            initView(null);
+            setData();
+        }
+    }
 
     @Override
     public void onStart() {
         super.onStart();
         decorView.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+        //取现完成回来刷新数据
+        refrashUI();
     }
 
     @Override
@@ -488,7 +499,8 @@ public class CashTypeActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
-        availableCylimit = getIntent().getStringExtra("availableCylimit");
+        //取现完成返回刷新数据（VerifyActivity）
+       refrashUI();
     }
 
 
@@ -607,16 +619,25 @@ public class CashTypeActivity extends BaseActivity {
                 if (product == null) {
                     return;
                 }
-                //TODO：当选择1000这个分界线时，有待确认需求
-                if (chooseQuota > product.creditFrom && chooseQuota <= product.creditTo) {
-                    ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
-                    data.add(p);
+                //300-1000,1000-3000,选择1000，属于1000-3000
+                if(chooseQuota == 3000){
+                    //特殊情况，等于3000
+                    if (chooseQuota >= product.creditFrom && chooseQuota <= product.creditTo) {
+                        ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
+                        data.add(p);
+                    }
+                }else{
+                    if (chooseQuota >= product.creditFrom && chooseQuota < product.creditTo) {
+                        ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
+                        data.add(p);
+                    }
                 }
             }
         }
 
         ProductResponse p;
-
+        //按日计息选项
+        ProductResponse noStageProduct = new ProductResponse(0, 0, false);
         if (chooseQuota > MAXAMOUNT) {
             //仅支持取现分期(>3000)
             if (CommonUtils.isNullOrEmpty(data)) {
@@ -653,7 +674,7 @@ public class CashTypeActivity extends BaseActivity {
                 p = data.get(data.size() - 2);
                 localIdProduct = p.idProduct;
                 showLoanAmount(localIdProduct, (int) chooseQuota);
-                tvCostFee.setLayoutParams(setCostFeeLayout(data));
+                tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
                 tvCostFee.setVisibility(View.VISIBLE);
             }
             showMonthly(localIdProduct);
@@ -667,30 +688,33 @@ public class CashTypeActivity extends BaseActivity {
             isLargeAmount = false;//标记小额
             isChooseProduct = true;//默认选择按日计息
             tvCostFee.setVisibility(View.VISIBLE);
-            tvCostFee.setLayoutParams(setCostFeeLayout(data));
+            tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
         }
         stagingTypeAdapter.setData(data);
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);
-
     }
 
     /**
      * 计算按日计息的费率的显示位置
+     *
      * @return
      */
-    public LinearLayout.LayoutParams setCostFeeLayout(List<ProductResponse> data){
-        LinearLayout.LayoutParams layoutParams;
-        if (data.size() % 4 == 0) {
-            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, DensityUtils.dip2px(5), DensityUtils.dip2px(10), DensityUtils.dip2px(21));
-            tvCostFee.setGravity(Gravity.RIGHT);
-        } else {
-            int width = (data.size() % 4-1) * (DensityUtils.getWidth() / 4) + 10;
-            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(width, DensityUtils.dip2px(5), 0, DensityUtils.dip2px(21));
+    public LinearLayout.LayoutParams getCostFeeLayoutParams(List<ProductResponse> data) {
+        if (CommonUtils.isNotNullOrEmpty(data)) {
+            LinearLayout.LayoutParams layoutParams;
+            if (data.size() % 4 == 0) {
+                layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, DensityUtils.dip2px(5), DensityUtils.dip2px(10), DensityUtils.dip2px(21));
+                tvCostFee.setGravity(Gravity.RIGHT);
+            } else {
+                int width = (data.size() % 4 - 1) * (DensityUtils.getWidth() / 4) + 10;
+                layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(width, DensityUtils.dip2px(5), 0, DensityUtils.dip2px(21));
+            }
+            return layoutParams;
         }
-        return layoutParams;
+        return new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

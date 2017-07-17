@@ -113,7 +113,7 @@ public class ActivationStatusActivity extends BaseActivity {
             case BACK:
                 //返回
                 String flag = getIntent().getStringExtra("flag");
-                if(flag.equals("transaction")){
+                if("transaction".equals(flag)){
                     BaseApplication.getInstance().finishActivity(IdentifyActivity.class);
                     BaseApplication.getInstance().finishActivity(TransactionPwdActivity.class);
                     BaseApplication.getInstance().finishActivity(RequestPasswordActivity.class);
