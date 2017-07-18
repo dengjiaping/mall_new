@@ -57,7 +57,7 @@ public class NotActiveDialog {
         tvRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (CommonUtils.isFastDoubleClick(R.id.tv_right_pwd)) {//防止重复点击
+                if (CommonUtils.isFastDoubleClick(R.id.tv_right)) {//防止重复点击
                     return;
                 }
                 WalletActivationFirstActivity.startIt(mActivity);
