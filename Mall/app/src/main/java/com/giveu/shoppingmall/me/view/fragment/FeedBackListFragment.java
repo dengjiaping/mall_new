@@ -33,7 +33,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-
 /**
  * Created by 508632 on 2016/12/29.
  */
@@ -41,6 +40,7 @@ import butterknife.ButterKnife;
 public class FeedBackListFragment extends BaseFragment implements IFeedBackView {
     private int status = 0;//0为未处理，1为已处理
     int pageNum = 1;//分页页码
+    private final int pageSize = 10;
     View fragmentView;
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
@@ -152,7 +152,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
 
     @Override
     public void initDataDelay() {
-        presenter.getFeedBackRecord("w", status+"", pageNum, LoginHelper.getInstance().getUserId());
+        presenter.getFeedBackRecord("w", status + "", pageNum, LoginHelper.getInstance().getUserId());
     }
 
 
@@ -167,7 +167,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
         if (CommonUtils.isNotNullOrEmpty(response)) {
             if (pageNum == 1) {
                 feedbackListAdapter.getData().clear();
-                if (response.size() >= 10) {
+                if (response.size() >= pageSize) {
                     ptrlv.setPullLoadEnable(true);
                 } else {
                     ptrlv.setPullLoadEnable(false);
