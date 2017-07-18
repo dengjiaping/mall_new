@@ -322,7 +322,10 @@ public void xxxxxx(**);
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
--keep class com.loc.ad.**{*;}
+
+-keep class com.loc.**{*;}
+-dontwarn com.loc.**
+
 #---------------------------------反射相关的类和方法-----------------------
 
 
@@ -348,7 +351,7 @@ public void xxxxxx(**);
 -dontwarn com.android.volley.**
 -dontwarn com.giveu.shoppingmall.**
 -dontwarn okhttp3.internal.huc.**
--dontwarn com.loc.ad.**
+
 
 
 
