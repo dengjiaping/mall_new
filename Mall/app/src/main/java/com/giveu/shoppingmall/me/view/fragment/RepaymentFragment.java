@@ -277,11 +277,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         //这里存储payId，在微信支付成功后调用确认是否还款成功的接口时使用
         this.payId = payId;
         //还款金额
-        if (TypeUtlis.CERDIT_PRODUCT.equalsIgnoreCase(productType)) {
-            repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(othersTotalAmount + ""));
-        } else if (TypeUtlis.CASH.equalsIgnoreCase(productType)) {
-            repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(cycleTotalAmount + ""));
-        }
+        repaymentDetailDialog.setProductAndMoney(TypeUtlis.getProductType(productType), StringUtils.format2(payMoney + ""));
         //实际支付
         repaymentDetailDialog.setPayStr(StringUtils.format2(payMoney + ""));
         repaymentDetailDialog.setOnConfirmListener(new RepaymentDetailDialog.OnConfirmListener() {

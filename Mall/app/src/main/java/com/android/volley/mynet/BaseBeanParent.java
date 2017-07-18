@@ -44,6 +44,7 @@ public class BaseBeanParent implements Serializable {
 		info.code = this.code;
 		info.result = this.result;
 		info.message = this.message;
+		info.originResultString = this.originResultString;
 		return info;
 	}
 

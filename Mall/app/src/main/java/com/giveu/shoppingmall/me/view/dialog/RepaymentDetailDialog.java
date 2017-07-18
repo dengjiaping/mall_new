@@ -53,7 +53,7 @@ public class RepaymentDetailDialog extends CustomDialog {
     }
 
     public void setProductAndMoney(String product, String money) {
-        tvProduct.setText("还款产品：" + product + "\n" + "还款金额：" + money);
+        tvProduct.setText("还款产品：" + product + "\n" + "还款金额：¥" + money);
     }
 
     @Override

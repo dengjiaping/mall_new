@@ -89,12 +89,12 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         if (isForSetting) {
             tvChangeAccount.setVisibility(View.GONE);
         }
-        baseLayout.hideBack();
         presenter = new LoginPresenter(this);
         if(isForSetting){
             baseLayout.setTitle("验证登录密码");
         }else {
-            baseLayout.setTitle("登录");
+            baseLayout.hideBack();
+            baseLayout.setTitle("解锁");
         }
         tv_userId.setText(LoginHelper.getInstance().getPhone());
         if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {

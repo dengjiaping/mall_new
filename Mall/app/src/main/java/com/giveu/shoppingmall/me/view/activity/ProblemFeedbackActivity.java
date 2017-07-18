@@ -15,6 +15,8 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.ProblemFeedBackPresenter;
 import com.giveu.shoppingmall.me.view.agent.IProblemFeedBackView;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.FileUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -46,6 +48,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     @BindView(R.id.tv_commit)
     ClickEnabledTextView tvCommit;
     private ProblemFeedBackPresenter presenter;
+    private ArrayList<String> uploadList;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, ProblemFeedbackActivity.class);
@@ -66,6 +69,9 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             }
         });
         presenter = new ProblemFeedBackPresenter(this);
+        uploadList = new ArrayList<>();
+        //创建图片缓存目录
+        FileUtils.getDirFile(FileUtils.TEMP_IMAGE);
     }
 
     @Override
@@ -97,23 +103,54 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             @Override
             public void onClick(View v) {
                 if (tvCommit.isClickEnabled()) {
-                    ArrayList<String> imagePathList = new ArrayList<>();
-                    List<ImageItem> imageItems = imageSelect.getSelectImages();
+                    final List<ImageItem> imageItems = imageSelect.getSelectImages();
                     if (CommonUtils.isNotNullOrEmpty(imageItems)) {
-                        for (ImageItem imageItem : imageItems) {
-                            imagePathList.add(imageItem.imagePath);
-                        }
-                        //上传反馈
-                        presenter.addQuestionMessage("files", imagePathList, "2", etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
-                                LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
-                                LoginHelper.getInstance().getUserId());
+                        uploadList.clear();
+                        uploadPhoto(imageItems);
                     }
                 } else {
                     commitButtonCanClick(true);
                 }
             }
         });
+        imageSelect.setOnCheckListener(new ImagesSelectView.OnCheckListener() {
+            @Override
+            public boolean onCheck() {
+                //删除图片后判断是否可点击提交
+                commitButtonCanClick(false);
+                return false;
+            }
+        });
     }
+
+    private void uploadPhoto(final List<ImageItem> imageItems) {
+        //开启子线程压缩图片，压缩完成后上传图片
+        showLoading();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String photoPath;
+                for (ImageItem imageItem : imageItems) {
+                    photoPath = FileUtils.TEMP_IMAGE + "/giveU_" + System.currentTimeMillis() + ".jpg";
+                    //压缩图片并保存至缓存目录，上传成功或失败都会删除，在presenter进行删除
+                    FileUtils.saveBitmapWithPath(ImageUtils.decodeScaleImage(imageItem.imagePath), photoPath);
+                    uploadList.add(photoPath);
+                }
+                if (presenter != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //上传反馈
+                            presenter.addQuestionMessage("files", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
+                                    LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
+                                    LoginHelper.getInstance().getUserId());
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
 
     @Override
     public void setData() {

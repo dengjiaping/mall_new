@@ -6,6 +6,7 @@
     android:id="@+id/iv_img"
     android:layout_width="51dp"
     android:layout_height="51dp"
+    android:scaleType="centerCrop"
     android:layout_marginRight="10dp"
-    android:src="@drawable/ic_question"/>
+    />
 </LinearLayout>
