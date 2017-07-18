@@ -13,9 +13,13 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.me.presenter.FeedBackPresenter;
+import com.giveu.shoppingmall.me.view.agent.IFeedBackView;
 import com.giveu.shoppingmall.model.bean.response.FeedBackListResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -30,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by 508632 on 2016/12/29.
  */
 
-public class FeedBackListFragment extends BaseFragment {
+public class FeedBackListFragment extends BaseFragment implements IFeedBackView {
     public static final String isSecondFragmentKey = "isSecondFragmentKey";
     boolean isSecondFrg = false;//是不是已处理
     int pageNum = 1;//分页页码
@@ -41,6 +45,7 @@ public class FeedBackListFragment extends BaseFragment {
     LvCommonAdapter<String> gridViewAdapter = null;
     @BindView(R.id.ll_feedbacklist)
     LinearLayout llFeedbacklist;
+    private FeedBackPresenter presenter;
 
 
     @Override
@@ -56,8 +61,13 @@ public class FeedBackListFragment extends BaseFragment {
 
         ptrlv.setPullRefreshEnable(false);
         ptrlv.setPullLoadEnable(false);
-
+        presenter = new FeedBackPresenter(this);
         return fragmentView;
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
@@ -95,11 +105,12 @@ public class FeedBackListFragment extends BaseFragment {
 //        if (isSecondFrg) {
 //            state = "1";
 //        }
+        presenter.getFeedBackRecord("w","0", 1, LoginHelper.getInstance().getUserId());
         FeedBackListResponse response1 = new FeedBackListResponse();
         FeedBackListResponse response2 = new FeedBackListResponse();
         FeedBackListResponse response3 = new FeedBackListResponse();
-        FeedBackListResponse response4= new FeedBackListResponse();
-        FeedBackListResponse response5= new FeedBackListResponse();
+        FeedBackListResponse response4 = new FeedBackListResponse();
+        FeedBackListResponse response5 = new FeedBackListResponse();
         List<FeedBackListResponse> data = new ArrayList();
         data.add(response1);
         data.add(response2);
@@ -110,7 +121,7 @@ public class FeedBackListFragment extends BaseFragment {
         imgList.add("");
         imgList.add("");
         imgList.add("");
-        gridViewAdapter = new LvCommonAdapter<String>(mBaseContext, R.layout.img_feedback_item,imgList) {
+        gridViewAdapter = new LvCommonAdapter<String>(mBaseContext, R.layout.img_feedback_item, imgList) {
             @Override
             protected void convert(ViewHolder viewHolder, String item, int position) {
                 //ImageUtils.loadImage(item.bigImage,R.drawable.defalut_img_88_88,iv_img);

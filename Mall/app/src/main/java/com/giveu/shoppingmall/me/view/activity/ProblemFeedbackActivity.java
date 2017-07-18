@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.me.presenter.ProblemFeedBackPresenter;
+import com.giveu.shoppingmall.me.view.agent.IProblemFeedBackView;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -20,7 +24,6 @@ import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.imageselect.ImageItem;
 import com.giveu.shoppingmall.widget.imageselect.ImagesSelectView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,7 @@ import butterknife.BindView;
  * Created by 101900 on 2017/6/23.
  */
 
-public class ProblemFeedbackActivity extends BasePermissionActivity {
+public class ProblemFeedbackActivity extends BasePermissionActivity implements IProblemFeedBackView {
 
 
     @BindView(R.id.et_input)
@@ -42,6 +45,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
     TextView tvPhone;
     @BindView(R.id.tv_commit)
     ClickEnabledTextView tvCommit;
+    private ProblemFeedBackPresenter presenter;
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, ProblemFeedbackActivity.class);
@@ -61,6 +65,12 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
                 FeedbackListActivity.startIt(mBaseContext);
             }
         });
+        presenter = new ProblemFeedBackPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     private void setTextCustomerPhone() {
@@ -86,10 +96,19 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
         tvCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tvCommit.isClickEnabled()){
-                    NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "提交成功！\n我们将在3个工作日内处理您的反馈！");
-                    dialog.showDialog();
-                }else {
+                if (tvCommit.isClickEnabled()) {
+                    ArrayList<String> imagePathList = new ArrayList<>();
+                    List<ImageItem> imageItems = imageSelect.getSelectImages();
+                    if (CommonUtils.isNotNullOrEmpty(imageItems)) {
+                        for (ImageItem imageItem : imageItems) {
+                            imagePathList.add(imageItem.imagePath);
+                        }
+                        //上传反馈
+                        presenter.addQuestionMessage("files", imagePathList, "2", etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
+                                LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
+                                LoginHelper.getInstance().getUserId());
+                    }
+                } else {
                     commitButtonCanClick(true);
                 }
             }
@@ -121,15 +140,8 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
             return;
         }
         tvCommit.setClickEnabled(true);
-        File file = null;
-        List<String> imagePathList = new ArrayList<>();
-        if (CommonUtils.isNotNullOrEmpty(imageItems)) {
-            for (ImageItem imageItem : imageItems) {
-                imagePathList.add(imageItem.imagePath);
-            }
 //			file = new File(imageItems.get(0).imagePath);
 //			upload(imageItems.get(0).imagePath);
-        }
     }
 
 
@@ -147,7 +159,18 @@ public class ProblemFeedbackActivity extends BasePermissionActivity {
         if (imageSelect != null) {
             imageSelect.doResult(requestCode, resultCode, data);
         }
-            commitButtonCanClick(false);
+        commitButtonCanClick(false);
     }
 
+    @Override
+    public void uploadSuccess() {
+        NormalHintDialog dialog = new NormalHintDialog(mBaseContext, "提交成功！\n我们将在3个工作日内处理您的反馈！");
+        dialog.showDialog();
+        dialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+            @Override
+            public void onDismiss() {
+                finish();
+            }
+        });
+    }
 }

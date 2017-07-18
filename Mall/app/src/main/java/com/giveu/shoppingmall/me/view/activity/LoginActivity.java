@@ -86,6 +86,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         etAccount.checkFormat(11);
         etPwd.setMaxLength(16);
         etPwd.checkFormat(8);
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getRemeberAccount())) {
+            etAccount.setText(LoginHelper.getInstance().getRemeberAccount());
+            etAccount.setSelection(LoginHelper.getInstance().getRemeberAccount().length());
+        }
 //        etPwd.setPasswordInputStyle();
         keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
         presenter = new LoginPresenter(this);
@@ -160,7 +164,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     private boolean canClick(boolean showToast) {
         tvLogin.setClickEnabled(false);
         if (etAccount.getText().toString().length() != 11) {
-            if(showToast){
+            if (showToast) {
                 ToastUtils.showShortToast("请输入11位的手机号");
             }
             return false;
@@ -191,6 +195,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     @Override
     public void onLoginSuccess(LoginResponse data) {
+        //重新登录后要先清空之前的登录信息，使用户有两次设置指纹或手势的机会,再重新保存用户信息
+        LoginHelper.getInstance().logout();
         ToastUtils.showLongToast("登录成功");
         LoginHelper.getInstance().saveLoginStatus(data);
         //统计登录次数

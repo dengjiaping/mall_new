@@ -44,6 +44,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String BANK_ICON_URL = "bankIconUrl";
     public static final String DEFAULT_CARD = "defaultCard";
     public static final String ISSETPWD = "isSetPwd";
+    public static final String REMEBER_ACCOUNT = "rememberAccount";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -78,6 +79,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
         personInfo.isSetPwd = getBoolean(ISSETPWD, false);
+
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -117,6 +119,7 @@ public class LoginHelper extends AbsSharePref {
         putString(BANK_ICON_URL, personInfo.bankIconUrl);
         putString(DEFAULT_CARD, personInfo.defaultCard);
         putBoolean(ISSETPWD, personInfo.isSetPwd);
+        putString(REMEBER_ACCOUNT, personInfo.phone);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -132,6 +135,10 @@ public class LoginHelper extends AbsSharePref {
     //退出登录，清空信息
     public void logout() {
         clear();
+        //保存登录账号
+        if (loginPersonInfo != null) {
+            putString(REMEBER_ACCOUNT, loginPersonInfo.phone);
+        }
         //退出登录后清空有权限的token
         SharePrefUtil.setAppToken("");
         //清空手势与登录密码
@@ -158,7 +165,7 @@ public class LoginHelper extends AbsSharePref {
     /**
      * 最大充值额度
      *
-     * @return  
+     * @return
      */
     public String getAvailableRechargeLimit() {
         return loginPersonInfo == null ? "0.00" : loginPersonInfo.availableRechargeLimit;
@@ -199,7 +206,15 @@ public class LoginHelper extends AbsSharePref {
      */
     public String getBankName() {
         return loginPersonInfo == null ? null : loginPersonInfo.bankName;
+    }
 
+    /**
+     * 记住登录账号
+     *
+     * @return
+     */
+    public String getRemeberAccount() {
+        return getString(REMEBER_ACCOUNT, "");
     }
 
     /**
@@ -246,13 +261,16 @@ public class LoginHelper extends AbsSharePref {
 
     /**
      * 是否有默认银行卡
+     *
      * @return
      */
     public boolean hasDefaultCard() {
         return loginPersonInfo != null && loginPersonInfo.hasDefaultCard;
     }
+
     /**
      * 是否已经设置交易密码
+     *
      * @return
      */
     public boolean hasSetPwd() {
@@ -357,19 +375,21 @@ public class LoginHelper extends AbsSharePref {
 
     /**
      * 更新可消费额度
+     *
      * @param usehAmount 使用的金额
      */
     public void setAvailablePoslimit(int usehAmount) {
-        if(loginPersonInfo != null){
-            loginPersonInfo.availablePosLimit = String.valueOf(Double.parseDouble(loginPersonInfo.availablePosLimit)- usehAmount);
+        if (loginPersonInfo != null) {
+            loginPersonInfo.availablePosLimit = String.valueOf(Double.parseDouble(loginPersonInfo.availablePosLimit) - usehAmount);
             putString(AVAILABLE_CYLIMIT, loginPersonInfo.availableCyLimit);
         }
     }
+
     /**
      * 设置是否有默认卡
      */
     public void setHasDefaultCard(String isDefalut) {
-        if(loginPersonInfo != null){
+        if (loginPersonInfo != null) {
             loginPersonInfo.defaultCard = isDefalut;
             putString(DEFAULT_CARD, loginPersonInfo.defaultCard);
         }

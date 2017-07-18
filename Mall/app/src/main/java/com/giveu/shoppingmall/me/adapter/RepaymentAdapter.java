@@ -52,17 +52,17 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                                 return;
                             }
                         }
+                        item.isChoose = cbChoose.isChecked();
                         //更新activity还款数目，选中为加，取消勾选为减
                         if (listener != null) {
-                            try {
-                                double money = Double.parseDouble(item.repayAmount);
-                                if (!cbChoose.isChecked()) {
-                                    money = -money;
+                            double money = 0;
+                            //计算选中项的总金额
+                            for (RepaymentBean repaymentBean : mDatas) {
+                                if (repaymentBean.isChoose) {
+                                    money += StringUtils.string2Double(repaymentBean.repayAmount);
                                 }
-                                listener.moneyChange(money,item.productType);
-                            } catch (Exception e) {
-
                             }
+                            listener.moneyChange(money, item.productType);
                         }
                     }
                 });
@@ -81,8 +81,8 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                             double money = 0;
                             //计算选中项的总金额
                             for (RepaymentBean repaymentBean : mDatas) {
-                                if(repaymentBean.isChoose){
-                                    money+=StringUtils.string2Double(repaymentBean.repayAmount);
+                                if (repaymentBean.isChoose) {
+                                    money += StringUtils.string2Double(repaymentBean.repayAmount);
                                 }
                             }
                             listener.moneyChange(money, item.productType);
@@ -105,9 +105,9 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
 
             @Override
             public void convert(ViewHolder holder, RepaymentBean item, int position) {
-                if(StringUtils.isNotNull(item.paymentNum)){
-                    holder.setText(R.id.tv_date, item.numInstalment+"/"+item.paymentNum+"期");
-                }else {
+                if (StringUtils.isNotNull(item.paymentNum)) {
+                    holder.setText(R.id.tv_date, item.numInstalment + "/" + item.paymentNum + "期");
+                } else {
                     holder.setText(R.id.tv_date, item.repayDate);
                 }
                 holder.setText(R.id.tv_money, "¥" + StringUtils.format2(item.repayAmount));

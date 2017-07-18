@@ -7,4 +7,6 @@ package com.giveu.shoppingmall.model.bean.response;
 public class ConfirmOrderResponse extends WxPayParamsResponse<ConfirmOrderResponse>{
     public long orderDetailId;
     public String orderNo;
+    public int payType;
+    public String alipay;
 }

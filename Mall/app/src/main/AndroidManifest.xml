@@ -159,8 +159,8 @@
             android:name=".me.view.activity.RepaymentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
-            android:launchMode="singleTask"
             android:label="还款"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
@@ -206,10 +206,11 @@
             android:exported="false"
             android:screenOrientation="behind" />
         <activity
-            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <activity
             android:name=".wxapi.WXPayEntryActivity"
@@ -271,8 +272,8 @@
 
         <activity
             android:name=".index.view.activity.WalletActivationFirstActivity"
-            android:launchMode="singleTask"
-            android:label="钱包激活首页" />
+            android:label="钱包激活首页"
+            android:launchMode="singleTask" />
         <activity
             android:name=".index.view.activity.WalletActivationSecondActivity"
             android:label="钱包激活二级页" />
@@ -320,8 +321,8 @@
             android:label="修改手机号" />
         <activity
             android:name=".me.view.activity.MyBankCardActivity"
-            android:launchMode="singleTask"
-            android:label="我的银行卡" />
+            android:label="我的银行卡"
+            android:launchMode="singleTask" />
         <activity
             android:name=".recharge.view.activity.RechargeStatusActivity"
             android:label="充值完成状态" />

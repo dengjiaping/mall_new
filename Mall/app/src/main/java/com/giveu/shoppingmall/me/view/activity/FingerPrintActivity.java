@@ -52,7 +52,6 @@ public class FingerPrintActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_finger_print);
-        baseLayout.setTitle("解锁");
         baseLayout.setRightTextColor(R.color.color_00adb2);
         baseLayout.hideBack();
         isForSetting = getIntent().getBooleanExtra("isForSetting", false);
@@ -60,6 +59,9 @@ public class FingerPrintActivity extends BaseActivity {
         if (isForSetting) {
             tvChangeLogin.setVisibility(View.GONE);
             tvFinger.setText("设置指纹密码");
+            baseLayout.setTitle("设置");
+        } else {
+            baseLayout.setTitle("解锁");
         }
         String textStr;
         if (isForSetting) {
@@ -196,7 +198,9 @@ public class FingerPrintActivity extends BaseActivity {
                 failCount++;
                 tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.red_f3323b));
                 tvMessage.setText("指纹密码错误");
-                translateAnim.start();
+                if (translateAnim != null) {
+                    translateAnim.start();
+                }
             }
         });
     }
