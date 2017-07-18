@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LocationUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.LocationListener;
@@ -279,6 +280,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                                         ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
                                     }
                                     setResult(RESULT_OK);
+                                    LoginHelper.getInstance().setIdPerson(idPerson);
                                     BaseApplication.getInstance().fetchUserInfo();//刷新状态
                                     finish();
                                 }

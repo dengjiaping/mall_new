@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -20,6 +21,8 @@ import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.giveu.shoppingmall.R.id.tv_consumable_money;
 
 
 /**
@@ -37,13 +40,14 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
     TextView tvWithdrawalsMoney;
     @BindView(R.id.tv_consumable)
     TextView tvConsumable;
-    @BindView(R.id.tv_consumable_money)
+    @BindView(tv_consumable_money)
     TextView tvConsumableMoney;
     private CustomDialog totalDialog;
     private TextView tvWithdrawals;
     private TextView tvLargeWithdrawals;
     private TextView tvHint;
     private TextView tvKnow;
+    private ImageView ivClose;
     private QuotaPresenter presenter;
     private QuotaDialog quotaDialog;//额度为0的弹窗
 
@@ -84,11 +88,11 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
         if (totalDialog == null) {
             totalDialog = new CustomDialog(mBaseContext, R.layout.dialog_avaialbe_credit
                     , R.style.customerDialog, Gravity.CENTER, false);
-            totalDialog.setCanceledOnTouchOutside(false);
             tvWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_withdrawals);
             tvLargeWithdrawals = (TextView) totalDialog.findViewById(R.id.tv_large_withdrawals);
             tvHint = (TextView) totalDialog.findViewById(R.id.tv_hint);
             tvKnow = (TextView) totalDialog.findViewById(R.id.tv_confirm);
+            ivClose = (ImageView) totalDialog.findViewById(R.id.iv_close);
         }
         switch (flag) {
             case 1:
@@ -130,11 +134,17 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
                 totalDialog.dismiss();
             }
         });
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                totalDialog.dismiss();
+            }
+        });
         totalDialog.show();
     }
 
 
-    @OnClick({R.id.tv_available_credit, R.id.tv_avaiable_withdrawals, R.id.tv_consumable})
+    @OnClick({R.id.tv_available_credit, R.id.tv_avaiable_withdrawals,R.id.tv_withdrawals_money, R.id.tv_consumable,R.id.tv_consumable_money})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -142,12 +152,13 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
             case R.id.tv_available_credit:
                 showTotalDialog(1);
                 break;
-
             case R.id.tv_avaiable_withdrawals:
+            case R.id.tv_withdrawals_money:
                 showTotalDialog(2);
                 break;
 
             case R.id.tv_consumable:
+            case R.id.tv_consumable_money:
                 showTotalDialog(3);
                 break;
         }

@@ -7,14 +7,31 @@
     android:background="@drawable/bg_custom_dialog_viewmode1"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
-        android:text="授信额度详情"
-        android:textColor="@color/black"
-        android:textSize="@dimen/ts_18" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:text="授信额度详情"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_18" />
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:padding="5dp"
+            android:src="@drawable/ic_dismiss" />
+    </RelativeLayout>
+
 
     <ImageView
         android:layout_width="match_parent"

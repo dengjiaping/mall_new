@@ -414,6 +414,17 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 设置idPerson
+     * @param idPerson
+     */
+    public void setIdPerson(String idPerson) {
+        if(loginPersonInfo != null){
+            loginPersonInfo.idPerson = idPerson;
+            putString(ID_PERSON, loginPersonInfo.idPerson);
+        }
+    }
+
+    /**
      * 获取客户Id
      *
      * @return

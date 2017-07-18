@@ -126,17 +126,6 @@ public class MyBankCardActivity extends BaseActivity {
         llDefaultBankCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ApiImpl.deleteBankInfo(mBaseContext, "164053", LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
-//                    @Override
-//                    public void onSuccess(BaseBean response) {
-//                        ToastUtils.showShortToast("删除成功！");
-//                    }
-//
-//                    @Override
-//                    public void onError(BaseBean errorBean) {
-//                        CommonLoadingView.showErrorToast(errorBean);
-//                    }
-//                });
                 if (needResult) {
                     Intent data = new Intent(mBaseContext, CashTypeActivity.class);
                     if (defalutBankCardNo.length() >= 4) {
@@ -150,29 +139,24 @@ public class MyBankCardActivity extends BaseActivity {
                 }
             }
         });
-        //needResult=true 取现页短按选择其他卡回上一页面显示出来
+        //短按 needResult=true 取现页选择其他卡回上一页面显示出来
         lvBankCard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-
+                if (bankListAdapter == null) {
+                    return;
+                }
+                if (position < 0 || position > bankListAdapter.getCount() + 1) {
+                    return;
+                }
+                if (bankListAdapter.getItem(position) == null) {
+                    return;
+                }
                 if (needResult) {
                     showBankNoStyle(position);
                     finish();
                 } else {
-                    final String id1 = String.valueOf(bankListAdapter.getItem(position).id);
-                    dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //删除银行卡
-                            showDeleteBankCardDialog(bankListAdapter, id1, position);
-                        }
-                    }, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //设置默认代扣卡
-                            showsetDefaultCardDialog(id1);
-                        }
-                    }, null).show();
+                    showManageCardDialog(dialogUtil,position);
                 }
 
             }
@@ -190,24 +174,33 @@ public class MyBankCardActivity extends BaseActivity {
                 if (bankListAdapter.getItem(position) == null) {
                     return true;
                 }
-
-                final String id2 = String.valueOf(bankListAdapter.getItem(position).id);
-                dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //删除银行卡
-                        showDeleteBankCardDialog(bankListAdapter, id2, position);
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //设置默认代扣卡
-                        showsetDefaultCardDialog(id2);
-                    }
-                }, null).show();
+                showManageCardDialog(dialogUtil,position);
                 return true;
             }
         });
+    }
+
+    /**
+     * 显示管理银行卡的Dialog
+     * @param dialogUtil
+     * @param position
+     */
+    public void showManageCardDialog(CustomDialogUtil dialogUtil,final int position){
+
+        final String id = String.valueOf(bankListAdapter.getItem(position).id);
+        dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //删除银行卡
+                showDeleteBankCardDialog(bankListAdapter, id, position);
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //设置默认代扣卡
+                showsetDefaultCardDialog(id);
+            }
+        }, null).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -406,7 +399,7 @@ public class MyBankCardActivity extends BaseActivity {
                 bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
             }
         }
-        return "* * * *   * * * *   * * * *   " + bankNo;
+        return bankNo;
     }
 
 //    @Override
