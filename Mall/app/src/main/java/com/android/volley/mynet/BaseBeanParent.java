@@ -11,7 +11,6 @@ public class BaseBeanParent implements Serializable {
 	public String code = Integer.MIN_VALUE + "";
 	public String result;
 	public String message;
-	public String status;
 	public String originResultString;
 
 	public interface STATUS{
