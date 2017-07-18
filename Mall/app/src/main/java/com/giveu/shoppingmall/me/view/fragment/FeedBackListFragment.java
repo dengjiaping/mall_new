@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.widget.photoview.PreviewPhotoActivity;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -51,7 +52,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
 
 
     @Override
-    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected View initView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
             status = arguments.getInt("status");
@@ -63,7 +64,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
         presenter = new FeedBackPresenter(this);
         feedbackListAdapter = new LvCommonAdapter<FeedBackResponse>(mBaseContext, R.layout.activity_feedback_list_item, new ArrayList<FeedBackResponse>()) {
             @Override
-            protected void convert(ViewHolder holder, FeedBackResponse item, int position) {
+            protected void convert(ViewHolder holder, final FeedBackResponse item, int position) {
                 GridView gv_item = holder.getView(R.id.gv_img);
                 TextView tv_content_yes = holder.getView(R.id.tv_content_yes);
                 TextView tv_time_yes = holder.getView(R.id.tv_time_yes);
@@ -82,8 +83,8 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
                     iv_apply_right.setVisibility(View.GONE);
                     iv_apply_down.setVisibility(View.VISIBLE);
                 }
-                //没有回复内容则隐藏处理结果
-                if (StringUtils.isNull(item.replyContent)) {
+                //已处理的才会有以下内容
+                if (status != 1) {
                     holder.setVisible(R.id.iv_line, false);
                     holder.setVisible(R.id.ll_yes, false);
                 } else {
@@ -91,6 +92,12 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
                     holder.setVisible(R.id.ll_yes, true);
                     tv_content_yes.setText(item.replyContent);
                     tv_time_yes.setText(StringUtils.formatDate(item.replayDate));
+                  /*  if(StringUtils.isNull(item.replyContent)) {
+
+                    }else {
+                        tv_content_yes.setText(item.replyContent);
+                        tv_time_yes.setText(StringUtils.formatDate(item.replayDate));
+                    }*/
                 }
 
                 if (CommonUtils.isNotNullOrEmpty(item.questionImageList)) {
@@ -106,6 +113,16 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
                 } else {
                     gv_item.setVisibility(View.GONE);
                 }
+                gv_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ArrayList<String> photoList = new ArrayList<String>();
+                        for (FeedBackResponse.QuestionImageListBean imageListBean : item.questionImageList) {
+                            photoList.add(imageListBean.smallImage);
+                        }
+                        PreviewPhotoActivity.startIt(mBaseContext,"图片浏览",photoList,position);
+                    }
+                });
             }
         };
         ptrlv.setAdapter(feedbackListAdapter);

@@ -130,7 +130,7 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                 break;
             case CORRECT:
-                lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
                 loginGestureSuccess();
                 break;
         }
