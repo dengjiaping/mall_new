@@ -43,7 +43,7 @@ public class FeedBackResponse extends BaseBean<List<FeedBackResponse>> {
     public String readDate;
     public String nickName;
     public String source;
-    public boolean fold = true;
+    public boolean fold = false;
     public List<QuestionImageListBean> questionImageList;
 
     public static class QuestionImageListBean {

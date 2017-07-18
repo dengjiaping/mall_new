@@ -210,7 +210,7 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".wxapi.WXPayEntryActivity"
@@ -298,11 +298,17 @@
         <activity
             android:name=".me.view.activity.FeedbackListActivity"
             android:label="处理记录页" />
+
+        <activity
+            android:name=".widget.photoview.PreviewPhotoActivity"
+            android:screenOrientation="portrait"
+            android:label="大图浏览" />
         <activity
             android:name=".me.view.activity.CustomerServicePhoneActivity"
             android:label="客服电话页" />
         <activity
             android:name=".me.view.activity.ProblemFeedbackActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:label="问题反馈页" />
         <activity
             android:name=".me.view.activity.ContactUsActivity"

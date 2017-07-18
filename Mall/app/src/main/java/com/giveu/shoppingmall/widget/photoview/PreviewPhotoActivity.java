@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.widget.photoview;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -30,6 +32,14 @@ public class PreviewPhotoActivity extends BaseActivity {
     private int currentPos;
     private String title;
 
+    public static void startIt(Activity activity, String title, ArrayList<String> photoList, int currentPos) {
+        Intent intent = new Intent(activity, PreviewPhotoActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("photoList", photoList);
+        intent.putExtra("currentPos", currentPos);
+        activity.startActivity(intent);
+    }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_preview_photo);
@@ -40,7 +50,7 @@ public class PreviewPhotoActivity extends BaseActivity {
             //数据为空则关闭页面
             finish();
         }
-        baseLayout.setTitle(String.format(title + "(%s/%s)", currentPos+1, photoList.size()));
+        baseLayout.setTitle(String.format(title + "(%s/%s)", currentPos + 1, photoList.size()));
         vp_Photo.setAdapter(new PreviewPhotoAdapter(photoList));
         vp_Photo.setPageMargin(DensityUtils.dip2px(15));
         vp_Photo.setCurrentItem(currentPos);
@@ -52,7 +62,7 @@ public class PreviewPhotoActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                baseLayout.setTitle(String.format(title + "(%s/%s)", position+1, photoList.size()));
+                baseLayout.setTitle(String.format(title + "(%s/%s)", position + 1, photoList.size()));
             }
 
             @Override
