@@ -24,12 +24,12 @@
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:padding="5dp"
-            android:src="@drawable/ic_close_white" />
+            android:src="@drawable/ic_dismiss" />
     </RelativeLayout>
 
 
