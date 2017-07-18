@@ -93,15 +93,12 @@
 #----------------------------------------------------------------------------
 
 #---------------------------------webview------------------------------------
--keepclassmembers class fqcn.of.javascript.interface.for.Webview {
-   public *;
-}
 -keepclassmembers class * extends android.webkit.WebViewClient {
     public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
     public boolean *(android.webkit.WebView, java.lang.String);
 }
 -keepclassmembers class * extends android.webkit.WebViewClient {
-    public void *(android.webkit.WebView, jav.lang.String);
+    public void *(android.webkit.WebView, java.lang.String);
 }
 #----------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
@@ -119,13 +116,13 @@
 -keep class com.alipay.sdk.app.AuthTask{ public *;}
 -keep public class * extends android.os.IInterface
 #微信支付
--keep class com.tencent.mm.sdk.openapi.WXMediaMessage {*;}
--keep class com.tencent.mm.sdk.openapi.** implements com.tencent.mm.sdk.openapi.WXMediaMessage$IMediaObject {*;}
+-keep class com.tencent.mm.opensdk.modelmsg.WXMediaMessage {*;}
+-keep class com.tencent.mm.sdk.openapi.** implements com.tencent.mm.opensdk.modelmsg.WXMediaMessage$IMediaObject {*;}
 -keep class com.tencent.wxop.** { *; }
 -dontwarn com.tencent.mm.**
 -keep class com.tencent.mm.**{*;}
 
--keep class sun.misc.Unsafe { *; }
+#-keep class sun.misc.Unsafe { *; }
 
 -keep class com.taobao.** {*;}
 -keep class com.alibaba.** {*;}
@@ -147,22 +144,15 @@
 -dontwarn org.android.spdy.**
 -dontwarn org.android.agoo.**
 
--keepclasseswithmembernames class com.xiaomi.**{*;}
--keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
-
--dontwarn com.xiaomi.push.service.b
-
 -keep class org.apache.http.**
 -keep interface org.apache.http.**
 -dontwarn org.apache.**
 
 #okhttp3.x
--dontwarn com.squareup.okhttp3.**
+#-dontwarn com.squareup.okhttp3.**
 -keep class com.squareup.okhttp3.** { *;}
--dontwarn okio.**
+#-dontwarn okio.**
 
-## nineoldandroids-2.4.0.jar
--keep public class com.nineoldandroids.** {*;}
 #sharesdk
 -keep class cn.sharesdk.**{*;}
 -keep class com.sina.**{*;}
@@ -174,43 +164,17 @@
 -dontwarn cn.sharesdk.**
 -dontwarn **.R$*
 
-####################zxing#####################
--keep class com.google.zxing.** {*;}
--dontwarn com.google.zxing.**
-##百度定位
--keep class com.baidu.** {*;}
--keep class vi.com.** {*;}
--dontwarn com.baidu.**
 
-## okhttp
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.{*;}
-#retrofit
--dontwarn retrofit.**
--keep class retrofit.** { *; }
--keepattributes Signature
--keepattributes Exceptions
--dontwarn okio.**
 
 #recyclerview-animators
 -keep class jp.wasabeef.** {*;}
 -dontwarn jp.wasabeef.*
 
-#multistateview
--keep class com.kennyc.view.** { *; }
--dontwarn com.kennyc.view.*
 
 # universal-image-loader 混淆
 -dontwarn com.nostra13.universalimageloader.**
 -keep class com.nostra13.universalimageloader.** { *; }
 
-#ormlite
--keep class com.j256.**
--keepclassmembers class com.j256.** { *; }
--keep enum com.j256.**
--keepclassmembers enum com.j256.** { *; }
--keep interface com.j256.**
--keepclassmembers interface com.j256.** { *; }
 #umeng
 # ========= 友盟 =================
 -dontshrink
@@ -242,12 +206,6 @@
 -keep public class com.tencent.** {*;}
 -keep class com.umeng.socialize.sensor.**
 
--keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage {*;}
-
--keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
-
--keep class im.yixin.sdk.api.YXMessage {*;}
--keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
 -keep public class com.giveu.shoppingmall.R$*{
     public static final int *;
 }
@@ -259,9 +217,6 @@
     public static ** valueOf(java.lang.String);
 }
 
-#友盟自动更新
--keep public class com.umeng.fb.ui.ThreadView {
-}
 -keep public class * extends com.umeng.**
 # 以下包不进行过滤
 -keep class com.umeng.** { *; }
@@ -279,11 +234,6 @@
  }
 
 
-#AndFix
--keep class * extends java.lang.annotation.Annotation
--keepclasseswithmembernames class * {
-    native <methods>;
-}
 
 #eventbus 3.0
 -keepattributes *Annotation*
@@ -305,12 +255,18 @@ public void xxxxxx(**);
 }
 
 
-################gson##################
--keep class com.google.gson.** {*;}
--keep class com.google.**{*;}
--keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.stream.** { *; }
+##---------------Begin: proguard configuration for Gson ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+# Gson specific classes
+#-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+# Application classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.examples.android.model.** { *; }
+##---------------End: proguard configuration for Gson ----------
 
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
@@ -345,24 +301,7 @@ public void xxxxxx(**);
 -keep public class android.support.design.R$* { *; }
 #-------------------------------------------------------------------------
 
-# picasso
--keep class com.squareup.picasso.** {*; }
--dontwarn com.squareup.picasso.**
 
-#glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-# #  ######## greenDao混淆  ##########
-# # -------------------------------------------
--keep class de.greenrobot.dao.** {*;}
--keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
-    public static Java.lang.String TABLENAME;
-}
--keep class **$Properties
 # #  ############### volley混淆  ###############
 # # -------------------------------------------
 -keep class com.android.volley.** {*;}
@@ -377,53 +316,13 @@ public void xxxxxx(**);
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
 
-#activeandroid
--keep class com.activeandroid.** { *; }
--dontwarn com.ikoding.app.biz.dataobject.**
--keep public class com.ikoding.app.biz.dataobject.** { *;}
--keepattributes *Annotation*
 
-#log4j
--dontwarn org.apache.log4j.**
--keep class  org.apache.log4j.** { *;}
-#下面几行 是环信即时通信的代码混淆
--keep class com.easemob.** {*;}
--keep class org.jivesoftware.** {*;}
--dontwarn  com.easemob.**
 
-#融云
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
- public *;
-}
-
--keepattributes Exceptions,InnerClasses
-
--keep class io.rong.** {*;}
-
--keep class * implements io.rong.imlib.model.MessageContent{*;}
-
--keepattributes Signature
-
--keepattributes *Annotation*
-
--keep class sun.misc.Unsafe { *; }
-
--keep class com.google.gson.examples.android.model.** { *; }
-
--keepclassmembers class * extends com.sea_monster.dao.AbstractDao {
- public static java.lang.String TABLENAME;
-}
--keep class **$Properties
--dontwarn org.eclipse.jdt.annotation.**
-
--keep class com.ultrapower.** {*;}
 #高徳地图
--dontwarn com.amap.api.**
--dontwarn com.a.a.**
--dontwarn com.autonavi.**
--keep class com.amap.api.**  {*;}
--keep class com.autonavi.**  {*;}
--keep class com.a.a.**  {*;}
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
+-keep class com.loc.ad.**{*;}
 #---------------------------------反射相关的类和方法-----------------------
 
 
@@ -432,44 +331,28 @@ public void xxxxxx(**);
 #---------------------------------与js互相调用的类------------------------
 -keep class com.giveu.shoppingmall.base.web.**  {*;}
 #---------------------------------自定义View的类------------------------
+-keep class com.android.volley.** { *; }
+-keep class com.giveu.shoppingmall.** { *; }
+-keep class com.wei.android.lib.fingerprintidentify.** { *; }
+-keep class com.lichfaker.scaleview.** { *; }
+-keep class cn.sharesdk.onekeyshare.** { *; }
+-keep class com.giveu.share.** { *; }
+-keep class com.soundcloud.android.crop.** { *; }
+# MeiZuFingerprint
+-keep class com.fingerprints.service.** { *; }
+-dontwarn com.fingerprints.service.**
+# SmsungFingerprint
+-keep class com.samsung.android.sdk.** { *; }
+-dontwarn com.samsung.android.sdk.**
+
+-dontwarn com.android.volley.**
+-dontwarn com.giveu.shoppingmall.**
+-dontwarn okhttp3.internal.huc.**
+-dontwarn com.loc.ad.**
 
 
--keep class **.R$* {*;}
--keep class com.isnc.facesdk.aty.**{*;}
--keep class com.isnc.facesdk.**{*;}
--keep class com.isnc.facesdk.common.**{*;}
--keep class com.isnc.facesdk.net.**{*;}
--keep class com.isnc.facesdk.view.**{*;}
--keep class com.isnc.facesdk.viewmodel.**{*;}
--keep class com.matrixcv.androidapi.face.**{*;}
-
-#retrofit2.x
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
-
-#Rxjava RxAndroid
--dontwarn rx.*
--dontwarn sun.misc.**
-
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-   long producerIndex;
-   long consumerIndex;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
 
 
-#fastJson
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.** { *; }
 
 # Okio
 -dontwarn com.squareup.**
