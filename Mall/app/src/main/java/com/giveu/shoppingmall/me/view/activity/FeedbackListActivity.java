@@ -95,9 +95,16 @@ public class FeedbackListActivity extends BaseActivity {
     public void setData() {
         if (fragment1 == null) {
             fragment1 = new FeedBackListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("status",0);
+            fragment1.setArguments(bundle);
         }
+
         if (fragment2 == null) {
             fragment2 = new FeedBackListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("status",1);
+            fragment2.setArguments(bundle);
         }
         List<Fragment> fragments = new ArrayList<Fragment>();
         fragments.add(fragment1);

@@ -41,7 +41,7 @@ public class FileUpload {
      * @param requestUrl       api地址
      * @param responseListener 返回值监听
      */
-    public static void uploadFileForThirdPlatformApi(String fileKey, List<String> filePaths, Map<String, String> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    public static void uploadFileForThirdPlatformApi(String fileKey, List<String> filePaths, Map<String, Object> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
         List<String> keys = new ArrayList<>();
         keys.add(fileKey);
         List<List<String>> filePathList = new ArrayList<>();
@@ -58,7 +58,7 @@ public class FileUpload {
      * @param requestUrl
      * @param responseListener
      */
-    public static void uploadFileForThirdPlatformApi(List<String> keys, List<List<String>> filePaths, Map<String, String> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    public static void uploadFileForThirdPlatformApi(List<String> keys, List<List<String>> filePaths, Map<String, Object> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
 
         if (keys.size() != filePaths.size()) {
             ToastUtils.showShortToast("图片key与图片路径长度不一致，请检查代码");
@@ -67,7 +67,7 @@ public class FileUpload {
         uploadFile(true, keys, filePaths, mParams, requestUrl, clzz, responseListener);
     }
 
-    public static void uploadFileForOwnPlatformApi(List<String> keys, List<List<String>> filePaths, Map<String, String> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    public static void uploadFileForOwnPlatformApi(List<String> keys, List<List<String>> filePaths, Map<String, Object> mParams, final String requestUrl, Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
         if (keys.size() != filePaths.size()) {
             ToastUtils.showShortToast("图片key与图片路径长度不一致，请检查代码");
             return;
@@ -85,7 +85,7 @@ public class FileUpload {
      * @param clzz             返回值用json格式化的模型类
      * @param responseListener 返回值监听  {@link BaseBeanParent}所有字段有效
      */
-    public static void uploadFileForOwnPlatformApi(String fileKey, List<String> filePaths, Map<String, String> mParams, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    public static void uploadFileForOwnPlatformApi(String fileKey, List<String> filePaths, Map<String, Object> mParams, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
         List<String> keys = new ArrayList<>();
         keys.add(fileKey);
         List<List<String>> filePathList = new ArrayList<>();
@@ -95,41 +95,39 @@ public class FileUpload {
         uploadFile(false, keys, filePathList, mParams, requestUrl, clzz, responseListener);
     }
 
-    private static void uploadFile(final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, final Map<String, String> mParams, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    private static void uploadFile(final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, final Map<String, Object> mParams, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
         CrashReportUtil.setTryCatchOnline(new CrashReportUtil.ITryCatch() {
             @Override
             public void onCatch() {
-                uploadFileByOkhttp( isThirdPlatformApi, keys, filePaths, mParams, requestUrl, clzz, responseListener);
+                uploadFileByOkhttp(isThirdPlatformApi, keys, filePaths, mParams, requestUrl, clzz, responseListener);
             }
         });
     }
 
-    private static void uploadFileByOkhttp(final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, Map<String, String> params, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
+    private static void uploadFileByOkhttp(final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, final Map<String, Object> params, final String requestUrl, final Class clzz, final BaseRequestAgent.ResponseListener responseListener) {
         //文本参数，增加公共参数
-        Map<String, Object> objectMap = RequestAgent.string2Object(params);
-        final Map<String, String> mStrParams = RequestAgent.object2String(BaseRequestAgent.addMoreParams(objectMap));
 
         /* form的分割线,自己定义 */
         final String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
         MultipartBody.Builder builder = new MultipartBody.Builder(boundary).setType(MultipartBody.FORM);
 
-        for (Map.Entry<String, String> entry : mStrParams.entrySet()) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
                 /* 上传一个普通的String参数 , key 叫 "p" */
-            builder.addFormDataPart(entry.getKey(), entry.getValue());
+            builder.addFormDataPart(entry.getKey(), entry.getValue().toString());
         }
                 /* 底下是上传了两个文件 */
         for (int i = 0; i < filePaths.size(); i++) {
             List<String> path = filePaths.get(i);
             if (path != null) {
                 for (int j = 0; j < path.size(); j++) {
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), new File(path.get(j)));
+                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpeg"), new File(path.get(j)));
                     builder.addFormDataPart(keys.get(i), "file1Name" + j, fileBody);
                 }
             }
         }
 
         //打印参数
-        logParams(isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl);
+        logParams(isThirdPlatformApi, keys, filePaths, params, requestUrl);
 
         MultipartBody mBody = builder.build();
         /* 下边的就和post一样了 */
@@ -157,10 +155,10 @@ public class FileUpload {
                             if (isThirdPlatformApi) {
                                 dealThirdPlatformApiSuccess(responseListener, responseString);
                             } else {
-                                dealMyPlatformApiSuccess(responseListener, isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, responseString, clzz);
+                                dealMyPlatformApiSuccess(responseListener, isThirdPlatformApi, keys, filePaths, params, requestUrl, responseString, clzz);
                             }
                         } else {
-                            dealFail(responseListener, isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, responseString);
+                            dealFail(responseListener, isThirdPlatformApi, keys, filePaths, params, requestUrl, responseString);
                         }
                     }
                 });
@@ -170,7 +168,7 @@ public class FileUpload {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        dealIOException(responseListener, isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, e);
+                        dealIOException(responseListener, isThirdPlatformApi, keys, filePaths, params, requestUrl, e);
                     }
                 });
 
@@ -178,8 +176,8 @@ public class FileUpload {
         });
     }
 
-    private static void dealFail(BaseRequestAgent.ResponseListener responseListener, boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, String> mStrParams, String requestUrl, String responseString) {
-        CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, responseString);
+    private static void dealFail(BaseRequestAgent.ResponseListener responseListener, boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, Object> mStrParams, String requestUrl, String responseString) {
+        CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys, filePaths, mStrParams, requestUrl, responseString);
 
         if (responseListener != null) {
             BaseBean baseBean = new BaseBean();
@@ -188,24 +186,25 @@ public class FileUpload {
         }
     }
 
-    private static void dealMyPlatformApiSuccess(final BaseRequestAgent.ResponseListener responseListener, final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, final Map<String, String> mStrParams, final String requestUrl, final String responseString, final Class clzz) {
+    private static void dealMyPlatformApiSuccess(final BaseRequestAgent.ResponseListener responseListener, final boolean isThirdPlatformApi, final List<String> keys, final List<List<String>> filePaths, final Map<String, Object> mStrParams, final String requestUrl, final String responseString, final Class clzz) {
         CrashReportUtil.setTryCatchOnline(new CrashReportUtil.ITryCatch() {
             @Override
             public void onCatch() {
                 BaseBeanParent baseBeanParent = (BaseBeanParent) new Gson().fromJson(responseString, BaseBeanParent.class);
+                baseBeanParent.originResultString = responseString;
                 if (baseBeanParent.isStatusSuccess()) {
                     if (responseListener != null) {
                         BaseBean mBean = (BaseBean) new Gson().fromJson(responseString, clzz);
                         responseListener.onSuccess(mBean);
                     }
-                }else {
+                } else {
                     //上报接口错误
-                    CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, responseString);
+                    CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys, filePaths, mStrParams, requestUrl, responseString);
 
-                    if (baseBeanParent.isLogoutByServer() && (!ApiUrl.sales_account_login.equals(requestUrl)) ){
+                    if (baseBeanParent.isLogoutByServer() && (!ApiUrl.sales_account_login.equals(requestUrl))) {
                         //除登录接口外，其他接口响应被服务器强制退出登录的code
 //                        LoginActivity.logoutByServerAndStartIt(baseBeanParent.message);
-                    }else if (responseListener != null) {
+                    } else if (responseListener != null) {
                         responseListener.onError(baseBeanParent.toBaseBean());
                     }
                 }
@@ -221,14 +220,14 @@ public class FileUpload {
         }
     }
 
-    private static void dealIOException(BaseRequestAgent.ResponseListener responseListener, boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, String> mStrParams, String requestUrl, IOException e) {
+    private static void dealIOException(BaseRequestAgent.ResponseListener responseListener, boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, Object> mStrParams, String requestUrl, IOException e) {
         e.printStackTrace();
-        CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys,  filePaths,  mStrParams,  requestUrl, e.getMessage());
+        CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys, filePaths, mStrParams, requestUrl, e.getMessage());
 
         if (responseListener != null) {
             BaseBean baseBean = new BaseBean();
             baseBean.result = BaseBean.STATUS.FAIL;
-            if (e != null && !TextUtils.isEmpty( e.getMessage() ) ){
+            if (e != null && !TextUtils.isEmpty(e.getMessage())) {
                 baseBean.message = e.getMessage();
             }
 
@@ -236,8 +235,8 @@ public class FileUpload {
         }
     }
 
-    private static void logParams(boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, String> mStrParams, String requestUrl) {
-        try{
+    private static void logParams(boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, Object> mStrParams, String requestUrl) {
+        try {
             Gson gson = new Gson();
             Map<String, Object> map = new HashMap<>();
             map.put("是否第三方", isThirdPlatformApi);
@@ -248,7 +247,7 @@ public class FileUpload {
             String json = gson.toJson(map);
 
             LogUtil.w(Const.LOG_TAG_HTTP, json);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

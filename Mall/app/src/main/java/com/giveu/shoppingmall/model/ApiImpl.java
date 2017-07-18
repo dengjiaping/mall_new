@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
+import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
@@ -369,17 +370,17 @@ public class ApiImpl {
     }
 
     //异常反馈记录
-    public static void queryQuestionInfo(Activity context, String source, String status, int pageNum, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void queryQuestionInfo(Activity context, String source, String status, int pageNum, String userId, BaseRequestAgent.ResponseListener<FeedBackResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"token", "source", "status", "pageNum", "userId"}, new Object[]{SharePrefUtil.getAppToken(), source, status, pageNum, StringUtils.string2Long(userId)});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.helpfeedback_queryQuestionInfo, BaseBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.helpfeedback_queryQuestionInfo, FeedBackResponse.class, context, responseListener);
     }
 
     //反馈
-    public static void addQuestionMessage(String files, List<String> photoList, String type, String content, String ident, String name,
+    public static void addQuestionMessage(String files, List<String> photoList, int type, String content, String ident, String name,
                                           String nickname, String phone, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, String> requestParams2 = BaseRequestAgent.getRequestParams(
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(
                 new String[]{"type", "content", "ident", "name", "nickname", "phone", "token", "userId"},
-                new String[]{type, content, ident, name, nickname, phone, SharePrefUtil.getAppToken(), userId});
+                new Object[]{type, content, ident, name, nickname, phone, SharePrefUtil.getAppToken(), userId});
         FileUpload.uploadFileForOwnPlatformApi(files, photoList, requestParams2, ApiUrl.helpfeedback_addQuestionMessage, BaseBean.class, responseListener);
     }
 

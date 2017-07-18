@@ -365,7 +365,7 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 searchTransaction();
-                ptrlv.setPullRefreshEnable(true);
+                ptrlv.setPullRefreshEnable(false);
             }
         });
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -407,8 +407,8 @@ public class TransactionSearchActivity extends BaseActivity implements ITransact
         //显示查询结果
         if (pageIndex == 1) {
             ptrlv.onRefreshComplete();
-            ptrlv.setPullRefreshEnable(true);
         }
+        ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contractList)) {
             if (pageIndex == 1) {
                 transactionList.clear();
