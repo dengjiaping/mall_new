@@ -56,7 +56,14 @@ public class AccountManagementActivity extends BaseActivity {
         setContentView(R.layout.activity_account_management);
         baseLayout.setTitle("账号管理");
         tvPhone.setText(LoginHelper.getInstance().getPhone());
-        //优先级别：真实姓名-用户名-手机号
+        notActiveDialog = new NotActiveDialog(mBaseContext);
+        ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //优先级别：真实姓名-用户名-手机号(方便激活钱包后及时更新信息以便展示，所以在onresume执行)
         if (StringUtils.isNotNull(LoginHelper.getInstance().getName())) {
             tvUserName.setText(LoginHelper.getInstance().getName());
         } else {
@@ -66,8 +73,6 @@ public class AccountManagementActivity extends BaseActivity {
                 tvUserName.setText(LoginHelper.getInstance().getPhone());
             }
         }
-        notActiveDialog = new NotActiveDialog(mBaseContext);
-        ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
 
     @Override
