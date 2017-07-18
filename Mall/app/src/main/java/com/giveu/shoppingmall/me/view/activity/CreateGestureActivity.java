@@ -7,14 +7,14 @@ import android.text.SpannableString;
 import android.view.View;
 import android.widget.TextView;
 
+import com.andrognito.patternlockview.PatternLockView;
+import com.andrognito.patternlockview.listener.PatternLockViewListener;
+import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.widget.lockpattern.LockPatternIndicator;
-import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
-import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +29,13 @@ import butterknife.OnClick;
  */
 public class CreateGestureActivity extends BaseActivity {
 
-    @BindView(R.id.lockPatterIndicator)
-    LockPatternIndicator lockPatternIndicator;
     @BindView(R.id.lockPatternView)
-    LockPatternView lockPatternView;
+    PatternLockView lockPatternView;
     @BindView(R.id.resetBtn)
     TextView resetBtn;
     @BindView(R.id.tv_message)
     TextView messageTv;
-    private List<LockPatternView.Cell> mChosenPattern = null;
+    private List<PatternLockView.Dot> mChosenPattern = null;
     private static final long DELAYTIME = 600L;
     private static final String TAG = "CreateGestureActivity";
     public static final int REQUEST_FINISH = 10000;
@@ -50,8 +48,6 @@ public class CreateGestureActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_create_gesture);
-
-        SpannableString titleText = StringUtils.getColorSpannable("", "手势密码设置", R.color.color_4a4a4a, R.color.color_4a4a4a);
         baseLayout.setTitle("设置");
         baseLayout.hideBack();
         SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
@@ -61,7 +57,7 @@ public class CreateGestureActivity extends BaseActivity {
                 finish();
             }
         });
-        lockPatternView.setOnPatternListener(patternListener);
+        lockPatternView.addPatternLockListener(patternListener);
     }
 
 
@@ -73,20 +69,22 @@ public class CreateGestureActivity extends BaseActivity {
     /**
      * 手势监听
      */
-    private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
+    private PatternLockViewListener patternListener = new PatternLockViewListener() {
 
         @Override
-        public void onPatternStart() {
-            lockPatternView.removePostClearPatternRunnable();
-            //updateStatus(result.DEFAULT, null);
-            lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+        public void onStarted() {
+
         }
 
         @Override
-        public void onPatternComplete(List<LockPatternView.Cell> pattern) {
-            //Log.e(TAG, "--onPatternDetected--");
+        public void onProgress(List<PatternLockView.Dot> progressPattern) {
+
+        }
+
+        @Override
+        public void onComplete(List<PatternLockView.Dot> pattern) {
             if (mChosenPattern == null && pattern.size() >= 4) {
-                mChosenPattern = new ArrayList<LockPatternView.Cell>(pattern);
+                mChosenPattern = new ArrayList<>(pattern);
                 updateStatus(Status.CORRECT, pattern);
             } else if (mChosenPattern == null && pattern.size() < 4) {
                 updateStatus(Status.LESSERROR, pattern);
@@ -98,6 +96,11 @@ public class CreateGestureActivity extends BaseActivity {
                 }
             }
         }
+
+        @Override
+        public void onCleared() {
+
+        }
     };
 
     /**
@@ -106,39 +109,27 @@ public class CreateGestureActivity extends BaseActivity {
      * @param status
      * @param pattern
      */
-    private void updateStatus(Status status, List<LockPatternView.Cell> pattern) {
+    private void updateStatus(Status status, List<PatternLockView.Dot> pattern) {
         messageTv.setTextColor(getResources().getColor(status.colorId));
         messageTv.setText(status.strId);
         switch (status) {
             case DEFAULT:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
                 break;
             case CORRECT:
-                updateLockPatternIndicator();
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
                 break;
             case LESSERROR:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                 break;
             case CONFIRMERROR:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.ERROR);
-                lockPatternView.postClearPatternRunnable(DELAYTIME);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                 break;
             case CONFIRMCORRECT:
                 saveChosenPattern(pattern);
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
                 setLockPatternSuccess();
                 break;
         }
-    }
-
-    /**
-     * 更新 Indicator
-     */
-    private void updateLockPatternIndicator() {
-        if (mChosenPattern == null)
-            return;
-        lockPatternIndicator.setIndicator(mChosenPattern);
     }
 
     /**
@@ -147,29 +138,24 @@ public class CreateGestureActivity extends BaseActivity {
     @OnClick(R.id.resetBtn)
     void resetLockPattern() {
         mChosenPattern = null;
-        lockPatternIndicator.setDefaultIndicator();
         updateStatus(Status.DEFAULT, null);
-        lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+        lockPatternView.clearPattern();
     }
 
     /**
      * 成功设置了手势密码(跳到首页)
      */
     private void setLockPatternSuccess() {
-        //调用接口将图案密码传给服务器
-        //接口存储图案成功
         ToastUtils.showShortToast("手势密码设置成功");
         setResult(RESULT_OK);
-        //如果支持手机指纹，那么跳转至设置指纹界面
         finish();
     }
 
     /**
      * 保存手势密码
      */
-    private void saveChosenPattern(List<LockPatternView.Cell> cells) {
-        byte[] bytes = LockPatternUtil.patternToHash(cells);
-        SharePrefUtil.getInstance().setPatternPwd(new String(bytes));
+    private void saveChosenPattern(List<PatternLockView.Dot> cells) {
+        SharePrefUtil.setPatternPwd(PatternLockUtils.patternToString(lockPatternView, cells));
     }
 
 

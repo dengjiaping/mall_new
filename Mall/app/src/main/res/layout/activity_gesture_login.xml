@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rl_root"
-                android:background="@color/white"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_root"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <TextView
@@ -27,11 +28,18 @@
         android:orientation="vertical"
         android:layout_centerInParent="true">
 
-        <com.giveu.shoppingmall.widget.lockpattern.LockPatternView
+        <com.andrognito.patternlockview.PatternLockView
             android:id="@+id/lockPatternView"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            app:aspectRatio="square"
+            app:aspectRatioEnabled="true"
+            app:correctStateColor="@color/color_00adb2"
+            app:wrongStateColor="@color/red_f3323b"
+            app:normalStateColor="@color/color_00adb2"
+            app:dotCount="3"/>
 
     </LinearLayout>
 
