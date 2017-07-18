@@ -57,7 +57,8 @@ public class MainCashFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-                if ("0".equals(availableCylimit)) {
+                double cylimit = Double.parseDouble(availableCylimit);
+                if (0 == cylimit) {
                     //取现额度为0
                     quotaDialog.showDialog();
                 } else {

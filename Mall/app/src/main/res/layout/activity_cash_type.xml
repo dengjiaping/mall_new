@@ -77,7 +77,6 @@
                     android:layout_alignParentTop="true"
                     android:gravity="bottom"
                     app:begin="0"
-                    app:end="2301"
                     app:indicateColor="@color/color_9b9b9b"
                     app:indicatePadding="10px"
                     app:indicateWidth="1px"

@@ -114,5 +114,5 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_marginTop="@dimen/default_layout_screen_gap"
-        android:background="@color/line_bg" />
+        android:background="@color/color_60dddddd" />
 </LinearLayout>

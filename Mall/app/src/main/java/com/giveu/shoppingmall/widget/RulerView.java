@@ -89,7 +89,7 @@ public class RulerView extends View {
         mTextColor = ta.getColor(R.styleable.RulerView_textColor, Color.GRAY);
         mTextSize = ta.getDimension(R.styleable.RulerView_textSize, 18);
         mBeginRange = ta.getInt(R.styleable.RulerView_begin, 0);
-        mEndRange = ta.getInt(R.styleable.RulerView_end, 100);
+        mEndRange = ta.getInt(R.styleable.RulerView_end, 0);
         mIndicateWidth = (int) ta.getDimension(R.styleable.RulerView_indicateWidth, 5);
         mIndicatePadding = (int) ta.getDimension(R.styleable.RulerView_indicatePadding, 15);
         ta.recycle();
@@ -106,6 +106,9 @@ public class RulerView extends View {
 
     private void initValue() {
 
+//        if(mEndRange == 0){
+//            mEndRange = 300;
+//        }
         mOverScroller = new OverScroller(getContext());
         setOverScrollMode(OVER_SCROLL_ALWAYS);
 
@@ -113,7 +116,6 @@ public class RulerView extends View {
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
-
 
         mIndicatePaint = new Paint();
         mIndicatePaint.setStyle(Paint.Style.FILL);
@@ -132,16 +134,21 @@ public class RulerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         int count = canvas.save();
-        for (int value = mBeginRange, position = 0; value <= mEndRange; value+=10, position++) {
+        for (int value = mBeginRange, position = 0; value <= mEndRange; value++, position++) {
             drawIndicate(canvas, position);
             if (mIsWithText)
-                drawText(canvas, position, String.valueOf(value));
+                drawText(canvas, position, String.valueOf(value*10));
         }
         canvas.restoreToCount(count);
     }
 
     public void setEndRange(int endRange){
-        mEndRange = endRange;
+        if (endRange > 3000) {
+            mEndRange = endRange/10;
+        } else {
+            mEndRange = 300;//小额
+        }
+        initValue();
     }
     //滑动停下的监听事件
     public interface OnMoveStopListener {

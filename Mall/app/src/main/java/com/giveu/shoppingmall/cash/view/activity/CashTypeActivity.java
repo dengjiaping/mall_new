@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -112,12 +111,10 @@ public class CashTypeActivity extends BaseActivity {
     boolean keyBordIsShow = false;
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
-
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
         mActivity.startActivity(intent);
     }
-
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -175,25 +172,17 @@ public class CashTypeActivity extends BaseActivity {
      */
     private void initScaleScrollView(final int cylimit) {
         //刻度尺默认最大额度
-      //  rulerView.setEndRange(cylimit);
+        rulerView.setEndRange(cylimit);
         rulerView.requestLayout();
         rulerView.post(new Runnable() {
             @Override
             public void run() {
-                int maxCylimit = (int) Double.parseDouble(availableCylimit);
-                rulerView.smoothScrollTo(maxCylimit);//刻度尺选择可用额度最大值
+                if (StringUtils.isNotNull(availableCylimit)) {
+                    int maxCylimit = (int) Double.parseDouble(availableCylimit);
+                    rulerView.smoothScrollTo(maxCylimit/10);//刻度尺选择可用额度最大值
+                }
             }
         });
-//        scaleScrollView.setMax(cylimit);
-//        scaleScrollView.requestLayout();
-//        //指针滑动指定位置
-//        scaleScrollView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                int maxCylimit = (int) Double.parseDouble(availableCylimit);
-//                scaleScrollView.setCurScale(maxCylimit);//刻度尺选择可用额度最大值
-//            }
-//        });
     }
 
     /**
@@ -227,17 +216,14 @@ public class CashTypeActivity extends BaseActivity {
                             if (StringUtils.isNotNull(input)) {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
-                                    rulerView.smoothScrollTo((int) chooseQuota );
-                                   // scaleScrollView.setCurScale((int) chooseQuota);
+                                    rulerView.smoothScrollTo((int) chooseQuota/10 );
                                     setData();
                                 }
                             }
                         } else {
                             keyBordIsShow = true;
                         }
-
                     }
-
                 }
                 previousKeyboardHeight = keyboardHeight;
             }
@@ -355,6 +341,13 @@ public class CashTypeActivity extends BaseActivity {
             ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
             return false;
         }
+        if (StringUtils.isNotNull(availableCylimit)) {
+            if (chooseQuota > Double.parseDouble(availableCylimit)) {
+                ToastUtils.showShortToast("取现额度不足");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -370,37 +363,17 @@ public class CashTypeActivity extends BaseActivity {
                     chooseQuota = Double.parseDouble("100.0");
                     ToastUtils.showShortToast("取现不少于100元");
                 }
-                rulerView.smoothScrollTo((int) chooseQuota);
+                rulerView.smoothScrollTo((int) chooseQuota/10);
                 setData();
             }
         });
         rulerView.setOnScaleListener(new RulerView.OnScaleListener() {
             @Override
             public void onScaleChanged(int scale) {
-                etInputAmount.setText(scale + "");
+                etInputAmount.setText(scale*10 + "");
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
             }
         });
-
-//        scaleScrollView.setOnMoveStopListener(new HorizontalScaleScrollView.OnMoveStopListener() {
-//            @Override
-//            public void stop() {
-//                chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
-//                if (chooseQuota < 100) {
-//                    chooseQuota = Double.parseDouble("100.0");
-//                    ToastUtils.showShortToast("取现不少于100元");
-//                }
-//                scaleScrollView.setCurScale((int) chooseQuota);
-//                setData();
-//            }
-//        });
-//        scaleScrollView.setOnScrollListener(new HorizontalScaleScrollView.OnScrollListener() {
-//            @Override
-//            public void onScaleScroll(int scale) {
-//                etInputAmount.setText("" + scale * 10);
-//                etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
-//            }
-//        });
 
         gvStagingType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
