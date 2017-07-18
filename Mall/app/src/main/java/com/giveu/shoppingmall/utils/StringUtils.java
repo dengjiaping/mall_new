@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -289,6 +290,12 @@ public class StringUtils {
         }
         return result;
     }
+
+    public static String formatDate(long orgianlDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return format.format(new Date(orgianlDate));
+    }
+
     /**
      * 将"2016-11-26T00:00:00"变成2016-11-26 00:00
      *
@@ -308,6 +315,7 @@ public class StringUtils {
         }
         return result;
     }
+
     public static String ToSBC(String input) {
         char c[] = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
@@ -331,6 +339,7 @@ public class StringUtils {
         }
         return D;
     }
+
     //解析数据传参类型转换异常捕获（转int）
     public static int string2Int(String intStr) {
         int I = 0;
@@ -341,6 +350,7 @@ public class StringUtils {
         }
         return I;
     }
+
     //解析数据传参类型转换异常捕获（转long）
     public static long string2Long(String longStr) {
         long L = 0;

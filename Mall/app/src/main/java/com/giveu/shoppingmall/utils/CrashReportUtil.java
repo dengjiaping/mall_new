@@ -57,7 +57,7 @@ public class CrashReportUtil {
 	/**
 	 * 上传文件时利用bugly上报访问网络时的自定义错误
 	 */
-	public static void postApiErrorToBugly(final boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, String> mParams, final String requestUrl, String response){
+	public static void postApiErrorToBugly(final boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, Object> mParams, final String requestUrl, String response){
 		try{
 			Gson gson = new Gson();
 			Map<String, Object> map = new HashMap<>();
