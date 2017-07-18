@@ -20,8 +20,7 @@
             android:layout_height="36dp"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/ic_gongshang" />
+            android:layout_marginTop="15dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="工商银行"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_17" />
 
@@ -45,14 +43,47 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_14" />
 
-            <TextView
-                android:id="@+id/tv_bank_card_no"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="* * * *   * * * *   * * * *   4562"
-                android:textColor="@color/white"
-                android:textSize="@dimen/ts_14" />
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="****"
+                    android:textSize="@dimen/ts_15"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="****"
+                    android:textSize="@dimen/ts_15"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="****"
+                    android:textSize="@dimen/ts_15"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_bank_card_no"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="****"
+                    android:textSize="@dimen/ts_15"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
