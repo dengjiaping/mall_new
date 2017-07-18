@@ -9,13 +9,14 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andrognito.patternlockview.PatternLockView;
+import com.andrognito.patternlockview.listener.PatternLockViewListener;
+import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
-import com.giveu.shoppingmall.widget.lockpattern.LockPatternUtil;
-import com.giveu.shoppingmall.widget.lockpattern.LockPatternView;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class GestureLoginActivity extends BaseActivity {
     private static final String TAG = "LoginGestureActivity";
 
     @BindView(R.id.lockPatternView)
-    LockPatternView lockPatternView;
+    PatternLockView lockPatternView;
     @BindView(R.id.tv_message)
     TextView messageTv;
     @BindView(R.id.tv_change_login)
@@ -80,27 +81,36 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     public void setData() {
         //得到当前用户的手势密码
-        gesturePassword = SharePrefUtil.getInstance().getPatternPwd();
-        lockPatternView.setOnPatternListener(patternListener);
+        gesturePassword = SharePrefUtil.getPatternPwd();
+        lockPatternView.addPatternLockListener(patternListener);
         updateStatus(Status.DEFAULT);
     }
 
-    private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
+    private PatternLockViewListener patternListener = new PatternLockViewListener() {
 
         @Override
-        public void onPatternStart() {
-            lockPatternView.removePostClearPatternRunnable();
+        public void onStarted() {
+
         }
 
         @Override
-        public void onPatternComplete(List<LockPatternView.Cell> pattern) {
+        public void onProgress(List<PatternLockView.Dot> progressPattern) {
+        }
+
+        @Override
+        public void onComplete(List<PatternLockView.Dot> pattern) {
             if (pattern != null) {
-                if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
+                if (gesturePassword.equals(PatternLockUtils.patternToString(lockPatternView, pattern))) {
                     updateStatus(Status.CORRECT);
                 } else {
                     updateStatus(Status.ERROR);
                 }
             }
+        }
+
+        @Override
+        public void onCleared() {
+
         }
     };
 
@@ -114,14 +124,13 @@ public class GestureLoginActivity extends BaseActivity {
         messageTv.setTextColor(getResources().getColor(status.colorId));
         switch (status) {
             case DEFAULT:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
                 break;
             case ERROR:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.ERROR);
-                lockPatternView.postClearPatternRunnable(DELAYTIME);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                 break;
             case CORRECT:
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+                lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                 loginGestureSuccess();
                 break;
         }
