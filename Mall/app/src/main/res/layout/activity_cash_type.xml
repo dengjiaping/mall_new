@@ -66,12 +66,31 @@
                 android:layout_height="1px"
                 android:background="@color/line_bg" />
 
-            <com.lichfaker.scaleview.HorizontalScaleScrollView
-                android:id="@+id/horizontalScale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:lf_scale_view_height="8dip"
-                app:lf_scale_view_margin="5dip" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+
+                <com.giveu.shoppingmall.widget.RulerView
+                    android:id="@+id/ruler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_alignParentTop="true"
+                    android:gravity="bottom"
+                    app:begin="0"
+                    app:indicateColor="@color/color_9b9b9b"
+                    app:indicatePadding="10px"
+                    app:indicateWidth="1px"
+                    app:selectedLineColor="@android:color/holo_blue_bright"
+                    app:textColor="@color/color_9b9b9b"
+                    app:textSize="@dimen/ts_13" />
+                <ImageView
+                    android:id="@+id/iv_pointer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_pointer_blue" />
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

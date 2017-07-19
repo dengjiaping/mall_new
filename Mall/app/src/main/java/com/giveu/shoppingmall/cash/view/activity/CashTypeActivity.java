@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -44,8 +43,8 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.RulerView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
-import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,13 +55,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+
 /**
  * 取现类型页
  * Created by 101900 on 2017/6/26.
  */
 
 public class CashTypeActivity extends BaseActivity {
-    HorizontalScaleScrollView scaleScrollView;
+    RulerView rulerView;
     @BindView(R.id.et_input_amount)
     EditText etInputAmount;
     @BindView(R.id.gv_staging_type)
@@ -95,6 +95,8 @@ public class CashTypeActivity extends BaseActivity {
     ImageView ivBank;
     @BindView(R.id.tv_cost_fee)
     TextView tvCostFee;
+    @BindView(R.id.iv_pointer)
+    ImageView ivPointer;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000是大额小额取现分界值
@@ -109,17 +111,15 @@ public class CashTypeActivity extends BaseActivity {
     boolean keyBordIsShow = false;
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
-
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
         mActivity.startActivity(intent);
     }
 
-
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_cash_type);
-        scaleScrollView = (HorizontalScaleScrollView) findViewById(R.id.horizontalScale);
+        rulerView = (RulerView) findViewById(R.id.ruler_view);
         initTitle();
         initDefaultBankCardLayout();
         decorView = (ViewGroup) getWindow().getDecorView();
@@ -156,14 +156,14 @@ public class CashTypeActivity extends BaseActivity {
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_large);
             baseLayout.setTopBarBgDrawble(R.color.color_febb41);
             tvEnsureBottom.setBackgroundResource(R.color.color_fe984a);
-            scaleScrollView.setPointerColor(R.color.color_fe8e4e);
+            ivPointer.setImageResource(R.drawable.ic_pointer_orange);
         } else {
             //小额显示蓝色
             etInputAmount.setTextColor(getResources().getColor(R.color.title_color));
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_small);
             baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
             tvEnsureBottom.setBackgroundResource(R.color.color_00bbc0);
-            scaleScrollView.setPointerColor(R.color.color_00b7bb);
+            ivPointer.setImageResource(R.drawable.ic_pointer_blue);
         }
     }
 
@@ -172,14 +172,15 @@ public class CashTypeActivity extends BaseActivity {
      */
     private void initScaleScrollView(final int cylimit) {
         //刻度尺默认最大额度
-        scaleScrollView.setMax(cylimit);
-        scaleScrollView.requestLayout();
-        //指针滑动指定位置
-        scaleScrollView.post(new Runnable() {
+        rulerView.setEndRange(cylimit);
+        rulerView.requestLayout();
+        rulerView.post(new Runnable() {
             @Override
             public void run() {
-                int maxCylimit = (int) Double.parseDouble(availableCylimit);
-                scaleScrollView.setCurScale(maxCylimit);//刻度尺选择可用额度最大值
+                if (StringUtils.isNotNull(availableCylimit)) {
+                    int maxCylimit = (int) Double.parseDouble(availableCylimit);
+                    rulerView.smoothScrollTo(maxCylimit/10);//刻度尺选择可用额度最大值
+                }
             }
         });
     }
@@ -215,16 +216,14 @@ public class CashTypeActivity extends BaseActivity {
                             if (StringUtils.isNotNull(input)) {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
-                                    scaleScrollView.setCurScale((int) chooseQuota);
+                                    rulerView.smoothScrollTo((int) chooseQuota/10 );
                                     setData();
                                 }
                             }
                         } else {
                             keyBordIsShow = true;
                         }
-
                     }
-
                 }
                 previousKeyboardHeight = keyboardHeight;
             }
@@ -342,6 +341,13 @@ public class CashTypeActivity extends BaseActivity {
             ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
             return false;
         }
+        if (StringUtils.isNotNull(availableCylimit)) {
+            if (chooseQuota > Double.parseDouble(availableCylimit)) {
+                ToastUtils.showShortToast("取现额度不足");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -349,7 +355,7 @@ public class CashTypeActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
-        scaleScrollView.setOnMoveStopListener(new HorizontalScaleScrollView.OnMoveStopListener() {
+        rulerView.setOnMoveStopListener(new RulerView.OnMoveStopListener() {
             @Override
             public void stop() {
                 chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
@@ -357,14 +363,14 @@ public class CashTypeActivity extends BaseActivity {
                     chooseQuota = Double.parseDouble("100.0");
                     ToastUtils.showShortToast("取现不少于100元");
                 }
-                scaleScrollView.setCurScale((int) chooseQuota);
+                rulerView.smoothScrollTo((int) chooseQuota/10);
                 setData();
             }
         });
-        scaleScrollView.setOnScrollListener(new HorizontalScaleScrollView.OnScrollListener() {
+        rulerView.setOnScaleListener(new RulerView.OnScaleListener() {
             @Override
-            public void onScaleScroll(int scale) {
-                etInputAmount.setText("" + scale * 10);
+            public void onScaleChanged(int scale) {
+                etInputAmount.setText(scale*10 + "");
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
             }
         });
@@ -434,7 +440,7 @@ public class CashTypeActivity extends BaseActivity {
     /**
      * 如果显示的数据和本地不一样则刷新
      */
-    public void refrashUI(){
+    public void refrashUI() {
         String cylimit = StringUtils.getTextFromView(tvAvailableCredit);
         if (!cylimit.equals(LoginHelper.getInstance().getAvailableCylimit())) {
             initView(null);
@@ -500,7 +506,7 @@ public class CashTypeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
         //取现完成返回刷新数据（VerifyActivity）
-       refrashUI();
+        refrashUI();
     }
 
 
@@ -620,13 +626,13 @@ public class CashTypeActivity extends BaseActivity {
                     return;
                 }
                 //300-1000,1000-3000,选择1000，属于1000-3000
-                if(chooseQuota == 3000){
+                if (chooseQuota == 3000) {
                     //特殊情况，等于3000
                     if (chooseQuota >= product.creditFrom && chooseQuota <= product.creditTo) {
                         ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
                         data.add(p);
                     }
-                }else{
+                } else {
                     if (chooseQuota >= product.creditFrom && chooseQuota < product.creditTo) {
                         ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
                         data.add(p);
@@ -764,5 +770,4 @@ public class CashTypeActivity extends BaseActivity {
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
     }
-
 }
