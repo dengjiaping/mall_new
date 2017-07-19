@@ -55,6 +55,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.giveu.shoppingmall.utils.StringUtils.getTextFromView;
+
 
 /**
  * 取现类型页
@@ -212,7 +214,7 @@ public class CashTypeActivity extends BaseActivity {
                         //键盘消失监听
                         if (keyBordIsShow) {
                             //第一次进来
-                            String input = StringUtils.getTextFromView(etInputAmount);
+                            String input = getTextFromView(etInputAmount);
                             if (StringUtils.isNotNull(input)) {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
@@ -358,7 +360,7 @@ public class CashTypeActivity extends BaseActivity {
         rulerView.setOnMoveStopListener(new RulerView.OnMoveStopListener() {
             @Override
             public void stop() {
-                chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
+                chooseQuota = Double.parseDouble(getTextFromView(etInputAmount));
                 if (chooseQuota < 100) {
                     chooseQuota = Double.parseDouble("100.0");
                     ToastUtils.showShortToast("取现不少于100元");
@@ -371,7 +373,7 @@ public class CashTypeActivity extends BaseActivity {
             @Override
             public void onScaleChanged(int scale) {
                 etInputAmount.setText(scale*10 + "");
-                etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
+                etInputAmount.setSelection(getTextFromView(etInputAmount).length());
             }
         });
 
@@ -441,7 +443,7 @@ public class CashTypeActivity extends BaseActivity {
      * 如果显示的数据和本地不一样则刷新
      */
     public void refrashUI() {
-        String cylimit = StringUtils.getTextFromView(tvAvailableCredit);
+        String cylimit = getTextFromView(tvAvailableCredit);
         if (!cylimit.equals(LoginHelper.getInstance().getAvailableCylimit())) {
             initView(null);
             setData();
@@ -488,19 +490,22 @@ public class CashTypeActivity extends BaseActivity {
 
     //获取按日计息费率
     private void getCostFee() {
-        ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
-            @Override
-            public void onSuccess(CostFeeResponse response) {
-                String costFee = String.valueOf(response.data.costFee);//按日计息费率
-                costFee = StringUtils.isNull(costFee) ? "" : "日综合息费" + costFee + "%";
-                tvCostFee.setText(costFee);
-            }
+        String costFee = StringUtils.getTextFromView(tvCostFee);
+        if(StringUtils.isNull(costFee)){
+            ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
+                @Override
+                public void onSuccess(CostFeeResponse response) {
+                    String costFee = String.valueOf(response.data.costFee);//按日计息费率
+                    costFee = StringUtils.isNull(costFee) ? "" : "日综合息费" + costFee + "%";
+                    tvCostFee.setText(costFee);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
