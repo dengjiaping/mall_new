@@ -83,6 +83,7 @@
                     app:selectedLineColor="@android:color/holo_blue_bright"
                     app:textColor="@color/color_9b9b9b"
                     app:textSize="@dimen/ts_13" />
+
                 <ImageView
                     android:id="@+id/iv_pointer"
                     android:layout_width="wrap_content"
@@ -291,14 +292,7 @@
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/ts_11" />
             </LinearLayout>
-            <!--<com.lichfaker.scaleview.PointerView-->
-            <!--android:id="@+id/pv"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-
         </LinearLayout>
-
-
     </ScrollView>
 
     <TextView
