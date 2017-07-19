@@ -44,8 +44,8 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.RulerView;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
-import com.lichfaker.scaleview.HorizontalScaleScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,13 +56,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+
 /**
  * 取现类型页
  * Created by 101900 on 2017/6/26.
  */
 
 public class CashTypeActivity extends BaseActivity {
-    HorizontalScaleScrollView scaleScrollView;
+    RulerView rulerView;
     @BindView(R.id.et_input_amount)
     EditText etInputAmount;
     @BindView(R.id.gv_staging_type)
@@ -95,6 +96,8 @@ public class CashTypeActivity extends BaseActivity {
     ImageView ivBank;
     @BindView(R.id.tv_cost_fee)
     TextView tvCostFee;
+    @BindView(R.id.iv_pointer)
+    ImageView ivPointer;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000是大额小额取现分界值
@@ -107,19 +110,18 @@ public class CashTypeActivity extends BaseActivity {
     int localIdProduct = 0;//选择的期数产品id
     boolean isChooseProduct = false;//是否选择了分期产品 false没选择
     boolean keyBordIsShow = false;
+    int oldScale = 0;//
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
-
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
         mActivity.startActivity(intent);
     }
 
-
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_cash_type);
-        scaleScrollView = (HorizontalScaleScrollView) findViewById(R.id.horizontalScale);
+        rulerView = (RulerView) findViewById(R.id.ruler_view);
         initTitle();
         initDefaultBankCardLayout();
         decorView = (ViewGroup) getWindow().getDecorView();
@@ -156,14 +158,14 @@ public class CashTypeActivity extends BaseActivity {
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_large);
             baseLayout.setTopBarBgDrawble(R.color.color_febb41);
             tvEnsureBottom.setBackgroundResource(R.color.color_fe984a);
-            scaleScrollView.setPointerColor(R.color.color_fe8e4e);
+            ivPointer.setImageResource(R.drawable.ic_pointer_orange);
         } else {
             //小额显示蓝色
             etInputAmount.setTextColor(getResources().getColor(R.color.title_color));
             llBgTop.setBackgroundResource(R.drawable.shape_cash_bg_small);
             baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
             tvEnsureBottom.setBackgroundResource(R.color.color_00bbc0);
-            scaleScrollView.setPointerColor(R.color.color_00b7bb);
+            ivPointer.setImageResource(R.drawable.ic_pointer_blue);
         }
     }
 
@@ -172,14 +174,15 @@ public class CashTypeActivity extends BaseActivity {
      */
     private void initScaleScrollView(final int cylimit) {
         //刻度尺默认最大额度
-        scaleScrollView.setMax(cylimit);
-        scaleScrollView.requestLayout();
-        //指针滑动指定位置
-        scaleScrollView.post(new Runnable() {
+        rulerView.setEndRange(cylimit);
+        rulerView.requestLayout();
+        rulerView.post(new Runnable() {
             @Override
             public void run() {
-                int maxCylimit = (int) Double.parseDouble(availableCylimit);
-                scaleScrollView.setCurScale(maxCylimit);//刻度尺选择可用额度最大值
+                if (StringUtils.isNotNull(availableCylimit)) {
+                    int maxCylimit = (int) Double.parseDouble(availableCylimit);
+                    rulerView.smoothScrollTo(maxCylimit);//刻度尺选择可用额度最大值
+                }
             }
         });
     }
@@ -215,16 +218,14 @@ public class CashTypeActivity extends BaseActivity {
                             if (StringUtils.isNotNull(input)) {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
-                                    scaleScrollView.setCurScale((int) chooseQuota);
+                                    rulerView.smoothScrollTo((int) chooseQuota);
                                     setData();
                                 }
                             }
                         } else {
                             keyBordIsShow = true;
                         }
-
                     }
-
                 }
                 previousKeyboardHeight = keyboardHeight;
             }
@@ -342,6 +343,13 @@ public class CashTypeActivity extends BaseActivity {
             ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
             return false;
         }
+        if (StringUtils.isNotNull(availableCylimit)) {
+            if (chooseQuota > Double.parseDouble(availableCylimit)) {
+                ToastUtils.showShortToast("取现额度不足");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -349,23 +357,23 @@ public class CashTypeActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
-        scaleScrollView.setOnMoveStopListener(new HorizontalScaleScrollView.OnMoveStopListener() {
+
+        //滑动监听，设值
+        rulerView.setOnScaleListener(new RulerView.OnScaleListener() {
             @Override
-            public void stop() {
-                chooseQuota = Double.parseDouble(StringUtils.getTextFromView(etInputAmount));
-                if (chooseQuota < 100) {
-                    chooseQuota = Double.parseDouble("100.0");
-                    ToastUtils.showShortToast("取现不少于100元");
-                }
-                scaleScrollView.setCurScale((int) chooseQuota);
-                setData();
-            }
-        });
-        scaleScrollView.setOnScrollListener(new HorizontalScaleScrollView.OnScrollListener() {
-            @Override
-            public void onScaleScroll(int scale) {
-                etInputAmount.setText("" + scale * 10);
+            public void onScaleChanged(int scale) {
+                chooseQuota = scale;
+                etInputAmount.setText(String.valueOf((int) chooseQuota));
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
+
+                if (scale == oldScale) {
+                    if (chooseQuota < 100) {
+                        chooseQuota = Double.parseDouble("100.0");
+                        ToastUtils.showShortToast("取现不少于100元");
+                    }
+                    setData();
+                }
+                oldScale = scale;
             }
         });
 
@@ -379,7 +387,7 @@ public class CashTypeActivity extends BaseActivity {
                                 stagingTypeAdapter.getItem(i).isChecked = true;
                                 idProduct = stagingTypeAdapter.getItem(i).idProduct;
                                 localIdProduct = idProduct;
-                                showMonthly(idProduct);
+                                showLoanAmount(idProduct, (int) chooseQuota);
                             } else {
                                 stagingTypeAdapter.getItem(i).isChecked = false;
                             }
@@ -392,49 +400,39 @@ public class CashTypeActivity extends BaseActivity {
     }
 
     /**
-     * 显示或隐藏乐控和贷款本金
+     * 显示或隐藏月控和贷款本金
      *
      * @param idProduct
+     * @param chooseQuota
      */
-    public void showMonthly(int idProduct) {
+    private void showLoanAmount(int idProduct, int chooseQuota) {
         if (idProduct != 0) {
-            showLoanAmount(idProduct, (int) chooseQuota);
             llShowData.setVisibility(View.VISIBLE);
+            ApiImpl.repayCost(mBaseContext, idProduct, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
+                @Override
+                public void onSuccess(RepayCostResponse response) {
+                    if (response.data != null) {
+                        RepayCostResponse product = response.data;
+                        tvDrawMoney.setText("提款金额：" + product.drawMoney);
+                        tvCost.setText("（含咨询费￥" + product.cost + "）");
+                        tvMonthlyPayment.setText("月供：" + (int) product.monthPay + "元");
+                    }
+                }
+
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
         } else {
             llShowData.setVisibility(View.GONE);
         }
     }
 
     /**
-     * 获取贷款金额
-     *
-     * @param idProduct
-     * @param chooseQuota
-     */
-    private void showLoanAmount(int idProduct, int chooseQuota) {
-        llShowData.setVisibility(View.VISIBLE);
-        ApiImpl.repayCost(mBaseContext, idProduct, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
-            @Override
-            public void onSuccess(RepayCostResponse response) {
-                if (response.data != null) {
-                    RepayCostResponse product = response.data;
-                    tvDrawMoney.setText("提款金额：" + product.drawMoney);
-                    tvCost.setText("（含咨询费￥" + product.cost + "）");
-                    tvMonthlyPayment.setText("月供：" + (int) product.monthPay + "元");
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-    }
-
-    /**
      * 如果显示的数据和本地不一样则刷新
      */
-    public void refrashUI(){
+    public void refrashUI() {
         String cylimit = StringUtils.getTextFromView(tvAvailableCredit);
         if (!cylimit.equals(LoginHelper.getInstance().getAvailableCylimit())) {
             initView(null);
@@ -482,25 +480,28 @@ public class CashTypeActivity extends BaseActivity {
 
     //获取按日计息费率
     private void getCostFee() {
-        ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
-            @Override
-            public void onSuccess(CostFeeResponse response) {
-                String costFee = String.valueOf(response.data.costFee);//按日计息费率
-                costFee = StringUtils.isNull(costFee) ? "" : "日综合息费" + costFee + "%";
-                tvCostFee.setText(costFee);
-            }
+        String costFee = StringUtils.getTextFromView(tvCostFee);
+        if (StringUtils.isNull(costFee)) {
+            ApiImpl.getCostFee(mBaseContext, new BaseRequestAgent.ResponseListener<CostFeeResponse>() {
+                @Override
+                public void onSuccess(CostFeeResponse response) {
+                    String costFee = String.valueOf(response.data.costFee);//按日计息费率
+                    costFee = StringUtils.isNull(costFee) ? "" : "日综合息费" + costFee + "%";
+                    tvCostFee.setText(costFee);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
         //取现完成返回刷新数据（VerifyActivity）
-       refrashUI();
+        refrashUI();
     }
 
 
@@ -548,50 +549,7 @@ public class CashTypeActivity extends BaseActivity {
                     ToastUtils.showLongToast("取现可用额度不足");
                     return;
                 }
-                final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
-                pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
-                    @Override
-                    public void checkPwd(String payPwd) {
-                        ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
-                                    @Override
-                                    public void onSuccess(PayPwdResponse response) {
-                                        pwdDialog.dissmissDialog();
-                                        if (response.data != null) {
-                                            PayPwdResponse pwdResponse = response.data;
-                                            if (pwdResponse.status) {
-                                                String creditType;
-                                                //取现需要验证手机
-                                                if (idProduct == 0) {//自行判断，idProduct=0则是随借随还（SH），有idProduct则是分期（SQ）
-                                                    creditType = "SH";
-                                                } else {
-                                                    creditType = "SQ";
-                                                }
-                                                VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code);
-                                            } else {
-                                                //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
-                                                PwdErrorDialog errorDialog = new PwdErrorDialog();
-                                                errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
-                                            }
-
-                                            CommonUtils.closeSoftKeyBoard(mBaseContext);
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onError(BaseBean errorBean) {
-                                        CommonLoadingView.showErrorToast(errorBean);
-                                    }
-                                }
-                        );
-                    }
-                });
-                //判断是否设置了交易密码
-                if (LoginHelper.getInstance().hasSetPwd()) {
-                    pwdDialog.showDialog();
-                } else {
-                    TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
-                }
+                showPwdDialog();
                 break;
             case R.id.ll_choose_bank:
                 //银行卡列表
@@ -600,12 +558,62 @@ public class CashTypeActivity extends BaseActivity {
             case R.id.tv_cost:
                 //什么是咨询费
                 CostDialog dialog = new CostDialog(mBaseContext);
+                //显示密码框完成取现
                 dialog.showDialog();
                 break;
         }
 
     }
 
+    /**
+     * 初始化交易密码dialog，判断是否有交易密码，有显示密码框，没有则跳转设置交易密码
+     */
+    public void showPwdDialog(){
+        final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
+        pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+            @Override
+            public void checkPwd(String payPwd) {
+                ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                            @Override
+                            public void onSuccess(PayPwdResponse response) {
+                                pwdDialog.dissmissDialog();
+                                if (response.data != null) {
+                                    PayPwdResponse pwdResponse = response.data;
+                                    if (pwdResponse.status) {
+                                        String creditType;
+                                        //取现需要验证手机
+                                        if (idProduct == 0) {//自行判断，idProduct=0则是随借随还（SH），有idProduct则是分期（SQ）
+                                            creditType = "SH";
+                                        } else {
+                                            creditType = "SQ";
+                                        }
+                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code);
+                                    } else {
+                                        //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
+                                        PwdErrorDialog errorDialog = new PwdErrorDialog();
+                                        errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
+                                    }
+
+                                    CommonUtils.closeSoftKeyBoard(mBaseContext);
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(BaseBean errorBean) {
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
+                        }
+                );
+            }
+        });
+        //判断是否设置了交易密码
+        if (LoginHelper.getInstance().hasSetPwd()) {
+            pwdDialog.showDialog();
+        } else {
+            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+        }
+    }
     /**
      * 根据选择的额度显示不同的借款期数
      *
@@ -620,13 +628,13 @@ public class CashTypeActivity extends BaseActivity {
                     return;
                 }
                 //300-1000,1000-3000,选择1000，属于1000-3000
-                if(chooseQuota == 3000){
+                if (chooseQuota == 3000) {
                     //特殊情况，等于3000
                     if (chooseQuota >= product.creditFrom && chooseQuota <= product.creditTo) {
                         ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
                         data.add(p);
                     }
-                }else{
+                } else {
                     if (chooseQuota >= product.creditFrom && chooseQuota < product.creditTo) {
                         ProductResponse p = new ProductResponse(product.paymentNum, product.idProduct, false);
                         data.add(p);
@@ -640,6 +648,7 @@ public class CashTypeActivity extends BaseActivity {
         ProductResponse noStageProduct = new ProductResponse(0, 0, false);
         if (chooseQuota > MAXAMOUNT) {
             //仅支持取现分期(>3000)
+            llShowData.setVisibility(View.VISIBLE);
             if (CommonUtils.isNullOrEmpty(data)) {
                 isChooseProduct = false;
                 llShowData.setVisibility(View.GONE);
@@ -656,6 +665,7 @@ public class CashTypeActivity extends BaseActivity {
                     product.isChecked = false;
                 }
             }
+            isChooseProduct = true;
             showLoanAmount(localIdProduct, (int) chooseQuota);
             isLargeAmount = true;//标记大额
             tvCostFee.setVisibility(View.GONE);
@@ -666,6 +676,7 @@ public class CashTypeActivity extends BaseActivity {
                 data.add(noStageProduct);
                 data.get(0).isChecked = true;
                 llShowData.setVisibility(View.GONE);
+
             } else {
                 data.add(noStageProduct);
                 //   data.get(data.size() - 1).isShow = true;
@@ -677,9 +688,8 @@ public class CashTypeActivity extends BaseActivity {
                 tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
                 tvCostFee.setVisibility(View.VISIBLE);
             }
-            showMonthly(localIdProduct);
-            isLargeAmount = false;//标记小额
             isChooseProduct = true;//默认会选择按日计息，即使没有分期产品
+            isLargeAmount = false;//标记小额
         } else {
             //仅支持随借随还(<300)
             data.add(noStageProduct);
@@ -764,5 +774,4 @@ public class CashTypeActivity extends BaseActivity {
         params.height = totalHeight - verticalSpacing;
         myGridView.setLayoutParams(params);
     }
-
 }

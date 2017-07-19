@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    //scale
+    <declare-styleable name="RulerView">
+        <attr name="indicateColor" format="color|reference" />
+        <attr name="selectedLineColor" format="color|reference" />
+        <attr name="textColor" format="color|reference" />
+        <attr name="textSize" format="dimension|reference"/>
+        <attr name="begin" format="integer|reference" />
+        <attr name="end" format="integer|reference" />
+        <attr name="indicateWidth" format="dimension|reference" />
+        <attr name="indicatePadding" format="dimension|reference" />
+    </declare-styleable>
     <declare-styleable name="ImageSelectView">
         <attr name="divide_index" format="integer" />
         <attr name="default_image" format="reference" />
