@@ -315,7 +315,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * 判断当前activity超时是否需要锁屏
      */
     private boolean isThisActivityNeedPattern() {
-        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class, FingerPrintActivity.class,
+        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class, FingerPrintActivity.class,LoginActivity.class,
                 WelcomeActivity.class, GestureLoginActivity.class, CreateGestureActivity.class, VerifyPwdActivity.class};
         List<Class> notNeedPatternActivitys = Arrays.asList(classes);
 
