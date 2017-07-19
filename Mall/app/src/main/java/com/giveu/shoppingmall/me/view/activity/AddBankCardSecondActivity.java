@@ -83,7 +83,7 @@ public class AddBankCardSecondActivity extends BaseActivity {
         CommonUtils.setTextWithSpan(checkboxDesc, false, "本人同意代扣还款并出具本", "《代扣服务授权书》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //代扣协议
+                //代扣服务授权书
             }
         });
     }

@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.android.volley.mynet.BaseBean;
@@ -34,6 +35,7 @@ import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -70,6 +72,12 @@ public class WalletActivationSecondActivity extends BaseActivity {
     String name;
     String bankNo;
     String phone;
+    @BindView(R.id.tv_agreement_activation)
+    TextView tvAgreementActivation;
+    @BindView(R.id.tv_agreement_withhold)
+    TextView tvAgreementWithhold;
+
+
     private String latitude;
     private String longitude;
     LocationUtils locationUtils;//定位方法
@@ -108,6 +116,19 @@ public class WalletActivationSecondActivity extends BaseActivity {
         locationUtils = new LocationUtils(mBaseContext);
         locationUtils.startLocation();
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
+
+        CommonUtils.setTextWithSpan(tvAgreementActivation, false, "已阅读并同意", "《即有钱包激活协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //即有钱包激活协议
+            }
+        });
+        CommonUtils.setTextWithSpan(tvAgreementWithhold, false, "及代扣还款并出具本", "《代扣服务授权书》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //代扣服务授权书
+            }
+        });
         initPermissionDialog();
     }
 
@@ -356,4 +377,10 @@ public class WalletActivationSecondActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

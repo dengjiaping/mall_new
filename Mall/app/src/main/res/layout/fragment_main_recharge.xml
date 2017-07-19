@@ -114,10 +114,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="温馨提示：温馨提示内容温馨提示内容温馨提示内容温馨提示内容"
+            android:text="温馨提示：尊敬的钱包用户，因运营商将定期进行后台维护，请尽量避免在月初、月末以及每晚24点左右进行充值，以免造成充值失败，谢谢！"
             android:textColor="@color/color_9b9b9b"
             android:layout_marginTop="31dp"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:layout_marginBottom="24dp"
             android:textSize="@dimen/ts_11"/>
     </LinearLayout>

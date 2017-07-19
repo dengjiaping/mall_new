@@ -109,7 +109,6 @@ public class CashFinishStatusActivity extends BaseActivity {
                 llDate.setVisibility(View.VISIBLE);
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("取现操作成功");
-                llDateMid.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.VISIBLE);
                 tvDateTop.setText((double) cashAmount+"元");
                 tvDateMid.setText(stageNumber+"期");
@@ -151,6 +150,7 @@ public class CashFinishStatusActivity extends BaseActivity {
                     case "success":
                         //跳转放款进度
                         CaseRecordActivity.startIt(mBaseContext);
+                        finish();
                         break;
                     case "fail":
                         MainActivity.startIt(mBaseContext);

@@ -589,7 +589,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (event != null) {
             if (event.payStatus == 0) {
                 //微信支付成功
-                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "预计10分钟到账，充值高峰可能会有延迟");
             } else if (event.payStatus == -1) {
                 //微信支付失败
                 RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
