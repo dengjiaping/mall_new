@@ -319,9 +319,7 @@ public class RulerView extends View {
                         sprintBack();
                     }
                 }
-                if (listener != null) {
-                    listener.stop();
-                }
+
                 mIsDragged = false;
                 recycleVelocityTracker();
                 break;
@@ -385,6 +383,9 @@ public class RulerView extends View {
         if (scrollX != 0) {
             mOverScroller.startScroll(getScrollX(), getScrollY(), scrollX, 0);
             invalidateView();
+        }
+        if (listener != null) {
+            listener.stop();
         }
     }
 

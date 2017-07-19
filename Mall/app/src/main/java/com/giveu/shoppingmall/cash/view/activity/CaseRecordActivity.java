@@ -57,7 +57,7 @@ public class CaseRecordActivity extends BaseActivity {
                 TextView tvSource = viewHolder.getView(R.id.tv_source);
                 TextView tvDate = viewHolder.getView(R.id.tv_date);
                 if(item != null){
-                    tvLoan.setText(String.valueOf((double) item.loan));
+                    tvLoan.setText( StringUtils.nullToEmptyString(item.loan));
                     tvStatus.setText(StringUtils.nullToEmptyString(item.status));
                     tvSource.setText(StringUtils.nullToEmptyString(item.source));
                     //转换格式
