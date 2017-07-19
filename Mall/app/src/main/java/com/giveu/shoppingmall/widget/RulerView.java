@@ -63,7 +63,7 @@ public class RulerView extends View {
 
     private Rect mIndicateLoc;
 
-
+    private final int SCALE = 10;//每一小刻度为10
     //滚动相关参数
     private OverScroller mOverScroller;
     private VelocityTracker mVelocityTracker;
@@ -137,28 +137,31 @@ public class RulerView extends View {
         for (int value = mBeginRange, position = 0; value <= mEndRange; value++, position++) {
             drawIndicate(canvas, position);
             if (mIsWithText)
-                drawText(canvas, position, String.valueOf(value*10));
+                drawText(canvas, position, String.valueOf(value * SCALE));
         }
         canvas.restoreToCount(count);
     }
 
-    public void setEndRange(int endRange){
+    public void setEndRange(int endRange) {
         if (endRange > 3000) {
-            mEndRange = endRange/10;
+            mEndRange = endRange / SCALE;
         } else {
             mEndRange = 300;//小额
         }
         initValue();
     }
+
     //滑动停下的监听事件
     public interface OnMoveStopListener {
         void stop();
     }
 
     private OnMoveStopListener listener;
+
     public void setOnMoveStopListener(OnMoveStopListener listener) {
         this.listener = listener;
     }
+
     private void drawIndicate(Canvas canvas, int position) {
         computeIndicateLoc(mIndicateLoc, position);
         int left = mIndicateLoc.left + mIndicatePadding;
@@ -428,13 +431,13 @@ public class RulerView extends View {
 
     public void smoothScrollTo(int position) {
 
-        if (position < 0 || mBeginRange + position > mEndRange)
+        if (position / SCALE < 0 || mBeginRange + position / SCALE > mEndRange)
             return;
 
         if (!mOverScroller.isFinished())
             mOverScroller.abortAnimation();
 
-        int scrollX = getScrollByPosition(position);
+        int scrollX = getScrollByPosition(position / SCALE);
         mOverScroller.startScroll(getScrollX(), getScrollY(), scrollX - getScrollX(), 0);
         invalidateView();
     }
@@ -447,7 +450,7 @@ public class RulerView extends View {
 
     private void onScaleChanged(int scale) {
         if (mListener != null)
-            mListener.onScaleChanged(scale);
+            mListener.onScaleChanged(scale * SCALE);
     }
 
 
