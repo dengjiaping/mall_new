@@ -42,7 +42,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 //			AlarmManager mgr = (AlarmManager)application.getSystemService(Context.ALARM_SERVICE);
 //			mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 200,
 //					restartIntent); // 1秒钟后重启应用
-			application.finishActivityAndKillProcess();
+			if ( !DebugConfig.isDev){
+				application.finishActivityAndKillProcess();
+			}
 		}
 	}
 
