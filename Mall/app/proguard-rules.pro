@@ -25,6 +25,10 @@
 -keepattributes *Annotation*,InnerClasses
 -keepattributes Signature
 -keepattributes SourceFile,LineNumberTable
+#不压缩输入的类文件
+-dontshrink
+#不优化输入的类文件
+-dontoptimize
 #----------------------------------------------------------------------------
 
 #---------------------------------默认保留区---------------------------------
@@ -177,8 +181,6 @@
 
 #umeng
 # ========= 友盟 =================
--dontshrink
--dontoptimize
 -dontwarn com.google.android.maps.**
 -dontwarn android.webkit.WebView
 -dontwarn com.umeng.**
@@ -303,7 +305,6 @@ public void xxxxxx(**);
 
 
 # #  ############### volley混淆  ###############
-# # -------------------------------------------
 -keep class com.android.volley.** {*;}
 -keep class com.android.volley.toolbox.** {*;}
 -keep class com.android.volley.Response$* { *; }
@@ -311,6 +312,9 @@ public void xxxxxx(**);
 -keep class com.android.volley.RequestQueue$* { *; }
 -keep class com.android.volley.toolbox.HurlStack$* { *; }
 -keep class com.android.volley.toolbox.ImageLoader$* { *; }
+-keep class org.apache.http.**{*;}
+-dontwarn org.apache.http.**
+-dontwarn com.android.volley.**
 
 #jpush极光推送
 -dontwarn cn.jpush.**
@@ -334,24 +338,21 @@ public void xxxxxx(**);
 #---------------------------------与js互相调用的类------------------------
 -keep class com.giveu.shoppingmall.base.web.**  {*;}
 #---------------------------------自定义View的类------------------------
--keep class com.android.volley.** { *; }
 -keep class com.giveu.shoppingmall.** { *; }
 -keep class com.wei.android.lib.fingerprintidentify.** { *; }
 -keep class com.lichfaker.scaleview.** { *; }
 -keep class cn.sharesdk.onekeyshare.** { *; }
 -keep class com.giveu.share.** { *; }
 -keep class com.soundcloud.android.crop.** { *; }
+-dontwarn com.giveu.shoppingmall.**
+-dontwarn okhttp3.internal.huc.**
+#指纹识别
 # MeiZuFingerprint
 -keep class com.fingerprints.service.** { *; }
 -dontwarn com.fingerprints.service.**
 # SmsungFingerprint
 -keep class com.samsung.android.sdk.** { *; }
 -dontwarn com.samsung.android.sdk.**
-
--dontwarn com.android.volley.**
--dontwarn com.giveu.shoppingmall.**
--dontwarn okhttp3.internal.huc.**
-
 
 
 
