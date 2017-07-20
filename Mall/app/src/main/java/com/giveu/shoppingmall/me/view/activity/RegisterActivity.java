@@ -98,7 +98,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
 
             case R.id.tv_next:
                 if (canClick(true)) {
-                    presenter.checkSMSCode(etPhone.getText().toString(), etCode.getText().toString(),"regType");
+                    presenter.registerFirst(etPhone.getText().toString(), etCode.getText().toString());
                 }
                 break;
 
@@ -163,7 +163,6 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
 
     @Override
     public void checkSMSSuccess() {
-        SetPasswordActivity.startIt(mBaseContext, true, etPhone.getText().toString(), etCode.getText().toString());
     }
 
     @Override
@@ -178,5 +177,10 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         if (requestCode == SetPasswordActivity.REQUEST_FINISH && resultCode == RESULT_OK) {
             finish();
         }
+    }
+
+    @Override
+    public void registerFirstSuccess(String randomCode) {
+        SetPasswordActivity.startIt(mBaseContext, true, etPhone.getText().toString(), randomCode);
     }
 }

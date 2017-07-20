@@ -86,13 +86,18 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         etAccount.checkFormat(11);
         etPwd.setMaxLength(16);
         etPwd.checkFormat(8);
+//        etPwd.setPasswordInputStyle();
+        keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
+        presenter = new LoginPresenter(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (StringUtils.isNotNull(LoginHelper.getInstance().getRemeberAccount())) {
             etAccount.setText(LoginHelper.getInstance().getRemeberAccount());
             etAccount.setSelection(LoginHelper.getInstance().getRemeberAccount().length());
         }
-//        etPwd.setPasswordInputStyle();
-        keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
-        presenter = new LoginPresenter(this);
     }
 
     @Override

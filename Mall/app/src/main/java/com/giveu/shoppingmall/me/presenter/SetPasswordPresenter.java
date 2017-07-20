@@ -17,8 +17,8 @@ public class SetPasswordPresenter extends BasePresenter<ISetPasswordView> {
         super(view);
     }
 
-    public void register(String mobile, String password, String smsCode) {
-        ApiImpl.register(getView().getAct(), mobile, password, smsCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
+    public void register(String mobile, String password, String randCode) {
+        ApiImpl.register(getView().getAct(), mobile, password, randCode, new BaseRequestAgent.ResponseListener<RegisterResponse>() {
             @Override
             public void onSuccess(RegisterResponse response) {
                 if (getView() != null) {

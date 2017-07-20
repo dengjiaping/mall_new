@@ -137,8 +137,8 @@ public class ApiImpl {
     }
 
     //用户注册
-    public static void register(Activity context, String mobile, String password, String smsCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "smsCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, smsCode});
+    public static void register(Activity context, String mobile, String password, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_register, RegisterResponse.class, context, responseListener);
     }
 
@@ -154,7 +154,13 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_util_chkValiCode, BaseBean.class, context, responseListener);
     }
 
-    //用户注册
+    //用户注册第一步
+    public static void registerFirst(Activity context, String mobile, String smsCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"mobile", "smsCode"}, new String[]{mobile, smsCode});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_exist, BaseBean.class, context, responseListener);
+    }
+
+    //用户登录
     public static void login(Activity context, String userName, String password, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password"}, new String[]{SharePrefUtil.getUUId(), userName, password});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
