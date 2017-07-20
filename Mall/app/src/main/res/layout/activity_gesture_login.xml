@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="输入手势解锁"
+        android:text="输入图案解锁"
         android:textSize="@dimen/ts_20"
         android:textColor="@color/color_4a4a4a"
         android:layout_above="@+id/tv_message" />

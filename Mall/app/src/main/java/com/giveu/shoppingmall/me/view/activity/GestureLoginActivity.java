@@ -71,7 +71,6 @@ public class GestureLoginActivity extends BaseActivity {
                     VerifyPwdActivity.startIt(mBaseContext, true, false);
                 }
             });
-//            SpannableString titleText = StringUtils.getColorSpannable("", "解锁", R.color.color_4a4a4a, R.color.color_4a4a4a);
             baseLayout.setTitle("解锁");
             baseLayout.hideBack();
         }

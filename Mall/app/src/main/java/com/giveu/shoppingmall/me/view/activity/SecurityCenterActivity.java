@@ -65,9 +65,9 @@ public class SecurityCenterActivity extends BaseActivity {
     public void setData() {
         fingerHelper = new FingerPrintHelper(mBaseContext);
         if (fingerHelper.isHardwareEnable()) {
-            tvLockType.setText("指纹");
+            tvLockType.setText("指纹解锁");
         } else {
-            tvLockType.setText("手势");
+            tvLockType.setText("图案解锁");
         }
     }
 

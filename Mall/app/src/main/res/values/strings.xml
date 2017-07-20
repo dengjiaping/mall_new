@@ -13,15 +13,15 @@
 
 
     <!-- Gesture login activity -->
-    <string name="gesture_default">请输入手势密码</string>
+    <string name="gesture_default">请输入图案解锁密码</string>
     <string name="gesture_and_finger">请输入指纹或手势密码</string>
     <string name="finger_error">指纹不匹配</string>
-    <string name="gesture_error">手势密码输入错误</string>
+    <string name="gesture_error">解锁图案输入错误</string>
     <string name="gesture_correct">输入正确</string>
 
     <!-- Create gesture activity -->
     <string name="create_gesture_activity">CreateGestureActivity</string>
-    <string name="create_gesture_default">设置手势密码</string>
+    <string name="create_gesture_default">设置图案解锁密码</string>
     <string name="create_gesture_correct">再次绘制解锁图案</string>
     <string name="create_gesture_less_error">至少连接4个点，请重新输入</string>
     <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
