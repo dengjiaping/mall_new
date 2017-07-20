@@ -22,6 +22,11 @@ import com.giveu.shoppingmall.widget.EditView;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity.CHANGE_LOGIN_PWD;
+import static com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity.CHANGE_TRADE_PWD;
+import static com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity.FIND_LOGIN_PWD;
+import static com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity.FIND_TRADE_PWD;
+
 /**
  * Created by 513419 on 2017/6/30.
  */
@@ -37,13 +42,13 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     private String randCode;
     private String mobile;
     private IdentifyPresenter presenter;
-    private boolean isForTrade;//是否找回交易密码,false为找回登录密码
+    private int type;
 
-    public static void startIt(Activity activity, String randCode, String mobile, String smsCode, boolean isForTrade) {
+    public static void startIt(Activity activity, String randCode, String mobile, String smsCode, int type) {
         Intent intent = new Intent(activity, IdentifyActivity.class);
         intent.putExtra("mobile", mobile);
         intent.putExtra("randCode", randCode);
-        intent.putExtra("isForTrade", isForTrade);
+        intent.putExtra("type",  type);
         intent.putExtra("smsCode", smsCode);
         activity.startActivityForResult(intent, SetPasswordActivity.REQUEST_FINISH);
     }
@@ -53,11 +58,20 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
         setContentView(R.layout.activity_identify);
         mobile = getIntent().getStringExtra("mobile");
         randCode = getIntent().getStringExtra("randCode");
-        isForTrade = getIntent().getBooleanExtra("isForTrade", false);
-        if (isForTrade) {
-            baseLayout.setTitle("找回交易密码");
-        } else {
-            baseLayout.setTitle("找回登录密码");
+        type = getIntent().getIntExtra("type", 1);
+        switch (type) {
+            case FIND_LOGIN_PWD:
+                baseLayout.setTitle("找回登录密码");
+                break;
+            case CHANGE_LOGIN_PWD:
+                baseLayout.setTitle("修改登录密码");
+                break;
+            case FIND_TRADE_PWD:
+                baseLayout.setTitle("找回交易密码");
+                break;
+            case CHANGE_TRADE_PWD:
+                baseLayout.setTitle("修改交易密码");
+                break;
         }
         presenter = new IdentifyPresenter(this);
     }
@@ -75,7 +89,7 @@ public class IdentifyActivity extends BaseActivity implements IIdentifyView {
     @OnClick({R.id.tv_next})
     public void nextStep() {
         if (canClick(true)) {
-            if (isForTrade) {
+            if (type == FIND_TRADE_PWD || type == CHANGE_TRADE_PWD) {
                 //找回交易密码
                 String ident = StringUtils.getTextFromView(etIdentNo);
                 String userName = StringUtils.getTextFromView(etUsername);

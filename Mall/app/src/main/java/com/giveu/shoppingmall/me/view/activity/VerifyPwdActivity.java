@@ -25,7 +25,6 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
-import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 import butterknife.BindView;
@@ -157,9 +156,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         if (isForSetting) {
             //关闭手势
             if (isForClosePattern) {
-                //清除手势密码
-                SharePrefUtil.setPatternPwd("");
-                SharePrefUtil.setFingerPrint(false);
                 //重新计时
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 setResult(RESULT_OK);
@@ -172,8 +168,6 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
                 }
             }
         } else {
-            SharePrefUtil.setPatternPwd("");
-            SharePrefUtil.setFingerPrint(false);
             //重新计时
             BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
             MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);

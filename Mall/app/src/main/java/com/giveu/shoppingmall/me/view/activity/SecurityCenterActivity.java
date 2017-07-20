@@ -90,12 +90,12 @@ public class SecurityCenterActivity extends BaseActivity {
                 break;
             case R.id.ll_change_login_pwd:
                 //修改登录密码
-                RequestPasswordActivity.startIt(mBaseContext);
+                RequestPasswordActivity.startIt(mBaseContext,RequestPasswordActivity.CHANGE_LOGIN_PWD);
                 break;
             case R.id.ll_change_transaction_pwd:
                 //修改交易密码
                 if (isWallActivationAndPwd()) {//激活并设置了交易密码
-                    RequestPasswordActivity.startIt(mBaseContext, true);
+                    RequestPasswordActivity.startIt(mBaseContext, RequestPasswordActivity.CHANGE_TRADE_PWD);
                 }
                 break;
             case R.id.iv_switch:

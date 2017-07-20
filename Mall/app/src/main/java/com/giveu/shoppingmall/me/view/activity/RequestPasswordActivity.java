@@ -13,7 +13,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.RequestPwdPresenter;
 import com.giveu.shoppingmall.me.view.agent.IRequestPwdView;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -30,7 +29,7 @@ import butterknife.OnClick;
 
 /**
  * Created by 513419 on 2017/6/20.
- * 找回登录密码
+ * 找回或更改登录密码
  */
 
 public class RequestPasswordActivity extends BaseActivity implements IRequestPwdView {
@@ -46,26 +45,36 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     private CustomDialog callDialog;
     private TextView tvDial;
     private RequestPwdPresenter presenter;
-    private boolean isForTrade;//是否找回交易密码,false为找回登录密码
+    public static final int FIND_LOGIN_PWD = 1;
+    public static final int CHANGE_LOGIN_PWD = 2;
+    public static final int FIND_TRADE_PWD = 3;
+    public static final int CHANGE_TRADE_PWD = 4;
+    private int type;
 
-    public static void startIt(Activity activity) {
-        startIt(activity, false);
-    }
 
-    public static void startIt(Activity activity, boolean isForTrade) {
+    public static void startIt(Activity activity, int type) {
         Intent intent = new Intent(activity, RequestPasswordActivity.class);
-        intent.putExtra("isForTrade", isForTrade);
+        intent.putExtra("type", type);
         activity.startActivity(intent);
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_request_password);
-        isForTrade = getIntent().getBooleanExtra("isForTrade", false);
-        if (isForTrade) {
-            baseLayout.setTitle("找回交易密码");
-        } else {
-            baseLayout.setTitle("找回登录密码");
+        type = getIntent().getIntExtra("type", 1);
+        switch (type) {
+            case FIND_LOGIN_PWD:
+                baseLayout.setTitle("找回登录密码");
+                break;
+            case CHANGE_LOGIN_PWD:
+                baseLayout.setTitle("修改登录密码");
+                break;
+            case FIND_TRADE_PWD:
+                baseLayout.setTitle("找回交易密码");
+                break;
+            case CHANGE_TRADE_PWD:
+                baseLayout.setTitle("修改交易密码");
+                break;
         }
         presenter = new RequestPwdPresenter(this);
         initCallDialog();
@@ -126,7 +135,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             case R.id.tv_send_code:
                 if (etPhone.length() == 11) {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    if (isForTrade) {
+                    if (type == FIND_TRADE_PWD || type == CHANGE_TRADE_PWD) {
                         //交易密码
                         presenter.sendSMSCode(etPhone.getText().toString(), "resetPayPwd");
                     } else {
@@ -139,9 +148,9 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
                 break;
             case R.id.tv_next:
                 if (canClick(true)) {
-                    if (isForTrade) {
+                    if (type == FIND_TRADE_PWD || type == CHANGE_TRADE_PWD) {
                         //找回交易密码, 直接跳到下一个页面，下一个页面接口会一起校验短信验证码
-                        IdentifyActivity.startIt(mBaseContext, "", etPhone.getText().toString(), etVertificationCode.getText().toString(), isForTrade);
+                        IdentifyActivity.startIt(mBaseContext, "", etPhone.getText().toString(), etVertificationCode.getText().toString(), type);
                     } else {
                         //登录密码
                         presenter.checkSms(etPhone.getText().toString(), etVertificationCode.getText().toString());
@@ -184,7 +193,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     @Override
     public void skipToIdentify(String randCode) {
         //找回登录密码，钱包资质用户跳转至身份证填写
-        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), etVertificationCode.getText().toString(), isForTrade);
+        IdentifyActivity.startIt(mBaseContext, randCode, etPhone.getText().toString(), etVertificationCode.getText().toString(), type);
     }
 
     @Override

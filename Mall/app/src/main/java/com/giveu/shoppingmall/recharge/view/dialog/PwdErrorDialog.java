@@ -58,7 +58,7 @@ public class PwdErrorDialog {
         tv_left_errorpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RequestPasswordActivity.startIt(mActivity,true);
+                RequestPasswordActivity.startIt(mActivity,RequestPasswordActivity.FIND_TRADE_PWD);
             }
         });
 
@@ -68,7 +68,7 @@ public class PwdErrorDialog {
             public void onClick(View view) {
                 if (times == 0) {
                     //跳转找回交易密码
-                    RequestPasswordActivity.startIt(mActivity,true);
+                    RequestPasswordActivity.startIt(mActivity,RequestPasswordActivity.FIND_TRADE_PWD);
                 }
                 mDialog.dismiss();
             }
