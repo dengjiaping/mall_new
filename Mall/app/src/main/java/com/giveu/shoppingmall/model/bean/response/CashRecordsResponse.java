@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CashRecordsResponse extends BaseBean<List<CashRecordsResponse>> {
     public String appDate;
-    public int loan;
+    public String loan;
     public String source;
     public String status;
 }

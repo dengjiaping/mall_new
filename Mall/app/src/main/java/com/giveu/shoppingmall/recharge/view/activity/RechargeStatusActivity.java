@@ -93,6 +93,7 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvHintBottom.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
+                tvBtnTop.setVisibility(View.VISIBLE);
                 tvBtnTop.setText("重新支付");
                 tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setVisibility(View.GONE);

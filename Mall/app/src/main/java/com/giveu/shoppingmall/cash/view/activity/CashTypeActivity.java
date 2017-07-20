@@ -41,6 +41,7 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -98,6 +99,8 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvCostFee;
     @BindView(R.id.iv_pointer)
     ImageView ivPointer;
+    @BindView(R.id.tv_agreement)
+    TextView tvAgreement;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000是大额小额取现分界值
@@ -118,6 +121,7 @@ public class CashTypeActivity extends BaseActivity {
         mActivity.startActivity(intent);
     }
 
+    //
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_cash_type);
@@ -126,6 +130,14 @@ public class CashTypeActivity extends BaseActivity {
         initDefaultBankCardLayout();
         decorView = (ViewGroup) getWindow().getDecorView();
         availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《借款及服务相关协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //借款及服务相关协议
+            }
+        });
+
         if (StringUtils.isNotNull(availableCylimit)) {
             int cylimit = (int) Double.parseDouble(availableCylimit);
 
@@ -219,7 +231,7 @@ public class CashTypeActivity extends BaseActivity {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
                                     rulerView.smoothScrollTo((int) chooseQuota);
-                                    setData();
+                                    RefreshData();
                                 }
                             }
                         } else {
@@ -353,27 +365,61 @@ public class CashTypeActivity extends BaseActivity {
         return true;
     }
 
+    int springBackCount = 0;//回弹次数
+    boolean isScroll = false;//是否滑动了
+    boolean isGetData = false;
+    double lastEditTextValue;
 
     @Override
     public void setListener() {
         super.setListener();
 
+        rulerView.setOnMoveStopListener(new RulerView.OnMoveStopListener() {
+            @Override
+            public void stop() {
+                LogUtil.e("回弹");
+                if (isScroll) {
+                    //第一次次回弹且值相等调接口
+                    if (chooseQuota < 100) {
+                        //chooseQuota = Double.parseDouble("100.0");
+                        ToastUtils.showShortToast("取现不少于100元");
+                        rulerView.smoothScrollTo(100);//低于100滑到100，并提示
+                    }
+                    RefreshData();
+                }
+
+//                if (isScroll) {
+//                    springBackCount++;
+//                    if (springBackCount == 3) {
+//                        springBackCount = 1;
+//                        isGetData = false;
+//                        isScroll = false;
+//                    }
+//                }
+            }
+        });
         //滑动监听，设值
         rulerView.setOnScaleListener(new RulerView.OnScaleListener() {
             @Override
             public void onScaleChanged(int scale) {
+                isScroll = true;
+                LogUtil.e("scale:" + scale);
+                LogUtil.e("次数:" + springBackCount);
                 chooseQuota = scale;
                 etInputAmount.setText(String.valueOf((int) chooseQuota));
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
-
-                if (scale == oldScale) {
-                    if (chooseQuota < 100) {
-                        chooseQuota = Double.parseDouble("100.0");
-                        ToastUtils.showShortToast("取现不少于100元");
-                    }
-                    setData();
-                }
-                oldScale = scale;
+//
+//                if (springBackCount == 2 && scale == (int) chooseQuota && !isGetData) {
+//                    //第一次次回弹且值相等调接口
+//                    if (chooseQuota < 100) {
+//                        chooseQuota = Double.parseDouble("100.0");
+//                        ToastUtils.showShortToast("取现不少于100元");
+//                        rulerView.smoothScrollTo(100);//低于100滑到100，并提示
+//                    }
+//                    setData();
+//                    isGetData = true;
+//                }
+                // oldScale = scale;
             }
         });
 
@@ -436,7 +482,7 @@ public class CashTypeActivity extends BaseActivity {
         String cylimit = StringUtils.getTextFromView(tvAvailableCredit);
         if (!cylimit.equals(LoginHelper.getInstance().getAvailableCylimit())) {
             initView(null);
-            setData();
+            RefreshData();
         }
     }
 
@@ -458,24 +504,31 @@ public class CashTypeActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        if (CommonUtils.isNullOrEmpty(productList)) {
-            //获取产品数据（分期数）
-            ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getAvailableCylimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {
-                @Override
-                public void onSuccess(ProductResponse response) {
-                    productList = response.data;
-                    setStageNumberData(chooseQuota);
-                }
+        //获取一次
+        //获取产品数据（分期数）
+        ApiImpl.initProduct(mBaseContext, LoginHelper.getInstance().getAvailableCylimit(), new BaseRequestAgent.ResponseListener<ProductResponse>() {
+            @Override
+            public void onSuccess(ProductResponse response) {
+                productList = response.data;
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        } else {
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+        //获取费率
+        getCostFee();
+
+    }
+
+    public void RefreshData() {
+        //选中不同金额调取本地数据，不请求接口
+        if (lastEditTextValue != chooseQuota) {
+            lastEditTextValue = chooseQuota;
             setStageNumberData(chooseQuota);
         }
-        getCostFee();
     }
 
     //获取按日计息费率
@@ -568,7 +621,7 @@ public class CashTypeActivity extends BaseActivity {
     /**
      * 初始化交易密码dialog，判断是否有交易密码，有显示密码框，没有则跳转设置交易密码
      */
-    public void showPwdDialog(){
+    public void showPwdDialog() {
         final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
         pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
             @Override
@@ -614,6 +667,7 @@ public class CashTypeActivity extends BaseActivity {
             TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
         }
     }
+
     /**
      * 根据选择的额度显示不同的借款期数
      *
@@ -676,6 +730,8 @@ public class CashTypeActivity extends BaseActivity {
                 data.add(noStageProduct);
                 data.get(0).isChecked = true;
                 llShowData.setVisibility(View.GONE);
+                isChooseProduct = true;//默认选择按日计息
+                tvCostFee.setVisibility(View.VISIBLE);
 
             } else {
                 data.add(noStageProduct);
@@ -685,9 +741,9 @@ public class CashTypeActivity extends BaseActivity {
                 p = data.get(data.size() - 2);
                 localIdProduct = p.idProduct;
                 showLoanAmount(localIdProduct, (int) chooseQuota);
-                tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
                 tvCostFee.setVisibility(View.VISIBLE);
             }
+            tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
             isChooseProduct = true;//默认会选择按日计息，即使没有分期产品
             isLargeAmount = false;//标记小额
         } else {
@@ -718,7 +774,7 @@ public class CashTypeActivity extends BaseActivity {
                 layoutParams.setMargins(0, DensityUtils.dip2px(5), DensityUtils.dip2px(10), DensityUtils.dip2px(21));
                 tvCostFee.setGravity(Gravity.RIGHT);
             } else {
-                int width = (data.size() % 4 - 1) * (DensityUtils.getWidth() / 4) + 10;
+                int width = (data.size() % 4 - 1) * (DensityUtils.getWidth() / 4) + DensityUtils.dip2px(10);
                 layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(width, DensityUtils.dip2px(5), 0, DensityUtils.dip2px(21));
             }
@@ -737,7 +793,7 @@ public class CashTypeActivity extends BaseActivity {
                 ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
             }
             //更新用户信息
-            setData();
+            RefreshData();
         }
     }
 
