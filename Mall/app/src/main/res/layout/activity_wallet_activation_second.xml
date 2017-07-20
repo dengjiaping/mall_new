@@ -118,7 +118,7 @@
             android:id="@+id/tv_agreement_withhold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/title_color"
+            android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
