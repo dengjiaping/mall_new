@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,6 +23,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -33,6 +39,9 @@ import com.giveu.shoppingmall.widget.SendCodeTextView;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,21 +126,50 @@ public class WalletActivationSecondActivity extends BaseActivity {
         locationUtils.startLocation();
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
 
-        CommonUtils.setTextWithSpan(tvAgreementActivation, false, "已阅读并同意", "《即有钱包激活协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //即有钱包激活协议
-            }
-        });
-        CommonUtils.setTextWithSpan(tvAgreementWithhold, false, "及代扣还款并出具本", "《代扣服务授权书》", R.color.black, R.color.title_color, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //代扣服务授权书
-            }
-        });
+        AgreementBean agreementBean1 = new AgreementBean("已阅读并同意","《即有钱包激活协议》","你要传的url");
+        AgreementBean agreementBean2 = new AgreementBean("及代扣还款并出具本","《代扣服务授权书》","你要传的url");
+        List<AgreementBean> agreementList = new ArrayList<>();
+        agreementList.add(agreementBean1);
+        agreementList.add(agreementBean2);
+        //添加合同详情的下方动态的合同，个数会变化
+        String str = "";
+        for (int i = 0; i < agreementList.size(); i++) {
+            str += agreementList.get(i).startStr+agreementList.get(i).endStr;
+        }
+        SpannableString msp = new SpannableString(str);
+        addMsp(agreementList, msp);
+        tvAgreementActivation.setMovementMethod(LinkMovementMethod.getInstance());//开始响应点击事件
+        tvAgreementActivation.setText(msp);
+
         initPermissionDialog();
     }
+    //根据合同的数量来设置可点击的合同个数
+    public void addMsp(final List<AgreementBean> agreementList, final SpannableString msp) {
+        final List<AgreementBean> mAgreementList = agreementList;
 
+        int total = 0;
+        int start = 0;
+        for (int i = 0; i < mAgreementList.size(); i++) {
+            final int dataPosition = i;
+            start = total + mAgreementList.get(i).startStr.length();
+            total = start + mAgreementList.get(i).endStr.length();
+
+            msp.setSpan(new ClickableSpan() {
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+
+                @Override
+                public void onClick(View widget) {
+                    //跳转
+                    ToastUtils.showShortToast(dataPosition+"");
+                }
+            }, start, total, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+    }
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr("请在系统设置中开启地位服务");
