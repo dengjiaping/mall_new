@@ -87,7 +87,7 @@ public class PwdDialog {
         tv_dialog_pwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RequestPasswordActivity.startIt(mActivity, true);
+                RequestPasswordActivity.startIt(mActivity, RequestPasswordActivity.FIND_TRADE_PWD);
             }
         });
     }

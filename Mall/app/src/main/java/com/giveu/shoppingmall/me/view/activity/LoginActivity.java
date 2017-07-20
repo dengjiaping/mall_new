@@ -138,7 +138,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 break;
 
             case R.id.tv_forget_pwd:
-                RequestPasswordActivity.startIt(mBaseContext);
+                RequestPasswordActivity.startIt(mBaseContext,RequestPasswordActivity.FIND_LOGIN_PWD);
                 break;
 
             case R.id.iv_wechat_login:
