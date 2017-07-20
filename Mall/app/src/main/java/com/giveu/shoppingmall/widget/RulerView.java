@@ -151,14 +151,15 @@ public class RulerView extends View {
         initValue();
     }
 
-    //滑动停下的监听事件
-    public interface OnMoveStopListener {
+    //监听回弹事件
+    public interface OnAdjustIndicateListener {
         void stop();
     }
 
-    private OnMoveStopListener listener;
+    private OnAdjustIndicateListener listener;
 
-    public void setOnMoveStopListener(OnMoveStopListener listener) {
+    //设置监听回弹事件的listener
+    public void setOnAdjustIndicateListener(OnAdjustIndicateListener listener) {
         this.listener = listener;
     }
 

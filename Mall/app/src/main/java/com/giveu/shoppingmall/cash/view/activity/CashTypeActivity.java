@@ -22,6 +22,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
@@ -41,7 +42,6 @@ import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -127,6 +127,7 @@ public class CashTypeActivity extends BaseActivity {
         setContentView(R.layout.activity_cash_type);
         rulerView = (RulerView) findViewById(R.id.ruler_view);
         initTitle();
+        BaseApplication.getInstance().fetchUserInfo();
         initDefaultBankCardLayout();
         decorView = (ViewGroup) getWindow().getDecorView();
         availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
@@ -365,61 +366,34 @@ public class CashTypeActivity extends BaseActivity {
         return true;
     }
 
-    int springBackCount = 0;//回弹次数
-    boolean isScroll = false;//是否滑动了
-    boolean isGetData = false;
+    boolean isExecuteOnScaleChanged = false;//是否执行了OnScaleChanged（滑动监听）
     double lastEditTextValue;
 
     @Override
     public void setListener() {
         super.setListener();
 
-        rulerView.setOnMoveStopListener(new RulerView.OnMoveStopListener() {
+        rulerView.setOnAdjustIndicateListener(new RulerView.OnAdjustIndicateListener() {
             @Override
             public void stop() {
-                LogUtil.e("回弹");
-                if (isScroll) {
+                if (isExecuteOnScaleChanged) {
                     //第一次次回弹且值相等调接口
                     if (chooseQuota < 100) {
-                        //chooseQuota = Double.parseDouble("100.0");
                         ToastUtils.showShortToast("取现不少于100元");
                         rulerView.smoothScrollTo(100);//低于100滑到100，并提示
                     }
                     RefreshData();
                 }
-
-//                if (isScroll) {
-//                    springBackCount++;
-//                    if (springBackCount == 3) {
-//                        springBackCount = 1;
-//                        isGetData = false;
-//                        isScroll = false;
-//                    }
-//                }
             }
         });
         //滑动监听，设值
         rulerView.setOnScaleListener(new RulerView.OnScaleListener() {
             @Override
             public void onScaleChanged(int scale) {
-                isScroll = true;
-                LogUtil.e("scale:" + scale);
-                LogUtil.e("次数:" + springBackCount);
+                isExecuteOnScaleChanged = true;
                 chooseQuota = scale;
                 etInputAmount.setText(String.valueOf((int) chooseQuota));
                 etInputAmount.setSelection(StringUtils.getTextFromView(etInputAmount).length());
-//
-//                if (springBackCount == 2 && scale == (int) chooseQuota && !isGetData) {
-//                    //第一次次回弹且值相等调接口
-//                    if (chooseQuota < 100) {
-//                        chooseQuota = Double.parseDouble("100.0");
-//                        ToastUtils.showShortToast("取现不少于100元");
-//                        rulerView.smoothScrollTo(100);//低于100滑到100，并提示
-//                    }
-//                    setData();
-//                    isGetData = true;
-//                }
-                // oldScale = scale;
             }
         });
 
@@ -510,7 +484,6 @@ public class CashTypeActivity extends BaseActivity {
             @Override
             public void onSuccess(ProductResponse response) {
                 productList = response.data;
-
             }
 
             @Override
@@ -556,7 +529,6 @@ public class CashTypeActivity extends BaseActivity {
         //取现完成返回刷新数据（VerifyActivity）
         refrashUI();
     }
-
 
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
@@ -615,7 +587,6 @@ public class CashTypeActivity extends BaseActivity {
                 dialog.showDialog();
                 break;
         }
-
     }
 
     /**
@@ -646,10 +617,8 @@ public class CashTypeActivity extends BaseActivity {
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
                                         errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
                                     }
-
                                     CommonUtils.closeSoftKeyBoard(mBaseContext);
                                 }
-
                             }
 
                             @Override
