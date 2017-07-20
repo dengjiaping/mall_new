@@ -285,7 +285,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                 return;
             } else if (LoginActivity.class.getName().equals(className) || VerifyPwdActivity.class.getName().equals(className)) {
                 //从登录页面过来的或密码解锁界面
-                if (TextUtils.isEmpty(SharePrefUtil.getPatternPwd()) || !SharePrefUtil.hasFingerPrint()) {
+                if (TextUtils.isEmpty(SharePrefUtil.getPatternPwd()) && !SharePrefUtil.hasFingerPrint()) {
                     //如果没有设置手势，第一次提示设置
                     ((MainActivity) this).settingPatternOrFingerPrint();
                 }

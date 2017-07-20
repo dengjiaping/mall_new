@@ -118,16 +118,20 @@ public class CreateGestureActivity extends BaseActivity {
                 break;
             case CORRECT:
                 lockPatternView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
+                lockPatternView.clearPattern();
                 break;
             case LESSERROR:
                 lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
+                lockPatternView.clearPattern();
                 break;
             case CONFIRMERROR:
                 lockPatternView.setViewMode(PatternLockView.PatternViewMode.WRONG);
+                lockPatternView.clearPattern();
                 break;
             case CONFIRMCORRECT:
                 saveChosenPattern(pattern);
                 setLockPatternSuccess();
+                lockPatternView.clearPattern();
                 break;
         }
     }

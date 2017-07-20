@@ -141,9 +141,6 @@ public class LoginHelper extends AbsSharePref {
         }
         //退出登录后清空有权限的token
         SharePrefUtil.setAppToken("");
-        //清空手势与登录密码
-        SharePrefUtil.setFingerPrint(false);
-        SharePrefUtil.setPatternPwd("");
         loginPersonInfo = null;
     }
 
