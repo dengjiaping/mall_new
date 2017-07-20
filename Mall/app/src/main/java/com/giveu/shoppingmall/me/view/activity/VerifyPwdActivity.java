@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 import butterknife.BindView;
@@ -154,8 +155,10 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
     @Override
     public void onLoginSuccess(LoginResponse data) {
         if (isForSetting) {
-            //关闭手势
+            //关闭手势或指纹
             if (isForClosePattern) {
+                SharePrefUtil.setPatternPwd("");
+                SharePrefUtil.setFingerPrint(false);
                 //重新计时
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 setResult(RESULT_OK);

@@ -23,6 +23,8 @@ import com.giveu.shoppingmall.widget.EditView;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.giveu.shoppingmall.utils.LoginHelper.REMEBER_ACCOUNT;
+
 /**
  * Created by 513419 on 2017/6/20.
  */
@@ -38,15 +40,15 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     private boolean isSetPassword;
     private SetPasswordPresenter presenter;
     private String mobile;
-    private String smsCode;
+    private String randomCode;
     private String randCode;
     public static final int REQUEST_FINISH = 10000;
 
-    public static void startIt(Activity activity, boolean isSetPassword, String mobile, String smsCode) {
+    public static void startIt(Activity activity, boolean isSetPassword, String mobile, String randomCode) {
         Intent intent = new Intent(activity, SetPasswordActivity.class);
         intent.putExtra("isSetPassword", isSetPassword);
         intent.putExtra("mobile", mobile);
-        intent.putExtra("smsCode", smsCode);
+        intent.putExtra("randomCode", randomCode);
         activity.startActivityForResult(intent, REQUEST_FINISH);
     }
 
@@ -63,7 +65,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         setContentView(R.layout.activity_set_password);
         isSetPassword = getIntent().getBooleanExtra("isSetPassword", false);
         mobile = getIntent().getStringExtra("mobile");
-        smsCode = getIntent().getStringExtra("smsCode");
+        randomCode = getIntent().getStringExtra("randomCode");
         randCode = getIntent().getStringExtra("randCode");
         //区分是设置密码还是重置密码
         if (isSetPassword) {
@@ -100,7 +102,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
                     if (StringUtils.checkLoginPwdAndTipError(etPwd.getText().toString(),true)) {
                         if (isSetPassword) {
                             //设置密码
-                            presenter.register(mobile, MD5.MD5Encode(etPwd.getText().toString()), smsCode);
+                            presenter.register(mobile, MD5.MD5Encode(etPwd.getText().toString()), randomCode);
                         } else {
                             //重置密码
                             presenter.resetPassword(mobile, MD5.MD5Encode(etPwd.getText().toString()), randCode, LoginHelper.getInstance().getUserName());
@@ -150,6 +152,8 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     @Override
     public void registerSuccess(RegisterResponse response) {
         ToastUtils.showShortToast("注册成功");
+        //只保存账号，以便在登录界面显示注册的账号
+        LoginHelper.getInstance().putString(REMEBER_ACCOUNT, mobile);
         setResult(RESULT_OK);
         finish();
     }

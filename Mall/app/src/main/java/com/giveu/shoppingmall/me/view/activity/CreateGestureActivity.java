@@ -150,7 +150,7 @@ public class CreateGestureActivity extends BaseActivity {
      * 成功设置了手势密码(跳到首页)
      */
     private void setLockPatternSuccess() {
-        ToastUtils.showShortToast("手势密码设置成功");
+        ToastUtils.showShortToast("图案解锁密码设置成功");
         setResult(RESULT_OK);
         finish();
     }
