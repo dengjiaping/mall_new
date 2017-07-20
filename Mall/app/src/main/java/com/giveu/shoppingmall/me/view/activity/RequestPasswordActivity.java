@@ -179,6 +179,12 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
             }
             return false;
         }
+        if ("获取验证码".equals(tvSendCode.getText().toString()) && tvSendCode.isEnabled()) {
+            if (showToast) {
+                ToastUtils.showShortToast("请获取验证码");
+            }
+            return false;
+        }
 
         if (etVertificationCode.getText().toString().length() == 0) {
             if (showToast) {
@@ -205,6 +211,7 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     @Override
     public void sendSMSSuccess() {
         tvSendCode.startCount(null);
+        canClick(false);
     }
 
     @Override
