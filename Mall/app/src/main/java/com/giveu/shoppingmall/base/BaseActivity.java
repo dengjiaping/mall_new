@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -310,6 +312,15 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         getIntent().putExtra(MainActivity.lockPatternKey, "");
     }
 
+    @Override
+    public Resources getResources() {
+        //设置字体大小不随系统字体大小而改变
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics());
+        return res;
+    }
 
     /**
      * 判断当前activity超时是否需要锁屏
