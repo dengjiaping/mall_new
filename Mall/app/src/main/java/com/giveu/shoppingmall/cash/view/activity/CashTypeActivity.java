@@ -556,6 +556,9 @@ public class CashTypeActivity extends BaseActivity {
                 break;
             case R.id.tv_ensure_bottom:
                 //确定
+                if (!ensureBtnCanclick(chooseQuota)) {
+                    return;
+                }
                 if (!isChooseProduct) {
                     ToastUtils.showShortToast("请选择分期产品！");
                     return;
@@ -566,12 +569,6 @@ public class CashTypeActivity extends BaseActivity {
                 }
                 if (!cbDesc.isChecked()) {
                     ToastUtils.showShortToast("请勾选协议！");
-                    return;
-                }
-                double chooseAmount = Double.parseDouble(availableCylimit);
-                if (chooseQuota > chooseAmount) {
-                    //选择的金额大于可用额度
-                    ToastUtils.showLongToast("取现可用额度不足");
                     return;
                 }
                 showPwdDialog();
@@ -600,7 +597,7 @@ public class CashTypeActivity extends BaseActivity {
                 ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
                             @Override
                             public void onSuccess(PayPwdResponse response) {
-                                pwdDialog.dissmissDialog();
+                                //pwdDialog.dissmissDialog();
                                 if (response.data != null) {
                                     PayPwdResponse pwdResponse = response.data;
                                     if (pwdResponse.status) {
@@ -611,6 +608,7 @@ public class CashTypeActivity extends BaseActivity {
                                         } else {
                                             creditType = "SQ";
                                         }
+                                        pwdDialog.dissmissDialog();
                                         VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code);
                                     } else {
                                         //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
