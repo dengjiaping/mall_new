@@ -156,7 +156,7 @@ public class MyBankCardActivity extends BaseActivity {
                     showBankNoStyle(position);
                     finish();
                 } else {
-                    showManageCardDialog(dialogUtil,position);
+                    showManageCardDialog(dialogUtil, position);
                 }
 
             }
@@ -174,7 +174,7 @@ public class MyBankCardActivity extends BaseActivity {
                 if (bankListAdapter.getItem(position) == null) {
                     return true;
                 }
-                showManageCardDialog(dialogUtil,position);
+                showManageCardDialog(dialogUtil, position);
                 return true;
             }
         });
@@ -182,10 +182,11 @@ public class MyBankCardActivity extends BaseActivity {
 
     /**
      * 显示管理银行卡的Dialog
+     *
      * @param dialogUtil
      * @param position
      */
-    public void showManageCardDialog(CustomDialogUtil dialogUtil,final int position){
+    public void showManageCardDialog(CustomDialogUtil dialogUtil, final int position) {
 
         final String id = String.valueOf(bankListAdapter.getItem(position).id);
         dialogUtil.getDialogMode3("解绑银行卡", "设置为默认代扣卡", "取消", new View.OnClickListener() {
@@ -206,7 +207,9 @@ public class MyBankCardActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshBank(AddCardEvent event) {
         setData();
+        LoginHelper.getInstance().setBankIconUrl(defalutBankIconUrl);
     }
+
     /**
      * 传入点击项，返回4位尾数的银行卡号给上一页面
      *
@@ -363,12 +366,12 @@ public class MyBankCardActivity extends BaseActivity {
                             break;
                         }
                     }
-                    if (hasDefaultBank){
+                    if (hasDefaultBank) {
                         llDefaultBankCard.setVisibility(View.VISIBLE);
                         tvDefalutBankName.setText(StringUtils.nullToEmptyString(defalutBankName));
                         tvDefalutBankCardNo.setText(StringUtils.nullToEmptyString(changeBankNoStyle(defalutBankCardNo)));
                         ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
-                    }else{
+                    } else {
                         llDefaultBankCard.setVisibility(View.GONE);
                     }
                     //设置其他银行卡列表数据

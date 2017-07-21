@@ -204,7 +204,15 @@ public class LoginHelper extends AbsSharePref {
     public String getBankName() {
         return loginPersonInfo == null ? null : loginPersonInfo.bankName;
     }
-
+    /**
+     * 设置默认卡名称
+     */
+    public void setBankName(String bankName) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.bankName = bankName;
+            putString(BANK_NAME, loginPersonInfo.bankName);
+        }
+    }
     /**
      * 记住登录账号
      *
@@ -222,7 +230,15 @@ public class LoginHelper extends AbsSharePref {
     public String getBankIconUrl() {
         return loginPersonInfo == null ? null : loginPersonInfo.bankIconUrl;
     }
-
+    /**
+     * 设置默认卡Icon的url
+     */
+    public void setBankIconUrl(String bankIconUrl) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.bankIconUrl = bankIconUrl;
+            putString(BANK_ICON_URL, loginPersonInfo.bankIconUrl);
+        }
+    }
     /**
      * 默认银行卡号
      *
@@ -231,7 +247,15 @@ public class LoginHelper extends AbsSharePref {
     public String getDefaultCard() {
         return loginPersonInfo == null ? null : loginPersonInfo.defaultCard;
     }
-
+    /**
+     * 设置默认卡卡号
+     */
+    public void setDefaultCard(String defaultCard) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.defaultCard = defaultCard;
+            putString(DEFAULT_CARD, loginPersonInfo.defaultCard);
+        }
+    }
 
     @Override
     public String getSharedPreferencesName() {
@@ -385,10 +409,10 @@ public class LoginHelper extends AbsSharePref {
     /**
      * 设置是否有默认卡
      */
-    public void setHasDefaultCard(String isDefalut) {
+    public void setHasDefaultCard(boolean isDefalut) {
         if (loginPersonInfo != null) {
-            loginPersonInfo.defaultCard = isDefalut;
-            putString(DEFAULT_CARD, loginPersonInfo.defaultCard);
+            loginPersonInfo.hasDefaultCard = isDefalut;
+            putBoolean(HAS_DEFAULT_CARD, loginPersonInfo.hasDefaultCard);
         }
     }
 
@@ -412,10 +436,11 @@ public class LoginHelper extends AbsSharePref {
 
     /**
      * 设置idPerson
+     *
      * @param idPerson
      */
     public void setIdPerson(String idPerson) {
-        if(loginPersonInfo != null){
+        if (loginPersonInfo != null) {
             loginPersonInfo.idPerson = idPerson;
             putString(ID_PERSON, loginPersonInfo.idPerson);
         }

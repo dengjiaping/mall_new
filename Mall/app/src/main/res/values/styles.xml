@@ -427,7 +427,6 @@
         <item name="android:maxLength">30</item>
 
     </style>
-
     <style name="activity_wallet_activation_et_style">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -436,6 +435,7 @@
         <item name="android:textSize">@dimen/ts_16</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/color_4a4a4a</item>
+        <item name="android:textColorHint">@color/color_d8d8d8</item>
     </style>
 
     <style name="activity_wallet_activation_iv_style">

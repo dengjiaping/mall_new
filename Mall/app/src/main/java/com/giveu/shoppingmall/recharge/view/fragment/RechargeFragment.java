@@ -48,6 +48,7 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.dialog.OnlyConfirmDialog;
+import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 
@@ -109,6 +110,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private int paymentType;
     private ChargeOrderDialog orderDialog;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    private PermissionDialog permissionDialog;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,6 +122,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
         notActiveDialog = new NotActiveDialog(mBaseContext);
+        initPermissionDialog();
         registerEventBus();
         return view;
     }
@@ -186,6 +189,14 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void updateUserInfo(LoginResponse response) {
         //更新手机号
         initPhoneAndQuery();
+    }
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
+        permissionDialog.setNeedFinish(false);
+        permissionDialog.setConfirmStr("去设置");
+        permissionDialog.setCancleStr("暂不");
+        permissionDialog.setTitle("读取通讯录权限未开启");
     }
 
     @Override
@@ -421,7 +432,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
             Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
             if(cursor.getCount() == 0){
-                ToastUtils.showLongToast("请开启读取通讯录权限后重试");
+                permissionDialog.show();
                 return;
             }
             cursor.moveToFirst();

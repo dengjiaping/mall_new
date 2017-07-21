@@ -352,8 +352,8 @@ public class ApiImpl {
     }
 
     //绑卡识别(卡bin)
-    public static void identifyCard(Activity context, String bankPerson, String cardNo, String idPerson, BaseRequestAgent.ResponseListener<IdentifyCardResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankPerson", "cardNo", "idPerson"}, new Object[]{bankPerson, cardNo, StringUtils.string2Long(idPerson)});
+    public static void identifyCard(Activity context, String bankPerson, String cardNo, String idPerson,String ident, BaseRequestAgent.ResponseListener<IdentifyCardResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankPerson", "cardNo", "idPerson","ident"}, new Object[]{bankPerson, cardNo, StringUtils.string2Long(idPerson),ident});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_identifyCard, IdentifyCardResponse.class, context, responseListener);
     }
 

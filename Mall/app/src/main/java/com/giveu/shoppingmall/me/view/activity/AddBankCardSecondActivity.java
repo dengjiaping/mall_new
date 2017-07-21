@@ -243,17 +243,18 @@ public class AddBankCardSecondActivity extends BaseActivity {
                      String isDefault;
                     if (LoginHelper.getInstance().hasDefaultCard()) {
                         //有默认卡
-                        isDefault = "0";//当前设置其他卡
-                    } else {
-                        //无默认卡
-                        isDefault = "1";//当前设置默认卡
-                    }
-                    ApiImpl.addBankCard(mBaseContext, bankPhone, bankName, bankNo, bankPerson, sendCode, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getIdent(), isDefault, orderNo, "1", smsSeq, new BaseRequestAgent.ResponseListener<AgreementApplyResponse>() {
+                    isDefault = "0";//当前设置其他卡
+                } else {
+                    //无默认卡
+                    isDefault = "1";//当前设置默认卡
+                }
+
+                    ApiImpl.addBankCard(mBaseContext, bankPhone, bankName, bankNo, bankPerson, sendCode, LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getIdent(), "1", orderNo, "1", smsSeq, new BaseRequestAgent.ResponseListener<AgreementApplyResponse>() {
                         NormalHintDialog dialog;
 
                         @Override
                         public void onSuccess(AgreementApplyResponse response) {
-                            dialog = new NormalHintDialog(mBaseContext, response.message);
+                            dialog = new NormalHintDialog(mBaseContext, "银行卡添加成功，\n已自动设置为默认卡");
                             dialog.showDialog();
                             dialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
                                 @Override
@@ -261,8 +262,11 @@ public class AddBankCardSecondActivity extends BaseActivity {
                                     MyBankCardActivity.startIt(mBaseContext);
                                 }
                             });
-                            //添加银行卡成功，hasDefault设为“1”，表示有默认卡
-                            LoginHelper.getInstance().setHasDefaultCard("1");
+                            //添加银行卡成功，hasDefault设为true，表示有默认卡
+                            LoginHelper.getInstance().setHasDefaultCard(true);
+                            LoginHelper.getInstance().setBankName(bankName);
+
+                            LoginHelper.getInstance().setDefaultCard(bankNo);
                             EventBusUtils.poseEvent(new AddCardEvent());
                         }
 

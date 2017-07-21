@@ -95,10 +95,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginTop="19dp"
-        android:gravity="center_vertical">
+       >
 
         <CheckBox
             android:id="@+id/cb_check"
@@ -108,18 +108,12 @@
             android:checked="true" />
 
         <TextView
-            android:id="@+id/tv_agreement_activation"
+            android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/title_color"
+            android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_12" />
 
-        <TextView
-            android:id="@+id/tv_agreement_withhold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/title_color"
-            android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
     <com.giveu.shoppingmall.widget.ClickEnabledTextView

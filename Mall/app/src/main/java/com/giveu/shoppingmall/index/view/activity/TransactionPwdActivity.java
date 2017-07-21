@@ -12,7 +12,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -39,7 +38,6 @@ public class TransactionPwdActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_pwd);
         baseLayout.setTitle("设置交易密码");
-        CommonUtils.openSoftKeyBoard(mBaseContext);
     }
 
     public static void startIt(Activity mActivity, String idPerson) {

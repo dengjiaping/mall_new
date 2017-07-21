@@ -117,7 +117,7 @@ public class AddBankCardFirstActivity extends BaseActivity {
             CommonUtils.closeSoftKeyBoard(etBanknumber.getWindowToken(), mBaseContext);
             final String name = StringUtils.getTextFromView(etUsername);
             final String bankNo = StringUtils.getTextFromView(etBanknumber);
-            ApiImpl.identifyCard(mBaseContext, name, bankNo, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
+            ApiImpl.identifyCard(mBaseContext, name, bankNo, LoginHelper.getInstance().getIdPerson(),LoginHelper.getInstance().getIdent(), new BaseRequestAgent.ResponseListener<IdentifyCardResponse>() {
                 @Override
                 public void onSuccess(IdentifyCardResponse response) {
                     String bankCode = "";
@@ -136,7 +136,6 @@ public class AddBankCardFirstActivity extends BaseActivity {
                     if (errorBean != null) {
                         NormalHintDialog dialog = new NormalHintDialog(mBaseContext, errorBean.message);
                         dialog.showDialog();
-
                     }
                 }
             });

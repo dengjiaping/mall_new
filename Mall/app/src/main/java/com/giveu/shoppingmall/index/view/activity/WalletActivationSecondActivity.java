@@ -1,9 +1,18 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,6 +27,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -34,8 +44,10 @@ import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -72,10 +84,8 @@ public class WalletActivationSecondActivity extends BaseActivity {
     String name;
     String bankNo;
     String phone;
-    @BindView(R.id.tv_agreement_activation)
-    TextView tvAgreementActivation;
-    @BindView(R.id.tv_agreement_withhold)
-    TextView tvAgreementWithhold;
+    @BindView(R.id.tv_agreement)
+    TextView tvAgreement;
 
 
     private String latitude;
@@ -114,31 +124,75 @@ public class WalletActivationSecondActivity extends BaseActivity {
             etPhone.setText(phone);
         }
         locationUtils = new LocationUtils(mBaseContext);
-        locationUtils.startLocation();
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
 
-        CommonUtils.setTextWithSpan(tvAgreementActivation, false, "已阅读并同意", "《即有钱包激活协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //即有钱包激活协议
-            }
-        });
-        CommonUtils.setTextWithSpan(tvAgreementWithhold, false, "及代扣还款并出具本", "《代扣服务授权书》", R.color.black, R.color.title_color, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //代扣服务授权书
-            }
-        });
+        AgreementBean agreementBean1 = new AgreementBean("已阅读并同意", "《即有钱包激活协议》", "你要传的url");
+        AgreementBean agreementBean2 = new AgreementBean("及代扣还款并出具本", "《代扣服务授权书》", "你要传的url");
+        List<AgreementBean> agreementList = new ArrayList<>();
+        agreementList.add(agreementBean1);
+        agreementList.add(agreementBean2);
+        //添加合同详情的下方动态的合同，个数会变化
+        String str = "";
+        for (int i = 0; i < agreementList.size(); i++) {
+            str += agreementList.get(i).startStr + agreementList.get(i).endStr;
+        }
+        SpannableString msp = new SpannableString(str);
+        addMsp(agreementList, msp);
+        tvAgreement.setMovementMethod(LinkMovementMethod.getInstance());//开始响应点击事件
+        tvAgreement.setText(msp);
+
         initPermissionDialog();
+        locationUtils.startLocation();
+//这里以ACCESS_COARSE_LOCATION为例
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1001);//自定义的code
+        }
     }
 
+    //根据合同的数量来设置可点击的合同个数
+    public void addMsp(final List<AgreementBean> agreementList, final SpannableString msp) {
+        final List<AgreementBean> mAgreementList = agreementList;
+
+        int total = 0;
+        int start = 0;
+        for (int i = 0; i < mAgreementList.size(); i++) {
+            final int dataPosition = i;
+            start = total + mAgreementList.get(i).startStr.length();
+            total = start + mAgreementList.get(i).endStr.length();
+
+            msp.setSpan(new ClickableSpan() {
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+
+                @Override
+                public void onClick(View widget) {
+                    //跳转
+                    ToastUtils.showShortToast(dataPosition + "");
+                }
+            }, start, total, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //可在此继续其他操作。
+        if(requestCode == 1001){
+            ToastUtils.showLongToast("成功获取");
+        }
+    }
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("请在系统设置中开启地位服务");
+        permissionDialog.setPermissionStr("请在系统设置中开启GPS和定位权限");
         permissionDialog.setNeedFinish(false);
         permissionDialog.setConfirmStr("去设置");
         permissionDialog.setCancleStr("暂不");
-        permissionDialog.setTitle("定位服务未开启");
     }
 
     @Override
@@ -151,6 +205,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
         editTextListener(etBankNo, ivBankNo);
         showPhoneTextColor(ivPhone, etPhone, StringUtils.getTextFromView(etPhone));
         showPhoneTextColor(ivBankNo, etBankNo, StringUtils.getTextFromView(etBankNo));
+
 
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -182,8 +237,8 @@ public class WalletActivationSecondActivity extends BaseActivity {
                     }
                     locationUtils.stopLocation();
                 } else {
-                    ToastUtils.showLongToast("正在定位");
                     locationUtils.startLocation();
+                    ToastUtils.showLongToast("正在定位");
                 }
             }
         });
@@ -281,7 +336,6 @@ public class WalletActivationSecondActivity extends BaseActivity {
                 break;
             case R.id.tv_activation:
                 if (tvActivation.isClickEnabled()) {
-                    locationUtils.startLocation();//定位获取经纬度
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
                         public void onSuccess(final WalletActivationResponse response) {
@@ -375,12 +429,5 @@ public class WalletActivationSecondActivity extends BaseActivity {
         if (locationUtils != null) {
             locationUtils.destory();
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }
