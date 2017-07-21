@@ -38,6 +38,10 @@ public class SplashActivity extends BasePermissionActivity {
     private boolean needTurn;
     private PermissionDialog permissionDialog;
     private long lastTimeMillis;
+    //是否被用户禁止不再询问，设此标志位是因为onPermissionReallyDeclined
+    //回调后会执行onResume方法，导致setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+    //重复调用导致闪屏
+    private boolean isPermissionReallyDeclined;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -58,22 +62,23 @@ public class SplashActivity extends BasePermissionActivity {
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
                 startActivity(intent);
+                //进入设置了，下次onResume时继续判断申请权限
+                isPermissionReallyDeclined = false;
                 permissionDialog.dismiss();
-                finish();
             }
 
             @Override
             public void cancle() {
+                permissionDialog.dismiss();
                 finish();
             }
         });
-        //7.0系统动态获取权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
-        } else {
+        //6.0系统动态获取权限
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             startCountTime();
         }
     }
+
 
     @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
@@ -84,6 +89,8 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     public void onPermissionReallyDeclined(@NonNull String permissionName) {
         super.onPermissionReallyDeclined(permissionName);
+        //禁止不再询问会直接回调这方法
+        isPermissionReallyDeclined = true;
         permissionDialog.show();
     }
 
@@ -133,6 +140,12 @@ public class SplashActivity extends BasePermissionActivity {
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!isPermissionReallyDeclined) {
+                setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+            }
+        }
+
     }
 
     @Override

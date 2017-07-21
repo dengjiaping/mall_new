@@ -1,8 +1,13 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
 import android.widget.CheckBox;
@@ -15,8 +20,8 @@ import com.amap.api.location.AMapLocation;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
@@ -30,6 +35,7 @@ import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -44,7 +50,7 @@ import butterknife.OnClick;
  * Created by 101900 on 2017/6/19.
  */
 
-public class WalletActivationSecondActivity extends BaseActivity {
+public class WalletActivationSecondActivity extends BasePermissionActivity {
 
     @BindView(R.id.iv_bank_no)
     ImageView ivBankNo;
@@ -84,6 +90,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
     NormalHintDialog walletActivationDialog;
     private PermissionDialog permissionDialog;
     private int hasLocationTimes = 0;
+    private boolean isPermissionReallyDeclined;//该boolean的意义参考SplashActivity
 
     public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
@@ -114,7 +121,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
             etPhone.setText(phone);
         }
         locationUtils = new LocationUtils(mBaseContext);
-        locationUtils.startLocation();
+
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
 
         CommonUtils.setTextWithSpan(tvAgreementActivation, false, "已阅读并同意", "《即有钱包激活协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
@@ -132,14 +139,55 @@ public class WalletActivationSecondActivity extends BaseActivity {
         initPermissionDialog();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!isPermissionReallyDeclined) {
+                setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+            }
+        } else {
+            locationUtils.startLocation();
+        }
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull String permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
+        permissionDialog.setPermissionStr("钱包激活需要位置权限才可正常使用");
+        permissionDialog.show();
+        isPermissionReallyDeclined = true;
+    }
+
+    @Override
+    public void onPermissionGranted(@NonNull String[] permissionName) {
+        super.onPermissionGranted(permissionName);
+        locationUtils.startLocation();
+    }
+
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("请在系统设置中开启地位服务");
-        permissionDialog.setNeedFinish(false);
-        permissionDialog.setConfirmStr("去设置");
-        permissionDialog.setCancleStr("暂不");
-        permissionDialog.setTitle("定位服务未开启");
+        permissionDialog.setPermissionStr(getResources().getString(R.string.app_name) + "需要位置权限才可正常使用");
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                permissionDialog.dismiss();
+                isPermissionReallyDeclined = false;
+            }
+
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
+                finish();
+            }
+        });
     }
+
 
     @Override
     public void setListener() {
@@ -175,6 +223,7 @@ public class WalletActivationSecondActivity extends BaseActivity {
                         case 10:
                         case 12:
                         case 13:
+                            permissionDialog.setPermissionStr("请检查网络或位置权限");
                             permissionDialog.show();
                             break;
                         default:

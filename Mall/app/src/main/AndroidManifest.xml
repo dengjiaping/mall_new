@@ -276,6 +276,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".index.view.activity.WalletActivationSecondActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:label="钱包激活二级页" />
         <activity
             android:name=".index.view.activity.ActivationStatusActivity"

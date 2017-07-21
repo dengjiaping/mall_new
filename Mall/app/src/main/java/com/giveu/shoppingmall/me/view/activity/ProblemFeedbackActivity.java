@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -55,7 +56,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     private ProblemFeedBackPresenter presenter;
     private ArrayList<String> uploadList;
     private PermissionDialog permissionDialog;
-    private boolean needShow;
+    private boolean isPermissionReallyDeclined;//该boolean的意义参考SplashActivity
 
 
     public static void startIt(Activity mActivity) {
@@ -67,8 +68,6 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_problem_feedback);
         baseLayout.setTitle("问题反馈");
-        //先申请存储权限，存储权限获取后才去申请相机权限
-        setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
         setTextCustomerPhone();
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.setRightTextAndListener("记录", new View.OnClickListener() {
@@ -91,7 +90,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
                 intent.setData(uri);
                 startActivity(intent);
                 permissionDialog.dismiss();
-                finish();
+                isPermissionReallyDeclined = false;
             }
 
             @Override
@@ -103,11 +102,22 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isPermissionReallyDeclined) {
+            //先申请存储权限，存储权限获取后才去申请相机权限
+            setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+        }
+    }
+
+    @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
+        //先申请存储权限，存储权限获取后才去申请相机权限
         for (String s : permissionName) {
             if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(s)) {
                 setPermissionHelper(true, new String[]{Manifest.permission.CAMERA});
+                break;
             }
         }
     }
@@ -116,6 +126,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     public void onPermissionReallyDeclined(@NonNull String permissionName) {
         super.onPermissionReallyDeclined(permissionName);
         String permissionStr = "";
+        isPermissionReallyDeclined = true;
         if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(permissionName)) {
             permissionStr = "存储";
 
