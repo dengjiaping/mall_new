@@ -244,7 +244,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         //只有Activity不是回收后重建才显示密码框
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
-//            dealLockPattern();
+            dealLockPattern();
         }
     }
 
