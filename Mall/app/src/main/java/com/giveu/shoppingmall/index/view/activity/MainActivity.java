@@ -1,9 +1,16 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,9 +24,10 @@ import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
@@ -36,6 +44,8 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
+import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 
 import java.util.ArrayList;
 
@@ -45,7 +55,7 @@ import cn.jpush.android.api.JPushInterface;
 
 import static java.lang.System.currentTimeMillis;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BasePermissionActivity {
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
     //    public MainRepayFragment mainRepayFragment;
@@ -67,6 +77,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tv_me)
     TextView tvMe;
 
+    private PermissionDialog permissionDialog;
+
     private FragmentManager manager;
     //    private RadioGroup buttomBar;
     long exitTime;
@@ -78,6 +90,7 @@ public class MainActivity extends BaseActivity {
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    private boolean isPermissionReallyDeclined;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -107,6 +120,57 @@ public class MainActivity extends BaseActivity {
         resetIconAndTextColor();
         selectIconAndTextColor(0);
         BaseApplication.getInstance().fetchUserInfo();
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                //进入设置了，下次onResume时继续判断申请权限
+                isPermissionReallyDeclined = false;
+                permissionDialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 6.0以上系统申请通讯录权限
+     */
+    public void applyContactPermission() {
+        if (PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.READ_CONTACTS)) {
+            skipToContactsContract();
+        } else {
+            setPermissionHelper(false, new String[]{Manifest.permission.READ_CONTACTS});
+        }
+    }
+
+
+    @Override
+    public void onPermissionGranted(@NonNull String[] permissionName) {
+        super.onPermissionGranted(permissionName);
+    }
+
+    public void skipToContactsContract() {
+        //跳转通讯录
+        startActivityForResult(new Intent(Intent.ACTION_PICK,
+                ContactsContract.Contacts.CONTENT_URI), 0);
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull String permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
+        //禁止不再询问会直接回调这方法
+        isPermissionReallyDeclined = true;
+        permissionDialog.show();
     }
 
 
@@ -276,6 +340,8 @@ public class MainActivity extends BaseActivity {
             //上传设备号至服务器
 //            ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
         }
+
+
     }
 
     DownloadApkUtils downloadApkUtils = null;
@@ -361,4 +427,51 @@ public class MainActivity extends BaseActivity {
         setIntent(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            if (rechargeFragment != null) {
+                // ContentProvider展示数据类似一个单个数据库表
+                // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
+                ContentResolver reContentResolverol = getContentResolver();
+                // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
+                Uri contactData = data.getData();
+                // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
+                Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
+                if (cursor.getCount() == 0) {
+                    permissionDialog.show();
+                    return;
+                }
+                cursor.moveToFirst();
+                // 获得DATA表中的名字
+                String username = cursor.getString(cursor
+                        .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                // 条件为联系人ID
+                String contactId = cursor.getString(cursor
+                        .getColumnIndex(ContactsContract.Contacts._ID));
+                // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+                Cursor phone = reContentResolverol.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
+                                + contactId, null, null);
+                while (phone != null && phone.moveToNext()) {
+                    //填入号码
+                    String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
+                    if (sb.toString().length() != 11) {
+                        ToastUtils.showShortToast("手机号码格式有误");
+                    } else {
+                        sb.insert(3, " ");
+                        sb.insert(8, " ");
+                        rechargeFragment.setPhoneText(sb.toString());
+                    }
+                }
+                if (phone != null) {
+                    phone.close();
+                }
+            }
+
+        }
+    }
 }

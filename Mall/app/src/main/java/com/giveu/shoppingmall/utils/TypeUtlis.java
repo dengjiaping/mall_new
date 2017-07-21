@@ -234,6 +234,8 @@ public class TypeUtlis {
      * 随借随还取现 返回3
      *
      * @param creditType 合同类型
+     *                   sh:取现，sf:商城消费分期，sy:商城一次性消费，
+     *                   ss:线下消费，sq:常规取现分期，sd:大额取现分期
      */
     public static int getConsumType(String creditType) {
         int consumeType = 1;
@@ -241,14 +243,13 @@ public class TypeUtlis {
             return consumeType;
         }
         switch (creditType) {
-            case "sc":
             case "sf":
+            case "ss":
             case "sq":
             case "sd":
                 consumeType = 1;
                 break;
             case "sy":
-            case "ss":
                 consumeType = 2;
                 break;
             case "sh":
