@@ -533,7 +533,7 @@ public class CashTypeActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
                 //查看月供
-                ApiImpl.rpmDetail(mBaseContext, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(), localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
                         MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext, response.data);
@@ -598,20 +598,20 @@ public class CashTypeActivity extends BaseActivity {
                                     if (pwdResponse.status) {
                                         String creditType;
                                         //取现需要验证手机
-                                        if (idProduct == 0) {//自行判断，idProduct=0则是随借随还（SH），有idProduct则是分期（SQ）
+                                        if (localIdProduct == 0) {//自行判断，idProduct=0则是随借随还（SH），有idProduct则是分期（SQ）
                                             creditType = "SH";
                                         } else {
                                             creditType = "SQ";
                                         }
                                         pwdDialog.dissmissDialog();
                                         //没有切换银行卡时，传默认银行卡
-                                        if(StringUtils.isNull(chooseBankName)){
+                                        if (StringUtils.isNull(chooseBankName)) {
                                             chooseBankName = LoginHelper.getInstance().getBankName();
                                         }
-                                        if(StringUtils.isNull(chooseBankNo)){
+                                        if (StringUtils.isNull(chooseBankNo)) {
                                             chooseBankNo = LoginHelper.getInstance().getDefaultCard();
                                         }
-                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code, chooseBankName, chooseBankNo);
+                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(localIdProduct), response.data.code, chooseBankName, chooseBankNo);
                                     } else {
                                         //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
@@ -666,7 +666,9 @@ public class CashTypeActivity extends BaseActivity {
             }
         }
 
-        ProductResponse p;
+
+
+        ProductResponse p = null;
         //按日计息选项
         ProductResponse noStageProduct = new ProductResponse(0, 0, false);
         //默认显示分期gridView，和费率
@@ -710,9 +712,19 @@ public class CashTypeActivity extends BaseActivity {
 
             } else {
                 data.add(noStageProduct);
+                //不确定后台传来的分期产品是倒序还是顺序
+                if (data.size() > 2) {
+                    if (data.get(0).paymentNum > data.get(1).paymentNum) {
+                        //倒序
+                        data.get(0).isChecked = true;
+                        p = data.get(0);
+                    } else {
+                        //顺序
+                        data.get(data.size() - 2).isChecked = true;
+                        p = data.get(data.size() - 2);
+                    }
+                }
                 data.get(data.size() - 1).isChecked = false;
-                data.get(data.size() - 2).isChecked = true;
-                p = data.get(data.size() - 2);
                 localIdProduct = p.idProduct;
                 showLoanAmount(localIdProduct, (int) chooseQuota);
                 tvCostFee.setVisibility(View.VISIBLE);
@@ -734,7 +746,14 @@ public class CashTypeActivity extends BaseActivity {
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);
     }
-
+//    public void sortProduct( List<ProductResponse> data){
+//        List<ProductResponse> newData = new ArrayList<>();
+//        for (int i = 0; i < data.size(); i++) {
+//            if(){
+//
+//            }
+//        }
+//    }
     /**
      * 计算按日计息的费率的显示位置
      *

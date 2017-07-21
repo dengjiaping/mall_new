@@ -108,7 +108,7 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                 if (StringUtils.isNotNull(item.paymentNum)) {
                     holder.setText(R.id.tv_date, item.numInstalment + "/" + item.paymentNum + "期");
                 } else {
-                    holder.setText(R.id.tv_date, item.repayDate);
+                    holder.setText(R.id.tv_date, StringUtils.transactionSearchDate(item.repayDate));
                 }
                 holder.setText(R.id.tv_money, "¥" + StringUtils.format2(item.repayAmount));
                 holder.setText(R.id.tv_type, TypeUtlis.getCreditTypeText(item.creditType));

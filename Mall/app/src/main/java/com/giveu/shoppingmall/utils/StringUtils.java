@@ -316,6 +316,18 @@ public class StringUtils {
         return result;
     }
 
+    //2016/11/26转成11/26
+    public static String transactionSearchDate(String sourceDate) {
+        String repayDate = "";
+        if (StringUtils.isNotNull(sourceDate)) {
+            repayDate = sourceDate;
+            if (repayDate.length() > 2) {
+                repayDate = repayDate.substring(repayDate.indexOf("/") + 1, repayDate.length());
+            }
+        }
+        return repayDate;
+    }
+
     public static String ToSBC(String input) {
         char c[] = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
