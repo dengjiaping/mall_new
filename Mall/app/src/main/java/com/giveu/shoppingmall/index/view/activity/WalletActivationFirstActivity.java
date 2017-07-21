@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -98,14 +99,19 @@ public class WalletActivationFirstActivity extends BaseActivity {
             ApiImpl.getWalletQualified(mBaseContext, ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
                 @Override
                 public void onSuccess(WalletQualifiedResponse response) {
-                    if (response.data != null) {
-                        WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo,response.data.phone);
-                    }
+                    //有资质继续填写资料
+                    WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
                 }
 
                 @Override
                 public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
+                    //没有资质
+                    if ("sc800705".equals(errorBean.code)) {
+                        //跳转激活失败，无重新激活按钮
+                        ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
+                    }else{
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
                 }
             });
         } else {
@@ -142,7 +148,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == 100){
+        if (resultCode == RESULT_OK && requestCode == Const.ACTIVATION_CODE) {
             finish();
         }
     }

@@ -50,13 +50,15 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public static final String BANKCARD = "bankCard";
     private String salePrice;
 
-    public static void startIt(Activity activity, String statusType, String creditAmount, String creditType, String idProduct, String randCode) {
+    public static void startIt(Activity activity, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("statusType", statusType);
         intent.putExtra("creditAmount", creditAmount);
         intent.putExtra("creditType", creditType);
         intent.putExtra("idProduct", idProduct);
         intent.putExtra("randCode", randCode);
+        intent.putExtra("chooseBankName", chooseBankName);
+        intent.putExtra("chooseBankNo", chooseBankNo);
         activity.startActivity(intent);
     }
 
@@ -175,8 +177,10 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 String idProduct = getIntent().getStringExtra("idProduct");
                 final String creditType = getIntent().getStringExtra("creditType");
                 String randcode = getIntent().getStringExtra("randCode");
+                String chooseBankName = getIntent().getStringExtra("chooseBankName");
+                String chooseBankNo = getIntent().getStringExtra("chooseBankNo");
 
-                ApiImpl.addEnchashmentCredit(mBaseContext, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
+                ApiImpl.addEnchashmentCredit(mBaseContext,"0",chooseBankName,chooseBankNo, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
                     @Override
                     public void onSuccess(EnchashmentCreditResponse response) {
                         if (response.data != null) {

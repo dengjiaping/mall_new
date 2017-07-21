@@ -131,10 +131,11 @@ public class MyBankCardActivity extends BaseActivity {
                     if (defalutBankCardNo.length() >= 4) {
                         defalutBankCardNo = defalutBankCardNo.substring(defalutBankCardNo.length() - 4, defalutBankCardNo.length());
                     }
-                    String bankName = defalutBankName + "(尾号" + defalutBankCardNo + ")";
-                    data.putExtra("bankName", bankName);
-                    data.putExtra("defalutBankIconUrl", defalutBankIconUrl);
-                    setResult(RESULT_OK, data);
+ //                   String bankName = defalutBankName + "(尾号" + defalutBankCardNo + ")";
+//                    data.putExtra("defalutBankName", defalutBankName);
+//                    data.putExtra("defalutBankCardNo", defalutBankCardNo);
+//                    data.putExtra("defalutBankIconUrl", defalutBankIconUrl);
+//                    setResult(RESULT_OK, data);
                     finish();
                 }
             }
@@ -223,9 +224,19 @@ public class MyBankCardActivity extends BaseActivity {
             bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
         }
         String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
-        data.putExtra("bankName", bankName);
+        data.putExtra("chooseBankName", bankCardResponse.bankName);
+        data.putExtra("chooseBankNo", bankCardResponse.bankNo);
         data.putExtra("defalutBankIconUrl", bankCardResponse.bankIconUrl);
         setResult(RESULT_OK, data);
+//        String bankNo = bankCardResponse.bankNo;
+//        if (bankNo.length() >= 4) {
+//            bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
+//        }
+//        String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
+//        data.putExtra("bankName", bankName);
+//        data.putExtra("bankName", bankName);
+//        data.putExtra("defalutBankIconUrl", bankCardResponse.bankIconUrl);
+//        setResult(RESULT_OK, data);
     }
 
     /**

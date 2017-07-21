@@ -103,17 +103,18 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvAgreement;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
-    public final int MAXAMOUNT = 3000;//3000是大额小额取现分界值
-    public final int MINAMOUNT = 300;//低于300仅支持随借随还
+    public final int MAXAMOUNT = 3000;//3000目前最大额
+    public final int MINAMOUNT = 300;//300目前分期产品最小范围（300-1000,1000-3000）
     private ViewGroup decorView;
     ProductResponse noStageProduct;
     private int idProduct = 0;
-    private boolean isLargeAmount = false;//是否是大额
+    private boolean isLargeAmount = false;//是否是大额(下期从入口传过来，判断是大额还是小额，目前默认小额)
     String availableCylimit;
     int localIdProduct = 0;//选择的期数产品id
     boolean isChooseProduct = false;//是否选择了分期产品 false没选择
     boolean keyBordIsShow = false;
-    int oldScale = 0;//
+    String chooseBankNo;//选择的银行卡号
+    String chooseBankName;//选择的银行卡名
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
 
     public static void startIt(Activity mActivity) {
@@ -147,7 +148,7 @@ public class CashTypeActivity extends BaseActivity {
             etInputAmount.setText(String.valueOf((int) chooseQuota));//接收到的String转成int，填写到editText中
 
             initScaleScrollView(cylimit);
-            initColorByCylimit(cylimit);
+            initColorByCylimit(isLargeAmount);
             setKeyBordDismissListener();
             initAdapter(isLargeAmount);
             registerEventBus();//注册EventBus
@@ -155,16 +156,11 @@ public class CashTypeActivity extends BaseActivity {
     }
 
     /**
-     * 根据取现额度初始化当前页的字体背景颜色
+     * 根据isLargeAmount初始化当前页的字体背景颜色,true是大额
      *
-     * @param cylimit
+     * @param isLargeAmount
      */
-    public void initColorByCylimit(int cylimit) {
-        if (cylimit > MAXAMOUNT) {
-            isLargeAmount = true;
-        } else {
-            isLargeAmount = false;
-        }
+    public void initColorByCylimit(boolean isLargeAmount) {
         if (isLargeAmount) {
             //大额显示橙色
             etInputAmount.setTextColor(getResources().getColor(R.color.color_fe8d50));
@@ -597,7 +593,6 @@ public class CashTypeActivity extends BaseActivity {
                 ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
                             @Override
                             public void onSuccess(PayPwdResponse response) {
-                                //pwdDialog.dissmissDialog();
                                 if (response.data != null) {
                                     PayPwdResponse pwdResponse = response.data;
                                     if (pwdResponse.status) {
@@ -609,7 +604,14 @@ public class CashTypeActivity extends BaseActivity {
                                             creditType = "SQ";
                                         }
                                         pwdDialog.dissmissDialog();
-                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code);
+                                        //没有切换银行卡时，传默认银行卡
+                                        if(StringUtils.isNull(chooseBankName)){
+                                            chooseBankName = LoginHelper.getInstance().getBankName();
+                                        }
+                                        if(StringUtils.isNull(chooseBankNo)){
+                                            chooseBankNo = LoginHelper.getInstance().getDefaultCard();
+                                        }
+                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(idProduct), response.data.code, chooseBankName, chooseBankNo);
                                     } else {
                                         //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
@@ -667,29 +669,35 @@ public class CashTypeActivity extends BaseActivity {
         ProductResponse p;
         //按日计息选项
         ProductResponse noStageProduct = new ProductResponse(0, 0, false);
+        //默认显示分期gridView，和费率
+        gvStagingType.setVisibility(View.VISIBLE);
+        tvCostFee.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
             //仅支持取现分期(>3000)
             llShowData.setVisibility(View.VISIBLE);
             if (CommonUtils.isNullOrEmpty(data)) {
                 isChooseProduct = false;
+                //没有产品隐藏gv和费率
+                gvStagingType.setVisibility(View.GONE);
+                tvCostFee.setVisibility(View.INVISIBLE);
                 llShowData.setVisibility(View.GONE);
-                return;
-            }
-            p = data.get(stagingTypeAdapter.getCount() - 1);
-            if (p != null) {
-                localIdProduct = p.idProduct;
-            }
-            for (ProductResponse product : data) {
-                if (product.paymentNum == 18) {
-                    product.isChecked = true;
-                } else {
-                    product.isChecked = false;
+            } else {
+                p = data.get(stagingTypeAdapter.getCount() - 1);
+                if (p != null) {
+                    localIdProduct = p.idProduct;
                 }
+                for (ProductResponse product : data) {
+                    if (product.paymentNum == 18) {
+                        product.isChecked = true;
+                    } else {
+                        product.isChecked = false;
+                    }
+                }
+                isChooseProduct = true;
+                showLoanAmount(localIdProduct, (int) chooseQuota);
+                tvCostFee.setVisibility(View.GONE);
             }
-            isChooseProduct = true;
-            showLoanAmount(localIdProduct, (int) chooseQuota);
-            isLargeAmount = true;//标记大额
-            tvCostFee.setVisibility(View.GONE);
+            //     isLargeAmount = true;//标记大额
         } else if (chooseQuota >= MINAMOUNT && chooseQuota <= MAXAMOUNT) {
             //支持随借随还及取现分期(300-3000)
             if (CommonUtils.isNullOrEmpty(data)) {
@@ -702,7 +710,6 @@ public class CashTypeActivity extends BaseActivity {
 
             } else {
                 data.add(noStageProduct);
-                //   data.get(data.size() - 1).isShow = true;
                 data.get(data.size() - 1).isChecked = false;
                 data.get(data.size() - 2).isChecked = true;
                 p = data.get(data.size() - 2);
@@ -712,13 +719,13 @@ public class CashTypeActivity extends BaseActivity {
             }
             tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
             isChooseProduct = true;//默认会选择按日计息，即使没有分期产品
-            isLargeAmount = false;//标记小额
+            //     isLargeAmount = false;//标记小额
         } else {
             //仅支持随借随还(<300)
             data.add(noStageProduct);
             data.get(0).isChecked = true;
             llShowData.setVisibility(View.GONE);
-            isLargeAmount = false;//标记小额
+            //  isLargeAmount = false;//标记小额
             isChooseProduct = true;//默认选择按日计息
             tvCostFee.setVisibility(View.VISIBLE);
             tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
@@ -754,11 +761,19 @@ public class CashTypeActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1) {
-            tvBankName.setText(data.getStringExtra("bankName"));
+            chooseBankName = data.getStringExtra("chooseBankName");
+            chooseBankNo = data.getStringExtra("chooseBankNo");
             String defalutBankIconUrl = data.getStringExtra("defalutBankIconUrl");
+            String newBankNo = "";
+            if (chooseBankNo.length() >= 4) {
+                newBankNo = chooseBankNo.substring(chooseBankNo.length() - 4, chooseBankNo.length());
+            }
+            String bankName = chooseBankName + "(尾号" + newBankNo + ")";
+            tvBankName.setText(bankName);
             if (StringUtils.isNotNull(defalutBankIconUrl)) {
                 ImageUtils.loadImage(defalutBankIconUrl, R.color.transparent, ivBank);
             }
+
             //更新用户信息
             RefreshData();
         }
