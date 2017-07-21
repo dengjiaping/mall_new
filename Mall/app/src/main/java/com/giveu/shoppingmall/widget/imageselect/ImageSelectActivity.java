@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.GridView;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 public class ImageSelectActivity extends BaseActivity implements OnClickListener, SelectImageAdapter.OnClickSelectImageListener, FloderView.OnClickFloderListener {
     /**
@@ -392,7 +395,14 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         camerafile = new File(FileUtils.getCacheCanDeleteImageDir(), getFileName(identity_pic, true, false));
         String camearPath = camerafile.getPath();
-        Uri imageUri = Uri.fromFile(camerafile);
+        Uri imageUri;
+        //7.0系统需要共享文件权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = FileProvider.getUriForFile(this, "com.giveu.shoppingmall.fileprovider", camerafile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else {
+            imageUri = Uri.fromFile(camerafile);
+        }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         camearItem = new ImageItem();
         camearItem.imageName = camerafile.getName();
@@ -429,8 +439,6 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
             }
         }
     }
-
-
 
 
 }

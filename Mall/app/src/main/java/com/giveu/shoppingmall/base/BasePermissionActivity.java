@@ -21,27 +21,27 @@ public abstract class BasePermissionActivity extends BaseActivity implements OnP
 	 */
 	@Override
 	public void onPermissionGranted(@NonNull String[] permissionName) {
-		LogUtils.i("onPermissionGranted");
+		LogUtils.e("onPermissionGranted");
 	}
 
 	@Override
 	public void onPermissionDeclined(@NonNull String[] permissionName) {
-		LogUtils.i("onPermissionDeclined");
+		LogUtils.e("onPermissionDeclined");
 	}
 
 	@Override
 	public void onPermissionPreGranted(@NonNull String permissionsName) {
-		LogUtils.i("onPermissionPreGranted");
+		LogUtils.e("onPermissionPreGranted");
 	}
 
 	@Override
 	public void onPermissionNeedExplanation(@NonNull String permissionName) {
-		LogUtils.i("onPermissionNeedExplanation");
+		LogUtils.e("onPermissionNeedExplanation");
 	}
 
 	@Override
 	public void onPermissionReallyDeclined(@NonNull String permissionName) {
-		LogUtils.i("onPermissionReallyDeclined");
+		LogUtils.e("onPermissionReallyDeclined");
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public abstract class BasePermissionActivity extends BaseActivity implements OnP
 	 */
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		LogUtils.i("onRequestPermissionsResult");
+		LogUtils.e("onRequestPermissionsResult");
 		if (permissionHelper != null){
 			permissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}

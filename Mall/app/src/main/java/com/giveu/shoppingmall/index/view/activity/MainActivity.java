@@ -46,7 +46,6 @@ import cn.jpush.android.api.JPushInterface;
 import static java.lang.System.currentTimeMillis;
 
 public class MainActivity extends BaseActivity {
-    //这是版本升级的分支
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
     //    public MainRepayFragment mainRepayFragment;
