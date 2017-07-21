@@ -64,7 +64,7 @@ public class IntalmentDetailsDialog extends CustomDialog {
         }
         tvCreditNo.setText("合同号：" + details.contractNo);
         //分期产品
-        if (TypeUtlis.getConsumType(creditType) == 1||TypeUtlis.getConsumType(creditType) == 2) {
+        if (TypeUtlis.getConsumType(creditType) == 1 || TypeUtlis.getConsumType(creditType) == 2) {
             if (StringUtils.isNotNull(details.goodsName)) {
                 tvGoodsName.setText("商品名称：" + details.goodsName);
             } else {
@@ -72,20 +72,23 @@ public class IntalmentDetailsDialog extends CustomDialog {
             }
             tvGoodsName.setVisibility(View.VISIBLE);
             tvCreditAmount.setVisibility(View.GONE);
-            if(TypeUtlis.getConsumType(creditType) == 1) {
+            if (TypeUtlis.getConsumType(creditType) == 1) {
                 tvLoanDays.setText("分期总额：" + StringUtils.format2(details.creditAmount) + "元");
-            }else {
+            } else {
                 tvLoanDays.setText("交易金额：" + StringUtils.format2(details.creditAmount) + "元");
             }
+            tvInterestAmount.setVisibility(View.VISIBLE);
             tvInterestAmount.setText("当前金额：" + StringUtils.format2(details.instalmentAmount) + "元");
 
-        }  else if (TypeUtlis.getConsumType(creditType) == 3) {
+        } else if (TypeUtlis.getConsumType(creditType) == 3) {
             //取现随借随还
             tvGoodsName.setVisibility(View.GONE);
             tvLoanDays.setText("已借天数：" + details.loanDays + "天");
             tvLoanDays.setVisibility(View.VISIBLE);
-            tvCreditAmount.setText("取现金额：" + StringUtils.format2(details.instalmentAmount) + "元");
+            tvCreditAmount.setVisibility(View.VISIBLE);
+            tvCreditAmount.setText("取现金额：" + StringUtils.format2(details.creditAmount) + "元");
             if (StringUtils.isNotNull(details.interestAmount)) {
+                tvInterestAmount.setVisibility(View.VISIBLE);
                 tvInterestAmount.setText("当前息费：" + StringUtils.format2(details.interestAmount) + "元");
             } else {
                 tvInterestAmount.setVisibility(View.GONE);
