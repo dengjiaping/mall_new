@@ -20,9 +20,9 @@
 
         <TextView
             android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="05/27"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_14" />
@@ -30,7 +30,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:orientation="vertical">
 
             <LinearLayout

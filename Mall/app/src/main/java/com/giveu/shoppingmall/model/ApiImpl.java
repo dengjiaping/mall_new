@@ -305,14 +305,14 @@ public class ApiImpl {
     }
 
     //分期取现月供明细
-    public static void rpmDetail(Activity context, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+    public static void rpmDetail(Activity context, String idPerson, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson), idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
 
     //取现合同生成
     public static void addEnchashmentCredit(Activity context, String InsuranceFee, String bankName, String bankNo, String creditAmount, String creditType, String idPerson, String idProduct, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<EnchashmentCreditResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"InsuranceFee", "bankName", "bankNo","creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(InsuranceFee), bankName, bankNo,StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"InsuranceFee", "bankName", "bankNo", "creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(InsuranceFee), bankName, bankNo, StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_addEnchashmentCredit, EnchashmentCreditResponse.class, context, responseListener);
     }
 
@@ -352,8 +352,8 @@ public class ApiImpl {
     }
 
     //绑卡识别(卡bin)
-    public static void identifyCard(Activity context, String bankPerson, String cardNo, String idPerson,String ident, BaseRequestAgent.ResponseListener<IdentifyCardResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankPerson", "cardNo", "idPerson","ident"}, new Object[]{bankPerson, cardNo, StringUtils.string2Long(idPerson),ident});
+    public static void identifyCard(Activity context, String bankPerson, String cardNo, String idPerson, String ident, BaseRequestAgent.ResponseListener<IdentifyCardResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"bankPerson", "cardNo", "idPerson", "ident"}, new Object[]{bankPerson, cardNo, StringUtils.string2Long(idPerson), ident});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_identifyCard, IdentifyCardResponse.class, context, responseListener);
     }
 

@@ -25,7 +25,7 @@ public class TransactionAdapter extends LvCommonAdapter<ContractResponse.Contrac
         if (StringUtils.isNotNull(item.paymentNum)) {
             holder.setText(R.id.tv_date, item.currentInstalment + "/" + item.paymentNum + "期");
         } else {
-            holder.setText(R.id.tv_date, item.loanDate);
+            holder.setText(R.id.tv_date,StringUtils.transactionSearchDate(item.loanDate));
         }
 
         holder.setText(R.id.tv_type, TypeUtlis.getCreditTypeText(item.creditType));
