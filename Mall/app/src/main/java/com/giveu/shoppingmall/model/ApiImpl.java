@@ -311,8 +311,8 @@ public class ApiImpl {
     }
 
     //取现合同生成
-    public static void addEnchashmentCredit(Activity context, String creditAmount, String creditType, String idPerson, String idProduct, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<EnchashmentCreditResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
+    public static void addEnchashmentCredit(Activity context, String InsuranceFee, String bankName, String bankNo, String creditAmount, String creditType, String idPerson, String idProduct, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<EnchashmentCreditResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"InsuranceFee", "bankName", "bankNo","creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(InsuranceFee), bankName, bankNo,StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_addEnchashmentCredit, EnchashmentCreditResponse.class, context, responseListener);
     }
 

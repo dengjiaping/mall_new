@@ -35,6 +35,7 @@ import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LocationUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -81,6 +82,8 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     CheckBox cbCheck;
     @BindView(R.id.tv_activation)
     ClickEnabledTextView tvActivation;
+    @BindView(R.id.tv_agreement)
+    TextView tvAgreement;
     String orderNo;
     String sendSouce;
     String smsSeq;
@@ -89,9 +92,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     String name;
     String bankNo;
     String phone;
-    @BindView(R.id.tv_agreement)
-    TextView tvAgreement;
-
 
     private String latitude;
     private String longitude;
@@ -108,7 +108,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         intent.putExtra("idPerson", idPerson);
         intent.putExtra("bankNo", bankNo);
         intent.putExtra("phone", phone);
-        mActivity.startActivityForResult(intent, 100);
+        mActivity.startActivityForResult(intent, Const.ACTIVATION_CODE);
     }
 
     @Override
@@ -220,7 +220,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         super.onPermissionGranted(permissionName);
         locationUtils.startLocation();
     }
-
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr(getResources().getString(R.string.app_name) + "需要位置权限才可正常使用");
@@ -356,6 +355,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
 
         switch (view.getId()) {
             case R.id.tv_send_code:
+                //发送验证码
                 ApiImpl.sendActivateSmsCode(mBaseContext, bankNo, idPerson, ident, name, phone, new BaseRequestAgent.ResponseListener<SmsCodeResponse>() {
                     @Override
                     public void onSuccess(SmsCodeResponse response) {
@@ -386,6 +386,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                 });
                 break;
             case R.id.tv_activation:
+                //点击激活
                 if (tvActivation.isClickEnabled()) {
                     ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
                         @Override
@@ -399,32 +400,39 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                                         walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
                                             @Override
                                             public void onDismiss() {
-                                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
+                                                //显示成功页
+                                                activationSuccess(mBaseContext, response, idPerson);
                                             }
                                         });
                                     } else {
-                                        ActivationStatusActivity.startShowResultSuccess(mBaseContext, response, idPerson);
+                                        //显示成功页
+                                        activationSuccess(mBaseContext, response, idPerson);
                                     }
-                                    setResult(RESULT_OK);
-                                    LoginHelper.getInstance().setIdPerson(idPerson);
-                                    BaseApplication.getInstance().fetchUserInfo();//刷新状态
-                                    finish();
                                 }
                             }
                         }
 
                         @Override
                         public void onError(BaseBean errorBean) {
-                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean.message, errorBean.result);
-                            finish();
+                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
                         }
                     });
-
                 } else {
                     buttonCanClick(true);
                 }
                 break;
         }
+    }
+
+    /**
+     * 激活成功显示状态页面
+     */
+    public void activationSuccess(Activity activity, WalletActivationResponse wallResponse, String idPerson) {
+        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson);
+        finish();
+        setResult(RESULT_OK);
+        LoginHelper.getInstance().setIdPerson(idPerson);
+        BaseApplication.getInstance().fetchUserInfo();//刷新状态
     }
 
     /**

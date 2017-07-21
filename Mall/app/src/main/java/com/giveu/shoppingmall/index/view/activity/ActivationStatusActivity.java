@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
@@ -54,11 +55,12 @@ public class ActivationStatusActivity extends BaseActivity {
     }
 
     //用于finish之前页面
-    public static void startSetPwd(Activity mActivity,String flag) {
+    public static void startSetPwd(Activity mActivity, String flag) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        intent.putExtra("flag",flag);
+        intent.putExtra("flag", flag);
         mActivity.startActivity(intent);
     }
+
     //显示成功结果
     public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
@@ -80,10 +82,11 @@ public class ActivationStatusActivity extends BaseActivity {
     }
 
     //显示失败结果
-    public static void startShowResultFail(Activity mActivity, String message, String status) {
+    public static void startShowResultFail(Activity mActivity, BaseBean errorBean, String status) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        intent.putExtra("message", message);
+        intent.putExtra("message", errorBean.message);
         intent.putExtra("status", status);
+        intent.putExtra("code", errorBean.code);
         mActivity.startActivity(intent);
     }
 
@@ -109,11 +112,12 @@ public class ActivationStatusActivity extends BaseActivity {
                 //设置交易密码
                 String idPerson = getIntent().getStringExtra("idPerson");
                 TransactionPwdActivity.startIt(mBaseContext, idPerson);
+                BaseApplication.getInstance().finishActivity(WalletActivationFirstActivity.class);
                 break;
             case BACK:
                 //返回
                 String flag = getIntent().getStringExtra("flag");
-                if("transaction".equals(flag)){
+                if ("transaction".equals(flag)) {
                     BaseApplication.getInstance().finishActivity(IdentifyActivity.class);
                     BaseApplication.getInstance().finishActivity(TransactionPwdActivity.class);
                     BaseApplication.getInstance().finishActivity(RequestPasswordActivity.class);
@@ -152,14 +156,21 @@ public class ActivationStatusActivity extends BaseActivity {
             case "fail":
                 // 激活失败，无额度，含中间提示语
                 String message = StringUtils.nullToEmptyString(getIntent().getStringExtra("message"));
+                String code = StringUtils.nullToEmptyString(getIntent().getStringExtra("code"));
                 llDate.setVisibility(View.GONE);
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(message);
                 ivStatus.setImageResource(R.drawable.ic_activation_fail);
                 tvStatus.setText("激活失败");
+                tvSetTransactionPwd.setText("重新激活钱包");
                 tvSetTransactionPwd.setTag(REPEAT);
                 tvHintBottom.setVisibility(View.GONE);
-                tvSetTransactionPwd.setText("重新激活钱包");
+                if ("sc800115".equals(code) || "sc800705".equals(code)) {
+                    //800115:激活页面一跳转过来，没有资质；800705:激活页面二跳转过来，激活多次失败，不能再激活
+                    tvSetTransactionPwd.setVisibility(View.GONE);
+                } else {
+                    tvSetTransactionPwd.setVisibility(View.VISIBLE);
+                }
                 break;
             default:
                 //设置完交易密码后跳转的设置成功页
@@ -178,7 +189,7 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == 101){
+        if (resultCode == RESULT_OK && requestCode == 101) {
             finish();
         }
     }
