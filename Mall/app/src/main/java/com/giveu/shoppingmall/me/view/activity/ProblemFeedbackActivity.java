@@ -3,7 +3,11 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +26,9 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
+import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.imageselect.ImageItem;
 import com.giveu.shoppingmall.widget.imageselect.ImagesSelectView;
 
@@ -49,6 +55,9 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     ClickEnabledTextView tvCommit;
     private ProblemFeedBackPresenter presenter;
     private ArrayList<String> uploadList;
+    private PermissionDialog permissionDialog;
+    private boolean isPermissionReallyDeclined;//该boolean的意义参考SplashActivity
+
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, ProblemFeedbackActivity.class);
@@ -59,7 +68,6 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_problem_feedback);
         baseLayout.setTitle("问题反馈");
-        setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA});
         setTextCustomerPhone();
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.setRightTextAndListener("记录", new View.OnClickListener() {
@@ -72,6 +80,61 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
         uploadList = new ArrayList<>();
         //创建图片缓存目录
         FileUtils.getDirFile(FileUtils.TEMP_IMAGE);
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                permissionDialog.dismiss();
+                isPermissionReallyDeclined = false;
+            }
+
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isPermissionReallyDeclined) {
+            //先申请存储权限，存储权限获取后才去申请相机权限
+            setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(@NonNull String[] permissionName) {
+        super.onPermissionGranted(permissionName);
+        //先申请存储权限，存储权限获取后才去申请相机权限
+        for (String s : permissionName) {
+            if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(s)) {
+                setPermissionHelper(true, new String[]{Manifest.permission.CAMERA});
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull String permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
+        String permissionStr = "";
+        isPermissionReallyDeclined = true;
+        if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(permissionName)) {
+            permissionStr = "存储";
+
+        } else if (Manifest.permission.CAMERA.equals(permissionName)) {
+            permissionStr = "相机";
+        }
+        permissionDialog.setPermissionStr("问题反馈需要" + permissionStr + "权限才可正常使用");
+        permissionDialog.show();
     }
 
     @Override
