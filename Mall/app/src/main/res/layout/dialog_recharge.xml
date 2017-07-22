@@ -190,15 +190,6 @@
             android:checked="true" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="12dp"
-            android:gravity="center_vertical"
-            android:text="已阅读并同意"
-            android:textColor="@color/color_4d4d4d"
-            android:textSize="@dimen/ts_11" />
-
-        <TextView
             android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

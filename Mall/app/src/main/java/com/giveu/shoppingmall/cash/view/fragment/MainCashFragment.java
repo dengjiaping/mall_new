@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 
 import butterknife.BindView;
@@ -33,6 +34,10 @@ public class MainCashFragment extends BaseFragment {
     @BindView(R.id.tv_available_credit)
     TextView tvAvailableCredit;
     QuotaDialog quotaDialog;//额度为0的弹窗
+    @BindView(R.id.ll_top)
+    LinearLayout llTop;
+    @BindView(R.id.ll_date)
+    LinearLayout llDate;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class MainCashFragment extends BaseFragment {
                     //取现额度为0
                     quotaDialog.showDialog();
                 } else {
-                  //  CashTypeActivity.startIt(mBaseContext, "5000");
+                    //  CashTypeActivity.startIt(mBaseContext, "5000");
                     CashTypeActivity.startIt(mBaseContext);
                 }
             }
@@ -72,9 +77,13 @@ public class MainCashFragment extends BaseFragment {
     @Override
     public void initDataDelay() {
         int width = ivBgTop.getWidth();
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
-        layoutParams.height = (208 * width / 708);
-        ivBgTop.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
+        layoutParams1.height = (208 * width / 708);
+        ivBgTop.setLayoutParams(layoutParams1);
+        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
+        layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight()+ DensityUtils.dip2px(15);
+        layoutParams2.setMargins(DensityUtils.dip2px(10),DensityUtils.dip2px(6),DensityUtils.dip2px(10),0);
+        llTop.setLayoutParams(layoutParams2);
 
     }
 

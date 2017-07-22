@@ -18,6 +18,7 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -29,6 +30,7 @@ import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
@@ -106,13 +108,13 @@ public class CashTypeActivity extends BaseActivity {
     public final int MAXAMOUNT = 3000;//3000目前最大额
     public final int MINAMOUNT = 300;//300目前分期产品最小范围（300-1000,1000-3000）
     private ViewGroup decorView;
-    ProductResponse noStageProduct;
     private int idProduct = 0;
     private boolean isLargeAmount = false;//是否是大额(下期从入口传过来，判断是大额还是小额，目前默认小额)
     String availableCylimit;
     int localIdProduct = 0;//选择的期数产品id
     boolean isChooseProduct = false;//是否选择了分期产品 false没选择
-    boolean keyBordIsShow = false;
+    boolean keyBordIsShow = false;//键盘是否消失
+    boolean isStage = false;//是否是分期，false 随借随还 true 分期
     String chooseBankNo;//选择的银行卡号
     String chooseBankName;//选择的银行卡名
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
@@ -132,14 +134,8 @@ public class CashTypeActivity extends BaseActivity {
         initDefaultBankCardLayout();
         decorView = (ViewGroup) getWindow().getDecorView();
         availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-
-        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《借款及服务相关协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //借款及服务相关协议
-            }
-        });
-
+        //初始化一个随借随还的协议
+        setTvAgreement(0);
         if (StringUtils.isNotNull(availableCylimit)) {
             int cylimit = (int) Double.parseDouble(availableCylimit);
 
@@ -153,6 +149,29 @@ public class CashTypeActivity extends BaseActivity {
             initAdapter(isLargeAmount);
             registerEventBus();//注册EventBus
         }
+    }
+
+    /**
+     * 协议的控制，localIdProduct为0是随借随还，其他为分期产品
+     * @param localIdProduct
+     */
+    public void setTvAgreement(int localIdProduct) {
+        String url = "";
+        if (localIdProduct == 0) {
+            //随借随还
+            url = ApiUrl.WebUrl.cashBLoanStatic;
+        } else {
+            //分期
+            url = ApiUrl.WebUrl.cashLoanStatic;
+        }
+        final String finalUrl = url;
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《借款及服务相关协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //借款及服务相关协议
+                CustomWebViewActivity.startIt(mBaseContext, finalUrl, "《借款及服务相关协议》");
+            }
+        });
     }
 
     /**
@@ -408,6 +427,7 @@ public class CashTypeActivity extends BaseActivity {
                                 stagingTypeAdapter.getItem(i).isChecked = false;
                             }
                         }
+                        setTvAgreement(localIdProduct);
                         stagingTypeAdapter.notifyDataSetChanged();
                     }
                 }
@@ -735,6 +755,8 @@ public class CashTypeActivity extends BaseActivity {
             tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
             localIdProduct = 0;
         }
+        //更新显示哪个协议
+        setTvAgreement(localIdProduct);
         stagingTypeAdapter.setData(data);
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);

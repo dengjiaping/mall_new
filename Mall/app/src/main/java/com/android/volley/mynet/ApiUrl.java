@@ -13,6 +13,12 @@ public interface ApiUrl {
     interface WebUrl {
         String zhi_ma_xin_yong = "http://zhima.dafysz.com/Home/SignIn?idenNo=%s&name=%s&idCredit=0&deviceType=0";//芝麻信用
         String commonProblem = "http://wx.dafycredit.cn/question/";
+        String cashBLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
+        String cashLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
+        String pAProtocol = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/PAProtocol";//钱包激活
+        String authorize = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/Authorize";//代扣
+        String uRProtocol = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/URProtocol";//注册
+        String oConsumeLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
     }
 
     //帮助与反馈全路径url

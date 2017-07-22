@@ -13,8 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.ApiUrl;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
@@ -27,7 +30,7 @@ public class ChargeOrderDialog {
     private CustomDialog mDialog;
     private ImageView iv_dialog_close;
     //sumPrice 实际付款
-    private TextView tv_recharge_amount, tv_recharge_phone, tv_price, tv_preferential_price, tv_sum, tv_payment_type;
+    private TextView tv_recharge_amount, tv_recharge_phone, tv_price, tv_agreement, tv_sum, tv_payment_type;
     private ClickEnabledTextView tv_payment;
     private LinearLayout ll_payment_type;
     private CheckBox cb_agreement;
@@ -93,6 +96,7 @@ public class ChargeOrderDialog {
         tv_payment_type = (TextView) contentView.findViewById(R.id.tv_payment_type);
         tv_recharge_phone = (TextView) contentView.findViewById(R.id.tv_recharge_phone);
         tv_price = (TextView) contentView.findViewById(R.id.tv_price);
+        tv_agreement = (TextView) contentView.findViewById(R.id.tv_agreement);
         ll_payment_type = (LinearLayout) contentView.findViewById(R.id.ll_payment_type);
         tv_payment = (ClickEnabledTextView) contentView.findViewById(R.id.tv_payment);
         cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
@@ -102,6 +106,13 @@ public class ChargeOrderDialog {
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
 //        isCheckBoxChecked = cb_agreement.isChecked();
 //        ll_recharge_preferential = (LinearLayout) contentView.findViewById(R.id.ll_recharge_preferential);
+        CommonUtils.setTextWithSpan(tv_agreement, false, "已阅读并同意", "《贷款及咨询服务合同标准条款》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //贷款及咨询服务合同标准条款
+                CustomWebViewActivity.startIt(mActivity, ApiUrl.WebUrl.oConsumeLoanStatic, "《贷款及咨询服务合同标准条款》");
+            }
+        });
 
         setListener();
 

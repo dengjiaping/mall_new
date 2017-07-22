@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_top"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+    android:layout_marginRight="@dimen/default_layout_screen_gap"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/shape_frame_shadow"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -10,18 +15,13 @@
         android:id="@+id/iv_bg_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_layout_screen_gap"
-        android:layout_marginRight="@dimen/default_layout_screen_gap"
-        android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_cash_main" />
 
     <LinearLayout
+        android:id="@+id/ll_date"
         android:layout_width="match_parent"
-        android:layout_height="173dp"
-        android:layout_marginLeft="@dimen/default_layout_screen_gap"
-        android:layout_marginRight="@dimen/default_layout_screen_gap"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="@dimen/default_layout_screen_gap"
         android:paddingRight="@dimen/default_layout_screen_gap">
@@ -82,9 +82,9 @@
             android:id="@+id/tv_loan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:gravity="right"
             android:text="立即借款"
+            android:layout_marginBottom="24dp"
             android:textColor="@color/title_color"
             android:textSize="@dimen/ts_18" />
     </LinearLayout>

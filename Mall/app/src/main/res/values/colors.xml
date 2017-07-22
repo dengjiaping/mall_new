@@ -115,4 +115,12 @@
     <color name="red_f4333c">#F4333C</color>
     <!--lockpattern-->
 
+
+    <color name="color_dff7f7">#dff7f7</color>
+    <color name="color_e6f9f9">#e6f9f9</color>
+    <color name="color_e9f9fa">#e9f9fa</color>
+    <color name="color_ecfafa">#ecfafa</color>
+    <color name="color_fcfefe">#fcfefe</color>
+
+
 </resources>

@@ -25,11 +25,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -132,9 +134,25 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         locationUtils = new LocationUtils(mBaseContext);
 
         walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
+        //设置协议
+        setTvAgreement(tvAgreement);
+        initPermissionDialog();
+        locationUtils.startLocation();
+//这里以ACCESS_COARSE_LOCATION为例
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1001);//自定义的code
+        }
+    }
 
-        AgreementBean agreementBean1 = new AgreementBean("已阅读并同意", "《即有钱包激活协议》", "你要传的url");
-        AgreementBean agreementBean2 = new AgreementBean("及代扣还款并出具本", "《代扣服务授权书》", "你要传的url");
+    /**
+     * 设置协议
+     */
+    public void setTvAgreement(TextView tv) {
+        AgreementBean agreementBean1 = new AgreementBean("已阅读并同意", "《即有钱包激活协议》", ApiUrl.WebUrl.pAProtocol);
+        AgreementBean agreementBean2 = new AgreementBean("及代扣还款并出具本", "《代扣服务授权书》", ApiUrl.WebUrl.authorize);
         List<AgreementBean> agreementList = new ArrayList<>();
         agreementList.add(agreementBean1);
         agreementList.add(agreementBean2);
@@ -145,17 +163,8 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         }
         SpannableString msp = new SpannableString(str);
         addMsp(agreementList, msp);
-        tvAgreement.setMovementMethod(LinkMovementMethod.getInstance());//开始响应点击事件
-        tvAgreement.setText(msp);
-        initPermissionDialog();
-        locationUtils.startLocation();
-//这里以ACCESS_COARSE_LOCATION为例
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            //申请WRITE_EXTERNAL_STORAGE权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1001);//自定义的code
-        }
+        tv.setMovementMethod(LinkMovementMethod.getInstance());//开始响应点击事件
+        tv.setText(msp);
     }
 
     //根据合同的数量来设置可点击的合同个数
@@ -179,7 +188,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                 @Override
                 public void onClick(View widget) {
                     //跳转
-                    ToastUtils.showShortToast(dataPosition + "");
+                    CustomWebViewActivity.startIt(mBaseContext, mAgreementList.get(dataPosition).url, mAgreementList.get(dataPosition).endStr);
                 }
             }, start, total, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -220,6 +229,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         super.onPermissionGranted(permissionName);
         locationUtils.startLocation();
     }
+
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr(getResources().getString(R.string.app_name) + "需要位置权限才可正常使用");

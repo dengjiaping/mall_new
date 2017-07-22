@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.android.volley.mynet.ApiUrl;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
@@ -57,6 +58,13 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         etCode.checkFormat(6);
         presenter = new RegisterPresenter(this);
         tvSendCode.setSendTextColor(false);
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《即有钱包用户注册协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //即有钱包用户注册协议
+                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.uRProtocol, "《即有钱包用户注册协议》");
+            }
+        });
     }
 
     @Override

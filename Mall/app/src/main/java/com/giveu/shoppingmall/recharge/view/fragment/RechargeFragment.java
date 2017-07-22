@@ -63,6 +63,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.android.volley.mynet.ApiUrl.WebUrl.oConsumeLoanStatic;
+
 
 /**
  * 充值模块
