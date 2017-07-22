@@ -190,9 +190,9 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //可在此继续其他操作。
-        if (requestCode == 1001) {
-            ToastUtils.showLongToast("成功获取");
-        }
+//        if (requestCode == 1001) {
+//            ToastUtils.showLongToast("成功获取");
+//        }
     }
 
     @Override

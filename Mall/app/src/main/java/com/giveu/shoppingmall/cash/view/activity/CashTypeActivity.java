@@ -664,8 +664,8 @@ public class CashTypeActivity extends BaseActivity {
                     }
                 }
             }
+            sortProduct(data);
         }
-
 
 
         ProductResponse p = null;
@@ -712,17 +712,9 @@ public class CashTypeActivity extends BaseActivity {
 
             } else {
                 data.add(noStageProduct);
-                //不确定后台传来的分期产品是倒序还是顺序
                 if (data.size() > 2) {
-                    if (data.get(0).paymentNum > data.get(1).paymentNum) {
-                        //倒序
-                        data.get(0).isChecked = true;
-                        p = data.get(0);
-                    } else {
-                        //顺序
-                        data.get(data.size() - 2).isChecked = true;
-                        p = data.get(data.size() - 2);
-                    }
+                    data.get(data.size() - 2).isChecked = true;
+                    p = data.get(data.size() - 2);
                 }
                 data.get(data.size() - 1).isChecked = false;
                 localIdProduct = p.idProduct;
@@ -741,19 +733,31 @@ public class CashTypeActivity extends BaseActivity {
             isChooseProduct = true;//默认选择按日计息
             tvCostFee.setVisibility(View.VISIBLE);
             tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
+            localIdProduct = 0;
         }
         stagingTypeAdapter.setData(data);
         stagingTypeAdapter.notifyDataSetChanged();
         setGridViewHeightBasedOnChildren(DensityUtils.dip2px(6), 4, gvStagingType);
     }
-//    public void sortProduct( List<ProductResponse> data){
-//        List<ProductResponse> newData = new ArrayList<>();
-//        for (int i = 0; i < data.size(); i++) {
-//            if(){
-//
-//            }
-//        }
-//    }
+
+    /**
+     * 给分期产品按顺序排序
+     *
+     * @param data
+     */
+    public void sortProduct(List<ProductResponse> data) {
+        ProductResponse tempProduct;
+        for (int i = 0; i < data.size() - 1; i++) {
+            for (int j = i + 1; j < data.size(); j++) {
+                if (data.get(i).paymentNum > data.get(j).paymentNum) {
+                    tempProduct = data.get(j);
+                    data.set(j, data.get(i));
+                    data.set(i, tempProduct);
+                }
+            }
+        }
+    }
+
     /**
      * 计算按日计息的费率的显示位置
      *

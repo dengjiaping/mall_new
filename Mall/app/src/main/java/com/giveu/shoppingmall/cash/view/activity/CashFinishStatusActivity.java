@@ -112,8 +112,8 @@ public class CashFinishStatusActivity extends BaseActivity {
                 llBottom.setVisibility(View.VISIBLE);
                 tvDateTop.setText((double) cashAmount+"元");
                 tvDateMid.setText(stageNumber+"期");
-                cashDate = cashDate.substring(0, cashDate.indexOf("T"));//  "deductDate": "2017-08-21T00:00:00+08:00"
-                cashDate = cashDate.replaceAll("-", "/");
+//                cashDate = cashDate.substring(0, cashDate.indexOf("T"));//  "deductDate": "2017-08-21T00:00:00+08:00"
+//                cashDate = cashDate.replaceAll("-", "/");
                 tvDateBottom.setText(cashDate);
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.INVISIBLE);
