@@ -223,7 +223,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             }).start();
         } else {
             uploadList.clear();
-            presenter.addQuestionMessage("files", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
+            presenter.addQuestionMessage("", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
                     LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
                     LoginHelper.getInstance().getUserId());
         }
