@@ -3,14 +3,11 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,6 +25,7 @@ import com.amap.api.location.AMapLocation;
 import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
@@ -36,7 +34,6 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LocationUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -117,7 +114,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_second);
         baseLayout.setTitle("钱包激活");
-        CommonUtils.openSoftKeyBoard(mBaseContext);
         tvSendCode.setSendTextColor(false);
         idPerson = getIntent().getStringExtra("idPerson");
         ident = getIntent().getStringExtra("ident");
@@ -137,13 +133,9 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         //设置协议
         setTvAgreement(tvAgreement);
         initPermissionDialog();
-        locationUtils.startLocation();
-//这里以ACCESS_COARSE_LOCATION为例
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            //申请WRITE_EXTERNAL_STORAGE权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1001);//自定义的code
+        //6.0以下直接调取位置信息，6.0以上先申请权限
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            locationUtils.startLocation();
         }
     }
 
@@ -196,23 +188,16 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //可在此继续其他操作。
-//        if (requestCode == 1001) {
-//            ToastUtils.showLongToast("成功获取");
-//        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!isPermissionReallyDeclined) {
-                setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                if (!PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                } else {
+                    locationUtils.startLocation();
+                }
             }
-        } else {
-            locationUtils.startLocation();
         }
     }
 
@@ -265,7 +250,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         showPhoneTextColor(ivPhone, etPhone, StringUtils.getTextFromView(etPhone));
         showPhoneTextColor(ivBankNo, etBankNo, StringUtils.getTextFromView(etBankNo));
 
-
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -298,7 +282,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                     locationUtils.stopLocation();
                 } else {
                     locationUtils.startLocation();
-                    ToastUtils.showLongToast("正在定位");
                 }
             }
         });

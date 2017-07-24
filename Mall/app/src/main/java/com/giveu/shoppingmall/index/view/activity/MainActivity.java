@@ -13,7 +13,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -90,7 +90,6 @@ public class MainActivity extends BasePermissionActivity {
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
-    private boolean isPermissionReallyDeclined;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -131,7 +130,6 @@ public class MainActivity extends BasePermissionActivity {
                 intent.setData(uri);
                 startActivity(intent);
                 //进入设置了，下次onResume时继续判断申请权限
-                isPermissionReallyDeclined = false;
                 permissionDialog.dismiss();
             }
 
@@ -141,6 +139,7 @@ public class MainActivity extends BasePermissionActivity {
             }
         });
     }
+
 
     /**
      * 6.0以上系统申请通讯录权限
@@ -157,6 +156,12 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
+        for (String permissonStr : permissionName) {
+            if (Manifest.permission.READ_CONTACTS.equals(permissonStr)) {
+                skipToContactsContract();
+                break;
+            }
+        }
     }
 
     public void skipToContactsContract() {
@@ -169,7 +174,6 @@ public class MainActivity extends BasePermissionActivity {
     public void onPermissionReallyDeclined(@NonNull String permissionName) {
         super.onPermissionReallyDeclined(permissionName);
         //禁止不再询问会直接回调这方法
-        isPermissionReallyDeclined = true;
         permissionDialog.show();
     }
 
@@ -290,7 +294,7 @@ public class MainActivity extends BasePermissionActivity {
         doApkUpgrade();
     }
 
-    private class MainActivityAdapter extends FragmentStatePagerAdapter {
+    private class MainActivityAdapter extends FragmentPagerAdapter {
         private ArrayList<Fragment> fragments;
 
         public MainActivityAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
@@ -444,9 +448,6 @@ public class MainActivity extends BasePermissionActivity {
                     return;
                 }
                 cursor.moveToFirst();
-                // 获得DATA表中的名字
-                String username = cursor.getString(cursor
-                        .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 // 条件为联系人ID
                 String contactId = cursor.getString(cursor
                         .getColumnIndex(ContactsContract.Contacts._ID));
@@ -458,7 +459,7 @@ public class MainActivity extends BasePermissionActivity {
                 while (phone != null && phone.moveToNext()) {
                     //填入号码
                     String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
+                    final StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
                     if (sb.toString().length() != 11) {
                         ToastUtils.showShortToast("手机号码格式有误");
                     } else {
