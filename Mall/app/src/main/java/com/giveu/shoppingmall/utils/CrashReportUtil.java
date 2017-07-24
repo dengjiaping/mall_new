@@ -58,22 +58,22 @@ public class CrashReportUtil {
 	 * 上传文件时利用bugly上报访问网络时的自定义错误
 	 */
 	public static void postApiErrorToBugly(final boolean isThirdPlatformApi, List<String> keys, List<List<String>> filePaths, Map<String, Object> mParams, final String requestUrl, String response){
-		try{
-			Gson gson = new Gson();
-			Map<String, Object> map = new HashMap<>();
-			map.put("是否第三方", isThirdPlatformApi);
-			map.put("地址", requestUrl);
-			map.put("文本参数", mParams);
-			map.put("图片key", keys);
-			map.put("图片地址", filePaths);
-			map.put("返回值", response);
-			String json = gson.toJson(map);
-			Throwable thr = new MyException(json);
-			CrashReport.setUserSceneTag(BaseApplication.getInstance(), SceneTag.getInstance().getApiSceneTag(requestUrl)); // 上报后的Crash会显示该标签
-			CrashReport.postCatchedException(thr);  // bugly会将这个throwable上报
-		}catch (Exception e){
-			e.printStackTrace();
-		}
+//		try{
+//			Gson gson = new Gson();
+//			Map<String, Object> map = new HashMap<>();
+//			map.put("是否第三方", isThirdPlatformApi);
+//			map.put("地址", requestUrl);
+//			map.put("文本参数", mParams);
+//			map.put("图片key", keys);
+//			map.put("图片地址", filePaths);
+//			map.put("返回值", response);
+//			String json = gson.toJson(map);
+//			Throwable thr = new MyException(json);
+//			CrashReport.setUserSceneTag(BaseApplication.getInstance(), SceneTag.getInstance().getApiSceneTag(requestUrl)); // 上报后的Crash会显示该标签
+//			CrashReport.postCatchedException(thr);  // bugly会将这个throwable上报
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void postTryCatchToBugly(String str){
@@ -104,21 +104,21 @@ public class CrashReportUtil {
 	 * @param baseBean
 	 */
 	public static void postApiErrorToBugly(MyRequest myRequest, BaseBeanParent baseBean){
-		try{
-			if (baseBean != null){
-				Gson gson = new Gson();
-				Map<String, Object> map = new HashMap<>();
-				map.put("地址", myRequest.requestUrl);
-				map.put("参数", myRequest.getParams());
-				map.put("返回值", baseBean);
-				String json = gson.toJson(map);
-				Throwable thr = new MyException(json);
-				CrashReport.setUserSceneTag(BaseApplication.getInstance(), SceneTag.getInstance().getApiSceneTag(myRequest.requestUrl)); // 上报后的Crash会显示该标签
-				CrashReport.postCatchedException(thr);  // bugly会将这个throwable上报
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
+//		try{
+//			if (baseBean != null){
+//				Gson gson = new Gson();
+//				Map<String, Object> map = new HashMap<>();
+//				map.put("地址", myRequest.requestUrl);
+//				map.put("参数", myRequest.getParams());
+//				map.put("返回值", baseBean);
+//				String json = gson.toJson(map);
+//				Throwable thr = new MyException(json);
+//				CrashReport.setUserSceneTag(BaseApplication.getInstance(), SceneTag.getInstance().getApiSceneTag(myRequest.requestUrl)); // 上报后的Crash会显示该标签
+//				CrashReport.postCatchedException(thr);  // bugly会将这个throwable上报
+//			}
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
 	}
 
 //	public static void setUserIdTobugly(RegisterResponse loginBean) {
