@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -104,10 +103,6 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isPermissionReallyDeclined) {
-            //先申请存储权限，存储权限获取后才去申请相机权限
-            setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
-        }
     }
 
     @Override
@@ -116,10 +111,19 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
         //先申请存储权限，存储权限获取后才去申请相机权限
         for (String s : permissionName) {
             if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(s)) {
-                setPermissionHelper(true, new String[]{Manifest.permission.CAMERA});
+                setPermissionHelper(false, new String[]{Manifest.permission.CAMERA});
                 break;
             }
         }
+
+        for (String s : permissionName) {
+            if (Manifest.permission.CAMERA.equals(s)) {
+                //获取相机权限后跳转至相册
+                imageSelect.skipForResult();
+                break;
+            }
+        }
+
     }
 
     @Override
@@ -133,7 +137,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
         } else if (Manifest.permission.CAMERA.equals(permissionName)) {
             permissionStr = "相机";
         }
-        permissionDialog.setPermissionStr("问题反馈需要" + permissionStr + "权限才可正常使用");
+        permissionDialog.setPermissionStr("添加图片需要" + permissionStr + "权限才可正常使用");
         permissionDialog.show();
     }
 
@@ -167,10 +171,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             public void onClick(View v) {
                 if (tvCommit.isClickEnabled()) {
                     final List<ImageItem> imageItems = imageSelect.getSelectImages();
-                    if (CommonUtils.isNotNullOrEmpty(imageItems)) {
-                        uploadList.clear();
-                        uploadPhoto(imageItems);
-                    }
+                    addQuestionMessage(imageItems);
                 } else {
                     commitButtonCanClick(true);
                 }
@@ -184,34 +185,48 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
                 return false;
             }
         });
+        imageSelect.setOnPermissionListener(new ImagesSelectView.OnPermissionListener() {
+            @Override
+            public void requestPermission() {
+                setPermissionHelper(false, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+            }
+        });
+
     }
 
-    private void uploadPhoto(final List<ImageItem> imageItems) {
+    private void addQuestionMessage(final List<ImageItem> imageItems) {
         //开启子线程压缩图片，压缩完成后上传图片
         showLoading();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String photoPath;
-                for (ImageItem imageItem : imageItems) {
-                    photoPath = FileUtils.TEMP_IMAGE + "/giveU_" + System.currentTimeMillis() + ".jpg";
-                    //压缩图片并保存至缓存目录，上传成功或失败都会删除，在presenter进行删除
-                    FileUtils.saveBitmapWithPath(ImageUtils.decodeScaleImage(imageItem.imagePath), photoPath);
-                    uploadList.add(photoPath);
+        if (imageItems.size() > 0) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String photoPath;
+                    for (ImageItem imageItem : imageItems) {
+                        photoPath = FileUtils.TEMP_IMAGE + "/giveU_" + System.currentTimeMillis() + ".jpg";
+                        //压缩图片并保存至缓存目录，上传成功或失败都会删除，在presenter进行删除
+                        FileUtils.saveBitmapWithPath(ImageUtils.decodeScaleImage(imageItem.imagePath), photoPath);
+                        uploadList.add(photoPath);
+                    }
+                    if (presenter != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //上传反馈
+                                presenter.addQuestionMessage("files", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
+                                        LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
+                                        LoginHelper.getInstance().getUserId());
+                            }
+                        });
+                    }
                 }
-                if (presenter != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //上传反馈
-                            presenter.addQuestionMessage("files", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
-                                    LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
-                                    LoginHelper.getInstance().getUserId());
-                        }
-                    });
-                }
-            }
-        }).start();
+            }).start();
+        } else {
+            uploadList.clear();
+            presenter.addQuestionMessage("files", uploadList, 2, etInput.getText().toString(), LoginHelper.getInstance().getIdent(),
+                    LoginHelper.getInstance().getName(), LoginHelper.getInstance().getUserName(), LoginHelper.getInstance().getPhone(),
+                    LoginHelper.getInstance().getUserId());
+        }
     }
 
 
@@ -229,13 +244,6 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
         if (StringUtils.isNull(feedbackContent)) {
             if (showToast) {
                 ToastUtils.showShortToast("请填写反馈内容");
-            }
-            return;
-        }
-        List<ImageItem> imageItems = imageSelect.getSelectImages();
-        if (CommonUtils.isNullOrEmpty(imageItems)) {
-            if (showToast) {
-                ToastUtils.showShortToast("请添加截图");
             }
             return;
         }

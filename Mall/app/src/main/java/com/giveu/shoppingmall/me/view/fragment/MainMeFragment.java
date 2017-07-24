@@ -1,6 +1,10 @@
 package com.giveu.shoppingmall.me.view.fragment;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +17,6 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
-import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
@@ -100,7 +103,6 @@ public class MainMeFragment extends BaseFragment {
             if (StringUtils.isNotNull(LoginHelper.getInstance().getUserPic())) {
                 ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
             }
-            tvLogin.setEnabled(false);
             //用户有钱包资质
             if (LoginHelper.getInstance().hasQualifications()) {
                 tvStatus.setVisibility(View.GONE);
@@ -115,7 +117,12 @@ public class MainMeFragment extends BaseFragment {
             }
             tvWaittingPay.setText(StringUtils.format2(LoginHelper.getInstance().getRepayAmount()));
             tvPayAmounts.setText(LoginHelper.getInstance().getCreditCount());
-            tvDays.setText(LoginHelper.getInstance().getRepayDate());
+            String remainDays = LoginHelper.getInstance().getRemainDays();
+            SpannableString msp = new SpannableString("剩余" + remainDays + "天");
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvDays.setText(msp);
             llPayStatus.setVisibility(View.VISIBLE);
         } else {
             //未登录状态
@@ -124,7 +131,7 @@ public class MainMeFragment extends BaseFragment {
             tvLogin.setText("立即登录");
             tvSee.setVisibility(View.GONE);
             ivAvatar.setImageResource(R.drawable.ic_default_avatar);
-            tvLogin.setEnabled(true);
+            tvDays.setText("--");
             llPayStatus.setVisibility(View.GONE);
         }
     }
@@ -149,13 +156,16 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_quota})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_quota})
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
-                LoginActivity.startIt(mBaseContext);
+            case R.id.iv_avatar:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    AccountManagementActivity.startIt(mBaseContext);
+                }
                 break;
 
             case R.id.tv_status:

@@ -49,6 +49,7 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
                                         contentBean.isTitle = false;
                                         contentBean.contractId = contractListBean.contractId;
                                         contentBean.contractNo = contractListBean.contractNo;
+                                        contentBean.appDate = contractListBean.appDate;
                                         contentBean.creditType = contractListBean.creditType;
                                         contentBean.paymentNum = contractListBean.paymentNum;
                                         contentBean.isWithholding = contractListBean.isWithholding;
@@ -80,6 +81,7 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
                                     RepaymentBean contentBean = new RepaymentBean();
                                     contentBean.isTitle = false;
                                     contentBean.paymentNum = contractListBean.paymentNum;
+                                    contentBean.appDate = contractListBean.loanDate;
                                     contentBean.contractId = contractListBean.contractId;
                                     contentBean.contractNo = contractListBean.contractNo;
                                     contentBean.creditType = contractListBean.creditType;

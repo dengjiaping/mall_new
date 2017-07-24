@@ -45,6 +45,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String DEFAULT_CARD = "defaultCard";
     public static final String ISSETPWD = "isSetPwd";
     public static final String REMEBER_ACCOUNT = "rememberAccount";
+    public static final String REMAIN_DAYS = "remainDays";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -79,6 +80,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
         personInfo.isSetPwd = getBoolean(ISSETPWD, false);
+        personInfo.remainDays = getString(REMAIN_DAYS, "0");
 
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -120,6 +122,7 @@ public class LoginHelper extends AbsSharePref {
         putString(DEFAULT_CARD, personInfo.defaultCard);
         putBoolean(ISSETPWD, personInfo.isSetPwd);
         putString(REMEBER_ACCOUNT, personInfo.phone);
+        putString(REMAIN_DAYS, personInfo.remainDays);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -204,6 +207,7 @@ public class LoginHelper extends AbsSharePref {
     public String getBankName() {
         return loginPersonInfo == null ? null : loginPersonInfo.bankName;
     }
+
     /**
      * 设置默认卡名称
      */
@@ -213,6 +217,7 @@ public class LoginHelper extends AbsSharePref {
             putString(BANK_NAME, loginPersonInfo.bankName);
         }
     }
+
     /**
      * 记住登录账号
      *
@@ -230,6 +235,7 @@ public class LoginHelper extends AbsSharePref {
     public String getBankIconUrl() {
         return loginPersonInfo == null ? null : loginPersonInfo.bankIconUrl;
     }
+
     /**
      * 设置默认卡Icon的url
      */
@@ -239,6 +245,7 @@ public class LoginHelper extends AbsSharePref {
             putString(BANK_ICON_URL, loginPersonInfo.bankIconUrl);
         }
     }
+
     /**
      * 默认银行卡号
      *
@@ -247,6 +254,7 @@ public class LoginHelper extends AbsSharePref {
     public String getDefaultCard() {
         return loginPersonInfo == null ? null : loginPersonInfo.defaultCard;
     }
+
     /**
      * 设置默认卡卡号
      */
@@ -255,6 +263,15 @@ public class LoginHelper extends AbsSharePref {
             loginPersonInfo.defaultCard = defaultCard;
             putString(DEFAULT_CARD, loginPersonInfo.defaultCard);
         }
+    }
+
+    /**
+     * 还款剩余天数
+     *
+     * @return
+     */
+    public String getRemainDays() {
+        return (loginPersonInfo == null || loginPersonInfo.remainDays == null) ? "0" : loginPersonInfo.remainDays;
     }
 
     @Override

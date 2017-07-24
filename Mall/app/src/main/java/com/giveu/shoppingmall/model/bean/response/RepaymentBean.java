@@ -8,6 +8,7 @@ public class RepaymentBean {
     public boolean isTitle;
     public boolean isChoose;
     public String repayDate;//还款日期
+    public String appDate;//申请日期
     public String contractId;//合同id
     public String contractNo;//合同号
     public boolean isOverdue;//是否逾期

@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 /**
  * 选择图片
  */
@@ -263,10 +262,34 @@ public class ImagesSelectView extends LinearLayout {
         ImageInfo.MAX_SELECT_SIZE = maxSize;
         ImageInfo.selectImageItems.clear();
         ImageInfo.selectImageItems.addAll(imageSelectList);
-
-        SkipUtils.skipForResult(mContext, mFragment, ImageSelectActivity.class, REQUEST_CODE_SELECT_PHOTO);
+        //6.0以上系统需先申请存储权限和相机权限
+        if (onPermissionListener != null) {
+            onPermissionListener.requestPermission();
+        } else {
+            skipForResult();
+        }
 //        Intent it = new Intent(mAttachActivity, ImageSelectActivity.class);
 //        mFragment.startActivityForResult(it, REQUEST_CODE_SELECT_PHOTO);
+    }
+
+    /**
+     * 处理权限
+     * @param onPermissionListener
+     */
+    public void setOnPermissionListener(OnPermissionListener onPermissionListener) {
+        this.onPermissionListener = onPermissionListener;
+    }
+
+    public void skipForResult() {
+        SkipUtils.skipForResult(mContext, mFragment, ImageSelectActivity.class, REQUEST_CODE_SELECT_PHOTO);
+    }
+
+
+    private OnPermissionListener onPermissionListener;
+
+
+    public interface OnPermissionListener {
+        void requestPermission();
     }
 
     /**
@@ -305,7 +328,7 @@ public class ImagesSelectView extends LinearLayout {
      * @param data
      */
     public void doResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SELECT_PHOTO || requestCode == ImageSelectActivity.CODE_IMAGE_PREVIEW){
+        if (requestCode == REQUEST_CODE_SELECT_PHOTO || requestCode == ImageSelectActivity.CODE_IMAGE_PREVIEW) {
             imageSelectList.clear();
             imageSelectList.addAll(ImageInfo.selectImageItems);
             reSetImage(imageSelectList);
