@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+    android:layout_marginRight="@dimen/default_layout_screen_gap"
+    android:background="@drawable/bg_custom_dialog_viewmode1"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/default_layout_screen_gap"
+    android:paddingRight="@dimen/default_layout_screen_gap">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="应用更新"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_18" />
+
+    <TextView
+        android:id="@+id/tv_title_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="即有钱包新版本已发布，是否更新？"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_16" />
+
+    <TextView
+        android:id="@+id/tv_update_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="更新内容："
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_16" />
+
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_16" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="取消"
+            android:textColor="@color/color_00adb2"
+            android:textSize="@dimen/ts_16" />
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:text="更新"
+            android:textColor="@color/color_00adb2"
+            android:textSize="@dimen/ts_16" />
+
+    </LinearLayout>
+
+</LinearLayout>

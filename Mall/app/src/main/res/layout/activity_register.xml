@@ -134,7 +134,7 @@
                 android:paddingBottom="13dp"
                 android:paddingRight="@dimen/default_layout_screen_gap"
                 android:paddingTop="13dp"
-                android:text="已阅读并同意《用户绑定协议协议》"
+                android:text="已阅读并同意《用户绑定协议》"
                 android:textColor="@color/color_00bbc0"
                 android:textSize="@dimen/ts_12" />
 

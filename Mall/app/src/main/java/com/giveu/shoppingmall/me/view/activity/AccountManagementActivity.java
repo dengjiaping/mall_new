@@ -8,17 +8,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -45,6 +52,11 @@ public class AccountManagementActivity extends BaseActivity {
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    @BindView(R.id.iv_update)
+    ImageView ivUpdate;
+    private DownloadApkUtils downloadApkUtils;
+    private ApkUgradeResponse apkUgradeResponse;
+
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, AccountManagementActivity.class);
@@ -63,21 +75,19 @@ public class AccountManagementActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //优先级别：真实姓名-用户名-手机号(方便激活钱包后及时更新信息以便展示，所以在onresume执行)
+        //优先级别：真实姓名-手机号(方便激活钱包后及时更新信息以便展示，所以在onresume执行)
         if (StringUtils.isNotNull(LoginHelper.getInstance().getName())) {
             tvUserName.setText(LoginHelper.getInstance().getName());
+            tvPhone.setVisibility(View.VISIBLE);
         } else {
-            if (StringUtils.isNotNull(LoginHelper.getInstance().getUserName())) {
-                tvUserName.setText(LoginHelper.getInstance().getUserName());
-            } else {
-                tvUserName.setText(LoginHelper.getInstance().getPhone());
-            }
+            tvUserName.setText(LoginHelper.getInstance().getPhone());
+            tvPhone.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void setData() {
-
+        doApkUpgrade();
     }
 
     @OnClick({R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
@@ -103,6 +113,15 @@ public class AccountManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_version_update:
                 //版本更新
+                if (downloadApkUtils != null) {
+                    if (apkUgradeResponse != null && apkUgradeResponse.isNoUpdate()) {
+                        ToastUtils.showShortToast("暂无更新");
+                    } else {
+                        downloadApkUtils.showUpdateApkDialog(mBaseContext, apkUgradeResponse);
+                    }
+                } else {
+                    ToastUtils.showShortToast("暂无更新");
+                }
                 break;
             case R.id.tv_finish:
                 //退出登录
@@ -121,4 +140,29 @@ public class AccountManagementActivity extends BaseActivity {
             }
         }, null).show();
     }
+
+    /**
+     * 处理app版本升级
+     */
+    private void doApkUpgrade() {
+        //apk升级
+        ApiImpl.sendApkUpgradeRequest(mBaseContext, new BaseRequestAgent.ResponseListener<ApkUgradeResponse>() {
+            @Override
+            public void onSuccess(ApkUgradeResponse response) {
+                downloadApkUtils = new DownloadApkUtils();
+                apkUgradeResponse = response.data;
+                //需要更新则显示更新图标
+                if (response.data.isNoUpdate()) {
+                    ivUpdate.setVisibility(View.GONE);
+                } else {
+                    ivUpdate.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+            }
+        });
+    }
+
 }

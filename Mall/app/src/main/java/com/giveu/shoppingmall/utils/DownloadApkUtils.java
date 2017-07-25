@@ -11,7 +11,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -23,6 +22,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.giveu.shoppingmall.widget.dialog.AppUpdateDialog;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -38,21 +38,21 @@ import java.io.File;
  * Email: lichenwei.me@foxmail.com
  */
 public class DownloadApkUtils {
-    private  Activity mActivity;
-    private  ProgressDialog downloadProgressDialog;
-    private  NotificationManager mNotificationManager;
-    private  Notification mNotification;
+    private Activity mActivity;
+    private ProgressDialog downloadProgressDialog;
+    private NotificationManager mNotificationManager;
+    private Notification mNotification;
     float downloadPercent;
     float apkTotalSize;
     boolean isForce;//false普通 true强制更新
     //apk本地保存地址
     final String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
-    android.app.AlertDialog tipAlertDialog;
+    AppUpdateDialog tipAlertDialog;
     ApkUgradeResponse apkUgradeResponse;
 
 
     public void showUpdateApkDialog(Activity activity, final ApkUgradeResponse response) {
-        if (activity == null || response == null){
+        if (activity == null || response == null) {
             return;
         }
 
@@ -61,80 +61,71 @@ public class DownloadApkUtils {
         isForce = response.isForceUpdate();
 
         final File file = new File(apkSavePath);
-        android.app.AlertDialog.Builder builder = null;
+        tipAlertDialog = new AppUpdateDialog(mActivity);
         //如果已下载完成则弹安装Dialog
         if (file.isFile() && file.exists() && SharePrefUtil.getDownloadApkFlag()) {
-            builder = new android.app.AlertDialog.Builder(mActivity);
-            builder.setMessage("新版本下载完成了，是否安装？");
-            builder.setTitle("应用安装");
-            builder.setPositiveButton("安装", new DialogInterface.OnClickListener() {
+            tipAlertDialog.initDialogContent(true, "");
+            tipAlertDialog.setOnChooseListener(new AppUpdateDialog.OnChooseListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void cancel() {
+                    onDilaogCancle(mActivity, isForce);
+                }
+
+                @Override
+                public void confirm() {
                     Intent installApkIntent = getInstallApkIntent(apkSavePath);
                     mActivity.startActivity(installApkIntent);
                 }
             });
-
-            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    onDilaogCancle(dialog, mActivity, isForce);
-                }
-            });
         } else {
             //如果未下载完成则弹下载升级Dialog
-            builder = new android.app.AlertDialog.Builder(mActivity);
-            builder.setMessage("新版本发布了，是否升级？");
-            builder.setTitle("应用升级");
-            builder.setPositiveButton("升级", new DialogInterface.OnClickListener() {
+            tipAlertDialog.initDialogContent(false, response.desc);
+            tipAlertDialog.setOnChooseListener(new AppUpdateDialog.OnChooseListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void cancel() {
+                    onDilaogCancle(mActivity, isForce);
+                }
+
+                @Override
+                public void confirm() {
                     dismissTipDialog();
 
-                    try{
+                    try {
                         file.delete();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     //自动更新apk
                     downloadAndInstall(response.url);
                 }
             });
-
-            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    onDilaogCancle(dialog, mActivity, isForce);
-                }
-            });
+            tipAlertDialog.setCancelable(false);
+            tipAlertDialog.setCanceledOnTouchOutside(false);
+            showTipDialog();
         }
-        tipAlertDialog = builder.create();
-        tipAlertDialog.setCancelable(false);
-        tipAlertDialog.setCanceledOnTouchOutside(false);
-        showTipDialog();
     }
 
     private void dismissTipDialog() {
-        if (tipAlertDialog != null){
+        if (tipAlertDialog != null) {
             tipAlertDialog.dismiss();
         }
     }
 
     private void showTipDialog() {
-        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()){
+        if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
             return;
         }
 
-        if (tipAlertDialog != null && !tipAlertDialog.isShowing()){
+        if (tipAlertDialog != null && !tipAlertDialog.isShowing()) {
             tipAlertDialog.show();
         }
     }
 
-    private void onDilaogCancle(DialogInterface dialog, Activity mActivity, boolean isForce) {
+    private void onDilaogCancle(Activity mActivity, boolean isForce) {
         if (!isForce) {
-           dismissTipDialog();
+            dismissTipDialog();
         } else {
-            if (mActivity != null){
+            if (mActivity != null) {
                 mActivity.finish();
             }
         }
@@ -160,7 +151,7 @@ public class DownloadApkUtils {
         downloadProgressDialog.setProgress((int) current);
         downloadProgressDialog.setProgressNumberFormat(String.format("%.2fM/%.2fM", downloadPercent, apkTotalSize));
 
-        if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null){
+        if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null) {
             downloadProgressDialog.show();
         }
     }
@@ -170,7 +161,7 @@ public class DownloadApkUtils {
         httpUtils.download(url, apkSavePath, new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
-                if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null){
+                if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null) {
                     downloadProgressDialog.dismiss();
                 }
 
@@ -229,12 +220,11 @@ public class DownloadApkUtils {
         return intent;
     }
 
-    public void onActivityResume(){
-        if (isForce){
+    public void onActivityResume() {
+        if (isForce) {
             showUpdateApkDialog(mActivity, apkUgradeResponse);
         }
     }
-
 
 
 }

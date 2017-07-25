@@ -11,6 +11,7 @@ public class ApkUgradeResponse extends BaseBean<ApkUgradeResponse> {
     public String url;//apk地址
     public String versionStatus;//安卓升级0无更新1普通2强制
     public long version;
+	public String desc;//描述
 
 
 	public boolean isNoUpdate(){
