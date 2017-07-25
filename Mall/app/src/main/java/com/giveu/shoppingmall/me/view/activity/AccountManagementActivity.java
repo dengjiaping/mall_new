@@ -25,7 +25,6 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -67,7 +66,6 @@ public class AccountManagementActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_account_management);
         baseLayout.setTitle("账号管理");
-        tvPhone.setText(LoginHelper.getInstance().getPhone());
         notActiveDialog = new NotActiveDialog(mBaseContext);
         ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
@@ -79,6 +77,7 @@ public class AccountManagementActivity extends BaseActivity {
         if (StringUtils.isNotNull(LoginHelper.getInstance().getName())) {
             tvUserName.setText(LoginHelper.getInstance().getName());
             tvPhone.setVisibility(View.VISIBLE);
+            tvPhone.setText(LoginHelper.getInstance().getPhone());
         } else {
             tvUserName.setText(LoginHelper.getInstance().getPhone());
             tvPhone.setVisibility(View.GONE);
