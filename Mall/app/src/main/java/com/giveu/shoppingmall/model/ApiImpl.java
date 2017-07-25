@@ -47,7 +47,6 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 /**
@@ -99,11 +98,10 @@ public class ApiImpl {
     }
 
     public static void sendApkUpgradeRequest(Activity context, BaseRequestAgent.ResponseListener<ApkUgradeResponse> responseListener) {
-        double d = new Random().nextDouble();//加一个随机数，避免接口缓存
-        Map<String, String> requestParams2 = BaseRequestAgent.getRequestParams(new String[]{"version", "t"},
-                new String[]{CommonUtils.getVersionCode(), String.valueOf(d)});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"version"},
+                new Object[]{CommonUtils.getVersionCode()});
 
-        RequestAgent.getInstance().sendGetRequest(requestParams2, DebugConfig.getApkUpdateUrl(), ApkUgradeResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, DebugConfig.getApkUpdateUrl(), ApkUgradeResponse.class, context, responseListener);
     }
 
 

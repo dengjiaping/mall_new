@@ -133,9 +133,11 @@
             android:text="版本更新" />
 
         <ImageView
+            android:id="@+id/iv_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:visibility="gone"
             android:src="@drawable/ic_update_flag" />
 
         <View
