@@ -63,15 +63,13 @@ public class AccountManagementActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //优先级别：真实姓名-用户名-手机号(方便激活钱包后及时更新信息以便展示，所以在onresume执行)
+        //优先级别：真实姓名-手机号(方便激活钱包后及时更新信息以便展示，所以在onresume执行)
         if (StringUtils.isNotNull(LoginHelper.getInstance().getName())) {
             tvUserName.setText(LoginHelper.getInstance().getName());
+            tvPhone.setVisibility(View.VISIBLE);
         } else {
-            if (StringUtils.isNotNull(LoginHelper.getInstance().getUserName())) {
-                tvUserName.setText(LoginHelper.getInstance().getUserName());
-            } else {
-                tvUserName.setText(LoginHelper.getInstance().getPhone());
-            }
+            tvUserName.setText(LoginHelper.getInstance().getPhone());
+            tvPhone.setVisibility(View.GONE);
         }
     }
 
