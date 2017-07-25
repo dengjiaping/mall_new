@@ -129,7 +129,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         }
         locationUtils = new LocationUtils(mBaseContext);
 
-        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登陆密码登陆");
+        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登录密码登录");
         //设置协议
         setTvAgreement(tvAgreement);
         initPermissionDialog();
@@ -462,7 +462,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         }
         if (!cbCheck.isChecked()) {
             if (showToast) {
-                ToastUtils.showShortToast("请勾选协议！");
+                ToastUtils.showShortToast("请勾选即有钱包激活协议和代扣服务授权书！");
             }
             return;
         }

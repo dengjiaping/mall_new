@@ -36,7 +36,7 @@ public class CreditAdapter extends LvCommonAdapter<ListInstalmentResponse.Instal
             holder.setTextColor(R.id.tv_date, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
             holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
         }
-        holder.setText(R.id.tv_instalment, item.num + "");
+        holder.setText(R.id.tv_instalment, "第" + String.format("%02d", item.num) + "期");
         holder.setText(R.id.tv_amount, StringUtils.format2(item.amount));
         holder.setText(R.id.tv_date, item.dueDate);
         holder.setText(R.id.tv_status, TypeUtlis.getCreditStatusText(item.payStatus));

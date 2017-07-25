@@ -41,13 +41,12 @@ public class RechargeStatusActivity extends BaseActivity {
     TextView tvHintBottom;
     String status;
 
-    public static void startIt(Activity mActivity, String status, String hintMid, String rechargeAmount, String paymentAmount, String hintBottom) {
+    public static void startIt(Activity mActivity, String status, String hintMid, String rechargeAmount, String paymentAmount) {
         Intent intent = new Intent(mActivity, RechargeStatusActivity.class);
         intent.putExtra("status", status);
         intent.putExtra("hintMid", hintMid);
         intent.putExtra("rechargeAmount", rechargeAmount);
         intent.putExtra("paymentAmount", paymentAmount);
-        intent.putExtra("hintBottom", hintBottom);
         mActivity.startActivity(intent);
     }
 
@@ -68,8 +67,6 @@ public class RechargeStatusActivity extends BaseActivity {
         String rechargeAmount = getIntent().getStringExtra("rechargeAmount");
         //支付金额
         String paymentAmount = getIntent().getStringExtra("paymentAmount");
-        //下面的提示语
-        String hintBottom = getIntent().getStringExtra("hintBottom");
         switch (status) {
             case "success":
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
@@ -77,7 +74,6 @@ public class RechargeStatusActivity extends BaseActivity {
                 tvDateTop.setText(rechargeAmount);
                 tvDateMid.setText(paymentAmount);
                 tvHintBottom.setVisibility(View.VISIBLE);
-                tvHintBottom.setText(hintBottom);
                 tvHintMid.setVisibility(View.INVISIBLE);
                 tvBtnTop.setText("查看充值订单");
                 tvBtnTop.setVisibility(View.GONE);

@@ -10,7 +10,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -58,11 +58,11 @@ public class ChangePhoneNumberActivity extends BaseActivity {
         tvSendCode.setSendTextColor(false);
         randCode = getIntent().getStringExtra("randCode");
 
-        changeSuccessDialog = new NormalHintDialog(mBaseContext, "绑定手机修改成功！\n", "登陆手机号已同步，请通过绑定手机+登陆密码登陆");
+        changeSuccessDialog = new NormalHintDialog(mBaseContext, "绑定手机修改成功！\n\n", "登录手机号已同步，请通过绑定手机+登录密码登录");
         changeSuccessDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
             @Override
             public void onDismiss() {
-                MainActivity.startIt(mBaseContext);
+                finish();
             }
         });
     }
@@ -129,7 +129,7 @@ public class ChangePhoneNumberActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-         phoneNumber = StringUtils.getTextFromView(etPhoneNumber);
+        phoneNumber = StringUtils.getTextFromView(etPhoneNumber);
         String sendCode = StringUtils.getTextFromView(etSendCode);
         switch (view.getId()) {
             case R.id.tv_send_code:
@@ -147,7 +147,7 @@ public class ChangePhoneNumberActivity extends BaseActivity {
                     });
 
                 } else {
-                     ToastUtils.showShortToast("请输入11位的手机号");
+                    ToastUtils.showShortToast("请输入11位的手机号");
                 }
                 break;
             case R.id.tv_finish:
@@ -155,6 +155,8 @@ public class ChangePhoneNumberActivity extends BaseActivity {
                     ApiImpl.updatePhone(mBaseContext, LoginHelper.getInstance().getIdPerson(), phoneNumber, randCode, sendCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
                         public void onSuccess(BaseBean response) {
+                            LoginHelper.getInstance().setPhone(phoneNumber);
+                            BaseApplication.getInstance().fetchUserInfo();
                             changeSuccessDialog.showDialog();
                         }
 

@@ -198,7 +198,7 @@ public class ChargeOrderDialog {
                         }
                     });*/
                 } else {
-                    ToastUtils.showShortToast("请勾选用户协议");
+                    ToastUtils.showShortToast("请勾选贷款及咨询服务合同标准条款");
                 }
             }
         });

@@ -68,7 +68,7 @@ public class MyBankCardActivity extends BaseActivity {
     ImageView ivBank;
     @BindView(R.id.ll_my_card)
     LinearLayout llMyCard;
-
+    boolean needResult;//是否是取现过来的 true是
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
 //        mActivity.setResult(RESULT_OK);
@@ -84,6 +84,7 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void initView(Bundle savedInstanceState) {
+
         setContentView(R.layout.activity_add_bankcard);
         baseLayout.setTitle("我的银行卡");
         baseLayout.setRightImageAndListener(R.drawable.ic_add_bank_card, new View.OnClickListener() {
@@ -120,7 +121,6 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setListener() {
-        final boolean needResult = getIntent().getBooleanExtra("needResult", false);
         super.setListener();
         //needResult=true 取现页短按选择默认卡回上一页面显示出来
         llDefaultBankCard.setOnClickListener(new View.OnClickListener() {
@@ -128,14 +128,10 @@ public class MyBankCardActivity extends BaseActivity {
             public void onClick(View v) {
                 if (needResult) {
                     Intent data = new Intent(mBaseContext, CashTypeActivity.class);
-                    if (defalutBankCardNo.length() >= 4) {
-                        defalutBankCardNo = defalutBankCardNo.substring(defalutBankCardNo.length() - 4, defalutBankCardNo.length());
-                    }
- //                   String bankName = defalutBankName + "(尾号" + defalutBankCardNo + ")";
-//                    data.putExtra("defalutBankName", defalutBankName);
-//                    data.putExtra("defalutBankCardNo", defalutBankCardNo);
-//                    data.putExtra("defalutBankIconUrl", defalutBankIconUrl);
-//                    setResult(RESULT_OK, data);
+                    data.putExtra("chooseBankName",defalutBankName);
+                    data.putExtra("chooseBankNo", defalutBankCardNo);
+                    data.putExtra("defalutBankIconUrl",defalutBankIconUrl);
+                    setResult(RESULT_OK, data);
                     finish();
                 }
             }
@@ -219,24 +215,10 @@ public class MyBankCardActivity extends BaseActivity {
     private void showBankNoStyle(int position) {
         Intent data = new Intent(mBaseContext, CashTypeActivity.class);
         BankCardListResponse.BankInfoListBean bankCardResponse = bankListAdapter.getItem(position);
-        String bankNo = bankCardResponse.bankNo;
-        if (bankNo.length() >= 4) {
-            bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
-        }
-        String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
         data.putExtra("chooseBankName", bankCardResponse.bankName);
         data.putExtra("chooseBankNo", bankCardResponse.bankNo);
         data.putExtra("defalutBankIconUrl", bankCardResponse.bankIconUrl);
         setResult(RESULT_OK, data);
-//        String bankNo = bankCardResponse.bankNo;
-//        if (bankNo.length() >= 4) {
-//            bankNo = bankNo.substring(bankNo.length() - 4, bankNo.length());
-//        }
-//        String bankName = bankCardResponse.bankName + "(尾号" + bankNo + ")";
-//        data.putExtra("bankName", bankName);
-//        data.putExtra("bankName", bankName);
-//        data.putExtra("defalutBankIconUrl", bankCardResponse.bankIconUrl);
-//        setResult(RESULT_OK, data);
     }
 
     /**
@@ -356,6 +338,7 @@ public class MyBankCardActivity extends BaseActivity {
 
     @Override
     public void setData() {
+        needResult = getIntent().getBooleanExtra("needResult", false);
         ApiImpl.getBankCardInfo(mBaseContext, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BankCardListResponse>() {
             @Override
             public void onSuccess(BankCardListResponse response) {

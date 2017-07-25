@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                android:text="手机号码"
+                android:text="手机号"
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_16" />
 

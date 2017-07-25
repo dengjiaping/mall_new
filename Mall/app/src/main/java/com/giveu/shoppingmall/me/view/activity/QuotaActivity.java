@@ -124,7 +124,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
             public void onClick(View v) {
                 if (flag == 2) {
                     String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-                    if ("0".equals(availableCylimit)) {
+                    if (0 == Double.parseDouble(availableCylimit)) {
                         //取现额度为0
                         quotaDialog.showDialog();
                     } else {
@@ -144,7 +144,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
     }
 
 
-    @OnClick({R.id.tv_available_credit, R.id.tv_avaiable_withdrawals,R.id.tv_withdrawals_money, R.id.tv_consumable,R.id.tv_consumable_money})
+    @OnClick({R.id.tv_available_credit, R.id.tv_avaiable_withdrawals, R.id.tv_withdrawals_money, R.id.tv_consumable, R.id.tv_consumable_money})
     @Override
     public void onClick(View view) {
         super.onClick(view);

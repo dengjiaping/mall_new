@@ -77,7 +77,6 @@ public class AddBankCardSecondActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_addcardsecond);
-        CommonUtils.openSoftKeyBoard(mBaseContext);
         baseLayout.setTitle("添加银行卡");
         tvSendCode.setSendTextColor(true);
         bankName = getIntent().getStringExtra("bankName");

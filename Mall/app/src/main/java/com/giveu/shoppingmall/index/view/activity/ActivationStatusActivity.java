@@ -47,14 +47,14 @@ public class ActivationStatusActivity extends BaseActivity {
     public final int BACK = 1;
     public final int SETPWD = 2;
     public final int REPEAT = 3;
-
+    String flag;//找回交易密码的标记
     //钱包激活设置交易密码
     public static void startSetPwd(Activity mActivity) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         mActivity.startActivity(intent);
     }
 
-    //用于finish之前页面
+    //用于finish之前页面（找回交易密码）
     public static void startSetPwd(Activity mActivity, String flag) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         intent.putExtra("flag", flag);
@@ -116,7 +116,6 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
             case BACK:
                 //返回
-                String flag = getIntent().getStringExtra("flag");
                 if ("transaction".equals(flag)) {
                     BaseApplication.getInstance().finishActivity(IdentifyActivity.class);
                     BaseApplication.getInstance().finishActivity(TransactionPwdActivity.class);
@@ -134,6 +133,12 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
+        flag = getIntent().getStringExtra("flag");
+        if ("transaction".equals(flag)) {
+            baseLayout.setTitle("设置交易密码");
+        }else{
+            baseLayout.setTitle("钱包激活");
+        }
         switch (status) {
             case "success":
                 //激活成功

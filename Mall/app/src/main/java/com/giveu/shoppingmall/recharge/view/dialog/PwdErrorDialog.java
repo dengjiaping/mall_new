@@ -2,6 +2,10 @@ package com.giveu.shoppingmall.recharge.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +53,13 @@ public class PwdErrorDialog {
             tv_left_errorpwd.setVisibility(View.VISIBLE);
             tv_right_errorpwd.setText("重试");
             tv_error_text.setText("交易密码错误，您还剩下" + times + "次机会");
+            String startStr = "交易密码错误，您还剩下";
+            String endStr = "次机会";
+            SpannableString msp = new SpannableString(startStr + times + endStr);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_4a4a4a)), 0, startStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_00adb2)), startStr.length(), startStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_4a4a4a)), startStr.length() + 1, startStr.length()+endStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_error_text.setText(msp);
         }
         setListener();
     }

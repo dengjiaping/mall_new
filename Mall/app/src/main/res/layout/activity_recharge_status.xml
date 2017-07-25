@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/white">
 
     <LinearLayout
@@ -70,7 +71,6 @@
                     android:id="@+id/tv_date_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="13000.00元"
                     android:textColor="@color/color_4a4a4a"
                     android:textSize="@dimen/ts_16" />
             </LinearLayout>
@@ -93,7 +93,6 @@
                     android:id="@+id/tv_date_mid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="13000.00元"
                     android:textColor="@color/color_4a4a4a"
                     android:textSize="@dimen/ts_16" />
 
@@ -136,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
                 android:layout_marginTop="9dp"
-                android:text="温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态"
+                android:text="温馨提示：预计10分钟到账，充值高峰可能会有延迟"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/ts_12" />
         </LinearLayout>
@@ -153,7 +152,6 @@
         <com.giveu.shoppingmall.widget.ClickEnabledTextView
             android:id="@+id/tv_back"
             style="@style/click_enabled_bt"
-            android:layout_marginBottom="120dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_back_btn_blue"
             android:text="返回"

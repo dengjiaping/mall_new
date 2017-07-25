@@ -118,11 +118,19 @@ public class MainMeFragment extends BaseFragment {
             tvWaittingPay.setText(StringUtils.format2(LoginHelper.getInstance().getRepayAmount()));
             tvPayAmounts.setText(LoginHelper.getInstance().getCreditCount());
             String remainDays = LoginHelper.getInstance().getRemainDays();
-            SpannableString msp = new SpannableString("剩余" + remainDays + "天");
-            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tvDays.setText(msp);
+            if(StringUtils.isNotNull(remainDays)){
+                if (StringUtils.string2Int(remainDays) < 0) {
+                    //剩余天数为负数
+                    tvDays.setText("已逾期");
+                } else {
+                    SpannableString msp = new SpannableString("剩余" + remainDays + "天");
+                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tvDays.setText(msp);
+                }
+            }
+
             llPayStatus.setVisibility(View.VISIBLE);
         } else {
             //未登录状态

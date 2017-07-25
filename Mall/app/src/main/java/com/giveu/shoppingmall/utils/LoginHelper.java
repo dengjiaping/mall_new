@@ -483,6 +483,18 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 设置手机号
+     *
+     * @param phone
+     */
+    public void setPhone(String phone) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.phone = phone;
+            putString(PHONE, loginPersonInfo.phone);
+        }
+    }
+
+    /**
      * 获取用户Id
      *
      * @return

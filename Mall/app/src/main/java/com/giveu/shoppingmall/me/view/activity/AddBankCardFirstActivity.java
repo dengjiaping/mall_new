@@ -51,7 +51,6 @@ public class AddBankCardFirstActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_addcardfirst);
         baseLayout.setTitle("添加银行卡");
-        CommonUtils.openSoftKeyBoard(mBaseContext);
         //查看支持银行列表
         CommonUtils.setTextWithSpan(tvBanklist, false, "查看", "支持银行", R.color.color_9b9b9b, R.color.title_color, new View.OnClickListener() {
             @Override

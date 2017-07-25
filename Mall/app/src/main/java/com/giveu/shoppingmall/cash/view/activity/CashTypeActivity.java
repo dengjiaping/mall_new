@@ -584,7 +584,7 @@ public class CashTypeActivity extends BaseActivity {
                     return;
                 }
                 if (!cbDesc.isChecked()) {
-                    ToastUtils.showShortToast("请勾选协议！");
+                    ToastUtils.showShortToast("请勾选借款及服务相关协议！");
                     return;
                 }
                 showPwdDialog();

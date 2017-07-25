@@ -152,7 +152,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
 
         if (!cbAgreement.isChecked()) {
             if (showToast) {
-                ToastUtils.showShortToast("请勾选协议");
+                ToastUtils.showShortToast("请勾选即有钱包用户注册协议");
             }
 
             return false;

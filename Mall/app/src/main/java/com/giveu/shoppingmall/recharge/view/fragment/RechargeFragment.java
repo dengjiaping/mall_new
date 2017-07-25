@@ -63,8 +63,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.android.volley.mynet.ApiUrl.WebUrl.oConsumeLoanStatic;
-
 
 /**
  * 充值模块
@@ -623,10 +621,10 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         if (event != null) {
             if (event.payStatus == 0) {
                 //微信支付成功
-                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "预计10分钟到账，充值高峰可能会有延迟");
+                RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元");
             } else if (event.payStatus == -1) {
                 //微信支付失败
-                RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+                RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
             } else if (event.payStatus == -2) {
                 //微信支付取消,显示订单信息
                 if (orderDialog != null) {
@@ -648,12 +646,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             PayUtils.AliPay(mBaseContext, data.alipay, new PayUtils.AliPayThread.OnPayListener() {
                 @Override
                 public void onSuccess() {
-                    RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元", "温馨提示：预计10分钟到账，充值高峰可能会有延迟，可在个人中心-我的订单查看充值订单状态");
+                    RechargeStatusActivity.startIt(mBaseContext, "success", null, salePrice + "元", salePrice + "元");
                 }
 
                 @Override
                 public void onFail() {
-                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+                    RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
                 }
 
                 @Override
@@ -670,6 +668,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void confirmOrderFail() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元", null);
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
     }
 }

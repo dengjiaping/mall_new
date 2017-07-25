@@ -63,8 +63,9 @@ public class TransactionInputActivity extends BaseActivity {
                                         //密码正确
                                         CommonUtils.closeSoftKeyBoard(mBaseContext);
                                         ChangePhoneNumberActivity.startIt(mBaseContext, response.data.code);
+                                        finish();
                                     } else {
-                                        //TODO: 1-2 重试密码 3 冻结密码需要找回密码
+                                        //1-2 还剩输入次数 3 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
                                         errorDialog.showDialog(mBaseContext, pwdResponse.remainTimes);
                                         inputViewPwd.clearResult();
