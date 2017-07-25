@@ -108,6 +108,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
 //                tvLargeWithdrawals.setVisibility(View.VISIBLE);
 //                tvLargeWithdrawals.setText("大额现金分期可用额度：" + "¥4000.00" + "\n大额现金分期总额度：" + " ¥8000.00");
                 tvHint.setVisibility(View.GONE);
+                tvLargeWithdrawals.setVisibility(View.GONE);
                 tvKnow.setText("去取现");
                 break;
 
