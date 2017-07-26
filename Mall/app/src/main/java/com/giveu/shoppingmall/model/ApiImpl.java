@@ -68,7 +68,7 @@ public class ApiImpl {
 //        if (LoginHelper.getInstance().hasLogin()){
 //            tokenType = "1";
 //        }
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "tokenType"}, new String[]{SharePrefUtil.getUUId(), tokenType});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "platform"}, new String[]{SharePrefUtil.getUUId(), "Android"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.token_getToken, TokenBean.class, context, new BaseRequestAgent.ResponseListener<TokenBean>() {
             @Override
             public void onSuccess(TokenBean response) {
@@ -126,6 +126,12 @@ public class ApiImpl {
 
             }
         });
+    }
+
+    //退出登录
+    public static void logout(Activity context, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId"}, new Object[]{SharePrefUtil.getUUId()});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_logout, BaseBean.class, context, responseListener);
     }
 
     //获取用户信息

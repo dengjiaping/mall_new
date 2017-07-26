@@ -281,7 +281,14 @@ public class MainActivity extends BasePermissionActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 resetIconAndTextColor();
-                selectIconAndTextColor(mViewPager.getCurrentItem());
+                switch (mViewPager.getCurrentItem()) {
+                    case 0:
+                        selectIconAndTextColor(0);
+                        break;
+                    case 1:
+                        selectIconAndTextColor(2);
+                        break;
+                }
             }
         });
     }
