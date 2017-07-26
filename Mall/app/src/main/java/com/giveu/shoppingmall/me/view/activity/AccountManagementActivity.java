@@ -132,17 +132,15 @@ public class AccountManagementActivity extends BaseActivity {
         customDialogUtil.getDialogMode1("提示", "是否要退出登录？", "确定", "取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiImpl.logout(mBaseContext, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                LoginHelper.getInstance().logout();
+                finish();
+                ApiImpl.logout(null, new BaseRequestAgent.ResponseListener<BaseBean>() {
                     @Override
                     public void onSuccess(BaseBean response) {
-                        LoginHelper.getInstance().logout();
-                        ToastUtils.showShortToast("已退出登录");
-                        finish();
                     }
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        ToastUtils.showShortToast("退出登录失败");
                     }
                 });
             }
