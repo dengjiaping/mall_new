@@ -46,7 +46,7 @@ public class DownloadApkUtils {
     float apkTotalSize;
     boolean isForce;//false普通 true强制更新
     //apk本地保存地址
-    final String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
+    String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
     AppUpdateDialog tipAlertDialog;
     ApkUgradeResponse apkUgradeResponse;
 
@@ -57,6 +57,18 @@ public class DownloadApkUtils {
         }
 
         mActivity = activity;
+        try {
+            File file = mActivity.getExternalCacheDir();
+            if (file != null) {
+                apkSavePath = file.getAbsolutePath()
+                        + File.separator + "jiyouqianbao.apk";
+            } else {
+                apkSavePath = FileUtils.getSDcardPath() + File.separator + "jiyouqianbao.apk";
+            }
+
+        } catch (Exception e) {
+
+        }
         apkUgradeResponse = response;
         isForce = response.isForceUpdate();
 
@@ -99,10 +111,10 @@ public class DownloadApkUtils {
                     downloadAndInstall(response.url);
                 }
             });
-            tipAlertDialog.setCancelable(false);
-            tipAlertDialog.setCanceledOnTouchOutside(false);
-            showTipDialog();
         }
+        tipAlertDialog.setCancelable(false);
+        tipAlertDialog.setCanceledOnTouchOutside(false);
+        showTipDialog();
     }
 
     private void dismissTipDialog() {
@@ -181,7 +193,7 @@ public class DownloadApkUtils {
                 }
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);//为了向下兼容，这里采用了v7包下的NotificationCompat来构造
-                builder.setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher)).setContentTitle("温馨提示");
+                builder.setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher)).setContentTitle(mActivity.getResources().getString(R.string.app_name));
                 if (current > 0 && current < total) {
                     //下载进行中
                     builder.setProgress((int) total, (int) current, false);
