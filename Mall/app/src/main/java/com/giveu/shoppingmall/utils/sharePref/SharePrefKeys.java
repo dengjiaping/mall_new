@@ -10,6 +10,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 public interface SharePrefKeys {
 
     String NEW_VERSION_CODE = "NEW_VERSION_CODE";//最新版本号
+    String NeedUpdateApp = "NeedUpdateApp";//是否有最新版本
     String SERVER_TOKEN = "SERVER_TOKEN";
 
     /**

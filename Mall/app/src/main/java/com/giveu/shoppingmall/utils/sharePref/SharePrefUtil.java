@@ -33,7 +33,6 @@ public class SharePrefUtil extends AbsSharePref {
     }
 
 
-
     public static void setNeedWelcome(boolean show) {
         getInstance().putBoolean(SharePrefKeys.SP_WELCOM, show);
     }
@@ -65,6 +64,19 @@ public class SharePrefUtil extends AbsSharePref {
      */
     public static int getNewVersionCode() {
         return getInstance().getInt(SharePrefKeys.NEW_VERSION_CODE, 0);
+    }
+
+    /**
+     * 是否有最新版本
+     *
+     * @param hasNewVersion
+     */
+    public static void setNeedUpdateApp(boolean hasNewVersion) {
+        getInstance().putBoolean(SharePrefKeys.NeedUpdateApp, hasNewVersion);
+    }
+
+    public static boolean needUpdateApp() {
+        return getInstance().getBoolean(SharePrefKeys.NeedUpdateApp, false);
     }
 
 
@@ -115,7 +127,7 @@ public class SharePrefUtil extends AbsSharePref {
     }
 
     public static boolean hasFingerPrint() {
-        return getInstance().getBoolean(SharePrefKeys.FINGER_PWD + LoginHelper.getInstance().getUserId(),false);
+        return getInstance().getBoolean(SharePrefKeys.FINGER_PWD + LoginHelper.getInstance().getUserId(), false);
     }
 
     public static String getPatternPwd() {

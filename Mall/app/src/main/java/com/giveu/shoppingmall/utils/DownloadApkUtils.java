@@ -14,7 +14,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -46,7 +48,7 @@ public class DownloadApkUtils {
     float apkTotalSize;
     boolean isForce;//false普通 true强制更新
     //apk本地保存地址
-    final String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
+    String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
     AppUpdateDialog tipAlertDialog;
     ApkUgradeResponse apkUgradeResponse;
 
@@ -57,6 +59,18 @@ public class DownloadApkUtils {
         }
 
         mActivity = activity;
+        try {
+            File file = mActivity.getExternalCacheDir();
+            if (file != null) {
+                apkSavePath = file.getAbsolutePath()
+                        + File.separator + "jiyouqianbao.apk";
+            } else {
+                apkSavePath = FileUtils.getSDcardPath() + File.separator + "jiyouqianbao.apk";
+            }
+
+        } catch (Exception e) {
+
+        }
         apkUgradeResponse = response;
         isForce = response.isForceUpdate();
 
@@ -99,10 +113,10 @@ public class DownloadApkUtils {
                     downloadAndInstall(response.url);
                 }
             });
-            tipAlertDialog.setCancelable(false);
-            tipAlertDialog.setCanceledOnTouchOutside(false);
-            showTipDialog();
         }
+        tipAlertDialog.setCancelable(false);
+        tipAlertDialog.setCanceledOnTouchOutside(false);
+        showTipDialog();
     }
 
     private void dismissTipDialog() {
@@ -181,7 +195,7 @@ public class DownloadApkUtils {
                 }
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);//为了向下兼容，这里采用了v7包下的NotificationCompat来构造
-                builder.setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher)).setContentTitle("温馨提示");
+                builder.setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher)).setContentTitle(mActivity.getResources().getString(R.string.app_name));
                 if (current > 0 && current < total) {
                     //下载进行中
                     builder.setProgress((int) total, (int) current, false);
@@ -215,7 +229,15 @@ public class DownloadApkUtils {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
-        Uri data = Uri.parse("file://" + apkPath);
+        Uri data;
+        //适配7.0文件共享
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            data = FileProvider.getUriForFile(mActivity, "com.giveu.shoppingmall.fileprovider",new File(apkPath));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else {
+            data = Uri.parse("file://" + apkPath);
+        }
+
         intent.setDataAndType(data, "application/vnd.android.package-archive");
         return intent;
     }

@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 break;
 
             case R.id.tv_forget_pwd:
-                RequestPasswordActivity.startIt(mBaseContext,RequestPasswordActivity.FIND_LOGIN_PWD);
+                RequestPasswordActivity.startIt(mBaseContext, RequestPasswordActivity.FIND_LOGIN_PWD);
                 break;
 
             case R.id.iv_wechat_login:
@@ -324,12 +324,14 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     }
 
     public static void logoutByServerAndStartIt(String msg) {
+        //清空本地登录信息
         LoginHelper.getInstance().logout();
-        BaseApplication.getInstance().finishAllActivity();
+        BaseApplication.getInstance().finishAllExceptMainActivity();
         //停止极光推送并清除所有通知
         JPushInterface.stopPush(BaseApplication.getInstance());
         JPushInterface.clearAllNotifications(BaseApplication.getInstance());
         Context context = BaseApplication.getInstance().getApplicationContext();
+        //先开启首页，再跳转至登录界面
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isLogoutByServer", true);

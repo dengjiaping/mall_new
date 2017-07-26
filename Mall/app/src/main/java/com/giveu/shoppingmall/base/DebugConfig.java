@@ -10,8 +10,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
  */
 public class DebugConfig {
 
-    public static final boolean isTest = true;
-    public static final boolean isDev = false;
+    public static final boolean isTest = false;
+    public static final boolean isDev = true;
     public static final boolean isOnline = false;
 
 
@@ -40,7 +40,7 @@ public class DebugConfig {
     public static String BASE_URL_ONLINE = DOMAIN_ONLINE + "3c-web/" + API_VERSION;//正式环境
     public static String BASE_URL_DEV = DOMAIN_DEV + API_VERSION;//开发环境
 
-    public static String apk_update_test = DOMAIN_DEV + API_VERSION + "personCenter/account/getVersion";
+    public static String apk_update_test = DOMAIN_TEST + API_VERSION + "personCenter/account/getVersion";
     public static String apk_update_online = DOMAIN_ONLINE + API_VERSION + "personCenter/account/getVersion";
 
 

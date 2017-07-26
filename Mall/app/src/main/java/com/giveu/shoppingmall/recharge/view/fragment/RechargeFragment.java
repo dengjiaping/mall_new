@@ -526,14 +526,15 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
      * 自动填充手机并查询归属地
      */
     public void initPhoneAndQuery() {
-        if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())) {
+        //避免重复请求相同手机号归属地需加判断
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())
+                && !LoginHelper.getInstance().getPhone().equals(etRecharge.getText().toString().replaceAll(" ", ""))) {
             //自动填充空格，并查询手机信息
             StringBuilder ownerPhone = new StringBuilder(LoginHelper.getInstance().getPhone());
             ownerPhone.insert(3, " ");
             ownerPhone.insert(8, " ");
             etRecharge.setText(ownerPhone.toString());
             etRecharge.setSelection(ownerPhone.length());
-            presenter.getPhoneInfo(LoginHelper.getInstance().getPhone());
         }
     }
 

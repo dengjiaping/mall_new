@@ -12,6 +12,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.EventBusIndex;
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -76,7 +77,7 @@ public class BaseApplication extends MultiDexApplication {
         initTokenDaemon();
         initProvinceList();
         initShareSDK();
-       // fetchUserInfo();
+        // fetchUserInfo();
         //添加索引到EventBus默认的单例中
         EventBus.builder().addIndex(new EventBusIndex()).installDefaultEventBus();
     }
@@ -314,6 +315,17 @@ public class BaseApplication extends MultiDexApplication {
     public void finishAllActivity() {
         for (Activity activity : undestroyActivities) {
             if (activity != null) {
+                activity.finish();
+            }
+        }
+    }
+
+    /**
+     * 关闭除MainActivity外的所有界面，用于服务器返回登录过期时的操作
+     */
+    public void finishAllExceptMainActivity() {
+        for (Activity activity : undestroyActivities) {
+            if (activity != null && activity.getClass() != MainActivity.class) {
                 activity.finish();
             }
         }

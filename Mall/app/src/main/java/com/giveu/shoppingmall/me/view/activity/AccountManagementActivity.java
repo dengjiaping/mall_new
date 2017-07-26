@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
@@ -54,7 +55,6 @@ public class AccountManagementActivity extends BaseActivity {
     @BindView(R.id.iv_update)
     ImageView ivUpdate;
     private DownloadApkUtils downloadApkUtils;
-    private ApkUgradeResponse apkUgradeResponse;
 
 
     public static void startIt(Activity mActivity) {
@@ -82,11 +82,17 @@ public class AccountManagementActivity extends BaseActivity {
             tvUserName.setText(LoginHelper.getInstance().getPhone());
             tvPhone.setVisibility(View.GONE);
         }
+        //需要更新则显示更新图标
+        if (SharePrefUtil.needUpdateApp()) {
+            ivUpdate.setVisibility(View.VISIBLE);
+        } else {
+            ivUpdate.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
     public void setData() {
-        doApkUpgrade();
     }
 
     @OnClick({R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
@@ -112,15 +118,7 @@ public class AccountManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_version_update:
                 //版本更新
-                if (downloadApkUtils != null) {
-                    if (apkUgradeResponse != null && apkUgradeResponse.isNoUpdate()) {
-                        ToastUtils.showShortToast("暂无更新");
-                    } else {
-                        downloadApkUtils.showUpdateApkDialog(mBaseContext, apkUgradeResponse);
-                    }
-                } else {
-                    ToastUtils.showShortToast("暂无更新");
-                }
+                doApkUpgrade();
                 break;
             case R.id.tv_finish:
                 //退出登录
@@ -134,8 +132,19 @@ public class AccountManagementActivity extends BaseActivity {
         customDialogUtil.getDialogMode1("提示", "是否要退出登录？", "确定", "取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginHelper.getInstance().logout();
-                finish();
+                ApiImpl.logout(mBaseContext, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                    @Override
+                    public void onSuccess(BaseBean response) {
+                        LoginHelper.getInstance().logout();
+                        ToastUtils.showShortToast("已退出登录");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        ToastUtils.showShortToast("退出登录失败");
+                    }
+                });
             }
         }, null).show();
     }
@@ -149,12 +158,10 @@ public class AccountManagementActivity extends BaseActivity {
             @Override
             public void onSuccess(ApkUgradeResponse response) {
                 downloadApkUtils = new DownloadApkUtils();
-                apkUgradeResponse = response.data;
-                //需要更新则显示更新图标
-                if (response.data.isNoUpdate()) {
-                    ivUpdate.setVisibility(View.GONE);
+                if (response.data != null && response.data.isNoUpdate()) {
+                    ToastUtils.showShortToast("暂无更新");
                 } else {
-                    ivUpdate.setVisibility(View.VISIBLE);
+                    downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
                 }
             }
 
