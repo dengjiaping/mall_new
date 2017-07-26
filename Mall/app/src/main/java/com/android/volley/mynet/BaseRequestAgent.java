@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseListener;
+import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -264,7 +265,7 @@ public abstract class BaseRequestAgent {
                 });
             } else if (response.isLogoutByServer() && (!ApiUrl.sales_account_login.equals(myRequest.requestUrl))) {
                 //除登录接口外，其他接口响应被服务器强制退出登录的code
-//				LoginActivity.logoutByServerAndStartIt(response.message);
+				LoginActivity.logoutByServerAndStartIt(response.message);
             } else {
                 returnErrorListener(response);
             }

@@ -59,7 +59,7 @@ public class BaseBeanParent implements Serializable {
 	 * 被服务器强制退出登录
 	 */
 	public boolean isLogoutByServer(){
-		return "0001".equals(code);
+		return "500135".equals(code);
 	}
 
 

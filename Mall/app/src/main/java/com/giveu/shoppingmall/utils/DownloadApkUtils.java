@@ -14,7 +14,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -227,7 +229,15 @@ public class DownloadApkUtils {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
-        Uri data = Uri.parse("file://" + apkPath);
+        Uri data;
+        //适配7.0文件共享
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            data = FileProvider.getUriForFile(mActivity, "com.giveu.shoppingmall.fileprovider",new File(apkPath));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else {
+            data = Uri.parse("file://" + apkPath);
+        }
+
         intent.setDataAndType(data, "application/vnd.android.package-archive");
         return intent;
     }
