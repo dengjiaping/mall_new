@@ -228,9 +228,32 @@ public class TypeUtlis {
     }
 
     /**
+     * 还款页面显示期数还是时间
+     *
+     * @param creditType
+     * @return true为显示时间，false为显示期数
+     */
+    public static boolean isShowDate(String creditType) {
+        boolean showDate = true;
+        switch (creditType) {
+            case "sf":
+            case "ss":
+            case "sq":
+            case "sd":
+                showDate = false;
+                break;
+            case "sy":
+            case "sh":
+                showDate = true;
+                break;
+        }
+        return showDate;
+    }
+
+    /**
      * 根据合同类型转换成消费类型
-     * 现金分期、商城消费分期、常规取现分期、大额取现分期 返回1
-     * 商城一次性消费、线下消费 返回2
+     * 现金分期、商城消费分期、常规取现分期、大额取现分期、线下消费 返回1
+     * 商城一次性消费 返回2
      * 随借随还取现 返回3
      *
      * @param creditType 合同类型
@@ -318,25 +341,26 @@ public class TypeUtlis {
 
     /**
      * 根据值获取对应的运营商
+     *
      * @param value
      * @return
      */
-    public static String getOperatorStr(int value){
-        String operatorStr ="未知运营商";
-        switch (value){
+    public static String getOperatorStr(int value) {
+        String operatorStr = "未知运营商";
+        switch (value) {
             case 0:
-                operatorStr ="中国移动";
+                operatorStr = "中国移动";
                 break;
             case 1:
-                operatorStr ="中国联通";
+                operatorStr = "中国联通";
                 break;
             case 2:
-                operatorStr ="中国电信";
+                operatorStr = "中国电信";
                 break;
             default:
                 break;
         }
-        return  operatorStr;
+        return operatorStr;
     }
 
 }
