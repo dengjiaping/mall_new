@@ -117,8 +117,8 @@ public class MainActivity extends BasePermissionActivity {
         notActiveDialog = new NotActiveDialog(mBaseContext);
         UITest.test(mBaseContext);
         resetIconAndTextColor();
-        selectIconAndTextColor(2);
-        mViewPager.setCurrentItem(1);
+        selectIconAndTextColor(0);
+        mViewPager.setCurrentItem(0);
         BaseApplication.getInstance().fetchUserInfo();
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
@@ -235,22 +235,9 @@ public class MainActivity extends BasePermissionActivity {
                 break;
 
             case R.id.ll_cash:
-                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        mViewPager.setCurrentItem(0, false);
-                        selectIconAndTextColor(0);
-                    } else {
-                        notActiveDialog.showDialog();
-                        selectIconAndTextColor(0);
-//                        mViewPager.setCurrentItem(2);
-//                        selectIconAndTextColor(2);
-                    }
-
-                }
-
+                mViewPager.setCurrentItem(0, false);
+                selectIconAndTextColor(0);
                 break;
-
             case R.id.ll_repayment:
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {

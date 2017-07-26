@@ -271,7 +271,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getRemainDays() {
-        return (loginPersonInfo == null || loginPersonInfo.remainDays == null) ? "0" : loginPersonInfo.remainDays;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.remainDays)) ? "0" : loginPersonInfo.remainDays;
     }
 
     @Override
@@ -294,7 +294,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getTotalCost() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.totalCost;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.totalCost)) ? "0.00" : loginPersonInfo.totalCost;
     }
 
     /**
@@ -348,7 +348,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getGlobleLimit() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.globleLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.globleLimit))? "0.00" : loginPersonInfo.globleLimit;
     }
 
     /**
@@ -357,7 +357,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getCylimit() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.cyLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.cyLimit))? "0.00" : loginPersonInfo.cyLimit;
     }
 
     /**
@@ -366,7 +366,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getAvailableCylimit() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availableCyLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.availableCyLimit)) ? "0.00" : loginPersonInfo.availableCyLimit;
     }
 
     /**
@@ -439,7 +439,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getAvailablePoslimit() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.availablePosLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.availablePosLimit)) ? "0.00" : loginPersonInfo.availablePosLimit;
     }
 
     /**
@@ -448,7 +448,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getPosLimit() {
-        return loginPersonInfo == null ? "0.00" : loginPersonInfo.posLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.posLimit)) ? "0.00" : loginPersonInfo.posLimit;
     }
 
     /**
@@ -500,7 +500,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getUserId() {
-        return loginPersonInfo == null ? "0" : loginPersonInfo.userId;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.userId)) ? "0" : loginPersonInfo.userId;
     }
 
     /**

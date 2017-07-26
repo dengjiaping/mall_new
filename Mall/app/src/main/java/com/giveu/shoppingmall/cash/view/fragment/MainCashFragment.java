@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 
@@ -38,7 +39,7 @@ public class MainCashFragment extends BaseFragment {
     LinearLayout llTop;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
-
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_cash, null);
@@ -52,6 +53,7 @@ public class MainCashFragment extends BaseFragment {
             }
         });
         quotaDialog = new QuotaDialog(mBaseContext);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -63,27 +65,44 @@ public class MainCashFragment extends BaseFragment {
             public void onClick(View v) {
                 String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
                 double cylimit = Double.parseDouble(availableCylimit);
-                if (0 == cylimit) {
-                    //取现额度为0
-                    quotaDialog.showDialog();
-                } else {
-                    //  CashTypeActivity.startIt(mBaseContext, "5000");
-                    CashTypeActivity.startIt(mBaseContext);
+                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        if (0 == cylimit) {
+                            //取现额度为0
+                            quotaDialog.showDialog();
+                        } else {
+                            CashTypeActivity.startIt(mBaseContext);
+                        }
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+
                 }
+
             }
         });
     }
 
     @Override
     public void initDataDelay() {
-        int width = ivBgTop.getWidth();
-        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
-        layoutParams1.height = (208 * width / 708);
-        ivBgTop.setLayoutParams(layoutParams1);
-        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
-        layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight()+ DensityUtils.dip2px(15);
-        layoutParams2.setMargins(DensityUtils.dip2px(10),DensityUtils.dip2px(6),DensityUtils.dip2px(10),0);
-        llTop.setLayoutParams(layoutParams2);
+
+
+//        ivBgTop.setLayoutParams(layoutParams1);
+        llDate.post(new Runnable() {
+            @Override
+            public void run() {
+                 LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
+
+                int width = DensityUtils.getWidth()-DensityUtils.dip2px(30);
+                LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
+                layoutParams1.height = (208 * width / 708);
+                layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight()+ DensityUtils.dip2px(15);
+                layoutParams2.setMargins(DensityUtils.dip2px(10),DensityUtils.dip2px(6),DensityUtils.dip2px(10),0);
+                llDate.setLayoutParams(layoutParams2);
+            }
+        });
+
 
     }
 
