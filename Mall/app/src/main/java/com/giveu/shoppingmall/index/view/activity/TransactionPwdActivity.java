@@ -113,7 +113,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 });
                             }
                         } else {
-                            ToastUtils.showShortToast("两次输入的密码不一致！");
+                            ToastUtils.showShortToast("交易密码不一致，请重新确认");
                         }
                     } else {
                         //第一次输入密码

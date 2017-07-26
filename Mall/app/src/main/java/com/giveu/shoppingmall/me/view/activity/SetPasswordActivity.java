@@ -141,7 +141,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
         }
         if (!etConfirmPwd.getText().toString().equals(etPwd.getText().toString())) {
             if (showToast) {
-                ToastUtils.showShortToast("输入密码不一致");
+                ToastUtils.showShortToast("登录密码不一致，请重新确认");
             }
             return false;
         }

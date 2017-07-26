@@ -89,6 +89,7 @@ public class FeedbackListActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_feedback_list);
         baseLayout.setTitle("处理记录");
+        baseLayout.setTopBarBgDrawble(R.color.white);
     }
 
     @Override
