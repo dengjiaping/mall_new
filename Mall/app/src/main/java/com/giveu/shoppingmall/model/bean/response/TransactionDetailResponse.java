@@ -15,7 +15,7 @@ public class TransactionDetailResponse extends BaseBean<TransactionDetailRespons
      * dueDate : 测试内容60fu
      * goodsName : 测试内容9g54
      * idCredit : 测试内容58mr
-     * lastPrincipal : 14550
+     * lastAmount : 14550
      * paymentNum : 17584
      */
 
@@ -25,6 +25,6 @@ public class TransactionDetailResponse extends BaseBean<TransactionDetailRespons
     public String dueDate;
     public String goodsName;
     public String idCredit;
-    public String lastPrincipal;
+    public String lastAmount;
     public int paymentNum;
 }
