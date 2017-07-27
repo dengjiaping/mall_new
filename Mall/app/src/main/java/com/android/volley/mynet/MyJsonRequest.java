@@ -104,7 +104,7 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());
+        headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());//Authorization:+空格+Bearer空格+token
         String jsonParams = new Gson().toJson(getParams());
         if(getParams().isEmpty()){
             jsonParams = "";
@@ -113,6 +113,7 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         if ( !TextUtils.isEmpty(md5Str)){
             headerMap.put("sign", md5Str.toLowerCase());
         }
+        headerMap.put("deviceId", SharePrefUtil.getUUId());
         LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }
