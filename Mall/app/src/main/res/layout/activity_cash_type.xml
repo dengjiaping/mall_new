@@ -193,7 +193,7 @@
                             android:textSize="@dimen/ts_18" />
 
                         <ImageView
-                            android:layout_width="51dp"
+                            android:layout_width="45dp"
                             android:padding="@dimen/default_layout_screen_gap"
                             android:layout_height="match_parent"
                             android:src="@drawable/ic_right"/>
