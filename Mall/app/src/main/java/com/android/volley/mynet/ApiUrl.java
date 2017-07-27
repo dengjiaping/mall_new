@@ -33,6 +33,8 @@ public interface ApiUrl {
     String sales_account_checkPwd = BASE_URL + "sales/account/checkPwd";
     //登录
     String sales_account_login = BASE_URL + "sales/account/login";
+    //应用更新
+    String personCenter_account_getVersion = BASE_URL+"personCenter/account/getVersion";
     //公用请求蜂鸟接口
     String common_url = BASE_URL + "sales/public/commonsMethod";
     //公用请求蜂鸟path对应的key
