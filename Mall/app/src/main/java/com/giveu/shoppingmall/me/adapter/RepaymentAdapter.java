@@ -11,7 +11,6 @@ import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.RepaymentBean;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.TypeUtlis;
 
 import java.util.List;
@@ -44,12 +43,14 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                 cbChoose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致给予提醒
+                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致清空勾选，再选中当前项
                         for (RepaymentBean repaymentBean : datas) {
                             if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
-                                cbChoose.setChecked(!cbChoose.isChecked());
-                                ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
-                                return;
+                                for (RepaymentBean data : datas) {
+                                    data.isChoose = false;
+                                    notifyDataSetChanged();
+                                }
+                                break;
                             }
                         }
                         item.isChoose = cbChoose.isChecked();
@@ -69,10 +70,14 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                 holder.setOnClickListener(R.id.ll_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致清空勾选，再选中当前项
                         for (RepaymentBean repaymentBean : datas) {
                             if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
-                                ToastUtils.showShortToast("只能勾选分期产品和取现随借随还其中一项");
-                                return;
+                                for (RepaymentBean data : datas) {
+                                    data.isChoose = false;
+                                    notifyDataSetChanged();
+                                }
+                                break;
                             }
                         }
                         cbChoose.setChecked(!cbChoose.isChecked());

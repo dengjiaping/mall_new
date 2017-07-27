@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="应用更新"
+        android:text="升级提示"
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_18" />
 
@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="即有钱包新版本已发布，是否更新？"
+        android:visibility="gone"
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_16" />
 
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="更新内容："
+        android:visibility="gone"
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_16" />
 

@@ -32,6 +32,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
 
+import static android.os.Environment.getExternalStorageDirectory;
+
 /**
  * 自动下载更新apk服务
  * Create by: chenwei.li
@@ -48,7 +50,7 @@ public class DownloadApkUtils {
     float apkTotalSize;
     boolean isForce;//false普通 true强制更新
     //apk本地保存地址
-    String apkSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
+    String apkSavePath = getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName() + ".apk";
     AppUpdateDialog tipAlertDialog;
     ApkUgradeResponse apkUgradeResponse;
 
@@ -59,26 +61,17 @@ public class DownloadApkUtils {
         }
 
         mActivity = activity;
-        try {
-            File file = mActivity.getExternalCacheDir();
-            if (file != null) {
-                apkSavePath = file.getAbsolutePath()
-                        + File.separator + "jiyouqianbao.apk";
-            } else {
-                apkSavePath = FileUtils.getSDcardPath() + File.separator + "jiyouqianbao.apk";
-            }
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName();
+        final File file = new File(dirPath, "jiyouqianbao.apk");
+        apkSavePath = file.getAbsolutePath();
 
-        } catch (Exception e) {
-
-        }
         apkUgradeResponse = response;
         isForce = response.isForceUpdate();
 
-        final File file = new File(apkSavePath);
         tipAlertDialog = new AppUpdateDialog(mActivity);
         //如果已下载完成则弹安装Dialog
         if (file.isFile() && file.exists() && SharePrefUtil.getDownloadApkFlag()) {
-            tipAlertDialog.initDialogContent(true, "");
+            tipAlertDialog.initDialogContent(true, response.desc);
             tipAlertDialog.setOnChooseListener(new AppUpdateDialog.OnChooseListener() {
                 @Override
                 public void cancel() {
@@ -232,7 +225,7 @@ public class DownloadApkUtils {
         Uri data;
         //适配7.0文件共享
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            data = FileProvider.getUriForFile(mActivity, "com.giveu.shoppingmall.fileprovider",new File(apkPath));
+            data = FileProvider.getUriForFile(mActivity, "com.giveu.shoppingmall.fileprovider", new File(apkPath));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } else {
             data = Uri.parse("file://" + apkPath);
