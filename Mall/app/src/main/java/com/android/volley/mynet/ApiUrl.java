@@ -9,7 +9,7 @@ public interface ApiUrl {
      */
     String BASE_URL = DebugConfig.getBaseUrl();
     String H5_BASE_URL = DebugConfig.getH5BaseUrl();
-    String FEED_BACK_URL = DebugConfig.getFeedBackUrl();
+    String FEED_BACK_URL = DebugConfig.getFeedBackBaseUrl();
 
     interface WebUrl {
         String commonProblem = H5_BASE_URL + "question/";
