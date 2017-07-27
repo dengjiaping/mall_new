@@ -43,7 +43,7 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                 cbChoose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致给予提醒
+                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致清空勾选，再选中当前项
                         for (RepaymentBean repaymentBean : datas) {
                             if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
                                 for (RepaymentBean data : datas) {
@@ -70,6 +70,7 @@ public class RepaymentAdapter extends MultiItemTypeAdapter<RepaymentBean> {
                 holder.setOnClickListener(R.id.ll_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //遍历查询当前点击产品类型是否与上次勾选的一致，不一致清空勾选，再选中当前项
                         for (RepaymentBean repaymentBean : datas) {
                             if (repaymentBean.isChoose && !item.productType.equals(repaymentBean.productType)) {
                                 for (RepaymentBean data : datas) {
