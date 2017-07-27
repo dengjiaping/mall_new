@@ -381,13 +381,14 @@
             </intent-filter>
         </receiver>
 
-        <!--友盟-->
+        <!--友盟 key-->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="58d9fc2f65b6d60865001bbc" />
+            android:value="5979b42bbbea83180400142c" />
+        <!--友盟 默认渠道 官网-->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="3COrder" />
+            android:value="GuanWang" />
     </application>
 
 </manifest>
