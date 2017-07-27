@@ -40,6 +40,7 @@ public class MainCashFragment extends BaseFragment {
     @BindView(R.id.ll_date)
     LinearLayout llDate;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_main_cash, null);
@@ -49,7 +50,9 @@ public class MainCashFragment extends BaseFragment {
         baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CaseRecordActivity.startIt(mBaseContext);
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    CaseRecordActivity.startIt(mBaseContext);
+                }
             }
         });
         quotaDialog = new QuotaDialog(mBaseContext);
@@ -92,13 +95,13 @@ public class MainCashFragment extends BaseFragment {
         llDate.post(new Runnable() {
             @Override
             public void run() {
-                 LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
+                LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
 
-                int width = DensityUtils.getWidth()-DensityUtils.dip2px(30);
+                int width = DensityUtils.getWidth() - DensityUtils.dip2px(30);
                 LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
                 layoutParams1.height = (208 * width / 708);
-                layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight()+ DensityUtils.dip2px(15);
-                layoutParams2.setMargins(DensityUtils.dip2px(10),DensityUtils.dip2px(6),DensityUtils.dip2px(10),0);
+                layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight() + DensityUtils.dip2px(15);
+                layoutParams2.setMargins(DensityUtils.dip2px(10), DensityUtils.dip2px(6), DensityUtils.dip2px(10), 0);
                 llDate.setLayoutParams(layoutParams2);
             }
         });
