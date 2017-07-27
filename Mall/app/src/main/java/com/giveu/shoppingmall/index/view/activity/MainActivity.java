@@ -353,7 +353,7 @@ public class MainActivity extends BasePermissionActivity {
      */
     private void doApkUpgrade() {
         //apk升级
-        ApiImpl.sendApkUpgradeRequest(mBaseContext, new BaseRequestAgent.ResponseListener<ApkUgradeResponse>() {
+        ApiImpl.sendApkUpgradeRequest(null, new BaseRequestAgent.ResponseListener<ApkUgradeResponse>() {
             @Override
             public void onSuccess(ApkUgradeResponse response) {
                 downloadApkUtils = new DownloadApkUtils();
