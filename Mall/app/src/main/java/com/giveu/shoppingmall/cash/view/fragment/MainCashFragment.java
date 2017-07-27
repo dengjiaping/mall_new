@@ -107,7 +107,6 @@ public class MainCashFragment extends BaseFragment {
                     //取现额度为0
                     quotaDialog.showDialog();
                 } else {
-                    CashTypeActivity.startIt(mBaseContext);
                     return true;
                 }
             } else {
