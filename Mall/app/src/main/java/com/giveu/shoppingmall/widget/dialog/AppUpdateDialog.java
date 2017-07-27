@@ -64,26 +64,17 @@ public class AppUpdateDialog extends CustomDialog {
      */
     public void initDialogContent(boolean isInstall, String content) {
         if (isInstall) {
-            tvTitle.setText("应用安装");
-            tvTitleHint.setText("下载完成，是否立即安装？");
             tvConfirm.setText("安装");
-            tvUpdateHint.setVisibility(View.GONE);
-            tvContent.setVisibility(View.GONE);
-
         } else {
-            tvTitle.setText("应用更新");
-            tvTitleHint.setText("即有钱包新版本已发布，是否更新？");
-            tvConfirm.setText("更新");
-            tvUpdateHint.setVisibility(View.VISIBLE);
-            tvContent.setVisibility(View.VISIBLE);
-            if (StringUtils.isNull(content)) {
-                tvContent.setText("暂无更新内容");
+            tvConfirm.setText("升级");
+        }
+        if (StringUtils.isNull(content)) {
+            tvContent.setText("暂无更新内容");
+        } else {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                tvContent.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_COMPACT));
             } else {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    tvContent.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_COMPACT));
-                } else {
-                    tvContent.setText(Html.fromHtml(content));
-                }
+                tvContent.setText(Html.fromHtml(content));
             }
         }
 

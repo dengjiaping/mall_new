@@ -7,7 +7,6 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
-import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
@@ -101,7 +100,7 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"version"},
                 new Object[]{CommonUtils.getVersionCode()});
 
-        RequestAgent.getInstance().sendPostRequest(requestParams2, DebugConfig.getApkUpdateUrl(), ApkUgradeResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getVersion, ApkUgradeResponse.class, context, responseListener);
     }
 
 

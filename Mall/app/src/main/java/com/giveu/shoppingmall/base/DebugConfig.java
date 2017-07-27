@@ -10,8 +10,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
  */
 public class DebugConfig {
 
-    public static final boolean isTest = true;
-    public static final boolean isDev = false;
+    public static final boolean isTest = false;
+    public static final boolean isDev = true;
     public static final boolean isOnline = false;
 
 
@@ -48,16 +48,13 @@ public class DebugConfig {
     public static String H5_ONLINE = "http://wx.dafycredit.cn/";
     public static String H5_TEST = "http://wx.dafycredit.cn/";
 
-    public static String apk_update_test = DOMAIN_TEST + API_VERSION + "personCenter/account/getVersion";
-    public static String apk_update_online = DOMAIN_ONLINE + API_VERSION + "personCenter/account/getVersion";
-
 
     /**
      * 反馈的域名
      *
      * @return
      */
-    public static String getFeedBackUrl() {
+    public static String getFeedBackBaseUrl() {
         if (isOnline) {
             return FEED_BACK_ONLINE;
         } else {
@@ -88,17 +85,5 @@ public class DebugConfig {
             return H5_TEST;
         }
     }
-
-    /**
-     * apk升级的接口与其他接口路径不一样，没有项目名字“3c-web/”
-     */
-    public static String getApkUpdateUrl() {
-        if (isTest || isDev) {
-            return apk_update_test;
-        }
-        return apk_update_online;
-    }
-
-
 }
 
