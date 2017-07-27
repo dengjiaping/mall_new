@@ -50,7 +50,7 @@ public class MainCashFragment extends BaseFragment {
         baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                if (isLoginAndActivation()) {
                     CaseRecordActivity.startIt(mBaseContext);
                 }
             }
@@ -66,31 +66,16 @@ public class MainCashFragment extends BaseFragment {
         tvLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-                double cylimit = Double.parseDouble(availableCylimit);
-                //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        if (0 == cylimit) {
-                            //取现额度为0
-                            quotaDialog.showDialog();
-                        } else {
-                            CashTypeActivity.startIt(mBaseContext);
-                        }
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
-
+                if(isLoginAndActivation()){
+                    //登录并且激活
+                    CashTypeActivity.startIt(mBaseContext);
                 }
-
             }
         });
     }
 
     @Override
     public void initDataDelay() {
-
-
 //        ivBgTop.setLayoutParams(layoutParams1);
         llDate.post(new Runnable() {
             @Override
@@ -109,6 +94,28 @@ public class MainCashFragment extends BaseFragment {
 
     }
 
+    /**
+     * 是否登录是否激活
+     */
+    public boolean isLoginAndActivation(){
+        String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+        double cylimit = Double.parseDouble(availableCylimit);
+        //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
+        if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+            if (LoginHelper.getInstance().hasQualifications()) {
+                if (0 == cylimit) {
+                    //取现额度为0
+                    quotaDialog.showDialog();
+                } else {
+                    CashTypeActivity.startIt(mBaseContext);
+                    return true;
+                }
+            } else {
+                notActiveDialog.showDialog();
+            }
+        }
+        return false;
+    }
     @Override
     protected boolean translateStatusBar() {
         return true;
