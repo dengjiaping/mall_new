@@ -40,9 +40,30 @@ public class DebugConfig {
     public static String BASE_URL_ONLINE = DOMAIN_ONLINE + "3c-web/" + API_VERSION;//正式环境
     public static String BASE_URL_DEV = DOMAIN_DEV + API_VERSION;//开发环境
 
+    //反馈url
+    public static String FEED_BACK_ONLINE = "http://wx2.dafycredit.cn/wechat-web/";
+    public static String FEED_BACK_TEST = "http://wx2.dafycredit.cn/wechat-web/";
+
+    //h5 url
+    public static String H5_ONLINE = "http://wx.dafycredit.cn/";
+    public static String H5_TEST = "http://wx.dafycredit.cn/";
+
     public static String apk_update_test = DOMAIN_TEST + API_VERSION + "personCenter/account/getVersion";
     public static String apk_update_online = DOMAIN_ONLINE + API_VERSION + "personCenter/account/getVersion";
 
+
+    /**
+     * 反馈的域名
+     *
+     * @return
+     */
+    public static String getFeedBackUrl() {
+        if (isOnline) {
+            return FEED_BACK_ONLINE;
+        } else {
+            return FEED_BACK_TEST;
+        }
+    }
 
     public static String getBaseUrl() {
         //手动配置环境,方便调试，默认是没有的
@@ -61,7 +82,11 @@ public class DebugConfig {
     }
 
     public static String getH5BaseUrl() {
-        return "http://3c.dafysz.cn/h5/sales/";
+        if (isOnline) {
+            return H5_ONLINE;
+        } else {
+            return H5_TEST;
+        }
     }
 
     /**

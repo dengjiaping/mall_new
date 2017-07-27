@@ -7,6 +7,8 @@ import com.giveu.shoppingmall.utils.HardWareUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 
+import java.util.UUID;
+
 /**
  * 用于本地持久化存取
  */
@@ -83,7 +85,7 @@ public class SharePrefUtil extends AbsSharePref {
     public static String getUUId() {
         String deviceId = getInstance().getString(SharePrefKeys.UUID);
         if (StringUtils.isNull(deviceId)) {
-            deviceId = HardWareUtil.getDeviceId(BaseApplication.getInstance().getApplicationContext());
+            deviceId = UUID.randomUUID().toString();
             getInstance().putString(SharePrefKeys.UUID, deviceId);
         }
 

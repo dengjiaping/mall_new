@@ -88,23 +88,23 @@ public class HardWareUtil {
 	 *
 	 * @return
 	 */
-	public static String getDeviceId(Context context) {
-		String id = "";
-		try{
-			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			id = tm.getDeviceId();
-			if (TextUtils.isEmpty(id)) {
-				id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}finally {
-			if (TextUtils.isEmpty(id)){
-				id = UUID.randomUUID().toString();
-			}
-		}
-		return id;
-	}
+//	public static String getDeviceId(Context context) {
+//		String id = "";
+//		try{
+//			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//			id = tm.getDeviceId();
+//			if (TextUtils.isEmpty(id)) {
+//				id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//			}
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}finally {
+//			if (TextUtils.isEmpty(id)){
+//				id = UUID.randomUUID().toString();
+//			}
+//		}
+//		return id;
+//	}
 
 	/**
 	 * 获取设备MAC地址
@@ -188,6 +188,7 @@ public class HardWareUtil {
 	}
 
 	/**
+	 *	6.0以上必须获取到权限，否则崩溃
 	 * IMEI 全称�?International Mobile Equipment Identity，中文翻译为国际移动装备辨识码， 即�?常所说的手机序列号，
 	 * 用于在手机网络中识别每一部独立的手机，是国际上公认的手机标志序号，相当于移动电话的身份证。序列号共有15位数字，�?位（TAC）是型号核准号码�?
 	 * 代表手机类型。接�?位（FAC）是�?��装配号，代表产地。后6位（SNR）是串号，代表生产顺序号。最�?位（SP）一般为0，是�?��码，备用�?
@@ -198,7 +199,7 @@ public class HardWareUtil {
 	 */
 	public static String getIMEI(Context context) {
 		TelephonyManager ts = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		return ts.getDeviceId();
+		return ts.getSimSerialNumber();
 	}
 
 	/** 判断手机是否root，不弹出root请求框<br/> */

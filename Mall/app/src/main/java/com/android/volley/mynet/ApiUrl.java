@@ -9,22 +9,22 @@ public interface ApiUrl {
      */
     String BASE_URL = DebugConfig.getBaseUrl();
     String H5_BASE_URL = DebugConfig.getH5BaseUrl();
+    String FEED_BACK_URL = DebugConfig.getFeedBackUrl();
 
     interface WebUrl {
-        String zhi_ma_xin_yong = "http://zhima.dafysz.com/Home/SignIn?idenNo=%s&name=%s&idCredit=0&deviceType=0";//芝麻信用
-        String commonProblem = "http://wx.dafycredit.cn/question/";
-        String cashBLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
-        String cashLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
-        String pAProtocol = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/PAProtocol";//钱包激活
-        String authorize = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/Authorize";//代扣
-        String uRProtocol = "http://wx.dafycredit.cn/h5/sales/index.html#/Common/URProtocol";//注册
-        String oConsumeLoanStatic = "http://wx.dafycredit.cn/h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
+        String commonProblem = H5_BASE_URL + "question/";
+        String cashBLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
+        String cashLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
+        String pAProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/PAProtocol";//钱包激活
+        String authorize = H5_BASE_URL + "h5/sales/index.html#/Common/Authorize";//代扣
+        String uRProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/URProtocol";//注册
+        String oConsumeLoanStatic = H5_BASE_URL + "h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
     }
 
-    //帮助与反馈全路径url
-    String helpfeedback_queryQuestionInfo = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/queryQuestionInfo";
+    //帮助与反馈
+    String helpfeedback_queryQuestionInfo = FEED_BACK_URL + "helpfeedback/queryQuestionInfo";
     //反馈
-    String helpfeedback_addQuestionMessage = "http://wx2.dafycredit.cn/wechat-web/helpfeedback/addQuestionMessage";
+    String helpfeedback_addQuestionMessage = FEED_BACK_URL + "helpfeedback/addQuestionMessage";
 
     //广告页
     String activity_getImageInfo = BASE_URL + "activity/getImageInfo";
@@ -40,7 +40,7 @@ public interface ApiUrl {
     //保存极光设备号
     String api_Account_SaveDeviceNumber = "/api/Account/SaveDeviceNumber";
     //用户注册第一步
-    String personCenter_account_exist = BASE_URL +"personCenter/account/exist";
+    String personCenter_account_exist = BASE_URL + "personCenter/account/exist";
     //用户注册-第二步
     String personCenter_account_register = BASE_URL + "personCenter/account/register";
     //下发短信验证码
