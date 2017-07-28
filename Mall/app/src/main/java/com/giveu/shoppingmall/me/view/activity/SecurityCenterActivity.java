@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -117,7 +118,7 @@ public class SecurityCenterActivity extends BaseActivity {
         if (LoginHelper.getInstance().hasQualifications()) {
             //判断是否设置了交易密码
             if (!LoginHelper.getInstance().hasSetPwd()) {//没有设置交易密码
-                TransactionInputActivity.startIt(mBaseContext);
+                TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                 return false;
             }
             return true;

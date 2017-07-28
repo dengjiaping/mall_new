@@ -122,8 +122,6 @@ public class CashFinishStatusActivity extends BaseActivity {
                 tvBack.setVisibility(View.VISIBLE);
                 tvBtnTop.setBackgroundResource(R.color.title_color);
                 tvBack.setBackgroundResource(R.drawable.shape_back_btn_blue);
-
-
                 break;
             case "fail":
                 llDate.setVisibility(View.GONE);
@@ -133,7 +131,7 @@ public class CashFinishStatusActivity extends BaseActivity {
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
                 tvBtnTop.setText("返回");
-                tvBtnTop.setBackgroundResource(R.color.title_color);
+                tvBtnTop.setBackgroundResource(R.drawable.shape_back_btn_blue);
                 tvBack.setVisibility(View.GONE);
                 break;
         }
