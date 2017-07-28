@@ -1,2 +1,2 @@
-include ':app', ':cropimage_library', ':FingerprintIdentifyLib', ':shareLibrary', ':scaleview'
+include ':app', ':cropimage_library', ':FingerprintIdentifyLib', ':shareLibrary'
 
