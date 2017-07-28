@@ -143,6 +143,7 @@ public class DownloadApkUtils {
         downloadProgressDialog = new ProgressDialog(mActivity);
         mNotificationManager = (NotificationManager) mActivity.getSystemService(Service.NOTIFICATION_SERVICE);
         HttpUtils httpUtils = new HttpUtils();
+        ToastUtils.showLongToast("正在下载，请查看通知栏");
         downloadApk(httpUtils, url);
     }
 
