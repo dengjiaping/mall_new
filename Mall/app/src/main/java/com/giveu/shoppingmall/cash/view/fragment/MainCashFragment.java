@@ -98,11 +98,11 @@ public class MainCashFragment extends BaseFragment {
      * 是否登录是否激活
      */
     public boolean isLoginAndActivation(){
-        String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-        double cylimit = Double.parseDouble(availableCylimit);
         //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
         if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
             if (LoginHelper.getInstance().hasQualifications()) {
+                String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+                double cylimit = Double.parseDouble(availableCylimit);
                 if (0 == cylimit) {
                     //取现额度为0
                     quotaDialog.showDialog();

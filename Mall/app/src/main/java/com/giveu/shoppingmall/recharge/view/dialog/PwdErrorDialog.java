@@ -43,7 +43,7 @@ public class PwdErrorDialog {
         tv_error_text = (TextView) contentView.findViewById(R.id.tv_error_text);
         tv_left_errorpwd = (TextView) contentView.findViewById(R.id.tv_left_errorpwd);
         tv_right_errorpwd = (TextView) contentView.findViewById(R.id.tv_right_errorpwd);
-        
+
             if (times == 0) {
                 //错误达到3次
                 tv_left_errorpwd.setVisibility(View.GONE);
