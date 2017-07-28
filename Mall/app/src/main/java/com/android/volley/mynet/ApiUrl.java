@@ -31,8 +31,6 @@ public interface ApiUrl {
     String token_getToken = BASE_URL + "personCenter/token/applyToken";
     //验证密码
     String sales_account_checkPwd = BASE_URL + "sales/account/checkPwd";
-    //登录
-    String sales_account_login = BASE_URL + "sales/account/login";
     //应用更新
     String personCenter_account_getVersion = BASE_URL+"personCenter/account/getVersion";
     //公用请求蜂鸟接口

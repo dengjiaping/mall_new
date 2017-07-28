@@ -201,7 +201,7 @@ public class FileUpload {
                     //上报接口错误
                     CrashReportUtil.postApiErrorToBugly(isThirdPlatformApi, keys, filePaths, mStrParams, requestUrl, responseString);
 
-                    if (baseBeanParent.isLogoutByServer() && (!ApiUrl.sales_account_login.equals(requestUrl))) {
+                    if (baseBeanParent.isLogoutByServer() && (!ApiUrl.personCenter_account_login.equals(requestUrl))) {
                         //除登录接口外，其他接口响应被服务器强制退出登录的code
 //                        LoginActivity.logoutByServerAndStartIt(baseBeanParent.message);
                     } else if (responseListener != null) {

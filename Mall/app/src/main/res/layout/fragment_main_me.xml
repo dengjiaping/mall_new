@@ -190,7 +190,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="14dp"
-                    android:text="剩余3天"
                     android:textColor="#00b1b2"
                     android:textSize="@dimen/ts_16" />
 

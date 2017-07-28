@@ -194,7 +194,7 @@ public class BaseApplication extends MultiDexApplication {
             }
             map.put("versionCode", CommonUtils.getVersionCode());
             map.put("versionName", CommonUtils.getVersionName());
-            map.put("sampleApi", ApiUrl.sales_account_login);
+            map.put("sampleApi", ApiUrl.personCenter_account_login);
             map.put("updateApi", ApiUrl.personCenter_account_getVersion);
             String log = new Gson().toJson(map);
             LogUtil.onlineLog(log);
@@ -230,12 +230,12 @@ public class BaseApplication extends MultiDexApplication {
     }
 
     private void initPush() {
-        JPushInterface.setDebugMode(DebugConfig.isDebug);    // 设置开启日志,发布时请关闭日志
-        JPushInterface.init(this);
-        //如果用户未登录，那么不会收到推送
-        if (!LoginHelper.getInstance().hasLogin()) {
-            JPushInterface.stopPush(mInstance);
-        }
+//        JPushInterface.setDebugMode(DebugConfig.isDebug);    // 设置开启日志,发布时请关闭日志
+//        JPushInterface.init(this);
+//        //如果用户未登录，那么不会收到推送
+//        if (!LoginHelper.getInstance().hasLogin()) {
+//            JPushInterface.stopPush(mInstance);
+//        }
     }
 
 
