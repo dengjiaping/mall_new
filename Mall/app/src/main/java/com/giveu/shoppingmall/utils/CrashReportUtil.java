@@ -8,7 +8,6 @@ import com.android.volley.mynet.MyRequest;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.base.MyException;
-import com.google.gson.Gson;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class CrashReportUtil {
 		private SceneTag(){
 			tagMap = new HashMap<>();
 			tagMap.put(ApiUrl.token_getToken, 46688);//获取token
-			tagMap.put(ApiUrl.sales_account_login, 46687);//登录
+			tagMap.put(ApiUrl.personCenter_account_login, 46687);//登录
 		}
 
 		public static SceneTag getInstance(){

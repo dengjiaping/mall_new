@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 
+import static com.giveu.shoppingmall.R.drawable.spinner;
+
 
 public class LoadingDialog extends ProgressDialog {
     public static LoadingDialog dialog = null;
@@ -24,12 +26,12 @@ public class LoadingDialog extends ProgressDialog {
     }
 
     public static void dismissIfExist() {
-        try{
+        try {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
                 dialog = null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -52,8 +54,12 @@ public class LoadingDialog extends ProgressDialog {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         ImageView imageView = (ImageView) findViewById(R.id.spinnerImageView);
-        AnimationDrawable spinner = (AnimationDrawable) imageView.getBackground();
-        spinner.start();
+        if (imageView != null) {
+            AnimationDrawable spinner = (AnimationDrawable) imageView.getBackground();
+            if (spinner != null) {
+                spinner.start();
+            }
+        }
     }
 
 
@@ -88,11 +94,11 @@ public class LoadingDialog extends ProgressDialog {
      * @param onDismissListener      dialog.setOnDismissListener(onDismissListener);
      */
     public static void showIfNotExist(Activity context, String message, boolean canceledOnTouchOutside, DialogInterface.OnDismissListener onDismissListener) {
-        try{
+        try {
             if (context != null && !(dialog != null && dialog.isShowing())) {
-                dialog=getDialog(context,message,canceledOnTouchOutside,onDismissListener);
+                dialog = getDialog(context, message, canceledOnTouchOutside, onDismissListener);
             }
-        }catch (Exception e){//BadTokenException
+        } catch (Exception e) {//BadTokenException
             e.printStackTrace();
         }
     }
@@ -113,7 +119,7 @@ public class LoadingDialog extends ProgressDialog {
         ImageView spinnerImageView = (ImageView) view.findViewById(R.id.spinnerImageView);
         // 给布局添加动画
         // spinnerImageView.setBackgroundResource(R.anim.alertdialog_animation);
-        spinnerImageView.setBackgroundResource(R.drawable.spinner);
+        spinnerImageView.setBackgroundResource(spinner);
         // 获取动画
         final AnimationDrawable animation = (AnimationDrawable) spinnerImageView.getBackground();
         // 设置动画执行多次

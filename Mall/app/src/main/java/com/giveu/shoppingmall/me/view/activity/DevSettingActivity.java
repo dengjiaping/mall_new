@@ -80,7 +80,7 @@ public class DevSettingActivity extends BaseActivity {
 		map.put("isOnline", DebugConfig.isOnline);
 		map.put("versionCode", CommonUtils.getVersionCode());
 		map.put("versionName", CommonUtils.getVersionName());
-		map.put("sampleApi", ApiUrl.sales_account_login);
+		map.put("sampleApi", ApiUrl.personCenter_account_login);
 		map.put("updateApi", ApiUrl.personCenter_account_getVersion);
 		Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
 		String log = gson2.toJson(map);

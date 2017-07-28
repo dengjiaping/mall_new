@@ -263,7 +263,7 @@ public abstract class BaseRequestAgent {
                         returnErrorListener(error2);
                     }
                 });
-            } else if (response.isLogoutByServer() && (!ApiUrl.sales_account_login.equals(myRequest.requestUrl))) {
+            } else if (response.isLogoutByServer() && (!ApiUrl.personCenter_account_login.equals(myRequest.requestUrl))) {
                 //除登录接口外，其他接口响应被服务器强制退出登录的code
 				LoginActivity.logoutByServerAndStartIt(response.message);
             } else {

@@ -194,7 +194,7 @@ public class BaseApplication extends MultiDexApplication {
             }
             map.put("versionCode", CommonUtils.getVersionCode());
             map.put("versionName", CommonUtils.getVersionName());
-            map.put("sampleApi", ApiUrl.sales_account_login);
+            map.put("sampleApi", ApiUrl.personCenter_account_login);
             map.put("updateApi", ApiUrl.personCenter_account_getVersion);
             String log = new Gson().toJson(map);
             LogUtil.onlineLog(log);
