@@ -667,9 +667,6 @@ public class CashTypeActivity extends BaseActivity {
         List<ProductResponse> data = new ArrayList();
         if (CommonUtils.isNotNullOrEmpty(productList)) {
             for (ProductResponse product : productList) {
-                if (product == null) {
-                    return;
-                }
                 //300-1000,1000-3000,选择1000，属于1000-3000
                 if (chooseQuota == 3000) {
                     //特殊情况，等于3000
