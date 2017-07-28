@@ -314,6 +314,16 @@ public class LoginHelper extends AbsSharePref {
     public boolean hasSetPwd() {
         return loginPersonInfo != null && loginPersonInfo.isSetPwd;
     }
+    /**
+     * 设置是否有交易密码
+     * @return
+     */
+    public void setHasSetPwd(boolean isSetPwd) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.isSetPwd = isSetPwd;
+            putBoolean(ISSETPWD, loginPersonInfo.isSetPwd);
+        }
+    }
 
     /**
      * 获取用户真实姓名

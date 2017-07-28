@@ -101,6 +101,9 @@ public class TransactionPwdActivity extends BaseActivity {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         setResult(RESULT_OK);
+                                        //设置完交易密码，状态保存本地
+                                        LoginHelper.getInstance().setHasSetPwd(true);
+                                        //再调用户信息，刷新数据
                                         BaseApplication.getInstance().fetchUserInfo();
                                         ActivationStatusActivity.startSetPwd(mBaseContext);
                                         finish();
