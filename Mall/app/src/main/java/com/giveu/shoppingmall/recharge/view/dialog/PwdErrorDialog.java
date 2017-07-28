@@ -47,13 +47,13 @@ public class PwdErrorDialog {
         if (times == 0) {
             //错误达到3次
             tv_left_errorpwd.setVisibility(View.GONE);
-            tv_right_errorpwd.setText("忘记密码");
-            tv_error_text.setText("交易密码多次输入错误，请通过忘记密码找回");
+            tv_right_errorpwd.setText("找回交易密码");
+            tv_error_text.setText("您的交易密码连续输错3次！账号暂时被冻结");
         } else {
             tv_left_errorpwd.setVisibility(View.VISIBLE);
             tv_right_errorpwd.setText("重新输入");
-            String startStr = "交易密码不正确，你还可以再输入";
-            String endStr = "次";
+            String startStr = "交易密码错误，您还剩下";
+            String endStr = "次机会";
             SpannableString msp = new SpannableString(startStr + times + endStr);
             msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_4a4a4a)), 0, startStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_00adb2)), startStr.length(), startStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

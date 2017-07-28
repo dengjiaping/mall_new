@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.event.AddCardEvent;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
@@ -69,6 +70,7 @@ public class MyBankCardActivity extends BaseActivity {
     @BindView(R.id.ll_my_card)
     LinearLayout llMyCard;
     boolean needResult;//是否是取现过来的 true是
+
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
 //        mActivity.setResult(RESULT_OK);
@@ -128,9 +130,9 @@ public class MyBankCardActivity extends BaseActivity {
             public void onClick(View v) {
                 if (needResult) {
                     Intent data = new Intent(mBaseContext, CashTypeActivity.class);
-                    data.putExtra("chooseBankName",defalutBankName);
+                    data.putExtra("chooseBankName", defalutBankName);
                     data.putExtra("chooseBankNo", defalutBankCardNo);
-                    data.putExtra("defalutBankIconUrl",defalutBankIconUrl);
+                    data.putExtra("defalutBankIconUrl", defalutBankIconUrl);
                     setResult(RESULT_OK, data);
                     finish();
                 }
@@ -226,10 +228,22 @@ public class MyBankCardActivity extends BaseActivity {
      *
      * @param id
      */
-    private void setDefaultCard(final String id) {
+    private void setDefaultCard(String id) {
         final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.BANKCARD);
-        pwdDialog.showDialog();
-        //验证成功的监听，拿到返回的code
+        setPwdListener(pwdDialog, id);
+        if (LoginHelper.getInstance().hasSetPwd()) {//设置了交易密码
+            pwdDialog.showDialog();
+        } else {
+            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+        }
+    }
+
+    /**
+     * 验证成功的监听，拿到返回的code
+     * @param pwdDialog
+     * @param id
+     */
+    public void setPwdListener(final PwdDialog pwdDialog, final String id) {
         pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
             @Override
             public void checkPwd(String payPwd) {
@@ -274,7 +288,6 @@ public class MyBankCardActivity extends BaseActivity {
                 );
             }
         });
-
     }
 
     /**
