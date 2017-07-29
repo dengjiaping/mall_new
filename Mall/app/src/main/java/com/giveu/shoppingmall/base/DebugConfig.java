@@ -63,6 +63,14 @@ public class DebugConfig {
         }
     }
 
+    public static String getCommonQuestionBaseUrl(){
+        if (isOnline) {
+            return "http://wx.dafysz.cn/";
+        } else {
+            return "http://wx.dafycredit.cn/";
+        }
+    }
+
     public static String getBaseUrl() {
         //手动配置环境,方便调试，默认是没有的
         String debugBaseUrl = DevSettingSharePref.getInstance().getDebugBaseUrl();

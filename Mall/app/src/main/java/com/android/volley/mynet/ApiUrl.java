@@ -12,7 +12,7 @@ public interface ApiUrl {
     String FEED_BACK_URL = DebugConfig.getFeedBackBaseUrl();
 
     interface WebUrl {
-        String commonProblem = H5_BASE_URL + "question/";//常见问题
+        String commonProblem = DebugConfig.getCommonQuestionBaseUrl() + "question/";//常见问题
         String cashBLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
         String cashLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
         String pAProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/PAProtocol";//钱包激活
