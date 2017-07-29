@@ -32,16 +32,16 @@ public class DebugConfig {
 
     private static String DOMAIN_DEV = "http://10.10.11.140:9000/";//开发域名
     private static String DOMAIN_TEST = "http://testdfshop.dafycredit.cn:9000/";//域名
-    private static String DOMAIN_ONLINE = "http://3c.dafysz.cn/";//域名
+    private static String DOMAIN_ONLINE = "http://dafyshop.dafycredit.cn/";//域名
 
 
     public static final String API_VERSION = "v1/";//api版本，开发，正式环境可用
     public static String BASE_URL_TEST = DOMAIN_TEST + API_VERSION;//测试环境
-    public static String BASE_URL_ONLINE = DOMAIN_ONLINE + "3c-web/" + API_VERSION;//正式环境
+    public static String BASE_URL_ONLINE = DOMAIN_ONLINE + API_VERSION;//正式环境
     public static String BASE_URL_DEV = DOMAIN_DEV + API_VERSION;//开发环境
 
     //反馈url
-    public static String FEED_BACK_ONLINE = "http://wx2.dafycredit.cn/wechat-web/";
+    public static String FEED_BACK_ONLINE = "https://wx.dafysz.cn/wechat-web/";
     public static String FEED_BACK_TEST = "http://wx2.dafycredit.cn/wechat-web/";
 
     //h5 url
