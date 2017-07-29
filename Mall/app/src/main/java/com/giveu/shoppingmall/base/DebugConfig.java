@@ -36,15 +36,16 @@ public class DebugConfig {
 
 
     public static final String API_VERSION = "v1/";//api版本，开发，正式环境可用
+    //普通接口baseurl
     public static String BASE_URL_TEST = DOMAIN_TEST + API_VERSION;//测试环境
     public static String BASE_URL_ONLINE = DOMAIN_ONLINE + API_VERSION;//正式环境
     public static String BASE_URL_DEV = DOMAIN_DEV + API_VERSION;//开发环境
 
-    //反馈url
+    //反馈接口baseurl
     public static String FEED_BACK_ONLINE = "https://wx.dafysz.cn/wechat-web/";
     public static String FEED_BACK_TEST = "http://wx2.dafycredit.cn/wechat-web/";
 
-    //h5 url
+    //h5 baseurl
     public static String H5_ONLINE = "http://wx.dafycredit.cn/";
     public static String H5_TEST = "http://wx.dafycredit.cn/";
 
