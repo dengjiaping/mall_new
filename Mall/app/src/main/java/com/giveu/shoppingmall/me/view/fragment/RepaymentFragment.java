@@ -3,6 +3,8 @@ package com.giveu.shoppingmall.me.view.fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,8 +132,8 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                         //分期产品
                         if (repaymentBean.isChoose && TypeUtlis.CERDIT_PRODUCT.equalsIgnoreCase(repaymentBean.productType)) {
                             if (payMoney > othersTotalAmount) {
-                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于分期产品剩余待还期款总额", "¥" + StringUtils.format2(othersTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
-                                resultDialog.setContent(colorStr);
+                                String amountsStr = "¥" + StringUtils.format2(othersTotalAmount + "");
+                                resultDialog.setContent(getColorSpannable("还款金额不能大于分期产品剩余待还期款总额", amountsStr, "元"));
                                 resultDialog.show();
                                 return;
                             }
@@ -139,8 +141,8 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                         } else if (repaymentBean.isChoose && TypeUtlis.CASH.equalsIgnoreCase(repaymentBean.productType)) {
                             //零花钱产品
                             if (payMoney > cycleTotalAmount) {
-                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于零花钱剩余待还期款总额", "¥" + StringUtils.format2(cycleTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
-                                resultDialog.setContent(colorStr);
+                                String amountsStr = "¥" + StringUtils.format2(cycleTotalAmount + "");
+                                resultDialog.setContent(getColorSpannable("还款金额不能大于随借随还剩余待还总额", amountsStr, "元"));
                                 resultDialog.show();
                                 return;
                             }
@@ -155,6 +157,14 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
             default:
                 break;
         }
+    }
+
+    private SpannableString getColorSpannable(String beforeStr, String midStr, String afterStr) {
+        SpannableString msp = new SpannableString(beforeStr + midStr + afterStr);
+        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, beforeStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), beforeStr.length(), beforeStr.length() + midStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), beforeStr.length() + midStr.length(), beforeStr.length() + midStr.length() + afterStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return msp;
     }
 
     @Override
