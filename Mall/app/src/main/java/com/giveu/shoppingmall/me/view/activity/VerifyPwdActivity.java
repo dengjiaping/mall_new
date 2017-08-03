@@ -90,9 +90,9 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             tvChangeAccount.setVisibility(View.GONE);
         }
         presenter = new LoginPresenter(this);
-        if(isForSetting){
+        if (isForSetting) {
             baseLayout.setTitle("验证登录密码");
-        }else {
+        } else {
             baseLayout.hideBack();
             baseLayout.setTitle("解锁");
         }
@@ -154,6 +154,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
 
     @Override
     public void onLoginSuccess(LoginResponse data) {
+        LoginHelper.getInstance().saveLoginStatus(data);
         if (isForSetting) {
             //关闭手势或指纹
             if (isForClosePattern) {
