@@ -156,10 +156,10 @@ public class AccountManagementActivity extends BaseActivity {
             @Override
             public void onSuccess(ApkUgradeResponse response) {
                 downloadApkUtils = new DownloadApkUtils();
-                if (response.data != null && response.data.isNoUpdate()) {
-                    ToastUtils.showShortToast("暂无更新");
-                } else {
+                if (response.data != null && response.data.isNeedUpdate()) {
                     downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
+                } else {
+                    ToastUtils.showShortToast("暂无更新");
                 }
             }
 

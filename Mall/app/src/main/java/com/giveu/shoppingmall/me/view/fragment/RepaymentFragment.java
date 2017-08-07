@@ -208,7 +208,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         repaymentAdapter.setOnMoneyChangetListener(new RepaymentAdapter.OnMoneyChangeListener() {
             @Override
             public void moneyChange(double money, String productType) {
-                //当选中金额改变时，更新显示，并设置选中的产品类型（分期产品还是取现随借岁患）
+                //当选中金额改变时，更新显示，并设置选中的产品类型（分期产品还是取现随借随还）
                 payMoney = money;
                 tvMoney.setText("还款金额：¥" + StringUtils.format2(payMoney + ""));
                 RepaymentFragment.this.productType = productType;
