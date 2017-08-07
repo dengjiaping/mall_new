@@ -139,7 +139,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
                         } else if (repaymentBean.isChoose && TypeUtlis.CASH.equalsIgnoreCase(repaymentBean.productType)) {
                             //零花钱产品
                             if (payMoney > cycleTotalAmount) {
-                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于零花钱剩余待还期款总额", "¥" + StringUtils.format2(cycleTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
+                                SpannableString colorStr = StringUtils.getColorSpannable("还款金额不能大于随借随还剩余待还期款总额", "¥" + StringUtils.format2(cycleTotalAmount + ""), R.color.color_4a4a4a, R.color.color_00adb2);
                                 resultDialog.setContent(colorStr);
                                 resultDialog.show();
                                 return;

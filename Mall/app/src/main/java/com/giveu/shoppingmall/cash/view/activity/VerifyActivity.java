@@ -17,7 +17,9 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 
@@ -97,7 +99,9 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         orderNo = getIntent().getStringExtra("orderNo");
         salePrice = getIntent().getStringExtra("salePrice");
 
-        tvPhone.setText(LoginHelper.getInstance().getPhone());
+        tvPhone.setText(hintPhone(LoginHelper.getInstance().getPhone()));
+        //弹出键盘，需求
+        CommonUtils.openSoftKeyBoard(mBaseContext);
         switch (statusType) {
             case CASH:
                 codeType = "enchashment";
@@ -108,6 +112,21 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 break;
         }
         presenter.sendSMSCode(LoginHelper.getInstance().getPhone(), codeType);
+    }
+
+    /**
+     * 隐藏中间四位数，如1378614023
+     */
+    public String hintPhone(String phone) {
+        if (StringUtils.isNotNull(phone)) {
+            if (phone.length() > 4) {
+                String strEnd = phone.substring(phone.length() - 5, phone.length() - 1);//4023
+                strEnd = "****" + strEnd;//****4023
+                String strStart = phone.substring(0, 3);//137
+                return strStart + strEnd;
+            }
+        }
+        return phone;
     }
 
 
@@ -180,7 +199,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 String chooseBankName = getIntent().getStringExtra("chooseBankName");
                 String chooseBankNo = getIntent().getStringExtra("chooseBankNo");
 
-                ApiImpl.addEnchashmentCredit(mBaseContext,"0",chooseBankName,chooseBankNo, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
+                ApiImpl.addEnchashmentCredit(mBaseContext, "0", chooseBankName, chooseBankNo, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
                     @Override
                     public void onSuccess(EnchashmentCreditResponse response) {
                         if (response.data != null) {
