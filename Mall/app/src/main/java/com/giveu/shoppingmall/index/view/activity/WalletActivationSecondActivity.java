@@ -247,8 +247,8 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         editTextListener(etPhone, ivPhone);
         editTextListener(etCode, ivCode);
         editTextListener(etBankNo, ivBankNo);
-        showPhoneTextColor(ivPhone, etPhone, StringUtils.getTextFromView(etPhone));
-        showPhoneTextColor(ivBankNo, etBankNo, StringUtils.getTextFromView(etBankNo));
+        showPhoneTextColor(etPhone, StringUtils.getTextFromView(etPhone));
+        showPhoneTextColor(etBankNo, StringUtils.getTextFromView(etBankNo));
 
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -305,7 +305,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         editText.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                showPhoneTextColor(imageView, editText, s.toString());
+                showPhoneTextColor(editText, s.toString());
             }
         });
     }
@@ -315,12 +315,12 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
      *
      * @param phone
      */
-    public void showPhoneTextColor(ImageView iv, final EditText editText, String phone) {
-        if (phone.length() > 0) {
-            iv.setImageResource(R.drawable.ic_pen);
-        } else {
-            iv.setImageResource(R.drawable.ic_add);
-        }
+    public void showPhoneTextColor(final EditText editText, String phone) {
+//        if (phone.length() > 0) {
+//            iv.setImageResource(R.drawable.ic_pen);
+//        } else {
+//            iv.setImageResource(R.drawable.ic_add);
+//        }
         if (etPhone == editText) {
             //如果是手机号的EditText还需判断验证码是否可以点击
             if (StringUtils.checkPhoneNumberAndTipError(phone, false)) {

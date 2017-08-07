@@ -61,6 +61,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
         setContentView(R.layout.activity_quota);
         baseLayout.setTitle("我的额度");
         baseLayout.setBlueWhiteStyle();
+        baseLayout.setTopBarBgDrawble(R.color.color_5bd4ca);
         presenter = new QuotaPresenter(this);
         tvWithdrawalsMoney.setText("¥" + StringUtils.format2(LoginHelper.getInstance().getAvailableCylimit()));
         tvConsumableMoney.setText("¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit()));

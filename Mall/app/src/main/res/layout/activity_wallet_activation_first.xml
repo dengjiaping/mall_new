@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/iv_name"
             style="@style/activity_wallet_activation_iv_style"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_name" />
 
         <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_name"
@@ -43,7 +43,7 @@
         <ImageView
             android:id="@+id/iv_ident"
             style="@style/activity_wallet_activation_iv_style"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_ident" />
 
         <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_ident"

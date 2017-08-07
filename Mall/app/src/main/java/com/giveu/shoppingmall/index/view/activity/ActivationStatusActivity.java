@@ -135,7 +135,7 @@ public class ActivationStatusActivity extends BaseActivity {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
         flag = getIntent().getStringExtra("flag");
         if ("transaction".equals(flag)) {
-            baseLayout.setTitle("设置交易密码");
+            baseLayout.setTitle("设置成功");
         }else{
             baseLayout.setTitle("钱包激活");
         }

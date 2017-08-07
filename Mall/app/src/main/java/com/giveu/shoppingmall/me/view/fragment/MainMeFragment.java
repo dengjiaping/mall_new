@@ -76,6 +76,7 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.setTitle("个人中心");
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
+        baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
         notActiveDialog = new NotActiveDialog(mBaseContext);
        /* baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
             @Override

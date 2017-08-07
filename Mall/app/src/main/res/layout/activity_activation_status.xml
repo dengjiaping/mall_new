@@ -19,9 +19,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:gravity="center"
-        android:text="激活成功"
         android:textColor="@color/black"
         android:textSize="@dimen/ts_21" />
+    <TextView
+        android:id="@+id/tv_hint_mid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:gravity="center"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_18"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/ll_date"
@@ -53,7 +63,6 @@
                 android:id="@+id/tv_globle_limit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="13000.00元"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_16" />
         </LinearLayout>
@@ -74,7 +83,6 @@
                 android:id="@+id/tv_cy_limit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="13000.00元"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_16" />
         </LinearLayout>
@@ -95,7 +103,6 @@
                 android:id="@+id/tv_pos_limit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="13000.00元"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_16" />
         </LinearLayout>
@@ -112,21 +119,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:layout_marginTop="9dp"
-            android:text="提示提示提示提示提示提示提示提示提示提示提示提示提示提示"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_12" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_hint_mid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:gravity="center"
-        android:text="您暂时不符合即有钱包的开通条件，\n请注意后续消息！"
-        android:textColor="@color/color_4a4a4a"
-        android:textSize="@dimen/ts_18"
-        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_set_transaction_pwd"

@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/iv_bank_no"
             style="@style/activity_wallet_activation_iv_style"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_card" />
 
         <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_bank_no"
@@ -44,7 +44,7 @@
         <ImageView
             android:id="@+id/iv_phone"
             style="@style/activity_wallet_activation_iv_style"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_phone" />
 
         <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_phone"
@@ -67,7 +67,7 @@
         <ImageView
             android:id="@+id/iv_code"
             style="@style/activity_wallet_activation_iv_style"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_sms_code" />
 
         <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_code"

@@ -14,6 +14,7 @@
         android:layout_marginTop="42dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:layout_gravity="center"
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_16" />
 

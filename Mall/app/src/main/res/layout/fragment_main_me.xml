@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_00adb2"
+            android:background="@drawable/shape_cash_bg_small"
             android:paddingBottom="16dp"
             android:paddingTop="28dp">
 
@@ -34,7 +34,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLength="11"
-                android:paddingLeft="12dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="5dp"
                 android:singleLine="true"
                 android:text="立即登录"

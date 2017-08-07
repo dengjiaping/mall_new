@@ -68,9 +68,27 @@ public class WalletActivationFirstActivity extends BaseActivity {
     public void setData() {
 
     }
-
+//    /**
+//     * 每个输入框监听 输入字符后图标改变，未输时还原图标
+//     *
+//     * @param editText
+//     * @param imageView
+//     */
+//    public void editTextListener(final EditText editText, final ImageView imageView) {
+//        editText.addTextChangedListener(new TextChangeListener() {
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if (s.length() > 0) {
+//                    imageView.setImageResource(R.drawable.ic_pen);
+//                } else {
+//                    imageView.setImageResource(R.drawable.ic_add);
+//                }
+//                nextButtonCanClick(false);
+//            }
+//        });
+//    }
     /**
-     * 每个输入框监听 输入字符后图标改变，未输时还原图标
+     * 错误输入的监听
      *
      * @param editText
      * @param imageView
@@ -79,11 +97,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
         editText.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    imageView.setImageResource(R.drawable.ic_pen);
-                } else {
-                    imageView.setImageResource(R.drawable.ic_add);
-                }
+                //按钮置灰的判断
                 nextButtonCanClick(false);
             }
         });
