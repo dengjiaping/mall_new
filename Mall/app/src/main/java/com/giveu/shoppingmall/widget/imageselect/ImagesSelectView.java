@@ -92,8 +92,6 @@ public class ImagesSelectView extends LinearLayout {
     int leftMargin;
     int rightMargin;
 
-    boolean flag;//当前页面的图片预览 false没有预览
-
 
     public ImagesSelectView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -276,6 +274,7 @@ public class ImagesSelectView extends LinearLayout {
 
     /**
      * 处理权限
+     *
      * @param onPermissionListener
      */
     public void setOnPermissionListener(OnPermissionListener onPermissionListener) {
@@ -302,8 +301,7 @@ public class ImagesSelectView extends LinearLayout {
         @Override
         public void onSelectImage(final int index) {
             if (index < imageSelectList.size()) {
-                SkipUtils.skipActivityForResult(mContext, Act_ImagePreActivity.class, SkipUtils.Params3.getInstance(index, ImageSelectActivity.CODE_IMAGE_PREVIEW, imageSelectList), ImageSelectActivity.CODE_IMAGE_PREVIEW);
-                flag = true;
+                SkipUtils.skipActivityForResult(mContext, Act_ImagePreActivity.class, SkipUtils.Params4.getInstance(index, ImageSelectActivity.CODE_IMAGE_PREVIEW, imageSelectList, false), ImageSelectActivity.CODE_IMAGE_PREVIEW);
             } else {
                 skipForImageSelect();
             }
@@ -331,16 +329,11 @@ public class ImagesSelectView extends LinearLayout {
      * @param data
      */
     public void doResult(int requestCode, int resultCode, Intent data) {
-        if(!flag){
-            //不是本页面的图片预览
-            if ((requestCode == REQUEST_CODE_SELECT_PHOTO || requestCode == ImageSelectActivity.CODE_IMAGE_PREVIEW) && resultCode == mContext.RESULT_OK) {
-                imageSelectList.clear();
-                imageSelectList.addAll(ImageInfo.selectImageItems);
-                reSetImage(imageSelectList);
-            }
-
+        if ((requestCode == REQUEST_CODE_SELECT_PHOTO || requestCode == ImageSelectActivity.CODE_IMAGE_PREVIEW) && resultCode == Activity.RESULT_OK) {
+            imageSelectList.clear();
+            imageSelectList.addAll(ImageInfo.selectImageItems);
+            reSetImage(imageSelectList);
         }
-        flag = false;
     }
 
     /**

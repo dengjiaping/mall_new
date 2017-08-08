@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -185,12 +186,14 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
                 return false;
             }
         });
-        imageSelect.setOnPermissionListener(new ImagesSelectView.OnPermissionListener() {
-            @Override
-            public void requestPermission() {
-                setPermissionHelper(false, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            imageSelect.setOnPermissionListener(new ImagesSelectView.OnPermissionListener() {
+                @Override
+                public void requestPermission() {
+                    setPermissionHelper(false, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+                }
+            });
+        }
 
     }
 
@@ -268,6 +271,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             imageSelect.doResult(requestCode, resultCode, data);
         }
         commitButtonCanClick(false);
+        imageSelect.requestLayout();
     }
 
     @Override
