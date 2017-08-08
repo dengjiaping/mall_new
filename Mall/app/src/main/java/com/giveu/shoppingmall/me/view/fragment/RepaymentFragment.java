@@ -241,7 +241,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         if (headerBean != null) {
             cycleTotalAmount = headerBean.cycleTotalAmount;
             othersTotalAmount = headerBean.othersTotalAmount;
-            headerHolder.tvTotal.setText("¥" + headerBean.repayAmount);
+            headerHolder.tvTotal.setText("¥" + StringUtils.format2(headerBean.repayAmount));
             if (StringUtils.isNotNull(headerBean.endDate)) {
                 headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
             } else {
