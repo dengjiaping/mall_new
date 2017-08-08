@@ -313,6 +313,7 @@ public class ImagesSelectView extends LinearLayout {
                 return;
             }
             imageSelectList.remove(index);
+            ImageInfo.selectImageItems.remove(index);
             reSetImage(imageSelectList);
 
             if (onCheckListener != null) {

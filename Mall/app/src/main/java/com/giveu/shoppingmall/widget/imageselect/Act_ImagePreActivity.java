@@ -55,6 +55,7 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
 
     @Override
     public void onClickRight() {
+        currIndex = viewPager.getCurrentItem();
         if (currIndex < imageList.size()) {
             ImageItem imageItem = imageList.get(currIndex);
             if (ImageSelectViewUtil.isContainsImage(ImageInfo.selectImageItems, imageItem)) {
