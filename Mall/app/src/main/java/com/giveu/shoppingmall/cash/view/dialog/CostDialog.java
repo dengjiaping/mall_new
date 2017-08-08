@@ -5,9 +5,12 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 
@@ -26,6 +29,12 @@ public class CostDialog {
         View convertView = inflater.inflate(R.layout.dialog_cost, null);
         initView(convertView);
         mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+        Window window = mDialog.getWindow();
+        if(window!=null) {
+            WindowManager.LayoutParams attributes = mDialog.getWindow().getAttributes();
+            attributes.height = DensityUtils.dip2px(350);
+            mDialog.getWindow().setAttributes(attributes);
+        }
         mDialog.setCancelable(false);
     }
 

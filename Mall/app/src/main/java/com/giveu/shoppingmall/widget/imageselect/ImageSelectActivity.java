@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.FileUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -180,9 +181,11 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
                 floderView.setVisibility(View.VISIBLE);
                 break;
             case R.id.txt_cancle:
+
                 back(false);
                 break;
             case R.id.txt_ok:
+                ImageInfo.selectImageItems.addAll(mAdapter.getImageList());
                 back(true);
                 break;
             case R.id.txt_preview:
@@ -269,7 +272,7 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
      * 设置选中文本
      */
     public void setSelectText() {
-        String leftString = ImageInfo.getLeftAllSize();
+        String leftString = mAdapter == null || CommonUtils.isNullOrEmpty(mAdapter.getImageList()) ? null : "完成(" + mAdapter.getImageList().size() + ")";
         if (StringUtils.isNull(leftString)) {
             txt_ok.setTextColor(getResources().getColor(R.color.color_999999));
             txt_ok.setBackgroundResource(R.drawable.bg_select_image_unselect);

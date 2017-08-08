@@ -16,12 +16,15 @@ import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SelectImageAdapter extends ParentAdapter<ImageItem> {
 
     private Context context;
     private int width;
     private LayoutParams params;
-
+    List<ImageItem> list = new ArrayList<>();
     public SelectImageAdapter(Context c) {
         super(c);
 
@@ -30,6 +33,9 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
         params = new LayoutParams(width, width);
     }
 
+    public List<ImageItem> getImageList(){
+        return list;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -61,6 +67,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
      *
      * @param holder
      */
+
     private void fillData(final ImageItem bean, final ViewHolder holder, final int position) {
         if (bean.isTakeCamera) {
             holder.image.setVisibility(View.INVISIBLE);
@@ -81,7 +88,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
             holder.image_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ImageSelectViewUtil.isContainsImage(ImageInfo.selectImageItems, bean)) {
+                    if (ImageSelectViewUtil.isContainsImage(list, bean)) {
                         holder.check.setChecked(false);
                         holder.image.setColorFilter(null);
                         ImageSelectViewUtil.removeImage(ImageInfo.selectImageItems, bean);
@@ -96,7 +103,8 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
                         }
                         holder.check.setChecked(true);
                         holder.image.setColorFilter(Color.parseColor("#77000000"));
-                        ImageInfo.selectImageItems.add(bean);
+                        list.add(bean);
+                      //  ImageInfo.selectImageItems.add(bean);
                     }
 
                     if (onClickSelectImageListener != null) {
