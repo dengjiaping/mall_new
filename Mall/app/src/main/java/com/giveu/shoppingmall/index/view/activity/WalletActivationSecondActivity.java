@@ -29,11 +29,13 @@ import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.me.view.activity.BankActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AgreementBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LocationUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -83,6 +85,8 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     ClickEnabledTextView tvActivation;
     @BindView(R.id.tv_agreement)
     TextView tvAgreement;
+    @BindView(R.id.tv_banklist)
+    TextView tvBanklist;
     String orderNo;
     String sendSouce;
     String smsSeq;
@@ -91,7 +95,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     String name;
     String bankNo;
     String phone;
-
     private String latitude;
     private String longitude;
     LocationUtils locationUtils;//定位方法
@@ -120,6 +123,16 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         name = getIntent().getStringExtra("name");
         bankNo = getIntent().getStringExtra("bankNo");
         phone = getIntent().getStringExtra("phone");
+
+        //查看支持银行列表
+        CommonUtils.setTextWithSpan(tvBanklist, false, "查看", "支持银行", R.color.color_9b9b9b, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //打开银行列表
+                CommonUtils.closeSoftKeyBoard(mBaseContext);
+                BankActivity.startIt(mBaseContext);
+            }
+        });
 
         if (StringUtils.isNotNull(bankNo)) {
             etBankNo.setText(bankNo);
