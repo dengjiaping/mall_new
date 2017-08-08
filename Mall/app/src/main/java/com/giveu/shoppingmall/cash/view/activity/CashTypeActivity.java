@@ -165,11 +165,11 @@ public class CashTypeActivity extends BaseActivity {
             url = ApiUrl.WebUrl.cashLoanStatic;
         }
         final String finalUrl = url;
-        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《借款及服务相关协议》", R.color.black, R.color.title_color, new View.OnClickListener() {
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "借款及服务相关协议", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //借款及服务相关协议
-                CustomWebViewActivity.startIt(mBaseContext, finalUrl, "《借款及服务相关协议》");
+                CustomWebViewActivity.startIt(mBaseContext, finalUrl, "借款及服务相关协议");
             }
         });
     }
@@ -209,6 +209,9 @@ public class CashTypeActivity extends BaseActivity {
             public void run() {
                 if (StringUtils.isNotNull(availableCylimit)) {
                     int maxCylimit = (int) Double.parseDouble(availableCylimit);
+                    if(maxCylimit > 3000){
+                        maxCylimit = 3000;
+                    }
                     rulerView.smoothScrollTo(maxCylimit);//刻度尺选择可用额度最大值
                 }
             }
@@ -449,9 +452,9 @@ public class CashTypeActivity extends BaseActivity {
                 public void onSuccess(RepayCostResponse response) {
                     if (response.data != null) {
                         RepayCostResponse product = response.data;
-                        tvDrawMoney.setText("提款金额：" + product.drawMoney);
+                        tvDrawMoney.setText("贷款本金：" + product.drawMoney);
                         tvCost.setText("（含咨询费￥" + product.cost + "）");
-                        tvMonthlyPayment.setText("月供：" + (int) product.monthPay + "元");
+                        tvMonthlyPayment.setText("每月还款额：" + (int) product.monthPay + "元");
                     }
                 }
 

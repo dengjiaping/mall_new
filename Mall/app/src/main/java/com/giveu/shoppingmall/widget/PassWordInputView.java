@@ -24,8 +24,6 @@ import com.giveu.shoppingmall.R;
 
 import java.util.ArrayList;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 /**
  * 6位密码框自定义View
  * Created by 101900 on 2016/12/21.
@@ -49,6 +47,7 @@ public class PassWordInputView extends View {
     private boolean textVisible;
     private int textSize;
     Context context;
+    int type;//输入类型
 
     public PassWordInputView(Context context) {
         super(context);
@@ -79,7 +78,7 @@ public class PassWordInputView extends View {
         final float dp = getResources().getDisplayMetrics().density;
         this.setFocusable(true);
         this.setFocusableInTouchMode(true);
-        input = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        input = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         result = new ArrayList<>();
         if (attrs != null) {
             TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.PswInputView);
@@ -258,9 +257,18 @@ public class PassWordInputView extends View {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        outAttrs.inputType = InputType.TYPE_CLASS_TEXT;//输入类型为文本
+        outAttrs.inputType = type == 0 ? InputType.TYPE_CLASS_TEXT : type;//输入类型默认为文本
         outAttrs.imeOptions = EditorInfo.IME_ACTION_DONE;
         return new MyInputConnection(this, false);
+    }
+
+    /**
+     * 设置输入类型
+     *
+     * @param type
+     */
+    public void setInputType(int type) {
+        this.type = type;
     }
 
     public void setInputCallBack(InputCallBack inputCallBack) {

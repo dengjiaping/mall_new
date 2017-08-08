@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.cash.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.TextView;
 
@@ -89,6 +90,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         setContentView(R.layout.activity_verify);
         baseLayout.setTitle("验证");
         //   tvSendCode.startCount(null);
+        inputViewPwd.setInputType(InputType.TYPE_CLASS_NUMBER);
         tvSendCode.setSendTextColor(false);
         presenter = new VerifyPresenter(this);
         statusType = getIntent().getStringExtra("statusType");

@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/default_layout_screen_gap"
-                android:text="到账金额"
+                android:text="提款额"
                 android:textSize="@dimen/ts_11" />
 
             <EditText

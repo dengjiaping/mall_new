@@ -143,11 +143,12 @@ public class RulerView extends View {
     }
 
     public void setEndRange(int endRange) {
-        if (endRange > 3000) {
-            mEndRange = endRange / SCALE;
-        } else {
-            mEndRange = 300;//小额
-        }
+//        if (endRange > 3000) {
+//            mEndRange = endRange / SCALE;
+//        } else {
+//            mEndRange = 300;//小额
+//        }
+        mEndRange = 300;//目前都是3000
         initValue();
     }
 
