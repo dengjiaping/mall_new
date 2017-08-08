@@ -13,13 +13,14 @@ import java.util.List;
  * @author Administrator
  */
 public class Act_ImagePreActivity extends AbsImgPreviewActivity {
+    private boolean isFromSelectActivity;
 
     @Override
     public void afterInit() {
-        SkipUtils.Params3<Integer, Integer, List<ImageItem>> params3 = (SkipUtils.Params3<Integer, Integer, List<ImageItem>>) SkipUtils.getParams(getIntent());
-        currIndex = params3.param1;
-        imageList = params3.param3;
-
+        SkipUtils.Params4<Integer, Integer, List<ImageItem>, Boolean> param4 = (SkipUtils.Params4<Integer, Integer, List<ImageItem>, Boolean>) SkipUtils.getParams(getIntent());
+        currIndex = param4.param1;
+        imageList = param4.param3;
+        isFromSelectActivity = param4.param4;
         if (!CommonUtils.isNullOrEmpty(imageList)) {
             ImageItem removeItem = null;
             for (ImageItem item : imageList) {
@@ -59,11 +60,12 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
             if (ImageSelectViewUtil.isContainsImage(ImageInfo.selectImageItems, imageItem)) {
                 check.setChecked(false);
                 ImageSelectViewUtil.removeImage(ImageInfo.selectImageItems, imageItem);
-
-                deleteImageInViewPager(viewPager,pagerAdapter, currIndex);
+                if (!isFromSelectActivity) {
+                    deleteImageInViewPager(viewPager, pagerAdapter, currIndex);
+                }
             } else {
                 if (ImageInfo.selectImageItems.size() >= ImageInfo.MAX_SELECT_SIZE) {
-                    ToastUtils.showShortToast( "您最多选择" + ImageInfo.MAX_SELECT_SIZE + "张图片");
+                    ToastUtils.showShortToast("您最多选择" + ImageInfo.MAX_SELECT_SIZE + "张图片");
                     return;
                 }
                 check.setChecked(true);
@@ -73,7 +75,7 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
     }
 
     private void deleteImageInViewPager(FixedViewPager viewPager, ImagePreViewAdapter pa, int currIndex) {
-        if (pa.imageList.size() == 1){
+        if (pa.imageList.size() == 1) {
             back();
             return;
         }
@@ -83,7 +85,6 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
         viewPager.setCurrentItem(currIndex);
         onPageSelected(currIndex);
     }
-
 
 
 }

@@ -316,7 +316,7 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
      */
     @Override
     public void onClickShowBigImage(int poistion) {
-        SkipUtils.skipActivityForResult(this, Act_ImagePreActivity.class, SkipUtils.Params3.getInstance(poistion, CODE_IMAGE_PREVIEW, mAdapter.itemList), CODE_IMAGE_PREVIEW);
+        SkipUtils.skipActivityForResult(this, Act_ImagePreActivity.class, SkipUtils.Params4.getInstance(poistion, CODE_IMAGE_PREVIEW, mAdapter.itemList, true), CODE_IMAGE_PREVIEW);
     }
 
     @Override
