@@ -82,7 +82,7 @@ public class ChooseCityDialog extends CustomDialog {
             wl_county.setVisibility(View.GONE);
         }
 
-        List<String> province = getProvinceBean();
+        List<String> province = getProvince();
         if (CommonUtils.isNotNullOrEmpty(province)) {
             curP = province.get(0);
         }
@@ -152,7 +152,7 @@ public class ChooseCityDialog extends CustomDialog {
         }
     }
 
-    public List<String> getProvinceBean() {
+    public List<String> getProvince() {
         return null;
     }
 
