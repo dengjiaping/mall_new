@@ -7,6 +7,9 @@ import android.view.View;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LoginHelper;
 
 import butterknife.OnClick;
 
@@ -39,6 +42,14 @@ public class PerfectInfoActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.ll_contact:
+                if (LoginHelper.getInstance().hasExistOther()) {
+                    //添加过,查看联系人
+                    ShowContactsActivity.startIt(mBaseContext);
+                } else {
+                    //没有添加过，添加联系人
+                    PerfectContactsActivity.startIt(mBaseContext, Const.PERSONCENTER);
+                }
+
                 break;
 
             case R.id.ll_live_address:

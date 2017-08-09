@@ -46,6 +46,8 @@ public class LoginHelper extends AbsSharePref {
     public static final String ISSETPWD = "isSetPwd";
     public static final String REMEBER_ACCOUNT = "rememberAccount";
     public static final String REMAIN_DAYS = "remainDays";
+    public static final String EXISTOTHER = "existOther";
+    public static final String EXISTLIVE = "existLive";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -81,6 +83,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
         personInfo.isSetPwd = getBoolean(ISSETPWD, false);
         personInfo.remainDays = getString(REMAIN_DAYS, "0");
+        personInfo.existOther = getString(EXISTOTHER, "0");
+        personInfo.existLive = getString(EXISTLIVE, "0");
 
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -123,6 +127,8 @@ public class LoginHelper extends AbsSharePref {
         putBoolean(ISSETPWD, personInfo.isSetPwd);
         putString(REMEBER_ACCOUNT, personInfo.phone);
         putString(REMAIN_DAYS, personInfo.remainDays);
+        putString(EXISTOTHER, personInfo.existOther);
+        putString(EXISTLIVE, personInfo.existLive);
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -314,8 +320,10 @@ public class LoginHelper extends AbsSharePref {
     public boolean hasSetPwd() {
         return loginPersonInfo != null && loginPersonInfo.isSetPwd;
     }
+
     /**
      * 设置是否有交易密码
+     *
      * @return
      */
     public void setHasSetPwd(boolean isSetPwd) {
@@ -325,6 +333,54 @@ public class LoginHelper extends AbsSharePref {
         }
     }
 
+    /**
+     * 是否已经设置居住地址 true 有
+     *
+     * @return
+     */
+    public boolean hasExistLive() {
+        if (loginPersonInfo != null && "1".equals(loginPersonInfo.existLive)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 设置是否有居住地址
+     *
+     * @return
+     */
+    public void setHasExistLive(String existLive) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.existLive = existLive;
+            putString(EXISTLIVE, loginPersonInfo.existLive);
+        }
+    }
+    /**
+     * 是否已经设置其他联系人 true 有
+     *
+     * @return
+     */
+    public boolean hasExistOther() {
+        if (loginPersonInfo != null && "1".equals(loginPersonInfo.existOther)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 设置是否有其他联系人
+     *
+     * @return
+     */
+    public void setHasExistOther(String existOther) {
+        if (loginPersonInfo != null) {
+            loginPersonInfo.existOther = existOther;
+            putString(EXISTOTHER, loginPersonInfo.existOther);
+        }
+    }
     /**
      * 获取用户真实姓名
      *
@@ -358,7 +414,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getGlobleLimit() {
-        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.globleLimit))? "0.00" : loginPersonInfo.globleLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.globleLimit)) ? "0.00" : loginPersonInfo.globleLimit;
     }
 
     /**
@@ -367,7 +423,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getCylimit() {
-        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.cyLimit))? "0.00" : loginPersonInfo.cyLimit;
+        return (loginPersonInfo == null || StringUtils.isNull(loginPersonInfo.cyLimit)) ? "0.00" : loginPersonInfo.cyLimit;
     }
 
     /**

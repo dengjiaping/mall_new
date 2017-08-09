@@ -655,30 +655,29 @@ public class CashTypeActivity extends BaseActivity {
                 );
             }
         });
-        if (true) {
+        if (false) {
             //添加了联系人
             if (true) {
-                //添加了居住地址
-
-                //判断是否设置了交易密码
+                //添加了居住地址,判断是否设置了交易密码
                 if (LoginHelper.getInstance().hasSetPwd()) {
                     pwdDialog.showDialog();
                 } else {
                     TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                 }
             } else {
-                //未添加居住地址
+                //TODO：未添加居住地址
+
             }
         } else {
             //未添加联系人
             PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
         }
-        //判断是否设置了交易密码
-        if (LoginHelper.getInstance().hasSetPwd()) {
-            pwdDialog.showDialog();
-        } else {
-            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
-        }
+//        //判断是否设置了交易密码
+//        if (LoginHelper.getInstance().hasSetPwd()) {
+//            pwdDialog.showDialog();
+//        } else {
+//            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+//        }
     }
 
     /**

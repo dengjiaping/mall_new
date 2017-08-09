@@ -284,6 +284,12 @@
             android:name=".index.view.activity.TransactionPwdActivity"
             android:label="钱包激活设置交易密码" />
         <activity
+            android:name=".index.view.activity.PerfectContactsActivity"
+            android:label="我的联系人" />
+        <activity
+            android:name=".me.view.activity.ShowContactsActivity"
+            android:label="查看联系人" />
+        <activity
             android:name=".me.view.activity.BankActivity"
             android:label="支持银行卡列表" />
         <activity

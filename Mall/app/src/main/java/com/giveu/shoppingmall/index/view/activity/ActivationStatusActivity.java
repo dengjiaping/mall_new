@@ -78,6 +78,16 @@ public class ActivationStatusActivity extends BaseActivity {
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
             }
+        }else{
+            //手q用户
+            intent.putExtra("status", "success");
+            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
+            //提现额度
+            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
+            //消费额度
+            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
+            //TODO:额度为0的提示语
+            //  intent.putExtra("lab", response.data.lab);
         }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);

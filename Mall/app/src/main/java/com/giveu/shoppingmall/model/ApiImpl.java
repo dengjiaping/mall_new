@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.model.bean.response.BankListResponse;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
@@ -392,7 +393,11 @@ public class ApiImpl {
                 new Object[]{type, content, ident, name, nickname, phone, SharePrefUtil.getAppToken(), userId});
         FileUpload.uploadFileForOwnPlatformApi(files, photoList, requestParams2, ApiUrl.helpfeedback_addQuestionMessage, BaseBean.class, responseListener);
     }
-
+    //联系人类型
+    public static void getContactTypeInfo(Activity context, BaseRequestAgent.ResponseListener<ContactsResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"type"}, new Object[]{2});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.apersonCenter_account_getContactTypeInfo, ContactsResponse.class, context, responseListener);
+    }
 }
 
 

@@ -7,30 +7,44 @@ import com.android.volley.mynet.BaseBean;
  */
 
 public class LoginResponse extends BaseBean<LoginResponse> {
-
     /**
-     * accessToken : 78hxxxdffs
-     * activeDate : 2017/6/23
-     * availableCyLimit : 5154
-     * availablePosLimit : 50000
-     * certNo : 430691198606187561
+     * idPerson : 14563859
+     * hidden : true
+     * userPic :
+     * endDate : 2067/8/7
      * cyLimit : 50000
-     * endDate : 2020/6/1
+     * ident : 370724199806296925
+     * repayAmount : 289
+     * creditCount : 1
+     * bankName : 中国建设银行
+     * existOther : 2
+     * remainDays : 0
+     * bankIconUrl : http://10.10.11.140:9000/img/bankicon/2.png
+     * availablePosLimit : 48799.99
+     * userLevel : 1
+     * hasDefaultCard : true
+     * activeDate : 2017/8/7
+     * bankNo : 6217002340015437975
+     * availableRechargeLimit : 500
+     * defaultCard : 6217002340015437975
+     * isDk : 1
+     * address : {"province":"山东","city":"济南","provinceCode":"","cityCode":""}
+     * nickName :
+     * isSetPwd : true
+     * availableCyLimit : 50000
+     * userName : 17688933779
+     * accessToken : e2233c1773ea859231d66697bfc9b9c4
+     * userId : 80
+     * realName : 侯芳
      * globleLimit : 100000
-     * idPerson : 11111
-     * mobile : 18118751982
-     * nickName : 佳文
-     * posLimit : 0
-     * realName : 王佳文
-     * status : 1
-     * statusDesc : 注册成功-已激活
-     * userId : 12
-     * userName : 1856989654
-     * userPic : user_09.jpg
+     * posLimit : 50000
+     * phone : 17688933779
+     * name : 侯芳
+     * repayDate : 2017/08/09
+     * existLive : 1
+     * totalCost : 98799.99
+     * status : true
      */
-
-
-
 
     public String accessToken;
     public String activeDate;
@@ -60,4 +74,21 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public boolean hasDefaultCard;
     public boolean isSetPwd;
     public String remainDays;
+    public String existOther;
+    public String existLive;
+    public AddressBean address;
+
+    public static class AddressBean {
+        /**
+         * province : 山东
+         * city : 济南
+         * provinceCode :
+         * cityCode :
+         */
+
+        public String province;
+        public String city;
+        public String provinceCode;
+        public String cityCode;
+    }
 }
