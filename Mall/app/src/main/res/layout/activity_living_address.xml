@@ -21,6 +21,7 @@
             android:textSize="@dimen/ts_15" />
 
         <TextView
+            android:id="@+id/tv_syncAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_blue_without_solid"
@@ -130,12 +131,12 @@
         android:layout_width="match_parent"
         android:layout_height="88dp"
         android:layout_marginTop="1dp"
-        android:textSize="@dimen/ts_14"
         android:background="@color/white"
-        android:textColor="@color/color_282828"
         android:gravity="start"
         android:hint="请补充详细收货地址，如街道、门牌号、楼层及房间号等"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:textColor="@color/color_282828"
+        android:textSize="@dimen/ts_14" />
 
     <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_commit"
