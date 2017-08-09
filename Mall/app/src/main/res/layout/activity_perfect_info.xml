@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:text="请完善其他联系人"
+        android:gravity="center_vertical"
+        android:textColor="@color/color_282828"
+        android:textSize="@dimen/ts_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/tv_addcardinfo_styles"
+            android:layout_width="90dp"
+            android:text="与本人关系" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_color"
+            android:text="请选择"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_right"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/tv_addcardinfo_styles"
+            android:layout_width="90dp"
+            android:text="姓名" />
+
+        <com.giveu.shoppingmall.widget.EditView
+            android:id="@+id/et_banknumber"
+            style="@style/et_addcardinfo_styles"
+            android:inputType="number"
+            android:maxLength="25"
+            android:hint="请填写联系人姓名" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/tv_addcardinfo_styles"
+            android:layout_width="90dp"
+            android:text="手机号" />
+
+        <com.giveu.shoppingmall.widget.EditView
+            style="@style/et_addcardinfo_styles"
+            android:inputType="number"
+            android:maxLength="25"
+            android:hint="请填写联系人手机号" />
+    </LinearLayout>
+
+    <com.giveu.shoppingmall.widget.ClickEnabledTextView
+        android:id="@+id/tv_next"
+        style="@style/click_enabled_bt"
+        android:layout_marginTop="102dp"
+        android:text="下一步" />
+</LinearLayout>

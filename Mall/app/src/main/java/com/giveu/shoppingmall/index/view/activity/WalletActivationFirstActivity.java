@@ -87,6 +87,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
 //            }
 //        });
 //    }
+
     /**
      * 错误输入的监听
      *
@@ -114,6 +115,13 @@ public class WalletActivationFirstActivity extends BaseActivity {
                 @Override
                 public void onSuccess(WalletQualifiedResponse response) {
                     //有资质继续填写资料
+//                    if (true) {
+//                        //手Q用户
+//                        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson);
+//                        BaseApplication.getInstance().fetchUserInfo();
+//                    } else {
+//                        WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
+//                    }
                     WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
                 }
 
@@ -123,7 +131,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
                     if ("sc800705".equals(errorBean.code)) {
                         //跳转激活失败，无重新激活按钮
                         ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
-                    }else{
+                    } else {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 }
