@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/ll_contact"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:paddingRight="@dimen/default_layout_screen_gap">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="我的联系人"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_detail_grey" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_live_address"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:paddingRight="@dimen/default_layout_screen_gap">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="我的居住地址"
+            android:textColor="@color/color_282828"
+            android:textSize="@dimen/ts_15" />
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_detail_grey" />
+    </LinearLayout>
+
+
+</LinearLayout>
