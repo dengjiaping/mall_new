@@ -18,8 +18,9 @@
             android:src="@drawable/ic_default_avatar" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -41,6 +42,25 @@
                 android:textSize="@dimen/ts_14" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_perfect_info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="6dp"
+                android:text="完善个人资料"
+                android:textColor="@color/color_282828"
+                android:textSize="@dimen/ts_16" />
+
+            <ImageView style="@style/arrow_common_problem_style" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -48,9 +68,9 @@
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_marginTop="11dp"
-        android:visibility="gone"
         android:background="@color/white"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <ImageView
             style="@style/iv_common_problem_style"
@@ -137,8 +157,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:visibility="gone"
-            android:src="@drawable/ic_update_flag" />
+            android:src="@drawable/ic_update_flag"
+            android:visibility="gone" />
 
         <View
             android:layout_width="0dp"

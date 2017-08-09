@@ -28,7 +28,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
-import com.giveu.shoppingmall.index.view.activity.PerfectInfoActivity;
+import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
@@ -671,7 +671,7 @@ public class CashTypeActivity extends BaseActivity {
             }
         } else {
             //未添加联系人
-            PerfectInfoActivity.startIt(mBaseContext, Const.CASH);
+            PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
         }
         //判断是否设置了交易密码
         if (LoginHelper.getInstance().hasSetPwd()) {

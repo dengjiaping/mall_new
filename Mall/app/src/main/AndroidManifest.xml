@@ -275,8 +275,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".index.view.activity.WalletActivationSecondActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:label="钱包激活二级页" />
+            android:label="钱包激活二级页"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".index.view.activity.ActivationStatusActivity"
             android:label="钱包激活状态" />
@@ -317,6 +317,13 @@
             android:name=".me.view.activity.AccountManagementActivity"
             android:label="账号管理主页" />
         <activity
+            android:name=".me.view.activity.PerfectInfoActivity"
+            android:label="完善个人资料" />
+
+        <activity
+            android:name=".me.view.activity.LivingAddressActivity"
+            android:label="我的居住地址" />
+        <activity
             android:name=".me.view.activity.SecurityCenterActivity"
             android:label="安全中心页" />
         <activity
@@ -341,13 +348,13 @@
 
         <!--7.0文件权限-->
         <provider
-            android:authorities="com.giveu.shoppingmall.fileprovider"
             android:name="android.support.v4.content.FileProvider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:authorities="com.giveu.shoppingmall.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->

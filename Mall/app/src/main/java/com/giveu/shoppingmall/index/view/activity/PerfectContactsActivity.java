@@ -9,21 +9,21 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.Const;
 
 /**
- * 完善个人信息
+ * 完善个人信息-联系人
  * Created by 101900 on 2017/8/9.
  */
 
-public class PerfectInfoActivity extends BaseActivity {
+public class PerfectContactsActivity extends BaseActivity {
 
     public static void startIt(Activity mActivity, String flag) {
-        Intent intent = new Intent(mActivity, PerfectInfoActivity.class);
+        Intent intent = new Intent(mActivity, PerfectContactsActivity.class);
         intent.putExtra("flag",flag);
         mActivity.startActivity(intent);
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_perfect_info);
+        setContentView(R.layout.activity_perfect_contacts);
     }
 
     @Override
