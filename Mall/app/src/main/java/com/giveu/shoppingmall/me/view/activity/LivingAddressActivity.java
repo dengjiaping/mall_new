@@ -66,8 +66,9 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         super.setListener();
         chooseCityDialog.setOnConfirmListener(new ChooseCityDialog.OnConfirmListener() {
             @Override
-            public void onConfirm(String p, String c, String a) {
-                tvAddress.setText(p + c + a);
+            public void onConfirm(String province, String city, String region, String street) {
+                tvAddress.setText(province + city + region + street);
+                chooseCityDialog.dismiss();
             }
         });
     }
