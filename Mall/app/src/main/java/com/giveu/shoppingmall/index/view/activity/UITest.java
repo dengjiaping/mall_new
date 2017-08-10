@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
+import com.giveu.shoppingmall.base.DebugConfig;
 
 /**
  * Created by 508632 on 2016/12/22.
@@ -13,10 +13,10 @@ import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
 
 public class UITest {
     public static void test(Activity mContext) {
-     /*   if (!DebugConfig.isDev) {
+        if (!DebugConfig.isDev) {
             return;
-        }*/
-        startActivity(LivingAddressActivity.class);
+        }
+//        startActivity(LivingAddressActivity.class);
     }
 
 

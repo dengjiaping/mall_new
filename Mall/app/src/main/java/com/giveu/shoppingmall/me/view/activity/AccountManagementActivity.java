@@ -26,6 +26,7 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -54,6 +55,8 @@ public class AccountManagementActivity extends BaseActivity {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.iv_update)
     ImageView ivUpdate;
+    @BindView(R.id.tv_perfect_info)
+    TextView tvPerfectInfo;
     private DownloadApkUtils downloadApkUtils;
 
 
@@ -67,6 +70,11 @@ public class AccountManagementActivity extends BaseActivity {
         setContentView(R.layout.activity_account_management);
         baseLayout.setTitle("账号管理");
         notActiveDialog = new NotActiveDialog(mBaseContext);
+        if(LoginHelper.getInstance().hasExistLive() && LoginHelper.getInstance().hasExistOther()){
+            tvPerfectInfo.setVisibility(View.GONE);
+        }else{
+            tvPerfectInfo.setVisibility(View.VISIBLE);
+        }
         ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
 
@@ -95,7 +103,7 @@ public class AccountManagementActivity extends BaseActivity {
     public void setData() {
     }
 
-    @OnClick({R.id.ll_perfect_info,R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
+    @OnClick({R.id.ll_perfect_info, R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -174,4 +182,10 @@ public class AccountManagementActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }
