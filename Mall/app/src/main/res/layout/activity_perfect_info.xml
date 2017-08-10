@@ -53,6 +53,5 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_detail_grey" />
     </LinearLayout>
+    </LinearLayout>
 
-
-</LinearLayout>

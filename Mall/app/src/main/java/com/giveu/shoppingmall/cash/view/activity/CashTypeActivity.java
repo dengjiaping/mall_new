@@ -28,6 +28,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
+import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
@@ -42,6 +43,7 @@ import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdDialog;
 import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -153,6 +155,7 @@ public class CashTypeActivity extends BaseActivity {
 
     /**
      * 协议的控制，localIdProduct为0是随借随还，其他为分期产品
+     *
      * @param localIdProduct
      */
     public void setTvAgreement(int localIdProduct) {
@@ -209,7 +212,7 @@ public class CashTypeActivity extends BaseActivity {
             public void run() {
                 if (StringUtils.isNotNull(availableCylimit)) {
                     int maxCylimit = (int) Double.parseDouble(availableCylimit);
-                    if(maxCylimit > 3000){
+                    if (maxCylimit > 3000) {
                         maxCylimit = 3000;
                     }
                     rulerView.smoothScrollTo(maxCylimit);//刻度尺选择可用额度最大值
@@ -583,7 +586,7 @@ public class CashTypeActivity extends BaseActivity {
                     return;
                 }
                 if (rlAddBankCard.getVisibility() == View.VISIBLE) {
-                    ToastUtils.showShortToast("请选择到账银行卡！");
+                    ToastUtils.showShortToast("请添加银行卡！");
                     return;
                 }
                 if (!cbDesc.isChecked()) {
@@ -652,12 +655,29 @@ public class CashTypeActivity extends BaseActivity {
                 );
             }
         });
-        //判断是否设置了交易密码
-        if (LoginHelper.getInstance().hasSetPwd()) {
-            pwdDialog.showDialog();
+        if (false) {
+            //添加了联系人
+            if (true) {
+                //添加了居住地址,判断是否设置了交易密码
+                if (LoginHelper.getInstance().hasSetPwd()) {
+                    pwdDialog.showDialog();
+                } else {
+                    TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                }
+            } else {
+                //TODO：未添加居住地址
+
+            }
         } else {
-            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+            //未添加联系人
+            PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
         }
+//        //判断是否设置了交易密码
+//        if (LoginHelper.getInstance().hasSetPwd()) {
+//            pwdDialog.showDialog();
+//        } else {
+//            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+//        }
     }
 
     /**

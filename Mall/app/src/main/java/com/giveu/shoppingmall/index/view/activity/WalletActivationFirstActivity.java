@@ -12,9 +12,11 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
@@ -87,6 +89,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
 //            }
 //        });
 //    }
+
     /**
      * 错误输入的监听
      *
@@ -114,7 +117,18 @@ public class WalletActivationFirstActivity extends BaseActivity {
                 @Override
                 public void onSuccess(WalletQualifiedResponse response) {
                     //有资质继续填写资料
-                    WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
+                    if (response != null) {
+                        if (response.data != null) {
+                            if (response.data.hasQQActivation()) {//手Q用户已激活
+                                //手Q用户
+                                LoginHelper.getInstance().setIdPerson(response.data.idPerson);
+                                BaseApplication.getInstance().fetchUserInfo();
+                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, null, LoginHelper.getInstance().getIdPerson());
+                            } else {//未激活
+                                WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
+                            }
+                        }
+                    }
                 }
 
                 @Override
@@ -123,7 +137,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
                     if ("sc800705".equals(errorBean.code)) {
                         //跳转激活失败，无重新激活按钮
                         ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
-                    }else{
+                    } else {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 }

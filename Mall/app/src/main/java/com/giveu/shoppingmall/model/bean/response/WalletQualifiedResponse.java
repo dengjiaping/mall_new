@@ -20,5 +20,20 @@ public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
     public String idPerson;
     public String ident;
     public String name;
+    public String isActivation;//1 手Q激活
     public String phone;
+
+    /**
+     * 判断是否是手Q用户
+     * @return
+     */
+    public boolean hasQQActivation(){
+        if("1".equals(isActivation)){
+            //已激活
+            return true;
+        }else{
+            //未激活
+            return false;
+        }
+    }
 }

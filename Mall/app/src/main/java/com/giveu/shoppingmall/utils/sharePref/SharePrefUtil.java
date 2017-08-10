@@ -1,9 +1,6 @@
 package com.giveu.shoppingmall.utils.sharePref;
 
-import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
-import com.giveu.shoppingmall.model.bean.response.PersonInfoResponse;
-import com.giveu.shoppingmall.utils.HardWareUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 
@@ -134,14 +131,6 @@ public class SharePrefUtil extends AbsSharePref {
 
     public static String getPatternPwd() {
         return getInstance().getString(SharePrefKeys.LOCK_PATTERN_PWD + LoginHelper.getInstance().getUserId());
-    }
-
-    public static void setPersonInfo(PersonInfoResponse userInfo) {
-        getInstance().putObj(SharePrefKeys.PERSON_INFO_RESPONSE, userInfo);
-    }
-
-    public static PersonInfoResponse getPersonInfo() {
-        return (PersonInfoResponse) getInstance().getObj(SharePrefKeys.PERSON_INFO_RESPONSE);
     }
 
 }

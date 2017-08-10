@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.me.view.activity.IdentifyActivity;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
@@ -48,6 +49,7 @@ public class ActivationStatusActivity extends BaseActivity {
     public final int SETPWD = 2;
     public final int REPEAT = 3;
     String flag;//找回交易密码的标记
+
     //钱包激活设置交易密码
     public static void startSetPwd(Activity mActivity) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
@@ -76,6 +78,16 @@ public class ActivationStatusActivity extends BaseActivity {
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
             }
+        }else{
+            //手q用户
+            intent.putExtra("status", "success");
+            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
+            //提现额度
+            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
+            //消费额度
+            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
+            //TODO:额度为0的提示语
+            //  intent.putExtra("lab", response.data.lab);
         }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
@@ -136,7 +148,7 @@ public class ActivationStatusActivity extends BaseActivity {
         flag = getIntent().getStringExtra("flag");
         if ("transaction".equals(flag)) {
             baseLayout.setTitle("设置成功");
-        }else{
+        } else {
             baseLayout.setTitle("钱包激活");
         }
         switch (status) {
@@ -153,8 +165,15 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvPosLimit.setText(String.valueOf(posLimit));
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
-                tvSetTransactionPwd.setText("设置交易密码");
-                tvSetTransactionPwd.setTag(SETPWD);
+                if (LoginHelper.getInstance().hasSetPwd()) {
+                    //设置过交易密码
+                    tvSetTransactionPwd.setText("确定");
+                    tvSetTransactionPwd.setTag(BACK);
+                } else {
+                    tvSetTransactionPwd.setText("设置交易密码");
+                    tvSetTransactionPwd.setTag(SETPWD);
+                }
+
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintBottom.setText(lab);
                 break;

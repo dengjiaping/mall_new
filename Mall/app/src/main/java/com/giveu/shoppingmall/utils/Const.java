@@ -9,6 +9,8 @@ public class Const {
     public static String myWebAgentPlus = ";DF/" + CommonUtils.getVersionName();
     public static String whichFragmentInActMain = "whichFragmentInActMain";
     public static final int ACTIVATION_CODE = 100;//激活页面一跳到激活二的code
-
+    public static final String RECHARGE = "recharge";
+    public static final String CASH = "cash";
+    public static final String PERSONCENTER = "personCenter";
 
 }
