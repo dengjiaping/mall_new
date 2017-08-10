@@ -10,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.mynet.BaseBean;
-import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.index.presenter.ContactsPresenter;
+import com.giveu.shoppingmall.index.view.agent.IContactsView;
 import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
-import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -26,9 +26,9 @@ import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,7 +38,7 @@ import butterknife.OnClick;
  * Created by 101900 on 2017/8/9.
  */
 
-public class PerfectContactsActivity extends BaseActivity {
+public class PerfectContactsActivity extends BaseActivity implements IContactsView {
 
     @BindView(R.id.tv_relationship)
     TextView tvRelationship;
@@ -53,9 +53,12 @@ public class PerfectContactsActivity extends BaseActivity {
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
     String flag;//上个页面的标记
+    String contactsCode;//联系人关系代码
     CustomListDialog contactsDialog;
     private ArrayList<CharSequence> contactsTextList = new ArrayList<>();
     private ArrayList<String> contactsCodeList = new ArrayList<>();
+    ContactsPresenter presenter;
+
     public static void startIt(Activity mActivity, String flag) {
         Intent intent = new Intent(mActivity, PerfectContactsActivity.class);
         intent.putExtra("flag", flag);
@@ -66,28 +69,17 @@ public class PerfectContactsActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_perfect_contacts);
         initChooseDialog();
+        presenter = new ContactsPresenter(this);
         saveContactsList();
     }
 
     /**
      * 获取联系人关系列表
      */
-    public void saveContactsList(){
-        ApiImpl.getContactTypeInfo(mBaseContext, new BaseRequestAgent.ResponseListener<ContactsResponse>() {
-            @Override
-            public void onSuccess(ContactsResponse response) {
-                for (ContactsResponse contactsResponse : response.data) {
-                    contactsTextList.add(contactsResponse.typeName);
-                    contactsCodeList.add(contactsResponse.personType);
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+    public void saveContactsList() {
+        presenter.showContactsList();
     }
+
     /**
      * 初始化其他证明选择对话框
      */
@@ -96,11 +88,13 @@ public class PerfectContactsActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 tvRelationship.setText(contactsTextList.get(position));
-               // innerCode = innerCodeList.get(position).toString();
+                contactsCode = contactsCodeList.get(position).toString();
+                tvRelationship.setTextColor(getResources().getColor(R.color.color_282828));
                 contactsDialog.dismiss();
             }
         });
     }
+
     @Override
     public void setListener() {
         super.setListener();
@@ -123,10 +117,10 @@ public class PerfectContactsActivity extends BaseActivity {
         llChooseRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CommonUtils.isNullOrEmpty(contactsCodeList) || CommonUtils.isNullOrEmpty(contactsTextList)){
+                if (CommonUtils.isNullOrEmpty(contactsCodeList) || CommonUtils.isNullOrEmpty(contactsTextList)) {
                     //没有获取到列表
                     saveContactsList();
-                }else{
+                } else {
                     contactsDialog.show();
                 }
             }
@@ -136,7 +130,7 @@ public class PerfectContactsActivity extends BaseActivity {
     @Override
     public void setData() {
         contactsDialog.setData(contactsTextList);
-         flag = getIntent().getStringExtra("flag");
+        flag = getIntent().getStringExtra("flag");
         switch (flag) {
             case Const.CASH:
                 //取现跳转过来
@@ -197,30 +191,52 @@ public class PerfectContactsActivity extends BaseActivity {
                 break;
             case R.id.tv_next:
                 if (tvNext.isClickEnabled()) {
-                    switch (flag) {
-                        case Const.CASH:
-                            //取现跳转过来
-                                //信息正确，下一步
-                            if(LoginHelper.getInstance().hasExistLive()){
-                                //设置了地址
-                                finish();
-                            }else{
-                                //没设置地址，去设置
-                                LivingAddressActivity.startIt(mBaseContext);
-                            }
-                            break;
-                        case Const.PERSONCENTER:
-                            //个人中心跳转过来
-                            finish();
-                            break;
-                        case Const.RECHARGE:
-                            //充值跳转过来
-                            break;
-                    }
+
+                    String name = StringUtils.getTextFromView(etContactsName);
+                    String phone = StringUtils.getTextFromView(etContactsPhone);
+                    presenter.commit(name, contactsCode, LoginHelper.getInstance().getIdPerson(), phone);
                 } else {
                     nextButtonCanClick(true);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void commitContactsSuccess() {
+        LoginHelper.getInstance().setHasExistOther("1");
+        BaseApplication.getInstance().fetchUserInfo();
+        switch (flag) {
+            case Const.CASH:
+                //取现跳转过来,还需添加
+                if (LoginHelper.getInstance().hasExistLive()) {
+                    //设置了地址
+                } else {
+                    //没设置地址，去设置
+                    LivingAddressActivity.startIt(mBaseContext);
+                }
+                break;
+            case Const.PERSONCENTER:
+                //个人中心跳转过来
+                ToastUtils.showShortToast("添加联系人成功");
+                break;
+            case Const.RECHARGE:
+                //充值跳转过来
+                break;
+        }
+        finish();
+    }
+
+    @Override
+    public void commitContactsFail() {
+
+    }
+
+    @Override
+    public void showContactsList(List<ContactsResponse> data) {
+        for (ContactsResponse contactsResponse : data) {
+            contactsTextList.add(contactsResponse.typeName);
+            contactsCodeList.add(contactsResponse.personType);
         }
     }
 }

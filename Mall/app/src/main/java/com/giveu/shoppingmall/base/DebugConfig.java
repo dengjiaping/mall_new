@@ -43,7 +43,7 @@ public class DebugConfig {
 
     //反馈接口baseurl
     public static String FEED_BACK_ONLINE = "https://wx.dafysz.cn/wechat-web/";
-    public static String FEED_BACK_TEST = "http://wx2.dafycredit.cn/wechat-web/";
+    public static String FEED_BACK_TEST = "http://wx.dafycredit.cn/wechat-web/";
 
     //h5 baseurl
     public static String H5_ONLINE = "http://3c.dafysz.cn/";

@@ -27,6 +27,8 @@ public interface ApiUrl {
     String helpfeedback_addQuestionMessage = FEED_BACK_URL + "helpfeedback/addQuestionMessage";
     //联系人类型
     String apersonCenter_account_getContactTypeInfo = BASE_URL + "personCenter/account/getContactTypeInfo";
+    //补充其他联系人
+    String personCenter_account_addOtherContact = BASE_URL + "personCenter/account/addOtherContact";
     //广告页
     String activity_getImageInfo = BASE_URL + "activity/getImageInfo";
     String token_getToken = BASE_URL + "personCenter/token/applyToken";

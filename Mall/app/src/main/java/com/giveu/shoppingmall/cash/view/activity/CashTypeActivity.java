@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
+import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
 import com.giveu.shoppingmall.me.view.activity.MyBankCardActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
@@ -506,6 +507,7 @@ public class CashTypeActivity extends BaseActivity {
             @Override
             public void onSuccess(ProductResponse response) {
                 productList = response.data;
+                RefreshData();
             }
 
             @Override
@@ -655,9 +657,9 @@ public class CashTypeActivity extends BaseActivity {
                 );
             }
         });
-        if (false) {
+        if (LoginHelper.getInstance().hasExistOther()) {
             //添加了联系人
-            if (true) {
+            if (LoginHelper.getInstance().hasExistLive()) {
                 //添加了居住地址,判断是否设置了交易密码
                 if (LoginHelper.getInstance().hasSetPwd()) {
                     pwdDialog.showDialog();
@@ -665,8 +667,8 @@ public class CashTypeActivity extends BaseActivity {
                     TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                 }
             } else {
-                //TODO：未添加居住地址
-
+                //未添加地址
+                LivingAddressActivity.startIt(mBaseContext);
             }
         } else {
             //未添加联系人

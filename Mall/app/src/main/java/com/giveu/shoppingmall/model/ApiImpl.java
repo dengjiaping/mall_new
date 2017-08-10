@@ -398,6 +398,11 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"type"}, new Object[]{2});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.apersonCenter_account_getContactTypeInfo, ContactsResponse.class, context, responseListener);
     }
+    //补充其他联系人
+    public static void addOtherContact(Activity context,String name,String relation,String idPerson,String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"name","relation","idPerson","phone"}, new Object[]{name,relation,StringUtils.string2Long(idPerson),phone});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addOtherContact, BaseBean.class, context, responseListener);
+    }
 }
 
 
