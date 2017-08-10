@@ -6,18 +6,27 @@ package com.giveu.shoppingmall.widget.dialog;
 
 
 import android.app.Activity;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.base.WheelCityAdapter;
-import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.widget.wheelview.OnWheelChangedListener;
-import com.giveu.shoppingmall.widget.wheelview.WheelView;
+import com.giveu.shoppingmall.base.rvadapter.RvCommonAdapter;
+import com.giveu.shoppingmall.base.rvadapter.ViewHolder;
+import com.giveu.shoppingmall.model.bean.response.CityBean;
+import com.giveu.shoppingmall.utils.DensityUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,12 +34,14 @@ import java.util.List;
  * 选择省市区的dialog
  */
 public class ChooseCityDialog extends CustomDialog {
-    public WheelView wl_province, wl_city, wl_county;
-    WheelCityAdapter cityAdapter1, cityAdapter2, cityAdapter3;
-    private boolean hideCounty = false;
-    private String curP, curC, curA;//当前选中的省，市，区
-    private TextView tv_title;
+    private String curP, curC, curR, curS;//当前选中的省，市，区
 
+    private ViewPager vpAddress;
+    private ArrayList<String> tabList;
+    private AddressAdapter addressAdapter;
+    private TabLayout tabLayout;
+
+    private ArrayList<ArrayList<CityBean>> cityList;
 
     public ChooseCityDialog(Activity context) {
         super(context, R.layout.dialog_choose_city, R.style.customerDialog, Gravity.CENTER, false);
@@ -39,120 +50,132 @@ public class ChooseCityDialog extends CustomDialog {
     @Override
     protected void initView(View contentView) {
         super.initView(contentView);
-        tv_title = (TextView) contentView.findViewById(R.id.tv_title);
-        TextView tv_ok = (TextView) contentView.findViewById(R.id.tv_right);
-        TextView tv_cancel_time = (TextView) contentView.findViewById(R.id.tv_left);
-        initWheelView(contentView);
-        tv_ok.setOnClickListener(new View.OnClickListener() {
+        tabList = new ArrayList<>();
+        cityList = new ArrayList<>();
+        ArrayList<CityBean> itemList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            CityBean cityBean = new CityBean();
+            cityBean.cityName = "城市" + i;
+            itemList.add(cityBean);
+        }
+        cityList.add(itemList);
+        vpAddress = (ViewPager) contentView.findViewById(R.id.vp_address);
+        tabLayout = (TabLayout) contentView.findViewById(R.id.tb_tag);
+        ImageView ivClose = (ImageView) contentView.findViewById(R.id.iv_dialog_close);
+        ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 dismiss();
-                if (listener != null) {
-                    listener.onConfirm(curP, curC, curA);
+            }
+        });
+        tabList.add("请选择");
+        addressAdapter = new AddressAdapter(mAttachActivity, tabList, cityList);
+        addressAdapter.setOnAddressChooseListener(new OnAddressChooseListener() {
+            @Override
+            public void onChoose(String address) {
+                int currentItem = vpAddress.getCurrentItem();
+                //选择的是第一个tab的地址，清空除第一个tab外的数据，并再增加一个数据
+                if (currentItem == 0 && tabList.size() >= 1) {
+                    curP = address;
+                    //重复选择不作处理
+                    if (!tabList.get(currentItem).equals(address)) {
+                        tabList.remove(currentItem);
+                        tabList.add(currentItem, address);
+                        //清空之后的信息
+                        tabList.subList(1, tabList.size()).clear();
+                        cityList.subList(1, cityList.size()).clear();
+                        tabList.add("请选择");
+                        ArrayList<CityBean> itemList = new ArrayList<>();
+                        for (int i = 0; i < 20; i++) {
+                            CityBean cityBean = new CityBean();
+                            cityBean.cityName = "城市" + i;
+                            itemList.add(cityBean);
+                        }
+                        cityList.add(itemList);
+                        addressAdapter.notifyDataSetChanged();
+                    }
+                    vpAddress.setCurrentItem(currentItem + 1);
+                } else {
+                    //设置市区街道信息
+                    switch (currentItem) {
+                        case 1:
+                            curC = address;
+                            break;
+                        case 2:
+                            curR = address;
+                            break;
+                        case 3:
+                            curS = address;
+                            break;
+                    }
+                    //如果是viewpager最后一个并且当前viewpager页面小于3，那么需要新增区或街道列表
+                    if (currentItem + 1 == tabList.size() && currentItem < 3) {
+                        //重复选择不作处理
+                        if (!tabList.get(currentItem).equals(address)) {
+                            tabList.remove(currentItem);
+                            tabList.add(currentItem, address);
+                            tabList.add("请选择");
+                            ArrayList<CityBean> itemList = new ArrayList<>();
+                            for (int i = 0; i < 20; i++) {
+                                CityBean cityBean = new CityBean();
+                                cityBean.cityName = "城市" + i;
+                                itemList.add(cityBean);
+                            }
+                            cityList.add(itemList);
+                            addressAdapter.notifyDataSetChanged();
+                        }
+                        vpAddress.setCurrentItem(currentItem + 1);
+                    } else if (currentItem < tabList.size()) {
+                        //重复选择不作处理
+                        if (!tabList.get(currentItem).equals(address) && currentItem < 3) {
+                            tabList.remove(currentItem);
+                            tabList.add(currentItem, address);
+                            tabList.subList(currentItem + 1, tabList.size()).clear();
+                            cityList.subList(currentItem + 1, cityList.size()).clear();
+                            tabList.add("请选择");
+                            ArrayList<CityBean> itemList = new ArrayList<>();
+                            for (int i = 0; i < 20; i++) {
+                                CityBean cityBean = new CityBean();
+                                cityBean.cityName = "城市" + i;
+                                itemList.add(cityBean);
+                            }
+                            cityList.add(itemList);
+                        } else {
+                            tabList.remove(currentItem);
+                            tabList.add(currentItem, address);
+                            if (tabList.size() == 3) {
+                                curS = "";
+                            }
+                            if (listener != null) {
+                                listener.onConfirm(curP, curC, curR, curS);
+                            }
+
+                        }
+                        addressAdapter.notifyDataSetChanged();
+                        vpAddress.setCurrentItem(currentItem + 1);
+                    }
                 }
             }
         });
-        tv_cancel_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        tabLayout.setupWithViewPager(vpAddress);
+        vpAddress.setAdapter(addressAdapter);
     }
 
-
-    protected void initWheelView(View view) {
-        wl_province = (WheelView) view.findViewById(R.id.wl1);
-        wl_city = (WheelView) view.findViewById(R.id.wl2);
-        wl_county = (WheelView) view.findViewById(R.id.wl3);
-        wl_county.setVisibility(View.VISIBLE);
-
-        cityAdapter1 = new WheelCityAdapter(mAttachActivity);
-        cityAdapter1.setTextSize(15);
-        wl_province.setViewAdapter(cityAdapter1);
-
-        cityAdapter2 = new WheelCityAdapter(mAttachActivity);
-        cityAdapter2.setTextSize(15);
-        wl_city.setViewAdapter(cityAdapter2);
-
-        cityAdapter3 = new WheelCityAdapter(mAttachActivity);
-        cityAdapter3.setTextSize(15);
-        wl_county.setViewAdapter(cityAdapter3);
-        if (hideCounty) {
-            wl_county.setVisibility(View.GONE);
-        }
-
-        List<String> province = getProvinceBean();
-        if (CommonUtils.isNotNullOrEmpty(province)) {
-            curP = province.get(0);
-        }
-
-        cityAdapter1.setData(province);
-
-        List<String> cityByProvince = getCityByProvince(curP);
-        if (CommonUtils.isNotNullOrEmpty(cityByProvince)) {
-            curC = cityByProvince.get(0);
-        }
-        cityAdapter2.setData(cityByProvince);
-
-        List<String> countyByProvinceCity = getCountyByProvinceCity(curP, curC);
-        if (CommonUtils.isNotNullOrEmpty(countyByProvinceCity)) {
-            curA = countyByProvinceCity.get(0);
-        }
-        cityAdapter3.setData(countyByProvinceCity);
-
-        wl_province.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                String p = cityAdapter1.getData().get(newValue);
-                curP = p;
-                cityAdapter2.setData(getCityByProvince(p));
-                if (CommonUtils.isNotNullOrEmpty(cityAdapter2.getData())) {
-                    wl_city.setCurrentItem(0);
-                    updateAreaWheel(p, cityAdapter2.getData().get(0));
-                }
-            }
-        });
-        wl_city.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                if (newValue < cityAdapter2.getData().size()) {
-                    String c = cityAdapter2.getData().get(newValue);
-                    updateAreaWheel(curP, c);
-                }
-            }
-        });
-        wl_county.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                if (newValue < cityAdapter3.getData().size()) {
-                    curA = cityAdapter3.getData().get(newValue);
-                }
-            }
-        });
-    }
-
-    /**
-     * 更新区的数据
-     */
-    private void updateAreaWheel(String curP, String curC) {
-        this.curP = curP;
-        this.curC = curC;
-
-        cityAdapter3.setData(getCountyByProvinceCity(curP, curC));
-        if (CommonUtils.isNotNullOrEmpty(cityAdapter3.getData())) {
-            wl_county.setCurrentItem(0);
-            this.curA = cityAdapter3.getData().get(0);
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        Window window = getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams attributes = window.getAttributes();
+            attributes.height = (int) (DensityUtils.getHeight() * (0.6));
+            attributes.width = DensityUtils.getWidth();
+            attributes.gravity = Gravity.BOTTOM;
+            window.setAttributes(attributes);
+            window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
         }
     }
 
-    public void setTitle(String title) {
-        if (StringUtils.isNotNull(title)) {
-            tv_title.setText(title);
-        }
-    }
-
-    public List<String> getProvinceBean() {
+    public List<String> getProvince() {
         return null;
     }
 
@@ -167,10 +190,102 @@ public class ChooseCityDialog extends CustomDialog {
     private OnConfirmListener listener;
 
     public interface OnConfirmListener {
-        void onConfirm(String p, String c, String a);
+        void onConfirm(String province, String city, String region, String street);
     }
 
     public void setOnConfirmListener(OnConfirmListener listener) {
         this.listener = listener;
+    }
+
+    private class AddressAdapter extends PagerAdapter {
+
+        private Activity activity;
+        private ArrayList<String> tabList;
+        private ArrayList<ArrayList<CityBean>> cityList;
+
+        public AddressAdapter(Activity activity, ArrayList<String> tabList, ArrayList<ArrayList<CityBean>> cityList) {
+            this.activity = activity;
+            this.tabList = tabList;
+            this.cityList = cityList;
+        }
+
+        @Override
+        public int getCount() {
+            return tabList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public View instantiateItem(ViewGroup container, int position) {
+            View view = View.inflate(activity, R.layout.vp_item_address, null);
+            RecyclerView rvAddress = (RecyclerView) view.findViewById(R.id.rv_address);
+            if (position < cityList.size()) {
+                final ArrayList<CityBean> detailList = cityList.get(position);
+                RvCommonAdapter<CityBean> addressAdapter = new RvCommonAdapter<CityBean>(activity, R.layout.rv_item_address, detailList) {
+                    @Override
+                    protected void convert(final ViewHolder holder, final CityBean item, final int position) {
+                        holder.setText(R.id.tv_address, item.cityName);
+                        if (item.isChoose) {
+                            holder.setTextColor(R.id.tv_address, ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
+                        } else {
+                            holder.setTextColor(R.id.tv_address, ContextCompat.getColor(mAttachActivity, R.color.color_282828));
+                        }
+                        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (listener != null) {
+                                    listener.onChoose(item.cityName);
+                                }
+                                item.isChoose = true;
+                                for (int i = 0; i < detailList.size(); i++) {
+                                    CityBean cityBean = detailList.get(i);
+                                    if (cityBean.isChoose && !cityBean.cityName.equals(item.cityName)) {
+                                        cityBean.isChoose = false;
+                                        break;
+                                    }
+                                }
+                                notifyDataSetChanged();
+                            }
+                        });
+                    }
+                };
+                LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                rvAddress.setLayoutManager(layoutManager);
+                rvAddress.setAdapter(addressAdapter);
+            }
+
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabList.get(position);
+        }
+
+        private OnAddressChooseListener listener;
+
+        public void setOnAddressChooseListener(OnAddressChooseListener listener) {
+            this.listener = listener;
+        }
+    }
+
+    public interface OnAddressChooseListener {
+        void onChoose(String address);
     }
 }
