@@ -12,5 +12,7 @@ public class Const {
     public static final String RECHARGE = "recharge";
     public static final String CASH = "cash";
     public static final String PERSONCENTER = "personCenter";
+    public static final String ADDRESS_JSON = "addressJson";
+    public static final String ADDRESS_TIME = "addressTime";
 
 }

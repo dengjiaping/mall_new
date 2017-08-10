@@ -78,15 +78,15 @@ public class EditView extends EditText {
      * @param flag
      */
     public void checkFormat(final int flag) {
-        if(StringUtils.getTextFromView(this).length() == flag){
+        if (StringUtils.getTextFromView(this).length() == flag) {
             setTextColor(getResources().getColor(R.color.color_4a4a4a));
-        }else{
+        } else {
             setTextColor(getResources().getColor(R.color.red));
         }
         this.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (hasSetMaxLength && s.length() >= flag && s.length() <= maxLength ) {
+                if (hasSetMaxLength && s.length() >= flag && s.length() <= maxLength) {
                     setTextColor(getResources().getColor(R.color.color_4a4a4a));
                 } else if (s.length() == flag) {
                     setTextColor(getResources().getColor(R.color.color_4a4a4a));
@@ -128,6 +128,13 @@ public class EditView extends EditText {
                             setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
+                    case Style.PHONE://银行卡名中文
+                        if (s.length() == 11) {
+                            setTextColor(getResources().getColor(R.color.black));
+                        } else {
+                            setTextColor(getResources().getColor(R.color.red));
+                        }
+                        break;
                 }
             }
         });
@@ -137,6 +144,7 @@ public class EditView extends EditText {
         String NAME = "name";//姓名
         String IDENT = "ident";//身份证
         String BANKNAME = "bankName";//银行卡名
+        String PHONE = "phone";//手机号
     }
 
     /**
@@ -145,7 +153,7 @@ public class EditView extends EditText {
      * @param nickname
      * @return
      */
-    public boolean checkUserNameAndTipError(String nickname) {
+    public static boolean checkUserNameAndTipError(String nickname) {
         if (TextUtils.isEmpty(nickname)) {
             return false;
         }

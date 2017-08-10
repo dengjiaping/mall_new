@@ -126,5 +126,9 @@ public interface ApiUrl {
     String personCenter_bankCard_addBankCard = BASE_URL + "personCenter/bankCard/addBankCard";
     //还款结果查询
     String pay_query = BASE_URL + "pay/query";
+    //添加现居住地址
+    String personCenter_account_addLiveAddress = BASE_URL+"personCenter/account/addLiveAddress";
+    //京东地址Json数据
+    String personCenter_address_getAddListJson = BASE_URL+"personCenter/address/getAddListJson";
 }
 

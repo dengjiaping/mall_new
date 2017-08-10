@@ -50,6 +50,7 @@
             android:paddingLeft="5dp">
 
             <TextView
+                android:id="@+id/tv_perfect_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"

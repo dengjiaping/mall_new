@@ -8,6 +8,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
@@ -393,6 +394,7 @@ public class ApiImpl {
                 new Object[]{type, content, ident, name, nickname, phone, SharePrefUtil.getAppToken(), userId});
         FileUpload.uploadFileForOwnPlatformApi(files, photoList, requestParams2, ApiUrl.helpfeedback_addQuestionMessage, BaseBean.class, responseListener);
     }
+
     //联系人类型
     public static void getContactTypeInfo(Activity context, BaseRequestAgent.ResponseListener<ContactsResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"type"}, new Object[]{2});
@@ -400,8 +402,20 @@ public class ApiImpl {
     }
     //补充其他联系人
     public static void addOtherContact(Activity context,String name,String relation,String idPerson,String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"name","relation","idPerson","phone"}, new Object[]{name,relation,StringUtils.string2Long(idPerson),phone});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"name", "relation", "idPerson", "phone"}, new Object[]{name, relation, StringUtils.string2Long(idPerson), phone});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addOtherContact, BaseBean.class, context, responseListener);
+    }
+    //添加现居住地址
+    public static void addLiveAddress(Activity context, String idPerson, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "province", "city", "region", "street", "building"},
+                new Object[]{StringUtils.string2Long(idPerson), province, city, region, street, building});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addLiveAddress, BaseBean.class, context, responseListener);
+    }
+
+    //联系人类型
+    public static void getAddListJson(Activity context, BaseRequestAgent.ResponseListener<AddressBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getAddListJson, AddressBean.class, context, responseListener);
     }
 }
 

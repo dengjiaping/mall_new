@@ -20,11 +20,11 @@
 
         <ImageView
             android:id="@+id/iv_dialog_close"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="10dp"
             android:layout_alignParentRight="true"
-            android:padding="13dp"
-            android:src="@drawable/ic_close_white" />
+            android:src="@drawable/ic_dismiss" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -34,11 +34,13 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tb_tag"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/white"
             app:tabIndicatorHeight="1dp"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/color_00bbc0"
             app:tabSelectedTextColor="@color/color_4a4a4a"
             app:tabTextColor="@color/color_4a4a4a" />
 
