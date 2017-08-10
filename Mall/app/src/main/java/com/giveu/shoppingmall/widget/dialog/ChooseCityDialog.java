@@ -30,7 +30,6 @@ import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -185,6 +184,7 @@ public class ChooseCityDialog extends CustomDialog {
                             initString(curR);
                             initString(curS);
                             if (listener != null) {
+                                //避免快速点击以致弹框消失
                                 int size = 0;
                                 if (StringUtils.isNotNull(curP)) {
                                     size++;
@@ -234,18 +234,6 @@ public class ChooseCityDialog extends CustomDialog {
             window.setAttributes(attributes);
             window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
         }
-    }
-
-    public List<String> getProvince() {
-        return null;
-    }
-
-    public List<String> getCityByProvince(String provinceName) {
-        return null;
-    }
-
-    public List<String> getCountyByProvinceCity(String provinceName, String cityName) {
-        return null;
     }
 
     private OnConfirmListener listener;
