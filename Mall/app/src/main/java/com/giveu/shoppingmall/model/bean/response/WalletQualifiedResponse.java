@@ -7,22 +7,37 @@ import com.android.volley.mynet.BaseBean;
  */
 
 public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
-
     /**
-     * bankNo : 6228481218005648235
-     * idPerson : 10000923
-     * ident : 371082199201058672
-     * name : 唐兴
-     * phone : 18109491314
+     * bankNo : 515442940123456789
+     * cyLimit : 1
+     * globleLimit : 1
+     * idPerson : 11413713
+     * ident : 23012619810605986X
+     * isActivation : 32070
+     * isPhoneChage : 1
+     * isSetPwd : 1
+     * name : 邓绿蝶
+     * phone : 15818512345
+     * posLimit : 1
      */
-
+    /**
+     * 普通用户
+     */
     public String bankNo;
+    public String name;
+    public String phone;
     public String idPerson;
     public String ident;
-    public String name;
+    /**
+     * 手q用户
+     */
+    public String cyLimit;
+    public String globleLimit;
     public String isActivation;//1 手Q激活
-    public String phone;
-
+    public boolean isPhoneChage;
+    public boolean isSetPwd;
+    public String posLimit;
+    public String lab;
     /**
      * 判断是否是手Q用户
      * @return

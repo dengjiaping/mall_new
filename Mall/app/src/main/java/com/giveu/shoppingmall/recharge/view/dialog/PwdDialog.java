@@ -58,7 +58,6 @@ public class PwdDialog {
 
 
     private void initView(final View contentView) {
-        CommonUtils.openSoftKeyBoard(mActivity);
         tv_dialog_pwd = (TextView) contentView.findViewById(R.id.tv_dialog_pwd);
         inputView = (PassWordInputView) contentView.findViewById(R.id.inputview_dialog);
         inputView.clearFocus();

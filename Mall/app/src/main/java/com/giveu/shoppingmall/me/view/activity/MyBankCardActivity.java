@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
+import com.giveu.shoppingmall.event.AddCardEvent;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
@@ -32,6 +33,9 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,18 +69,18 @@ public class MyBankCardActivity extends BaseActivity {
     ImageView ivBank;
     @BindView(R.id.ll_my_card)
     LinearLayout llMyCard;
+    public static final String DEFAULT = "default";
+    public static final String DELETE = "delete";
     boolean needResult;//是否是取现过来的 true是
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
-//        mActivity.setResult(RESULT_OK);
         mActivity.startActivity(intent);
     }
 
     public static void startIt(Activity mActivity, boolean needResult) {
         Intent intent = new Intent(mActivity, MyBankCardActivity.class);
         intent.putExtra("needResult", needResult);
-        mActivity.setResult(RESULT_OK);
         mActivity.startActivityForResult(intent, 1);
     }
 
@@ -95,6 +99,7 @@ public class MyBankCardActivity extends BaseActivity {
         llDefaultBankCard.requestFocus();
         dialogUtil = new CustomDialogUtil(mBaseContext);
         initAdapter();
+        registerEventBus();//注册EventBus
     }
 
     /**
@@ -198,6 +203,11 @@ public class MyBankCardActivity extends BaseActivity {
         }, null).show();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshBank(AddCardEvent event) {
+        setData();
+        LoginHelper.getInstance().setBankIconUrl(defalutBankIconUrl);
+    }
 
 
     /**
@@ -221,7 +231,7 @@ public class MyBankCardActivity extends BaseActivity {
      */
     private void setDefaultCard(String id) {
         final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.BANKCARD);
-        setPwdListener(pwdDialog, id, "default", -1);
+        setPwdListener(pwdDialog, id, DEFAULT, -1);
         if (LoginHelper.getInstance().hasSetPwd()) {//设置了交易密码
             pwdDialog.showDialog();
         } else {
@@ -246,28 +256,28 @@ public class MyBankCardActivity extends BaseActivity {
                                     PayPwdResponse pwdResponse = response.data;
                                     if (pwdResponse.status) {
                                         //交易密码校验成功
-                                        ApiImpl.setDefaultCard(mBaseContext, pwdResponse.code, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
-                                            @Override
-                                            public void onSuccess(BaseBean response) {
-                                                //设置默认代扣卡之后刷新列表
-                                                if ("delete".equals(flag)) {
-                                                    //解绑银行卡
-                                                    deleteBankCard(id, position, bankListAdapter);
-                                                } else {
-                                                    //设置默认卡
+                                        if (DELETE.equals(flag)) {
+                                            //解绑银行卡
+                                            deleteBankCard(id, position, bankListAdapter);
+                                            pwdDialog.dissmissDialog();
+                                        } else {
+                                            //设置默认卡
+                                            ApiImpl.setDefaultCard(mBaseContext, pwdResponse.code, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                                @Override
+                                                public void onSuccess(BaseBean response) {
+                                                    //设置默认代扣卡之后刷新列表
                                                     setData();
                                                     LoginHelper.getInstance().setBankIconUrl(defalutBankIconUrl);
                                                     ToastUtils.showShortToast("设置默认代扣卡成功！");
                                                     pwdDialog.dissmissDialog();
                                                 }
 
-                                            }
-
-                                            @Override
-                                            public void onError(BaseBean errorBean) {
-                                                CommonLoadingView.showErrorToast(errorBean);
-                                            }
-                                        });
+                                                @Override
+                                                public void onError(BaseBean errorBean) {
+                                                    CommonLoadingView.showErrorToast(errorBean);
+                                                }
+                                            });
+                                        }
                                     } else {
                                         // 交易密码校验成功,remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();
@@ -320,7 +330,7 @@ public class MyBankCardActivity extends BaseActivity {
             public void onClick(View v) {
                 //验证交易密码
                 final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.BANKCARD);
-                setPwdListener(pwdDialog, id, "delete", position);
+                setPwdListener(pwdDialog, id, DELETE, position);
                 if (LoginHelper.getInstance().hasSetPwd()) {//设置了交易密码
                     pwdDialog.showDialog();
                 } else {
@@ -341,7 +351,7 @@ public class MyBankCardActivity extends BaseActivity {
         ApiImpl.deleteBankInfo(mBaseContext, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-                if (bankListAdapter != null && bankListAdapter.getCount() > 0) {
+                if (bankListAdapter != null && bankListAdapter.getData() != null && bankListAdapter.getData().size() > position) {
                     bankListAdapter.getData().remove(position);
                     bankListAdapter.notifyDataSetChanged();
                     ToastUtils.showShortToast("删除成功！");

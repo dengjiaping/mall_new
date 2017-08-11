@@ -15,7 +15,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.me.view.activity.IdentifyActivity;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
-import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
@@ -62,7 +62,38 @@ public class ActivationStatusActivity extends BaseActivity {
         intent.putExtra("flag", flag);
         mActivity.startActivity(intent);
     }
-
+    //显示手Q用户激活成功结果
+    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson) {
+        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
+        if (response != null) {
+            intent.putExtra("status", response.result);
+            if (response.data != null) {
+                //总额度
+                intent.putExtra("globleLimit", response.data.globleLimit);
+                //提现额度
+                intent.putExtra("cyLimit", response.data.cyLimit);
+                //消费额度
+                intent.putExtra("posLimit", response.data.posLimit);
+                //是否设置交易密码
+                intent.putExtra("isSetPwd", response.data.isSetPwd);
+                //额度为0的提示语
+                intent.putExtra("lab", response.data.lab);
+            }
+        }
+//        else{
+//            //手q用户
+//            intent.putExtra("status", "success");
+//            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
+//            //提现额度
+//            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
+//            //消费额度
+//            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
+//            //TODO:额度为0的提示语
+//            //  intent.putExtra("lab", response.data.lab);
+//        }
+        intent.putExtra("idPerson", idPerson);
+        mActivity.startActivity(intent);
+    }
     //显示成功结果
     public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
@@ -78,17 +109,18 @@ public class ActivationStatusActivity extends BaseActivity {
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
             }
-        }else{
-            //手q用户
-            intent.putExtra("status", "success");
-            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
-            //提现额度
-            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
-            //消费额度
-            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
-            //TODO:额度为0的提示语
-            //  intent.putExtra("lab", response.data.lab);
         }
+//        else{
+//            //手q用户
+//            intent.putExtra("status", "success");
+//            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
+//            //提现额度
+//            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
+//            //消费额度
+//            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
+//            //TODO:额度为0的提示语
+//            //  intent.putExtra("lab", response.data.lab);
+//        }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
@@ -157,6 +189,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 String globleLimit = getIntent().getStringExtra("globleLimit");
                 String cyLimit = getIntent().getStringExtra("cyLimit");
                 String posLimit = getIntent().getStringExtra("posLimit");
+                boolean isSetPwd = getIntent().getBooleanExtra("isSetPwd",false);
                 String lab = StringUtils.nullToEmptyString(getIntent().getStringExtra("lab"));
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);
@@ -165,7 +198,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvPosLimit.setText(String.valueOf(posLimit));
                 ivStatus.setImageResource(R.drawable.ic_activation_success);
                 tvStatus.setText("激活成功");
-                if (LoginHelper.getInstance().hasSetPwd()) {
+                if (isSetPwd) {
                     //设置过交易密码
                     tvSetTransactionPwd.setText("确定");
                     tvSetTransactionPwd.setTag(BACK);
