@@ -143,7 +143,7 @@ public class ApiImpl {
 
     //用户注册
     public static void register(Activity context, String mobile, String password, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode","platform"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode,"Android"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_register, RegisterResponse.class, context, responseListener);
     }
 
