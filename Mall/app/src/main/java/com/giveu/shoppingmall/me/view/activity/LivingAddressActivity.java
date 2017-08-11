@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.me.presenter.LivingAddressPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DateUtil;
 import com.giveu.shoppingmall.utils.EventBusUtils;
@@ -81,6 +82,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_living_address);
         baseLayout.setTitle("我的居住地址");
+        chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        presenter = new LivingAddressPresenter(this);
         //已经有居住地址，那么只展示，否则进行填写
         if (LoginHelper.getInstance().hasExistLive()) {
             llChooseAddress.setEnabled(false);
@@ -92,13 +95,13 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             setEditDisabled(etPhone);
             setEditDisabled(etName);
             setEditDisabled(etDetailAddress);
+            //获取居住地址信息
+            presenter.getLiveAddress(LoginHelper.getInstance().getIdPerson());
         } else {
             if (StringUtils.isNull(LoginHelper.getInstance().getReceiveProvince())) {
                 tvSyncAddress.setVisibility(View.GONE);
             }
         }
-        chooseCityDialog = new ChooseCityDialog(mBaseContext);
-        presenter = new LivingAddressPresenter(this);
     }
 
     private void setEditDisabled(EditText editText) {
@@ -160,9 +163,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
                         }
                     }
-                }
-
-                ).start();
+                }).start();
 
             } else {
                 presenter.getAddListJson();
@@ -266,6 +267,27 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     public void getAddListJsonSuccess(ArrayList<AddressBean> addressList) {
         //获取地址陈宫
         chooseCityDialog.initProvince(addressList);
+    }
+
+    @Override
+    public void getLiveAddressSuccess(LivingAddressBean data) {
+        etPhone.setText(data.phone);
+        etName.setText(data.name);
+        String address = "";
+        if (StringUtils.isNotNull(data.province)) {
+            address += data.province;
+        }
+        if (StringUtils.isNotNull(data.city)) {
+            address += data.city;
+        }
+        if (StringUtils.isNotNull(data.region)) {
+            address += data.region;
+        }
+        if (StringUtils.isNotNull(data.town)) {
+            address += data.town;
+        }
+        tvAddress.setText(address);
+        etDetailAddress.setText(data.street);
     }
 
     @OnClick(R.id.tv_syncAddress)

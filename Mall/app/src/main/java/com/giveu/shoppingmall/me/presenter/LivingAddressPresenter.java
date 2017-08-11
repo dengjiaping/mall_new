@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DateUtil;
@@ -24,7 +25,7 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
     }
 
     public void addLiveAddress(String idPerson, String phone, String name, String province, String city, String region, String street, String building) {
-        ApiImpl.addLiveAddress(getView().getAct(), idPerson, phone,name,province, city, region, street, building, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.addLiveAddress(getView().getAct(), idPerson, phone, name, province, city, region, street, building, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
@@ -59,6 +60,24 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
                         }
                     }).start();
 
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            }
+        });
+    }
+
+    public void getLiveAddress(String idPerson) {
+        ApiImpl.getLiveAddress(getView().getAct(), idPerson, new BaseRequestAgent.ResponseListener<LivingAddressBean>() {
+            @Override
+            public void onSuccess(LivingAddressBean response) {
+                if (getView() != null && response.data != null) {
+                    getView().getLiveAddressSuccess(response.data);
                 }
             }
 
