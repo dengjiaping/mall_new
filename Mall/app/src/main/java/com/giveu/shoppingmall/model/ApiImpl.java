@@ -24,6 +24,7 @@ import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
+import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
@@ -143,7 +144,7 @@ public class ApiImpl {
 
     //用户注册
     public static void register(Activity context, String mobile, String password, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode","platform"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode,"Android"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_register, RegisterResponse.class, context, responseListener);
     }
 
@@ -418,6 +419,12 @@ public class ApiImpl {
     public static void getAddListJson(Activity context, BaseRequestAgent.ResponseListener<AddressBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getAddListJson, AddressBean.class, context, responseListener);
+    }
+
+    //获取居住地址信息
+    public static void getLiveAddress(Activity context, String idPerson, BaseRequestAgent.ResponseListener<LivingAddressBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getLiveAddress, LivingAddressBean.class, context, responseListener);
     }
 }
 
