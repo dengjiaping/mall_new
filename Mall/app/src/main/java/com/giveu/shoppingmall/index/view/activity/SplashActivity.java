@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -35,9 +36,12 @@ public class SplashActivity extends BasePermissionActivity {
     @BindView(R.id.tv_skip)
     TextView tvSkip;
     public static String NEED_TURN_KEY = "NEED_TURN_KEY";//是否需要跳转至消息列表（点击推送内容后的消息判断）
+    @BindView(R.id.tv_version)
+    TextView tvVersion;
     private boolean needTurn;
     private PermissionDialog permissionDialog;
     private long lastTimeMillis;
+    private boolean hasEnterOtherActivity;
     //是否被用户禁止不再询问，设此标志位是因为onPermissionReallyDeclined
     //回调后会执行onResume方法，导致setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
     //重复调用导致闪屏
@@ -77,6 +81,7 @@ public class SplashActivity extends BasePermissionActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             startCountTime();
         }
+        tvVersion.setText("V" + CommonUtils.getVersionName());
     }
 
 
@@ -119,7 +124,9 @@ public class SplashActivity extends BasePermissionActivity {
 
     protected void startViewPagerOrActivity() {
 //        getAdSplashImage();
-
+        if (hasEnterOtherActivity) {
+            return;
+        }
         if (SharePrefUtil.getNeedWelcome()) {
             WelcomeActivity.startIt(mBaseContext);
         } else {
@@ -132,6 +139,7 @@ public class SplashActivity extends BasePermissionActivity {
                 MainActivity.startItDealLock(0, mBaseContext, SplashActivity.class.getName(), needTurn);
             }
         }
+        hasEnterOtherActivity = true;
         finish();
     }
 
@@ -173,6 +181,4 @@ public class SplashActivity extends BasePermissionActivity {
         });
 
     }
-
-
 }

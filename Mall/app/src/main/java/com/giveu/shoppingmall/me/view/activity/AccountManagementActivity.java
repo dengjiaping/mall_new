@@ -103,7 +103,7 @@ public class AccountManagementActivity extends BaseActivity {
     public void setData() {
     }
 
-    @OnClick({R.id.ll_perfect_info, R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
+    @OnClick({R.id.ll_person_info, R.id.ll_delivery_address, R.id.ll_bank_card, R.id.ll_security_center, R.id.ll_version_update, R.id.tv_finish})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -129,7 +129,7 @@ public class AccountManagementActivity extends BaseActivity {
                 doApkUpgrade();
                 break;
 
-            case R.id.ll_perfect_info:
+            case R.id.ll_person_info:
                 //完善个人资料
                 PerfectInfoActivity.startIt(mBaseContext);
                 break;

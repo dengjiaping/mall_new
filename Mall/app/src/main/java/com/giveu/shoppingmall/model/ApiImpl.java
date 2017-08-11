@@ -408,9 +408,9 @@ public class ApiImpl {
     }
 
     //添加现居住地址
-    public static void addLiveAddress(Activity context, String idPerson, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "province", "city", "region", "street", "building"},
-                new Object[]{StringUtils.string2Long(idPerson), province, city, region, street, building});
+    public static void addLiveAddress(Activity context, String idPerson, String phone, String name, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "name", "province", "city", "region", "street", "building"},
+                new Object[]{StringUtils.string2Long(idPerson), phone, name, province, city, region, street, building});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addLiveAddress, BaseBean.class, context, responseListener);
     }
 

@@ -3,8 +3,12 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -34,7 +38,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.giveu.shoppingmall.R.id.tv_commit;
 
 /**
  * Created by 513419 on 2017/8/9.
@@ -48,10 +51,18 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     EditView etPhone;
     @BindView(R.id.et_detail_address)
     EditText etDetailAddress;
-    @BindView(tv_commit)
+    @BindView(R.id.tv_commit)
     ClickEnabledTextView tvCommit;
     @BindView(R.id.tv_address)
     TextView tvAddress;
+    @BindView(R.id.iv_detail)
+    ImageView ivDetail;
+    @BindView(R.id.ll_choose_address)
+    LinearLayout llChooseAddress;
+    @BindView(R.id.tv_syncAddress)
+    TextView tvSyncAddress;
+    @BindView(R.id.tv_addressTag)
+    TextView tvAddressTag;
     private String province;
     private String city;
     private String region;
@@ -70,8 +81,30 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_living_address);
         baseLayout.setTitle("我的居住地址");
+        //已经有居住地址，那么只展示，否则进行填写
+        if (LoginHelper.getInstance().hasExistLive()) {
+            llChooseAddress.setEnabled(false);
+            ivDetail.setVisibility(View.GONE);
+            tvAddressTag.setText("我的居住地址");
+            tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
+            tvCommit.setVisibility(View.GONE);
+            tvSyncAddress.setVisibility(View.GONE);
+            setEditDisabled(etPhone);
+            setEditDisabled(etName);
+            setEditDisabled(etDetailAddress);
+        } else {
+            if (StringUtils.isNull(LoginHelper.getInstance().getReceiveProvince())) {
+                tvSyncAddress.setVisibility(View.GONE);
+            }
+        }
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
         presenter = new LivingAddressPresenter(this);
+    }
+
+    private void setEditDisabled(EditText editText) {
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        editText.setFocusableInTouchMode(false);
     }
 
     @Override
@@ -81,31 +114,59 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
     @Override
     public void setData() {
-        final String addressJson = SharePrefUtil.getInstance().getString(Const.ADDRESS_JSON, "");
-        String cacheTime = SharePrefUtil.getInstance().getString(Const.ADDRESS_TIME, "");
-        //当本地缓存不为空，并且还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
-        if (StringUtils.isNotNull(addressJson) && cacheTime.equals(DateUtil.getCurrentTime2yyyyMMdd())) {
-            showLoading();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Gson gson = new Gson();
-                        ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
-                                new TypeToken<List<AddressBean>>() {
-                                }.getType());
-                        getAddListJsonSuccess(addressList);
-                    } catch (Exception e) {
-                        presenter.getAddListJson();
-                        SharePrefUtil.getInstance().putString(Const.ADDRESS_JSON, "");
-                    } finally {
-                        hideLoding();
+        //只是展示的话不需要获取地址列表
+        if (!LoginHelper.getInstance().hasExistLive()) {
+
+            final String addressJson = SharePrefUtil.getInstance().getString(Const.ADDRESS_JSON, "");
+            String cacheTime = SharePrefUtil.getInstance().getString(Const.ADDRESS_TIME, "");
+            //当本地缓存不为空，并且还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
+            if (StringUtils.isNotNull(addressJson) && cacheTime.equals(DateUtil.getCurrentTime2yyyyMMdd())) {
+                showLoading();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Gson gson = new Gson();
+                            final ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
+                                    new TypeToken<List<AddressBean>>() {
+                                    }.getType());
+                            if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getAddListJsonSuccess(addressList);
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            SharePrefUtil.getInstance().putString(Const.ADDRESS_JSON, "");
+                            if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        presenter.getAddListJson();
+                                    }
+                                });
+                            }
+                        } finally {
+                            if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideLoding();
+                                    }
+                                });
+                            }
+
+                        }
                     }
                 }
-            }).start();
 
-        } else {
-            presenter.getAddListJson();
+                ).start();
+
+            } else {
+                presenter.getAddListJson();
+            }
         }
     }
 
@@ -120,6 +181,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                 region = r;
                 street = s;
                 tvAddress.setText(province + city + region + street);
+                tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
                 canClick(false);
                 chooseCityDialog.dismiss();
             }
@@ -188,12 +250,13 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             String phone = etPhone.getText().toString();
             String name = etName.getText().toString();
             //添加居住地址
-            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), province, city, region, street, building);
+            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name, province, city, region, street, building);
         }
     }
 
     @Override
     public void addSuccess() {
+        LoginHelper.getInstance().setHasExistLive("1");
         ToastUtils.showShortToast("居住地址添加成功");
         EventBusUtils.poseEvent(new PwdDialogEvent());
         finish();
@@ -203,5 +266,21 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     public void getAddListJsonSuccess(ArrayList<AddressBean> addressList) {
         //获取地址陈宫
         chooseCityDialog.initProvince(addressList);
+    }
+
+    @OnClick(R.id.tv_syncAddress)
+    public void syncAddress() {
+        etPhone.setText(LoginHelper.getInstance().getReceivePhone());
+        etName.setText(LoginHelper.getInstance().getReceiveName());
+        province = LoginHelper.getInstance().getReceiveProvince();
+        city = LoginHelper.getInstance().getReceiveCity();
+        region = LoginHelper.getInstance().getReceiveRegion();
+        street = LoginHelper.getInstance().getReceiveStreet();
+        String address = province + city + region + street;
+        tvAddress.setText(address);
+        tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
+        etDetailAddress.setText(LoginHelper.getInstance().getReceiveDetailAddress());
+        etName.requestFocus();
+        etName.setSelection(etName.getText().toString().length());
     }
 }

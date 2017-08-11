@@ -76,7 +76,17 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String remainDays;
     public String existOther;
     public String existLive;
+    public String receivePhone;
+    public String receiveName;
+    public String receiveProvince;
+    public String receiveCity;
+    public String receiveRegion;
+    public String receiveStreet;
+    public String receiveDetailAddress;
+
     public AddressBean address;
+    public ShoppingAddress shippingAddress;
+
 
     public static class AddressBean {
         /**
@@ -90,5 +100,21 @@ public class LoginResponse extends BaseBean<LoginResponse> {
         public String city;
         public String provinceCode;
         public String cityCode;
+    }
+
+    public static class ShoppingAddress{
+            public String address;
+            public int addressType;
+            public String city;
+            public int cityCode;
+            public String custName;
+            public int idPerson;
+            public String phone;
+            public String province;
+            public int provinceCode;
+            public String region;
+            public int regionCode;
+            public String street;
+            public int streetCode;
     }
 }

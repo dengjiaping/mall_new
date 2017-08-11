@@ -12,19 +12,20 @@
         android:paddingRight="@dimen/default_layout_screen_gap">
 
         <TextView
+            android:id="@+id/tv_addressTag"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="请填写居住地址"
-            android:textColor="@color/color_282828"
+            android:textColor="@color/color_999999"
             android:textSize="@dimen/ts_15" />
 
         <TextView
             android:id="@+id/tv_syncAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_blue_without_solid"
+            android:background="@drawable/selector_blue_line_solid"
             android:gravity="center"
             android:padding="5dp"
             android:text="同步收货地址"
@@ -123,6 +124,7 @@
             android:textSize="@dimen/ts_14" />
 
         <ImageView
+            android:id="@+id/iv_detail"
             style="@style/arrow_common_problem_style"
             android:layout_gravity="center_vertical" />
 
