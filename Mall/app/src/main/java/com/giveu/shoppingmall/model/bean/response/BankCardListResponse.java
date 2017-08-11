@@ -36,5 +36,18 @@ public class BankCardListResponse extends BaseBean<BankCardListResponse> {
         public int isDefault;
         public int id;
         public String payType;
+        /**
+         * 判断是否是默认卡
+         * @return
+         */
+        public boolean hasDefault(){
+            if(1 == isDefault){
+                //是默认卡
+                return true;
+            }else{
+                //不是默认卡
+                return false;
+            }
+        }
     }
 }

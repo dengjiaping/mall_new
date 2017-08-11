@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,8 +103,7 @@
                 android:id="@+id/ll_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_layout_screen_gap"
-                android:visibility="gone">
+                >
 
                 <TextView
                     android:id="@+id/tv_date_name_bottom"
@@ -146,8 +145,7 @@
             style="@style/click_enabled_bt"
             android:layout_marginTop="56dp"
             android:background="@drawable/selector_login"
-            android:text="查看充值订单"
-            />
+            android:text="查看充值订单" />
 
         <com.giveu.shoppingmall.widget.ClickEnabledTextView
             android:id="@+id/tv_back"
@@ -155,6 +153,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_back_btn_blue"
             android:text="返回"
+            android:layout_marginBottom="30dp"
             android:textColor="@color/title_color" />
     </LinearLayout>
 </ScrollView>

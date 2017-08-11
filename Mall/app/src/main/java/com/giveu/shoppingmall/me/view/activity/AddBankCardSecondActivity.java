@@ -268,9 +268,10 @@ public class AddBankCardSecondActivity extends BaseActivity {
                             //添加银行卡成功，hasDefault设为true，表示有默认卡
                             LoginHelper.getInstance().setHasDefaultCard(true);
                             LoginHelper.getInstance().setBankName(bankName);
-
                             LoginHelper.getInstance().setDefaultCard(bankNo);
+                            //通知我的银行卡列表刷新界面
                             EventBusUtils.poseEvent(new AddCardEvent());
+                            BaseApplication.getInstance().fetchUserInfo();
                             BaseApplication.getInstance().finishActivity(AddBankCardFirstActivity.class);
                         }
 

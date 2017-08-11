@@ -554,13 +554,14 @@ public class CashTypeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
         //取现完成返回刷新数据（VerifyActivity）
-        refrashUI();
+        initDefaultBankCardLayout();
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showPwdDialog(PwdDialogEvent event) {
         //填写完居住地址回来弹出密码框（LivingAddressActivity）
        pwdDialog.showDialog();
     }
+
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
     public void onClick(View view) {

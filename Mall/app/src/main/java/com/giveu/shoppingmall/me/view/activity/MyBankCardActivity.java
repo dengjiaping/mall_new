@@ -231,7 +231,7 @@ public class MyBankCardActivity extends BaseActivity {
      */
     private void setDefaultCard(String id) {
         final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.BANKCARD);
-        setPwdListener(pwdDialog, id, DEFAULT, -1);
+        setPwdListener(pwdDialog, id, DEFAULT, -1);//换默认卡不用传position，因此传-1
         if (LoginHelper.getInstance().hasSetPwd()) {//设置了交易密码
             pwdDialog.showDialog();
         } else {
@@ -379,7 +379,7 @@ public class MyBankCardActivity extends BaseActivity {
                     boolean hasDefaultBank = false;
                     for (int i = 0; i < bankInfoList.size(); i++) {
                         BankCardListResponse.BankInfoListBean item = bankInfoList.get(i);
-                        if (1 == item.isDefault) {
+                        if (item.hasDefault()) {
                             //默认代扣卡设置
                             defalutBankName = item.bankName;
                             defalutBankCardNo = item.bankNo;
