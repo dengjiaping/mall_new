@@ -3,8 +3,12 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -50,6 +54,12 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     ClickEnabledTextView tvCommit;
     @BindView(R.id.tv_address)
     TextView tvAddress;
+    @BindView(R.id.iv_detail)
+    ImageView ivDetail;
+    @BindView(R.id.ll_choose_address)
+    LinearLayout llChooseAddress;
+    @BindView(R.id.tv_syncAddress)
+    TextView tvSyncAddress;
     private String province;
     private String city;
     private String region;
@@ -68,8 +78,25 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_living_address);
         baseLayout.setTitle("我的居住地址");
+        //已经有居住地址，那么只展示，否则进行填写
+        if (LoginHelper.getInstance().hasExistLive()) {
+            llChooseAddress.setEnabled(false);
+            ivDetail.setVisibility(View.GONE);
+            setEditDisabled(etPhone);
+            setEditDisabled(etName);
+            setEditDisabled(etDetailAddress);
+        } else {
+            if (StringUtils.isNull(LoginHelper.getInstance().getReceiveAddress())) {
+                tvSyncAddress.setVisibility(View.GONE);
+            }
+        }
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
         presenter = new LivingAddressPresenter(this);
+    }
+
+    private void setEditDisabled(EditText editText) {
+        editText.setFocusable(false);
+        editText.setFocusableInTouchMode(false);
     }
 
     @Override
@@ -89,18 +116,44 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                 public void run() {
                     try {
                         Gson gson = new Gson();
-                        ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
+                        final ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
                                 new TypeToken<List<AddressBean>>() {
                                 }.getType());
-                        getAddListJsonSuccess(addressList);
+                        if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getAddListJsonSuccess(addressList);
+                                }
+                            });
+                        }
                     } catch (Exception e) {
-                        presenter.getAddListJson();
                         SharePrefUtil.getInstance().putString(Const.ADDRESS_JSON, "");
+                        if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    presenter.getAddListJson();
+                                }
+                            });
+                        }
                     } finally {
-                        hideLoding();
+                        if (mBaseContext != null && !mBaseContext.isFinishing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideLoding();
+                                }
+                            });
+                        }
+
                     }
                 }
-            }).start();
+            }
+
+            ).
+
+                    start();
 
         } else {
             presenter.getAddListJson();
@@ -118,6 +171,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                 region = r;
                 street = s;
                 tvAddress.setText(province + city + region + street);
+                tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
                 canClick(false);
                 chooseCityDialog.dismiss();
             }
@@ -186,13 +240,14 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             String phone = etPhone.getText().toString();
             String name = etName.getText().toString();
             //添加居住地址
-            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), province, city, region, street, building);
+            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name, province, city, region, street, building);
         }
     }
 
     @Override
     public void addSuccess() {
-        ToastUtils.showShortToast("居住地址添加成功");
+        LoginHelper.getInstance().setHasExistLive("1");
+        ToastUtils.showShortToast("添加居住地址成功");
         finish();
     }
 
@@ -201,4 +256,16 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         //获取地址陈宫
         chooseCityDialog.initProvince(addressList);
     }
+
+    @OnClick(R.id.tv_syncAddress)
+    public void syncAddress() {
+        etPhone.requestFocus();
+        etPhone.setText(LoginHelper.getInstance().getReceivePhone());
+        etPhone.setSelection(etPhone.getText().toString().length());
+        etName.setText(LoginHelper.getInstance().getReceiveName());
+        tvAddress.setText(LoginHelper.getInstance().getReceiveAddress());
+        tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
+        etDetailAddress.setText(LoginHelper.getInstance().getReceiveAddress());
+    }
+
 }

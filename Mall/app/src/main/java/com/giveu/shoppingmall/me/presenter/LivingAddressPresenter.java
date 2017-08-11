@@ -23,8 +23,8 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
         super(view);
     }
 
-    public void addLiveAddress(String idPerson, String province, String city, String region, String street, String building) {
-        ApiImpl.addLiveAddress(getView().getAct(), idPerson, province, city, region, street, building, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void addLiveAddress(String idPerson, String phone, String name, String province, String city, String region, String street, String building) {
+        ApiImpl.addLiveAddress(getView().getAct(), idPerson, phone,name,province, city, region, street, building, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {

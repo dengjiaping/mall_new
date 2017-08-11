@@ -41,7 +41,7 @@
             app:tabMode="scrollable"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/color_00bbc0"
-            app:tabSelectedTextColor="@color/color_4a4a4a"
+            app:tabSelectedTextColor="@color/color_00bbc0"
             app:tabTextColor="@color/color_4a4a4a" />
 
         <View

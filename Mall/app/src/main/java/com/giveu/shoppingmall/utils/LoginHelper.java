@@ -48,6 +48,10 @@ public class LoginHelper extends AbsSharePref {
     public static final String REMAIN_DAYS = "remainDays";
     public static final String EXISTOTHER = "existOther";
     public static final String EXISTLIVE = "existLive";
+    public static final String RECEIVE_PHONE = "receivePhone";
+    public static final String RECEIVE_NAME = "receiveName";
+    public static final String RECEIVE_ADDRESS = "receiveAddress";
+    public static final String RECEIVE_DETAIL_ADDRESS = "receiveDetailAddress";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -84,7 +88,10 @@ public class LoginHelper extends AbsSharePref {
         personInfo.isSetPwd = getBoolean(ISSETPWD, false);
         personInfo.remainDays = getString(REMAIN_DAYS, "0");
         personInfo.existOther = getString(EXISTOTHER, "0");
-        personInfo.existLive = getString(EXISTLIVE, "0");
+        personInfo.receiveName = getString(RECEIVE_NAME, "");
+        personInfo.receivePhone = getString(RECEIVE_PHONE, "");
+        personInfo.receiveAddress = getString(RECEIVE_ADDRESS, "");
+        personInfo.receiveDetailAddress = getString(RECEIVE_DETAIL_ADDRESS, "");
 
         this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -129,6 +136,26 @@ public class LoginHelper extends AbsSharePref {
         putString(REMAIN_DAYS, personInfo.remainDays);
         putString(EXISTOTHER, personInfo.existOther);
         putString(EXISTLIVE, personInfo.existLive);
+        if (personInfo.shippingAddress != null) {
+            putString(RECEIVE_NAME, personInfo.shippingAddress.custName);
+            putString(RECEIVE_PHONE, personInfo.shippingAddress.phone);
+            String address = "";
+            if (StringUtils.isNotNull(personInfo.shippingAddress.province)) {
+                address += personInfo.shippingAddress.province;
+            }
+
+            if (StringUtils.isNotNull(personInfo.shippingAddress.city)) {
+                address += personInfo.shippingAddress.city;
+            }
+            if (StringUtils.isNotNull(personInfo.shippingAddress.region)) {
+                address += personInfo.shippingAddress.region;
+            }
+            if (StringUtils.isNotNull(personInfo.shippingAddress.street)) {
+                address += personInfo.shippingAddress.street;
+            }
+            putString(RECEIVE_ADDRESS, address);
+            putString(RECEIVE_DETAIL_ADDRESS, personInfo.shippingAddress.address);
+        }
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -222,6 +249,43 @@ public class LoginHelper extends AbsSharePref {
             loginPersonInfo.bankName = bankName;
             putString(BANK_NAME, loginPersonInfo.bankName);
         }
+    }
+
+    /**
+     * 收货手机号
+     *
+     * @return
+     */
+    public String getReceivePhone() {
+        return loginPersonInfo == null ? null : loginPersonInfo.receivePhone;
+    }
+
+    /**
+     * 收货人姓名
+     *
+     * @return
+     */
+    public String getReceiveName() {
+        return loginPersonInfo == null ? null : loginPersonInfo.receiveName;
+
+    }
+
+    /**
+     * 收货人地址
+     *
+     * @return
+     */
+    public String getReceiveAddress() {
+        return loginPersonInfo == null ? null : loginPersonInfo.receiveAddress;
+    }
+
+    /**
+     * 收货人详细地址
+     *
+     * @return
+     */
+    public String getReceiveDetailAddress() {
+        return loginPersonInfo == null ? null : loginPersonInfo.receiveDetailAddress;
     }
 
     /**
@@ -357,6 +421,7 @@ public class LoginHelper extends AbsSharePref {
             putString(EXISTLIVE, loginPersonInfo.existLive);
         }
     }
+
     /**
      * 是否已经设置其他联系人 true 有
      *
@@ -381,6 +446,7 @@ public class LoginHelper extends AbsSharePref {
             putString(EXISTOTHER, loginPersonInfo.existOther);
         }
     }
+
     /**
      * 获取用户真实姓名
      *

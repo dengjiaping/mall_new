@@ -27,7 +27,6 @@ import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.model.bean.response.CityBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -43,9 +42,9 @@ public class ChooseCityDialog extends CustomDialog {
     private ArrayList<String> tabList;
     private AddressAdapter addressAdapter;
     private TabLayout tabLayout;
-    private ArrayList<AddressBean> proviceList;
+    private ArrayList<AddressBean> proviceList;//这个是服务器返回的数据，包含省市区街道list
 
-    private ArrayList<ArrayList<CityBean>> cityList;
+    private ArrayList<ArrayList<CityBean>> cityList;//这个是选择省后，<>存储的市区街道列表，cityList的size和tabList的size一致
 
     public ChooseCityDialog(Activity context) {
         super(context, R.layout.dialog_choose_city, R.style.customerDialog, Gravity.CENTER, false);
@@ -61,6 +60,7 @@ public class ChooseCityDialog extends CustomDialog {
             return;
         }
         this.proviceList = proviceList;
+        //获取省份并存储省列表至cityList，与此同时tabList添加一个，因为viewpager的size与tabList的一致
         ArrayList<CityBean> itemList = new ArrayList<>();
         for (AddressBean addressBean : proviceList) {
             CityBean cityBean = new CityBean();
@@ -70,6 +70,7 @@ public class ChooseCityDialog extends CustomDialog {
         //初始化省
         cityList.add(itemList);
         tabList.add("请选择");
+        //刷新viewpager
         addressAdapter.notifyDataSetChanged();
     }
 
@@ -88,25 +89,31 @@ public class ChooseCityDialog extends CustomDialog {
         tabList = new ArrayList<>();
         cityList = new ArrayList<>();
         addressAdapter = new AddressAdapter(mAttachActivity, tabList, cityList);
+        //选择省或市或区或街道后的回调即点击recyclerview的item的回调
         addressAdapter.setOnAddressChooseListener(new OnAddressChooseListener() {
             @Override
             public void onChoose(int position, String address) {
+                //记录选中的是当前第几个页面
                 int currentItem = vpAddress.getCurrentItem();
-                //选择的是第一个tab的地址，清空除第一个tab外的数据，并再增加一个数据
+                //选中的是一个页面
                 if (currentItem == 0 && tabList.size() >= 1) {
+                    //记录当前选中的省份，清空市区街道信息
                     curP = address;
                     curC = "";
                     curR = "";
                     curS = "";
                     pPosition = position;
-                    //重复选择不作处理
+                    //重复选择不作处理，只处理选中item与上次不同的情况
                     if (!tabList.get(currentItem).equals(address)) {
+                        //这个操作实际是替换，比如上次选中的是北京，这次是上海，那么北京替换为上海
                         tabList.remove(currentItem);
                         tabList.add(currentItem, address);
-                        //清空之后的信息
+                        //选中的是第一个页面，那么需要清空除第一个页面的其他页面
                         tabList.subList(1, tabList.size()).clear();
                         cityList.subList(1, cityList.size()).clear();
+                        //清空后，因为已经选择了省份，接下来需要选择市，所以tabList需要增加一个
                         tabList.add("请选择");
+                        //获取该省份对应下的市
                         ArrayList<CityBean> itemList = new ArrayList<>();
                         for (AddressBean.ArrayCity arrayCity : proviceList.get(pPosition).array) {
                             CityBean cityBean = new CityBean();
@@ -119,8 +126,7 @@ public class ChooseCityDialog extends CustomDialog {
                     vpAddress.setCurrentItem(currentItem + 1);
                 } else {
                     ArrayList<CityBean> itemList = new ArrayList<>();
-
-                    //设置市区街道信息
+                    //选中的不是第一个页面，设置市区街道信息
                     switch (currentItem) {
                         case 1:
                             cPosition = position;
@@ -154,28 +160,37 @@ public class ChooseCityDialog extends CustomDialog {
                             curS = address;
                             break;
                     }
-                    //如果是viewpager最后一个并且itemList不为空
+                    //如果是viewpager最后一个并且itemList不为空（即该市或该区下还有子列表）
                     if (currentItem + 1 == tabList.size() && CommonUtils.isNotNullOrEmpty(itemList)) {
-                        //重复选择不作处理
+                        //重复选择不作处理，只处理选中item与上次不同的情况
                         if (!tabList.get(currentItem).equals(address)) {
+                            //这个操作实际是替换，比如上次选中的是北京，这次是上海，那么北京替换为上海
                             tabList.remove(currentItem);
                             tabList.add(currentItem, address);
+                            //因为已经选择了item，并且该item下还有子列表，所以tabList需要增加一个
                             tabList.add("请选择");
                             cityList.add(itemList);
                             addressAdapter.notifyDataSetChanged();
                         }
                         //跳转至下一个选择
                         vpAddress.setCurrentItem(currentItem + 1);
-                    } else if (currentItem < tabList.size()) {
-                        //重复选择不作处理
+                    } else if (currentItem < tabList.size()) {//防止越界
+                        //重复选择不作处理，只处理选中item与上次不同的情况，并且该item下还有子列表
                         if (!tabList.get(currentItem).equals(address) && CommonUtils.isNotNullOrEmpty(itemList)) {
+                            //这个操作实际是替换，比如上次选中的是北京，这次是上海，那么北京替换为上海
                             tabList.remove(currentItem);
                             tabList.add(currentItem, address);
+                            //选中的是第currentItem个页面，那么需要清空currentItem个页面后的其他页面
                             tabList.subList(currentItem + 1, tabList.size()).clear();
                             cityList.subList(currentItem + 1, cityList.size()).clear();
+                            //因为已经选择了item，并且该item下还有子列表，所以tabList需要增加一个
                             tabList.add("请选择");
                             cityList.add(itemList);
-                        } else {
+                        } else if (tabList.get(currentItem).equals(address) && CommonUtils.isNotNullOrEmpty(itemList)) {
+                            //当前选中的与上次选中的一致，并且还有下级列表，直接跳转下一页
+                            vpAddress.setCurrentItem(currentItem + 1);
+                        } else if (CommonUtils.isNullOrEmpty(itemList)) {//已经没有下级列表了，选择地址结束
+                            //这个操作实际是替换，比如上次选中的是北京，这次是上海，那么北京替换为上海
                             tabList.remove(currentItem);
                             tabList.add(currentItem, address);
                             //避免显示null，赋值“”
@@ -184,28 +199,10 @@ public class ChooseCityDialog extends CustomDialog {
                             initString(curR);
                             initString(curS);
                             if (listener != null) {
-                                //避免快速点击以致弹框消失
-                                int size = 0;
-                                if (StringUtils.isNotNull(curP)) {
-                                    size++;
-                                }
-                                if (StringUtils.isNotNull(curC)) {
-                                    size++;
-                                }
-                                if (StringUtils.isNotNull(curR)) {
-                                    size++;
-                                }
-                                if (StringUtils.isNotNull(curS)) {
-                                    size++;
-                                }
-                                if (size == tabList.size()) {
-                                    listener.onConfirm(curP, curC, curR, curS);
-                                }
+                                listener.onConfirm(curP, curC, curR, curS);
                             }
-
+                            addressAdapter.notifyDataSetChanged();
                         }
-                        addressAdapter.notifyDataSetChanged();
-                        vpAddress.setCurrentItem(currentItem + 1);
                     }
                 }
             }
@@ -299,6 +296,7 @@ public class ChooseCityDialog extends CustomDialog {
                                     listener.onChoose(position, item.cityName);
                                 }
                                 item.isChoose = true;
+                                //单选，所以需要重置非本次选择的isChoose
                                 for (int i = 0; i < detailList.size(); i++) {
                                     CityBean cityBean = detailList.get(i);
                                     if (cityBean.isChoose && !cityBean.cityName.equals(item.cityName)) {
@@ -306,6 +304,7 @@ public class ChooseCityDialog extends CustomDialog {
                                         break;
                                     }
                                 }
+                                //刷新ui
                                 notifyDataSetChanged();
                             }
                         });
