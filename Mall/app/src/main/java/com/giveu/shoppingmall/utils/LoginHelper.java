@@ -50,7 +50,10 @@ public class LoginHelper extends AbsSharePref {
     public static final String EXISTLIVE = "existLive";
     public static final String RECEIVE_PHONE = "receivePhone";
     public static final String RECEIVE_NAME = "receiveName";
-    public static final String RECEIVE_ADDRESS = "receiveAddress";
+    public static final String RECEIVE_PROVINCE = "receiveProvince";
+    public static final String RECEIVE_CITY = "receiveCity";
+    public static final String RECEIVE_REGION = "receiveRegion";
+    public static final String RECEIVE_STREET = "receiveStreet";
     public static final String RECEIVE_DETAIL_ADDRESS = "receiveDetailAddress";
 
     public static LoginHelper getInstance() {
@@ -66,6 +69,7 @@ public class LoginHelper extends AbsSharePref {
 
     //查询用户登录信息
     private void getLoginStatus() {
+        LogUtil.e("getLoginStatus");
         LoginResponse personInfo = new LoginResponse();
         personInfo.userId = getString(USER_ID, "");
         personInfo.status = getBoolean(STATUS, false);
@@ -88,12 +92,15 @@ public class LoginHelper extends AbsSharePref {
         personInfo.isSetPwd = getBoolean(ISSETPWD, false);
         personInfo.remainDays = getString(REMAIN_DAYS, "0");
         personInfo.existOther = getString(EXISTOTHER, "0");
+        personInfo.existLive = getString(EXISTLIVE, "0");
         personInfo.receiveName = getString(RECEIVE_NAME, "");
         personInfo.receivePhone = getString(RECEIVE_PHONE, "");
-        personInfo.receiveAddress = getString(RECEIVE_ADDRESS, "");
+        personInfo.receiveProvince = getString(RECEIVE_PROVINCE, "");
+        personInfo.receiveCity = getString(RECEIVE_CITY, "");
+        personInfo.receiveRegion = getString(RECEIVE_REGION, "");
+        personInfo.receiveStreet = getString(RECEIVE_STREET, "");
         personInfo.receiveDetailAddress = getString(RECEIVE_DETAIL_ADDRESS, "");
 
-        this.loginPersonInfo = personInfo;
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
         } else {
@@ -104,7 +111,6 @@ public class LoginHelper extends AbsSharePref {
     //保存用户登录信息
     public void saveLoginStatus(LoginResponse personInfo) {
         SharePrefUtil.setAppToken(personInfo.accessToken);
-        SharePrefUtil.getAppToken();
         putString(ACCESS_TOKEN, personInfo.accessToken);
         putString(ACTIVE_DATE, personInfo.activeDate);
         putString(AVAILABLE_CYLIMIT, personInfo.availableCyLimit);
@@ -139,21 +145,10 @@ public class LoginHelper extends AbsSharePref {
         if (personInfo.shippingAddress != null) {
             putString(RECEIVE_NAME, personInfo.shippingAddress.custName);
             putString(RECEIVE_PHONE, personInfo.shippingAddress.phone);
-            String address = "";
-            if (StringUtils.isNotNull(personInfo.shippingAddress.province)) {
-                address += personInfo.shippingAddress.province;
-            }
-
-            if (StringUtils.isNotNull(personInfo.shippingAddress.city)) {
-                address += personInfo.shippingAddress.city;
-            }
-            if (StringUtils.isNotNull(personInfo.shippingAddress.region)) {
-                address += personInfo.shippingAddress.region;
-            }
-            if (StringUtils.isNotNull(personInfo.shippingAddress.street)) {
-                address += personInfo.shippingAddress.street;
-            }
-            putString(RECEIVE_ADDRESS, address);
+            putString(RECEIVE_PROVINCE, personInfo.shippingAddress.province);
+            putString(RECEIVE_CITY, personInfo.shippingAddress.city);
+            putString(RECEIVE_REGION, personInfo.shippingAddress.region);
+            putString(RECEIVE_STREET, personInfo.shippingAddress.street);
             putString(RECEIVE_DETAIL_ADDRESS, personInfo.shippingAddress.address);
         }
         //剩余提醒次数
@@ -164,7 +159,7 @@ public class LoginHelper extends AbsSharePref {
         } else {
             putInt(REMAINING_TIMES, remainingTimes);
         }
-        this.loginPersonInfo = personInfo;
+        getLoginStatus();
     }
 
 
@@ -257,7 +252,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getReceivePhone() {
-        return loginPersonInfo == null ? null : loginPersonInfo.receivePhone;
+        return loginPersonInfo == null ? "" : loginPersonInfo.receivePhone;
     }
 
     /**
@@ -266,17 +261,28 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getReceiveName() {
-        return loginPersonInfo == null ? null : loginPersonInfo.receiveName;
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveName;
 
     }
 
-    /**
-     * 收货人地址
-     *
-     * @return
-     */
-    public String getReceiveAddress() {
-        return loginPersonInfo == null ? null : loginPersonInfo.receiveAddress;
+    public String getReceiveProvince() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveProvince;
+
+    }
+
+    public String getReceiveCity() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveCity;
+
+    }
+
+    public String getReceiveRegion() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveRegion;
+
+    }
+
+    public String getReceiveStreet() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveStreet;
+
     }
 
     /**
@@ -285,7 +291,7 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public String getReceiveDetailAddress() {
-        return loginPersonInfo == null ? null : loginPersonInfo.receiveDetailAddress;
+        return loginPersonInfo == null ? "" : loginPersonInfo.receiveDetailAddress;
     }
 
     /**

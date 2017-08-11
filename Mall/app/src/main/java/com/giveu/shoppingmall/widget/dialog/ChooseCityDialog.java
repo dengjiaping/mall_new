@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.model.bean.response.CityBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -186,22 +187,37 @@ public class ChooseCityDialog extends CustomDialog {
                             //因为已经选择了item，并且该item下还有子列表，所以tabList需要增加一个
                             tabList.add("请选择");
                             cityList.add(itemList);
-                        } else if (tabList.get(currentItem).equals(address) && CommonUtils.isNotNullOrEmpty(itemList)) {
-                            //当前选中的与上次选中的一致，并且还有下级列表，直接跳转下一页
-                            vpAddress.setCurrentItem(currentItem + 1);
-                        } else if (CommonUtils.isNullOrEmpty(itemList)) {//已经没有下级列表了，选择地址结束
+                            addressAdapter.notifyDataSetChanged();
+                        } else {
                             //这个操作实际是替换，比如上次选中的是北京，这次是上海，那么北京替换为上海
                             tabList.remove(currentItem);
                             tabList.add(currentItem, address);
-                            //避免显示null，赋值“”
-                            initString(curP);
-                            initString(curC);
-                            initString(curR);
-                            initString(curS);
-                            if (listener != null) {
+                            //避免显示null，赋值""
+                            curP = initString(curP);
+                            curC = initString(curC);
+                            curR = initString(curR);
+                            curS = initString(curS);
+                            int size = 0;
+                            if (StringUtils.isNotNull(curP)) {
+                                size++;
+                            }
+                            if (StringUtils.isNotNull(curC)) {
+                                size++;
+                            }
+                            if (StringUtils.isNotNull(curR)) {
+                                size++;
+                            }
+                            if (StringUtils.isNotNull(curS)) {
+                                size++;
+                            }
+                            //已经没有下级列表了，选择地址结束
+                            if (listener != null && size == tabList.size()) {
                                 listener.onConfirm(curP, curC, curR, curS);
                             }
                             addressAdapter.notifyDataSetChanged();
+                        }
+                        if (CommonUtils.isNotNullOrEmpty(itemList)) {
+                            vpAddress.setCurrentItem(currentItem + 1);
                         }
                     }
                 }
@@ -317,6 +333,7 @@ public class ChooseCityDialog extends CustomDialog {
             container.addView(view);
             return view;
         }
+
 
         @Override
         public int getItemPosition(Object object) {

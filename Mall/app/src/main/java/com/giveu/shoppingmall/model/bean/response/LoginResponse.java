@@ -78,7 +78,10 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String existLive;
     public String receivePhone;
     public String receiveName;
-    public String receiveAddress;
+    public String receiveProvince;
+    public String receiveCity;
+    public String receiveRegion;
+    public String receiveStreet;
     public String receiveDetailAddress;
 
     public AddressBean address;
