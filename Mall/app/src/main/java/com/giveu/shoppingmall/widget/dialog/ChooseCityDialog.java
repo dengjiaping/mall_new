@@ -46,6 +46,7 @@ public class ChooseCityDialog extends CustomDialog {
     private ArrayList<AddressBean> proviceList;//这个是服务器返回的数据，包含省市区街道list
 
     private ArrayList<ArrayList<CityBean>> cityList;//这个是选择省后，<>存储的市区街道列表，cityList的size和tabList的size一致
+    private int currentItem;
 
     public ChooseCityDialog(Activity context) {
         super(context, R.layout.dialog_choose_city, R.style.customerDialog, Gravity.CENTER, false);
@@ -95,7 +96,7 @@ public class ChooseCityDialog extends CustomDialog {
             @Override
             public void onChoose(int position, String address) {
                 //记录选中的是当前第几个页面
-                int currentItem = vpAddress.getCurrentItem();
+                 currentItem = vpAddress.getCurrentItem();
                 //选中的是一个页面
                 if (currentItem == 0 && tabList.size() >= 1) {
                     //记录当前选中的省份，清空市区街道信息
@@ -289,6 +290,7 @@ public class ChooseCityDialog extends CustomDialog {
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             View view = View.inflate(activity, R.layout.vp_item_address, null);
+            view.setTag(position);
             RecyclerView rvAddress = (RecyclerView) view.findViewById(R.id.rv_address);
             if (position < cityList.size()) {
                 final ArrayList<CityBean> detailList = cityList.get(position);
@@ -337,7 +339,13 @@ public class ChooseCityDialog extends CustomDialog {
 
         @Override
         public int getItemPosition(Object object) {
-            return POSITION_NONE;
+            View view = (View) object;
+            int tag = (int) view.getTag();
+            if (tag<=vpAddress.getCurrentItem()) {
+                return POSITION_UNCHANGED;
+            } else {
+                return POSITION_NONE;
+            }
         }
 
         @Override

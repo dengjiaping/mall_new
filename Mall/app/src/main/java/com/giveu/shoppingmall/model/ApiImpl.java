@@ -400,7 +400,11 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"type"}, new Object[]{2});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.apersonCenter_account_getContactTypeInfo, ContactsResponse.class, context, responseListener);
     }
-
+    //补充其他联系人
+    public static void addOtherContact(Activity context,String name,String relation,String idPerson,String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"name", "relation", "idPerson", "phone"}, new Object[]{name, relation, StringUtils.string2Long(idPerson), phone});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addOtherContact, BaseBean.class, context, responseListener);
+    }
     //添加现居住地址
     public static void addLiveAddress(Activity context, String idPerson, String phone, String name, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "name", "province", "city", "region", "street", "building"},

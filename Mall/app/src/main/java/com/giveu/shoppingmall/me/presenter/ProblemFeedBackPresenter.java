@@ -8,7 +8,6 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.FileUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class ProblemFeedBackPresenter extends BasePresenter<IProblemFeedBackView
                     } else {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     if (getView() != null) {

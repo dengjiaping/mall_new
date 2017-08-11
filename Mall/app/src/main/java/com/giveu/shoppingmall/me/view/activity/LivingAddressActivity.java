@@ -14,11 +14,13 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.me.presenter.LivingAddressPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DateUtil;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -255,7 +257,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     @Override
     public void addSuccess() {
         LoginHelper.getInstance().setHasExistLive("1");
-        ToastUtils.showShortToast("添加居住地址成功");
+        ToastUtils.showShortToast("居住地址添加成功");
+        EventBusUtils.poseEvent(new PwdDialogEvent());
         finish();
     }
 
