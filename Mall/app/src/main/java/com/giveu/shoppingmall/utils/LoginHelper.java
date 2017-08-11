@@ -69,7 +69,6 @@ public class LoginHelper extends AbsSharePref {
 
     //查询用户登录信息
     private void getLoginStatus() {
-        LogUtil.e("getLoginStatus");
         LoginResponse personInfo = new LoginResponse();
         personInfo.userId = getString(USER_ID, "");
         personInfo.status = getBoolean(STATUS, false);

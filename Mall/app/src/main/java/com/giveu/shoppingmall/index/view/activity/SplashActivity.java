@@ -41,7 +41,7 @@ public class SplashActivity extends BasePermissionActivity {
     private boolean needTurn;
     private PermissionDialog permissionDialog;
     private long lastTimeMillis;
-    private boolean hasEnterWelcome;
+    private boolean hasEnterOtherActivity;
     //是否被用户禁止不再询问，设此标志位是因为onPermissionReallyDeclined
     //回调后会执行onResume方法，导致setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
     //重复调用导致闪屏
@@ -124,7 +124,7 @@ public class SplashActivity extends BasePermissionActivity {
 
     protected void startViewPagerOrActivity() {
 //        getAdSplashImage();
-        if (hasEnterWelcome) {
+        if (hasEnterOtherActivity) {
             return;
         }
         if (SharePrefUtil.getNeedWelcome()) {
@@ -139,7 +139,7 @@ public class SplashActivity extends BasePermissionActivity {
                 MainActivity.startItDealLock(0, mBaseContext, SplashActivity.class.getName(), needTurn);
             }
         }
-        hasEnterWelcome = true;
+        hasEnterOtherActivity = true;
         finish();
     }
 

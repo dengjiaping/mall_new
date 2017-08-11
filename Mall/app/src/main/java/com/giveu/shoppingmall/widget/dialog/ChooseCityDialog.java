@@ -96,7 +96,7 @@ public class ChooseCityDialog extends CustomDialog {
             @Override
             public void onChoose(int position, String address) {
                 //记录选中的是当前第几个页面
-                 currentItem = vpAddress.getCurrentItem();
+                currentItem = vpAddress.getCurrentItem();
                 //选中的是一个页面
                 if (currentItem == 0 && tabList.size() >= 1) {
                     //记录当前选中的省份，清空市区街道信息
@@ -340,9 +340,13 @@ public class ChooseCityDialog extends CustomDialog {
         @Override
         public int getItemPosition(Object object) {
             View view = (View) object;
-            int tag = (int) view.getTag();
-            if (tag<=vpAddress.getCurrentItem()) {
-                return POSITION_UNCHANGED;
+            if (view != null) {
+                int tag = (int) view.getTag();
+                if (tag <= currentItem) {
+                    return POSITION_UNCHANGED;
+                } else {
+                    return POSITION_NONE;
+                }
             } else {
                 return POSITION_NONE;
             }
