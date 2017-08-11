@@ -28,6 +28,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.dialog.CostDialog;
 import com.giveu.shoppingmall.cash.view.dialog.MonthlyDetailsDialog;
+import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.AddBankCardFirstActivity;
@@ -121,7 +122,7 @@ public class CashTypeActivity extends BaseActivity {
     String chooseBankNo;//选择的银行卡号
     String chooseBankName;//选择的银行卡名
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
-
+    PwdDialog pwdDialog;
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
         mActivity.startActivity(intent);
@@ -152,6 +153,8 @@ public class CashTypeActivity extends BaseActivity {
             initAdapter(isLargeAmount);
             registerEventBus();//注册EventBus
         }
+
+        showPwdDialog();
     }
 
     /**
@@ -553,7 +556,11 @@ public class CashTypeActivity extends BaseActivity {
         //取现完成返回刷新数据（VerifyActivity）
         refrashUI();
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showPwdDialog(PwdDialogEvent event) {
+        //取现完成返回刷新数据（VerifyActivity）
+       pwdDialog.showDialog();
+    }
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
     public void onClick(View view) {
@@ -595,7 +602,7 @@ public class CashTypeActivity extends BaseActivity {
                     ToastUtils.showShortToast("请勾选借款及服务相关协议！");
                     return;
                 }
-                showPwdDialog();
+                canShowPwdDialog();
                 break;
             case R.id.ll_choose_bank:
                 //银行卡列表
@@ -609,12 +616,36 @@ public class CashTypeActivity extends BaseActivity {
                 break;
         }
     }
-
+/**
+ * TODO:填了联系人，居住地址后，返回到该页面，需要判断是否资料完善，是则显示密码框，否则不显示，再次点击确定，再行判断
+ */
+    /**
+     * 资料是否完善的判断
+     */
+    public void canShowPwdDialog(){
+        if (LoginHelper.getInstance().hasExistOther()) {
+            //添加了联系人
+            if (LoginHelper.getInstance().hasExistLive()) {
+                //添加了居住地址,判断是否设置了交易密码
+                if (LoginHelper.getInstance().hasSetPwd()) {
+                    pwdDialog.showDialog();
+                } else {
+                    TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                }
+            } else {
+                //未添加地址
+                LivingAddressActivity.startIt(mBaseContext);
+            }
+        } else {
+            //未添加联系人
+            PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
+        }
+    }
     /**
      * 初始化交易密码dialog，判断是否有交易密码，有显示密码框，没有则跳转设置交易密码
      */
     public void showPwdDialog() {
-        final PwdDialog pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
+        pwdDialog = new PwdDialog(mBaseContext, PwdDialog.statusType.CASH);
         pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
             @Override
             public void checkPwd(String payPwd) {
@@ -657,29 +688,8 @@ public class CashTypeActivity extends BaseActivity {
                 );
             }
         });
-        if (LoginHelper.getInstance().hasExistOther()) {
-            //添加了联系人
-            if (LoginHelper.getInstance().hasExistLive()) {
-                //添加了居住地址,判断是否设置了交易密码
-                if (LoginHelper.getInstance().hasSetPwd()) {
-                    pwdDialog.showDialog();
-                } else {
-                    TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
-                }
-            } else {
-                //未添加地址
-                LivingAddressActivity.startIt(mBaseContext);
-            }
-        } else {
-            //未添加联系人
-            PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
-        }
-//        //判断是否设置了交易密码
-//        if (LoginHelper.getInstance().hasSetPwd()) {
-//            pwdDialog.showDialog();
-//        } else {
-//            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
-//        }
+
+
     }
 
     /**
