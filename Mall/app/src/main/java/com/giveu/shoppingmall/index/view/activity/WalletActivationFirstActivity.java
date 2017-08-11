@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
+import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
@@ -45,7 +46,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
     EditView etIdent;
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
-
+    NormalHintDialog walletActivationDialog;
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, WalletActivationFirstActivity.class);
         mActivity.startActivity(intent);
@@ -54,6 +55,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_wallet_activation_first);
+        walletActivationDialog = new NormalHintDialog(mBaseContext, "你的激活绑定手机与注册号码不一致,激活成功后，请通过绑定手机+登录密码登录");
         baseLayout.setTitle("钱包激活");
     }
 
@@ -113,9 +115,9 @@ public class WalletActivationFirstActivity extends BaseActivity {
         if (tvNext.isClickEnabled()) {
             String ident = StringUtils.getTextFromView(etIdent);
             String name = StringUtils.getTextFromView(etName);
-            ApiImpl.getWalletQualified(mBaseContext, ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
+            ApiImpl.getWalletQualified(mBaseContext,LoginHelper.getInstance().getUserId(), ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
                 @Override
-                public void onSuccess(WalletQualifiedResponse response) {
+                public void onSuccess(final WalletQualifiedResponse response) {
                     //有资质继续填写资料
                     if (response != null) {
                         if (response.data != null) {
@@ -123,7 +125,21 @@ public class WalletActivationFirstActivity extends BaseActivity {
                                 //手Q用户
                                 LoginHelper.getInstance().setIdPerson(response.data.idPerson);
                                 BaseApplication.getInstance().fetchUserInfo();
-                                ActivationStatusActivity.startShowResultSuccess(mBaseContext, null, LoginHelper.getInstance().getIdPerson());
+                                if (response.data.isPhoneChage) {
+                                    //修改了手机号
+                                    walletActivationDialog.showDialog();
+                                    walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                        @Override
+                                        public void onDismiss() {
+                                            //显示成功页
+                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson());
+                                        }
+                                    });
+                                } else {
+                                    //显示成功页
+                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson());
+                                }
+
                             } else {//未激活
                                 WalletActivationSecondActivity.startIt(mBaseContext, StringUtils.getTextFromView(etName), StringUtils.getTextFromView(etIdent), response.data.idPerson, response.data.bankNo, response.data.phone);
                             }

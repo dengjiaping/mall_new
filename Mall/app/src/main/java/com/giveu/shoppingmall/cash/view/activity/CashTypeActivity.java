@@ -558,7 +558,7 @@ public class CashTypeActivity extends BaseActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showPwdDialog(PwdDialogEvent event) {
-        //取现完成返回刷新数据（VerifyActivity）
+        //填写完居住地址回来弹出密码框（LivingAddressActivity）
        pwdDialog.showDialog();
     }
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
@@ -616,9 +616,7 @@ public class CashTypeActivity extends BaseActivity {
                 break;
         }
     }
-/**
- * TODO:填了联系人，居住地址后，返回到该页面，需要判断是否资料完善，是则显示密码框，否则不显示，再次点击确定，再行判断
- */
+
     /**
      * 资料是否完善的判断
      */

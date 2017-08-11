@@ -178,8 +178,8 @@ public class ApiImpl {
     }
 
     //钱包资质判定
-    public static void getWalletQualified(Activity context, String ident, String name, BaseRequestAgent.ResponseListener<WalletQualifiedResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"ident", "name"}, new Object[]{ident, name});
+    public static void getWalletQualified(Activity context, String userId, String ident, String name, BaseRequestAgent.ResponseListener<WalletQualifiedResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"userId", "ident", "name"}, new Object[]{StringUtils.string2Long(userId), ident, name});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getWalletQualified, WalletQualifiedResponse.class, context, responseListener);
     }
 
@@ -400,11 +400,13 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"type"}, new Object[]{2});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.apersonCenter_account_getContactTypeInfo, ContactsResponse.class, context, responseListener);
     }
+
     //补充其他联系人
-    public static void addOtherContact(Activity context,String name,String relation,String idPerson,String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void addOtherContact(Activity context, String name, String relation, String idPerson, String phone, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"name", "relation", "idPerson", "phone"}, new Object[]{name, relation, StringUtils.string2Long(idPerson), phone});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addOtherContact, BaseBean.class, context, responseListener);
     }
+
     //添加现居住地址
     public static void addLiveAddress(Activity context, String idPerson, String phone, String name, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "name", "province", "city", "region", "street", "building"},
