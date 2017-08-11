@@ -85,6 +85,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.hasDefaultCard = getBoolean(HAS_DEFAULT_CARD, false);
         personInfo.availableRechargeLimit = getString(AVAILABLE_RECHARGE_LIMIT, "0");
         personInfo.totalCost = getString(TOTAL_COST, "");
+        personInfo.ident = getString(CERTNO,"");
         personInfo.bankName = getString(BANK_NAME, "");
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
@@ -92,6 +93,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.remainDays = getString(REMAIN_DAYS, "0");
         personInfo.existOther = getString(EXISTOTHER, "0");
         personInfo.existLive = getString(EXISTLIVE, "0");
+        personInfo.creditCount = getString(CREDIT_COUNT,"0");
+        personInfo.repayAmount = getString(REPAY_AMOUNT,"0");
         personInfo.receiveName = getString(RECEIVE_NAME, "");
         personInfo.receivePhone = getString(RECEIVE_PHONE, "");
         personInfo.receiveProvince = getString(RECEIVE_PROVINCE, "");
