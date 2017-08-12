@@ -85,7 +85,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.hasDefaultCard = getBoolean(HAS_DEFAULT_CARD, false);
         personInfo.availableRechargeLimit = getString(AVAILABLE_RECHARGE_LIMIT, "0");
         personInfo.totalCost = getString(TOTAL_COST, "");
-        personInfo.ident = getString(CERTNO,"");
+        personInfo.ident = getString(CERTNO, "");
         personInfo.bankName = getString(BANK_NAME, "");
         personInfo.bankIconUrl = getString(BANK_ICON_URL, "");
         personInfo.defaultCard = getString(DEFAULT_CARD, "");
@@ -93,8 +93,8 @@ public class LoginHelper extends AbsSharePref {
         personInfo.remainDays = getString(REMAIN_DAYS, "0");
         personInfo.existOther = getString(EXISTOTHER, "0");
         personInfo.existLive = getString(EXISTLIVE, "0");
-        personInfo.creditCount = getString(CREDIT_COUNT,"0");
-        personInfo.repayAmount = getString(REPAY_AMOUNT,"0");
+        personInfo.creditCount = getString(CREDIT_COUNT, "0");
+        personInfo.repayAmount = getString(REPAY_AMOUNT, "0");
         personInfo.receiveName = getString(RECEIVE_NAME, "");
         personInfo.receivePhone = getString(RECEIVE_PHONE, "");
         personInfo.receiveProvince = getString(RECEIVE_PROVINCE, "");
@@ -601,6 +601,26 @@ public class LoginHelper extends AbsSharePref {
             loginPersonInfo.idPerson = idPerson;
             putString(ID_PERSON, loginPersonInfo.idPerson);
         }
+
+
+    }
+
+    /**
+     * 判断是否是假用户（普通假数据激活用户）123 999999
+     *
+     * @return
+     */
+    public boolean hasAverageUser() {
+        if (StringUtils.isNotNull(loginPersonInfo.idPerson)) {
+            String idPerson = loginPersonInfo.idPerson;
+            if (idPerson.length() > 6) {
+                String idPersonStr = idPerson.substring(idPerson.length() - 6, idPerson.length());
+                if ("999999".equals(idPersonStr)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

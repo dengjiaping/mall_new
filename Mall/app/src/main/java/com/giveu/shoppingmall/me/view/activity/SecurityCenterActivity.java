@@ -50,6 +50,14 @@ public class SecurityCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_security_center);
         baseLayout.setTitle("安全中心");
         notActiveDialog = new NotActiveDialog(mBaseContext);
+        //如果是假数据激活用户，隐藏
+        if(LoginHelper.getInstance().hasAverageUser()){
+            llChangePhoneNumber.setVisibility(View.GONE);
+            llChangeTransactionPwd.setVisibility(View.GONE);
+        }else{
+            llChangePhoneNumber.setVisibility(View.VISIBLE);
+            llChangeTransactionPwd.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

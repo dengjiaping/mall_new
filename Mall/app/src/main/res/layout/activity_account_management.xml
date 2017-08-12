@@ -59,7 +59,9 @@
                 android:textColor="@color/color_282828"
                 android:textSize="@dimen/ts_16" />
 
-            <ImageView style="@style/arrow_common_problem_style" />
+            <ImageView
+                android:id="@+id/iv_right"
+                style="@style/arrow_common_problem_style" />
 
         </LinearLayout>
 

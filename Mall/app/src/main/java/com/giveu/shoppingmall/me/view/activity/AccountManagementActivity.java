@@ -57,6 +57,10 @@ public class AccountManagementActivity extends BaseActivity {
     ImageView ivUpdate;
     @BindView(R.id.tv_perfect_info)
     TextView tvPerfectInfo;
+    @BindView(R.id.ll_perfect_info)
+    LinearLayout llPerfectInfo;
+    @BindView(R.id.iv_right)
+    ImageView ivRight;
     private DownloadApkUtils downloadApkUtils;
 
 
@@ -70,10 +74,21 @@ public class AccountManagementActivity extends BaseActivity {
         setContentView(R.layout.activity_account_management);
         baseLayout.setTitle("账号管理");
         notActiveDialog = new NotActiveDialog(mBaseContext);
-        if(LoginHelper.getInstance().hasExistLive() && LoginHelper.getInstance().hasExistOther()){
+
+        //如果是假数据激活用户，隐藏
+        if (LoginHelper.getInstance().hasAverageUser()) {
+            llBankCard.setVisibility(View.GONE);
             tvPerfectInfo.setVisibility(View.GONE);
-        }else{
-            tvPerfectInfo.setVisibility(View.VISIBLE);
+            ivRight.setVisibility(View.GONE);
+        } else {
+            llBankCard.setVisibility(View.VISIBLE);
+            ivRight.setVisibility(View.VISIBLE);
+            //正常用户根据字段来看是否显示完善资料
+            if (LoginHelper.getInstance().hasExistLive() && LoginHelper.getInstance().hasExistOther()) {
+                tvPerfectInfo.setVisibility(View.GONE);
+            } else {
+                tvPerfectInfo.setVisibility(View.VISIBLE);
+            }
         }
         ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(28));
     }
@@ -131,7 +146,10 @@ public class AccountManagementActivity extends BaseActivity {
 
             case R.id.ll_person_info:
                 //完善个人资料
-                PerfectInfoActivity.startIt(mBaseContext);
+                if (!LoginHelper.getInstance().hasAverageUser()) {
+                   // 不是假数据激活用户，跳转填写
+                    PerfectInfoActivity.startIt(mBaseContext);
+                }
                 break;
             case R.id.tv_finish:
                 //退出登录

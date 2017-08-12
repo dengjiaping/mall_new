@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.ITransactionView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -18,18 +19,21 @@ public class TransactionPresenter extends BasePresenter<ITransactionView> {
     }
 
     public void searchContract(String creditStatus, String creditType, String idPerson, String loanDate, int page, int pageSize, String timeType) {
-        ApiImpl.searchContract(getView().getAct(), creditStatus, creditType, idPerson, loanDate, page, pageSize, timeType, new BaseRequestAgent.ResponseListener<ContractResponse>() {
-            @Override
-            public void onSuccess(ContractResponse response) {
-                if (getView() != null) {
-                    getView().showContractResult(response.data.list);
+        if (!LoginHelper.getInstance().hasAverageUser()) {
+            //不是假数据的激活用户，才去调交易查询数据
+            ApiImpl.searchContract(getView().getAct(), creditStatus, creditType, idPerson, loanDate, page, pageSize, timeType, new BaseRequestAgent.ResponseListener<ContractResponse>() {
+                @Override
+                public void onSuccess(ContractResponse response) {
+                    if (getView() != null) {
+                        getView().showContractResult(response.data.list);
+                    }
                 }
-            }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 }

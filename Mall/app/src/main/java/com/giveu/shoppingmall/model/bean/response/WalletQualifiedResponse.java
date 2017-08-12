@@ -38,15 +38,17 @@ public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
     public boolean isSetPwd;
     public String posLimit;
     public String lab;
+
     /**
      * 判断是否是手Q用户
+     *
      * @return
      */
-    public boolean hasQQActivation(){
-        if("1".equals(isActivation)){
+    public boolean hasQQActivation() {
+        if ("1".equals(isActivation)) {
             //已激活
             return true;
-        }else{
+        } else {
             //未激活
             return false;
         }
