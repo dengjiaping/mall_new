@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/color_282828"
             android:gravity="center_vertical"
-            android:text="朋友" />
+             />
     </LinearLayout>
 
     <View
@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/color_282828"
             android:gravity="center_vertical"
-            android:text="朋友" />
+            />
     </LinearLayout>
 
     <View
@@ -78,6 +78,6 @@
             android:layout_height="match_parent"
             android:textColor="@color/color_282828"
             android:gravity="center_vertical"
-            android:text="朋友" />
+             />
     </LinearLayout>
 </LinearLayout>

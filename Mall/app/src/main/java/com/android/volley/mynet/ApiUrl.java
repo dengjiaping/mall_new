@@ -131,6 +131,8 @@ public interface ApiUrl {
     //京东地址Json数据
     String personCenter_address_getAddListJson = BASE_URL+"personCenter/address/getAddListJson";
     //获取居住地址信息
-    String personCenter_address_getLiveAddress = BASE_URL+"personCenter/address/getLiveAddress";
+    String personCenter_address_getLiveAddress = BASE_URL+"personCenter/account/getLiveAddress";
+    //获取其他联系人信息
+    String personCenter_account_getOtherContact = BASE_URL+"personCenter/account/getOtherContact";
 }
 

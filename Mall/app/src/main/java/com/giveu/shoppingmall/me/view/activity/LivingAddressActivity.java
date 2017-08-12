@@ -271,8 +271,16 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
     @Override
     public void getLiveAddressSuccess(LivingAddressBean data) {
-        etPhone.setText(data.phone);
-        etName.setText(data.name);
+        if (StringUtils.isNull(data.phone)) {
+            etPhone.setHint("");
+        } else {
+            etPhone.setText(data.phone);
+        }
+        if (StringUtils.isNull(data.name)) {
+            etName.setHint("");
+        } else {
+            etName.setText(data.name);
+        }
         String address = "";
         if (StringUtils.isNotNull(data.province)) {
             address += data.province;
@@ -287,7 +295,11 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             address += data.town;
         }
         tvAddress.setText(address);
-        etDetailAddress.setText(data.street);
+        if (StringUtils.isNull(data.street)) {
+            etDetailAddress.setHint("");
+        } else {
+            etDetailAddress.setText(data.street);
+        }
     }
 
     @OnClick(R.id.tv_syncAddress)
