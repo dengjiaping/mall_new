@@ -381,6 +381,10 @@ public class CashTypeActivity extends BaseActivity {
             ToastUtils.showShortToast("仅支持取现整数，请调整取现金额");
             return false;
         }
+        if (chooseQuota > 3000) {
+            ToastUtils.showShortToast("提款额不能大于3000");
+            return false;
+        }
         if (StringUtils.isNotNull(availableCylimit)) {
             if (chooseQuota > Double.parseDouble(availableCylimit)) {
                 ToastUtils.showShortToast("取现额度不足");

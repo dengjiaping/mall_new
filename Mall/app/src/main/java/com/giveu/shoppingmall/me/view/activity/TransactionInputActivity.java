@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
@@ -40,7 +41,8 @@ public class TransactionInputActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_pwd);
         baseLayout.setTitle("修改手机号");
-        CommonUtils.openSoftKeyBoard(mBaseContext);
+        //仅支持数字
+        inputViewPwd.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
     @Override

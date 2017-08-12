@@ -117,12 +117,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     }
 
     /**
-     * 隐藏中间四位数，如1378614023
+     * 隐藏中间四位数，如13786614023
      */
     public String hintPhone(String phone) {
         if (StringUtils.isNotNull(phone)) {
             if (phone.length() > 4) {
-                String strEnd = phone.substring(phone.length() - 5, phone.length() - 1);//4023
+                String strEnd = phone.substring(phone.length() - 4, phone.length());//4023
                 strEnd = "****" + strEnd;//****4023
                 String strStart = phone.substring(0, 3);//137
                 return strStart + strEnd;

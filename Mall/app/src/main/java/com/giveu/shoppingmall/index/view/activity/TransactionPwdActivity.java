@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.widget.TextView;
 
@@ -37,6 +38,8 @@ public class TransactionPwdActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_transaction_pwd);
+        //仅支持数字
+        inputViewPwd.setInputType(InputType.TYPE_CLASS_NUMBER);
         baseLayout.setTitle("设置交易密码");
     }
 

@@ -119,7 +119,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
     @Override
     public void setListener() {
         super.setListener();
-        etConfirmPwd.addTextChangedListener(new TextChangeListener() {
+        etPwd.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 canClick(false);
