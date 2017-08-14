@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -11,6 +13,13 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.web.BaseWebViewActivity;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -74,6 +83,64 @@ public class StringUtils {
         Pattern p = Pattern.compile("^0?\\d{19}$");
         Matcher m = p.matcher(password);
         return m.matches();
+    }
+
+
+    /**
+     * 保存地址json至本地
+     *
+     * @param context
+     * @param addressJson
+     */
+    public static void saveAddress(Activity context, String addressJson) {
+        FileOutputStream out = null;
+        BufferedWriter writer = null;
+        try {
+            out = context.openFileOutput("addressJson", Context.MODE_PRIVATE);
+            writer = new BufferedWriter(new OutputStreamWriter(out));
+            writer.write(addressJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 读取地址Json
+     *
+     * @param context
+     * @return
+     */
+    public static String loadAddress(Activity context) {
+        FileInputStream in = null;
+        BufferedReader reader = null;
+        StringBuilder content = new StringBuilder();
+        try {
+            in = context.openFileInput("addressJson");//文件名
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content.toString();
     }
 
     /**

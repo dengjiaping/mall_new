@@ -10,6 +10,7 @@ import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DateUtil;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.google.gson.Gson;
@@ -53,8 +54,9 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
                         @Override
                         public void run() {
                             Gson gson = new Gson();
+
                             //本地缓存地址
-                            SharePrefUtil.getInstance().putString(Const.ADDRESS_JSON, gson.toJson(response.data));
+                            StringUtils.saveAddress(getView().getAct(), gson.toJson(response.data));
                             //缓存地址时间
                             SharePrefUtil.getInstance().putString(Const.ADDRESS_TIME, DateUtil.getCurrentTime2yyyyMMdd());
                         }
@@ -71,6 +73,7 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
             }
         });
     }
+
 
     public void getLiveAddress(String idPerson) {
         ApiImpl.getLiveAddress(getView().getAct(), idPerson, new BaseRequestAgent.ResponseListener<LivingAddressBean>() {
