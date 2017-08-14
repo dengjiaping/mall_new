@@ -142,12 +142,16 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!feedbackListAdapter.getItem(i - 1).fold) {
-                    feedbackListAdapter.getItem(i - 1).fold = true;
-                } else {
-                    feedbackListAdapter.getItem(i - 1).fold = false;
+                int pos = i - 1;
+                List<FeedBackResponse> data = feedbackListAdapter.getData();
+                if (data != null && pos >= 0 && pos < data.size()){
+                    if (!feedbackListAdapter.getItem(pos).fold) {
+                        feedbackListAdapter.getItem(pos).fold = true;
+                    } else {
+                        feedbackListAdapter.getItem(pos).fold = false;
+                    }
+                    feedbackListAdapter.notifyDataSetChanged();
                 }
-                feedbackListAdapter.notifyDataSetChanged();
             }
         });
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
