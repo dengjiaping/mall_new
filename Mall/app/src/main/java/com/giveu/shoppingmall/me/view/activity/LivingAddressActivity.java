@@ -89,6 +89,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             llChooseAddress.setEnabled(false);
             ivDetail.setVisibility(View.GONE);
             tvAddressTag.setText("我的居住地址");
+            tvAddress.setText("");
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
             tvCommit.setVisibility(View.GONE);
             tvSyncAddress.setVisibility(View.GONE);
@@ -103,6 +104,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             }
         }
     }
+
+
 
     private void setEditDisabled(EditText editText) {
         editText.setFocusable(false);
@@ -120,15 +123,15 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         //只是展示的话不需要获取地址列表
         if (!LoginHelper.getInstance().hasExistLive()) {
 
-            final String addressJson = SharePrefUtil.getInstance().getString(Const.ADDRESS_JSON, "");
             String cacheTime = SharePrefUtil.getInstance().getString(Const.ADDRESS_TIME, "");
-            //当本地缓存不为空，并且还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
-            if (StringUtils.isNotNull(addressJson) && cacheTime.equals(DateUtil.getCurrentTime2yyyyMMdd())) {
+            //当本地缓存还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
+            if (cacheTime.equals(DateUtil.getCurrentTime2yyyyMMdd())) {
                 showLoading();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            final String addressJson = StringUtils.loadAddress(mBaseContext);
                             Gson gson = new Gson();
                             final ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
                                     new TypeToken<List<AddressBean>>() {
@@ -142,7 +145,6 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                                 });
                             }
                         } catch (Exception e) {
-                            SharePrefUtil.getInstance().putString(Const.ADDRESS_JSON, "");
                             if (mBaseContext != null && !mBaseContext.isFinishing()) {
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -265,7 +267,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
     @Override
     public void getAddListJsonSuccess(ArrayList<AddressBean> addressList) {
-        //获取地址陈宫
+        //获取地址成功
         chooseCityDialog.initProvince(addressList);
     }
 

@@ -44,10 +44,11 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
     private RegisterPresenter presenter;
+    public static int REQUEST_PHONE = 1000;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, RegisterActivity.class);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, REQUEST_PHONE);
     }
 
     @Override
@@ -115,7 +116,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
                     ToastUtils.showShortToast("请输入11位的手机号");
                 } else {
                     CommonUtils.closeSoftKeyBoard(mBaseContext);
-                    presenter.sendSMSCode(etPhone.getText().toString(),"regType");
+                    presenter.sendSMSCode(etPhone.getText().toString(), "regType");
                 }
                 break;
 
@@ -183,6 +184,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SetPasswordActivity.REQUEST_FINISH && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
             finish();
         }
     }
