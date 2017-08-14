@@ -24,6 +24,7 @@ import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
+import com.networkbench.agent.impl.NBSAppAgent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -210,6 +211,12 @@ public class BaseApplication extends MultiDexApplication {
             if (!DebugConfig.isDev) {
                 //自定义UncaughtExceptionHandler，崩溃之后应用整体销毁
                 CrashHandler crashHandler = new CrashHandler(this);
+
+                //听云
+                if (DebugConfig.isOnline){
+                    NBSAppAgent.setLicenseKey("b7cec1e48dab49b98df327a73e4a08ad").withLocationServiceEnabled(true).startInApplication(this.getApplicationContext());
+                }
+
                 //开发环境不上报bugly
                 Context context = getApplicationContext();
                 // 获取当前包名

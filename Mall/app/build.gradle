@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+//听云
+apply plugin: 'newlens'
 
 def releaseTime() {
     return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+8"))
@@ -184,4 +186,7 @@ dependencies {
     compile project(':shareLibrary')
     //支付宝支付
     compile files('libs/alipaySingle-20170510.jar')
+    //听云
+    compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7"
+
 }
