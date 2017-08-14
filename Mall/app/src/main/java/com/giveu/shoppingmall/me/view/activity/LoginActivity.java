@@ -63,11 +63,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @BindView(R.id.tv_login)
     ClickEnabledTextView tvLogin;
 
-    private String lat;
-    private String lng;
-    //标记定位次数，如果2次定位未成功，那么提示定位失败，并不再进行登录操作
-    private int initLocCounts;
-    private String deviceNumber;
     private int keyHeight = 0; //软件盘弹起后所占高度
 
     private LoginPresenter presenter;
@@ -89,6 +84,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 //        etPwd.setPasswordInputStyle();
         keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
         presenter = new LoginPresenter(this);
+        initAccount();
+    }
+
+    private void initAccount() {
         if (StringUtils.isNotNull(LoginHelper.getInstance().getRemeberAccount())) {
             etAccount.setText(LoginHelper.getInstance().getRemeberAccount());
             etAccount.setSelection(LoginHelper.getInstance().getRemeberAccount().length());
@@ -119,7 +118,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
             case R.id.tv_login:
                 //每次点击按钮重置定位次数
-                initLocCounts = 1;
                 if (canClick(true)) {
                     presenter.login(etAccount.getText().toString(), MD5.MD5Encode(etPwd.getText().toString()));
                 }
@@ -306,6 +304,14 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RegisterActivity.REQUEST_PHONE && resultCode == RESULT_OK) {
+            initAccount();
+        }
     }
 
     @Override
