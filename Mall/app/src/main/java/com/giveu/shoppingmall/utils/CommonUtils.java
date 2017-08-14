@@ -198,10 +198,14 @@ public class CommonUtils {
      * 调用系统拨打电话
      */
     public static void callPhone(Context mcontext, String phoneStr) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        Uri data = Uri.parse("tel:" + phoneStr);
-        intent.setData(data);
-        mcontext.startActivity(intent);
+        try{
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            Uri data = Uri.parse("tel:" + phoneStr);
+            intent.setData(data);
+            mcontext.startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

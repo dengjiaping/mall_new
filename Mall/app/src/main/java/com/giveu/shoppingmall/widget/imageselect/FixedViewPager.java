@@ -21,7 +21,7 @@ public class FixedViewPager extends ViewPager {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {
             return super.dispatchTouchEvent(ev);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -31,7 +31,7 @@ public class FixedViewPager extends ViewPager {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         try {
             return super.onInterceptTouchEvent(ev);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -41,7 +41,7 @@ public class FixedViewPager extends ViewPager {
     public boolean onTouchEvent(MotionEvent ev) {
         try {
             return super.onTouchEvent(ev);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
