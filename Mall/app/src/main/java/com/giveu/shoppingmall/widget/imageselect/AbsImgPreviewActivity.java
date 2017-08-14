@@ -122,7 +122,7 @@ public abstract class AbsImgPreviewActivity extends BaseActivity implements OnPa
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_back:
-                back();
+                back(false);
                 break;
             case R.id.ll_right:
                 onClickRight();
@@ -132,7 +132,7 @@ public abstract class AbsImgPreviewActivity extends BaseActivity implements OnPa
 
     @Override
     public void onBackPressed() {
-        back();
+        back(true);
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class AbsImgPreviewActivity extends BaseActivity implements OnPa
     /**
      * 返回操作
      */
-    public abstract void back();
+    public abstract void back(boolean returnBack);
 
     /**
      * 点击右边操作

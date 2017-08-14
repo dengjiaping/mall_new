@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.IProblemFeedBackView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.FileUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import org.json.JSONObject;
@@ -38,6 +39,13 @@ public class ProblemFeedBackPresenter extends BasePresenter<IProblemFeedBackView
                     }
                 }).start();
                 String originalStr = errorBean.originResultString;
+                //后台返回空字符串，直接返回
+                if (StringUtils.isNull(originalStr)) {
+                    if (getView() != null) {
+                        getView().hideLoding();
+                    }
+                    return;
+                }
                 try {
                     JSONObject jsonObject = new JSONObject(originalStr);
                     if ("success".equals(jsonObject.getString("status"))) {

@@ -301,7 +301,7 @@ public class ImagesSelectView extends LinearLayout {
         @Override
         public void onSelectImage(final int index) {
             if (index < imageSelectList.size()) {
-                SkipUtils.skipActivityForResult(mContext, Act_ImagePreActivity.class, SkipUtils.Params4.getInstance(index, ImageSelectActivity.CODE_IMAGE_PREVIEW, imageSelectList, false), ImageSelectActivity.CODE_IMAGE_PREVIEW);
+                SkipUtils.skipActivityForResult(mContext, Act_ImagePreActivity.class, SkipUtils.Params5.getInstance(index, ImageSelectActivity.CODE_IMAGE_PREVIEW, imageSelectList, false), ImageSelectActivity.CODE_IMAGE_PREVIEW);
             } else {
                 skipForImageSelect();
             }

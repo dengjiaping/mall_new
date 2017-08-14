@@ -152,10 +152,10 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
         txt_ok.setOnClickListener(this);
         ll_bottom.setOnClickListener(this);
         floderView.setOnClickFloderListener(this);
-        setSelectText();
         mAdapter = new SelectImageAdapter(this);
         mAdapter.setOnClickSelectImageListener(this);
         gridview.setAdapter(mAdapter);
+        setSelectText();
         gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         loadData();
 
@@ -185,10 +185,13 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
                 back(false);
                 break;
             case R.id.txt_ok:
+                ImageInfo.selectImageItems.clear();
                 ImageInfo.selectImageItems.addAll(mAdapter.getImageList());
                 back(true);
                 break;
             case R.id.txt_preview:
+                ImageInfo.selectImageItems.clear();
+                ImageInfo.selectImageItems.addAll(mAdapter.getImageList());
                 SkipUtils.skipActivityForResult(this, Act_ImageSelectPreActivity.class, null, CODE_IMAGE_SELECT_PREVIEW);
                 break;
         }
@@ -319,6 +322,8 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
      */
     @Override
     public void onClickShowBigImage(int poistion) {
+        ImageInfo.selectImageItems.clear();
+        ImageInfo.selectImageItems.addAll(mAdapter.getImageList());
         SkipUtils.skipActivityForResult(this, Act_ImagePreActivity.class, SkipUtils.Params4.getInstance(poistion, CODE_IMAGE_PREVIEW, mAdapter.itemList, true), CODE_IMAGE_PREVIEW);
     }
 
@@ -351,6 +356,8 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
          */
         if (requestCode == CODE_IMAGE_PREVIEW) {
             if (mAdapter != null) {
+                mAdapter.getImageList().clear();
+                mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
                 mAdapter.notifyDataSetChanged();
                 setSelectText();
             }
@@ -361,6 +368,8 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
          */
         if (requestCode == CODE_IMAGE_SELECT_PREVIEW) {
             if (mAdapter != null) {
+                mAdapter.getImageList().clear();
+                mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
                 mAdapter.notifyDataSetChanged();
                 setSelectText();
             }

@@ -48,8 +48,10 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
     }
 
     @Override
-    public void back() {
-        setResult(RESULT_OK, new Intent());
+    public void back(boolean backReturn) {
+        if (!backReturn) {
+            setResult(RESULT_OK, new Intent());
+        }
         finish();
     }
 
@@ -77,7 +79,7 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
 
     private void deleteImageInViewPager(FixedViewPager viewPager, ImagePreViewAdapter pa, int currIndex) {
         if (pa.imageList.size() == 1) {
-            back();
+            back(false);
             return;
         }
 
