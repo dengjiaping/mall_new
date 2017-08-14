@@ -287,7 +287,7 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
             txt_ok.setText(leftString);
             txt_ok.setEnabled(true);
         }
-        if (ImageInfo.selectImageItems.isEmpty()) {
+        if (mAdapter.getImageList().isEmpty()) {
             txt_preview.setEnabled(false);
             txt_preview.setTextColor(getResources().getColor(R.color.color_999999));
         } else {
