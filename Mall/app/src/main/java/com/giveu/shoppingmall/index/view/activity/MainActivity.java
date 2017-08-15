@@ -102,7 +102,7 @@ public class MainActivity extends BasePermissionActivity {
         mainCashFragment = new MainCashFragment();
 //        mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
-//        fragmentList.add(rechargeFragment);
+        fragmentList.add(rechargeFragment);
         fragmentList.add(mainCashFragment);
 //        fragmentList.add(mainRepayFragment);
         fragmentList.add(mainMeFragment);
@@ -181,19 +181,19 @@ public class MainActivity extends BasePermissionActivity {
 
     public void selectIconAndTextColor(int selectPos) {
         switch (selectPos) {
-         /*   case 0:
+            case 0:
                 setImageView(ivRecharge, R.drawable.ic_recharge_select);
                 setTextColor(tvRecharge, R.color.color_00bbc0);
-                break;*/
-            case 0:
+                break;
+            case 1:
                 setImageView(ivCash, R.drawable.ic_cash_select);
                 setTextColor(tvCash, R.color.color_00bbc0);
                 break;
-            case 1:
+            case 2:
                 setImageView(ivRepayment, R.drawable.ic_repayment_select);
                 setTextColor(tvRepayment, R.color.color_00bbc0);
                 break;
-            case 2:
+            case 3:
 //                setImageView(ivRepayment, R.drawable.ic_repayment_select);
 //                setTextColor(tvRepayment, R.color.color_00bbc0);
                 setImageView(ivMe, R.drawable.ic_me_select);
@@ -235,8 +235,8 @@ public class MainActivity extends BasePermissionActivity {
                 break;
 
             case R.id.ll_cash:
-                mViewPager.setCurrentItem(0, false);
-                selectIconAndTextColor(0);
+                mViewPager.setCurrentItem(1, false);
+                selectIconAndTextColor(1);
                 break;
             case R.id.ll_repayment:
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
@@ -246,15 +246,15 @@ public class MainActivity extends BasePermissionActivity {
                     } else {
                         notActiveDialog.showDialog();
                     }
-                    selectIconAndTextColor(1);
+                    selectIconAndTextColor(2);
                 }
 //                mViewPager.setCurrentItem(2, false);
 //                selectIconAndTextColor(2);
                 break;
 
             case R.id.ll_me:
-                mViewPager.setCurrentItem(1, false);
-                selectIconAndTextColor(2);
+                mViewPager.setCurrentItem(2, false);
+                selectIconAndTextColor(3);
                 break;
 
             default:
@@ -268,14 +268,7 @@ public class MainActivity extends BasePermissionActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 resetIconAndTextColor();
-                switch (mViewPager.getCurrentItem()) {
-                    case 0:
-                        selectIconAndTextColor(0);
-                        break;
-                    case 1:
-                        selectIconAndTextColor(2);
-                        break;
-                }
+                selectIconAndTextColor(mViewPager.getCurrentItem());
             }
         });
     }
@@ -326,14 +319,8 @@ public class MainActivity extends BasePermissionActivity {
         super.onResume();
         //从账单返回主界面时需刷新tab的图标和字体颜色
         resetIconAndTextColor();
-        switch (mViewPager.getCurrentItem()) {
-            case 0:
-                selectIconAndTextColor(0);
-                break;
-            case 1:
-                selectIconAndTextColor(2);
-                break;
-        }
+        selectIconAndTextColor(mViewPager.getCurrentItem());
+
         if (downloadApkUtils != null) {
             downloadApkUtils.onActivityResume();
         }

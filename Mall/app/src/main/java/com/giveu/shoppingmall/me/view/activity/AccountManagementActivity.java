@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -23,10 +24,10 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -147,7 +148,7 @@ public class AccountManagementActivity extends BaseActivity {
             case R.id.ll_person_info:
                 //完善个人资料
                 if (!LoginHelper.getInstance().hasAverageUser()) {
-                   // 不是假数据激活用户，跳转填写
+                    // 不是假数据激活用户，跳转填写
                     PerfectInfoActivity.startIt(mBaseContext);
                 }
                 break;
@@ -200,10 +201,44 @@ public class AccountManagementActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    private int devSecretClickCount = 0;
+    private final long deltaTime = 10000;
+    private long lastTime;
+
+    @OnClick(R.id.view_dev)
+    public void clickDevSecret() {
+        if (devSecretClickCount == 0) {
+            lastTime = System.currentTimeMillis();
+        }
+        devSecretClickCount++;
+        if (devSecretClickCount > 10) {
+            devSecretClickCount = 0;
+            //10s内连续点击才有效
+            if (System.currentTimeMillis() - lastTime <= deltaTime) {
+                final ConfirmDialog  openDebugDialog = new ConfirmDialog(mBaseContext);
+                openDebugDialog.setEditEnable(true);
+                openDebugDialog.setContent("切换环境");
+                openDebugDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+                    @Override
+                    public void confirm() {
+                        if("#即有分期#789".equals(openDebugDialog.getEditContent())){
+                            CommonUtils.startActivity(mBaseContext, DevSettingActivity.class);
+                            openDebugDialog.dismiss();
+                        }else {
+                            ToastUtils.showShortToast("切换环境密码错误");
+                        }
+
+                    }
+
+                    @Override
+                    public void cancle() {
+                        openDebugDialog.dismiss();
+                    }
+                });
+                openDebugDialog.setCancelable(false);
+                openDebugDialog.setCanceledOnTouchOutside(false);
+                openDebugDialog.show();
+            }
+        }
     }
 }

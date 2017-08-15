@@ -184,4 +184,17 @@
         android:text="退出登录"
         android:textColor="@color/color_282828"
         android:textSize="@dimen/ts_18" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/view_dev"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 </LinearLayout>

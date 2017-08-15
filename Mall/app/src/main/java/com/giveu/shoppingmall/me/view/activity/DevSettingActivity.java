@@ -77,7 +77,7 @@ public class DevSettingActivity extends BaseActivity {
 
 		//检查apk相关信息是否正确
 		Map<String, Object> map = new HashMap<>();
-		map.put("isOnline", DebugConfig.isOnline);
+		map.put("isOnline", DebugConfig.isDebug);
 		map.put("versionCode", CommonUtils.getVersionCode());
 		map.put("versionName", CommonUtils.getVersionName());
 		map.put("sampleApi", ApiUrl.personCenter_account_login);
@@ -136,11 +136,11 @@ public class DevSettingActivity extends BaseActivity {
 	public void clickConfirmApi(){
 		final String api = etMyApi.getText().toString().trim();
 		if (TextUtils.isEmpty(api)){
-			ToastUtils.showShortToast("你有病啊，没有输入也点我");
+			ToastUtils.showShortToast("请输入域名");
 			return;
 		}
 
-		new CustomDialogUtil(mBaseContext).getDialogMode1("提示", "如果输入的api没有问题，后果自负", "取消", "确定", null, new View.OnClickListener() {
+		new CustomDialogUtil(mBaseContext).getDialogMode1("提示", "请输入正确的域名，否则后果自负", "取消", "确定", null, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DevSettingSharePref.getInstance().setDebugBaseUrl(api);
