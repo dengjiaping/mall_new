@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 
 import butterknife.BindView;
-import cn.jpush.android.api.JPushInterface;
 
 
 public class SplashActivity extends BasePermissionActivity {
@@ -147,7 +146,7 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        JPushInterface.onResume(this);
+//        JPushInterface.onResume(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!isPermissionReallyDeclined) {
                 setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
@@ -159,7 +158,7 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        JPushInterface.onPause(this);
+//        JPushInterface.onPause(this);
     }
 
     private void getAdSplashImage() {
