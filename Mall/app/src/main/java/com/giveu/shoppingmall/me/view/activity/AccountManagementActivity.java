@@ -217,7 +217,7 @@ public class AccountManagementActivity extends BaseActivity {
             if (System.currentTimeMillis() - lastTime <= deltaTime) {
                 final ConfirmDialog  openDebugDialog = new ConfirmDialog(mBaseContext);
                 openDebugDialog.setEditEnable(true);
-                openDebugDialog.setContent("切换环境");
+                openDebugDialog.setContent("开启开发者模式");
                 openDebugDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
                     @Override
                     public void confirm() {
@@ -225,7 +225,7 @@ public class AccountManagementActivity extends BaseActivity {
                             CommonUtils.startActivity(mBaseContext, DevSettingActivity.class);
                             openDebugDialog.dismiss();
                         }else {
-                            ToastUtils.showShortToast("切换环境密码错误");
+                            ToastUtils.showShortToast("密码错误");
                         }
 
                     }
