@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.DebugConfig;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
 import com.giveu.shoppingmall.widget.IosSwitch;
@@ -48,6 +49,8 @@ public class DevSettingActivity extends BaseActivity {
 	RadioGroup rg;
 	@BindView(R.id.et_my_api)
 	EditText etMyApi;
+	@BindView(R.id.et_web_address)
+	EditText etWebAddress;
 	@BindView(R.id.tv_confirm_api)
 	TextView tvConfirmApi;
 
@@ -61,7 +64,7 @@ public class DevSettingActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				CustomDialogUtil dialogUtil = new CustomDialogUtil(mBaseContext);
-				dialogUtil.getDialogMode1("提示", "你想执行什么操作？", "上一页", "杀死进程", new View.OnClickListener() {
+				dialogUtil.getDialogMode1("提示", "如果你切换了环境，请杀死进程重新登录，你想执行什么操作？", "上一页", "杀死进程", new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						finish();
@@ -69,6 +72,7 @@ public class DevSettingActivity extends BaseActivity {
 				}, new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						LoginHelper.getInstance().logout();
 						BaseApplication.getInstance().finishActivityAndKillProcess();
 					}
 				}).show();
@@ -77,7 +81,15 @@ public class DevSettingActivity extends BaseActivity {
 
 		//检查apk相关信息是否正确
 		Map<String, Object> map = new HashMap<>();
-		map.put("isOnline", DebugConfig.isDebug);
+		if (DebugConfig.isOnline) {
+			map.put("isOnline", DebugConfig.isOnline);
+		}
+		if (DebugConfig.isDev) {
+			map.put("isDev", DebugConfig.isDev);
+		}
+		if (DebugConfig.isTest) {
+			map.put("isTest", DebugConfig.isTest);
+		}
 		map.put("versionCode", CommonUtils.getVersionCode());
 		map.put("versionName", CommonUtils.getVersionName());
 		map.put("sampleApi", ApiUrl.personCenter_account_login);
@@ -148,6 +160,14 @@ public class DevSettingActivity extends BaseActivity {
 		}).show();
 	}
 
-
+	@OnClick(R.id.tv_confirm_web)
+	public void clickConfirmWeb() {
+		final String url = etWebAddress.getText().toString().trim();
+		if (TextUtils.isEmpty(url)) {
+			ToastUtils.showShortToast("请输入地址");
+			return;
+		}
+		CustomWebViewActivity.startIt(mBaseContext, url, "");
+	}
 
 }

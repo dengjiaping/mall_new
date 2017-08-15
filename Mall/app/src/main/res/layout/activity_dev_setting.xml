@@ -112,5 +112,27 @@
             android:background="@color/color_00adb2"
             android:padding="10dp"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我要测试网页："
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:id="@+id/et_web_address"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="请输入网页的全路径"/>
+        <TextView
+            android:id="@+id/tv_confirm_web"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="访问"
+            android:background="@color/color_00adb2"
+            android:padding="10dp"/>
+
     </LinearLayout>
 </ScrollView>
