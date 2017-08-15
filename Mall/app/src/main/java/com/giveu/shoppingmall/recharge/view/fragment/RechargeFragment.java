@@ -514,6 +514,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void showProducts(RechargeResponse data) {
         //默认显示中国移动话费充值
+        if(data.call==null){
+            return;
+        }
         rechargeResponse = data;
         if (CommonUtils.isNotNullOrEmpty(data.call.cmccs)) {
             productList.addAll(data.call.cmccs);

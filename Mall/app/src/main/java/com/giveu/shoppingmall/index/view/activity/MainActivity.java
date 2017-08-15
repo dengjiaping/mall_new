@@ -319,7 +319,11 @@ public class MainActivity extends BasePermissionActivity {
         super.onResume();
         //从账单返回主界面时需刷新tab的图标和字体颜色
         resetIconAndTextColor();
-        selectIconAndTextColor(mViewPager.getCurrentItem());
+        if (mViewPager.getCurrentItem() == 2) {
+            selectIconAndTextColor(3);
+        } else {
+            selectIconAndTextColor(mViewPager.getCurrentItem());
+        }
 
         if (downloadApkUtils != null) {
             downloadApkUtils.onActivityResume();
