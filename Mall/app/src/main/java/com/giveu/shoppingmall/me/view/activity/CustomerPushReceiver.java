@@ -66,6 +66,7 @@ public class CustomerPushReceiver extends BroadcastReceiver {
             } else {
                 Activity activity = BaseApplication.getInstance().undestroyActivities.get(BaseApplication.getInstance().undestroyActivities.size() - 1);
                 if (!(activity instanceof VerifyPwdActivity) && !(activity instanceof GestureLoginActivity)) {
+                    turnIntent = new Intent(context, MessageActivity.class);
                 }
             }
             if (turnIntent != null) {

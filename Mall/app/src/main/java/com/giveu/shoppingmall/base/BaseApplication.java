@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.SuccessOrFailListener;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
@@ -47,10 +48,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import cn.sharesdk.framework.ShareSDK;
 
 
@@ -237,12 +240,19 @@ public class BaseApplication extends MultiDexApplication {
     }
 
     private void initPush() {
-//        JPushInterface.setDebugMode(DebugConfig.isDebug);    // 设置开启日志,发布时请关闭日志
-//        JPushInterface.init(this);
-//        //如果用户未登录，那么不会收到推送
-//        if (!LoginHelper.getInstance().hasLogin()) {
-//            JPushInterface.stopPush(mInstance);
-//        }
+        JPushInterface.setDebugMode(DebugConfig.isDebug);    // 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);
+        JPushInterface.setAlias(this, "hesuccesshesuccess", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                ToastUtils.showLongToast("success");
+                LogUtil.e(JPushInterface.getRegistrationID(mInstance));
+            }
+        });
+        //如果用户未登录，那么不会收到推送
+        if (!LoginHelper.getInstance().hasLogin()) {
+            JPushInterface.stopPush(mInstance);
+        }
     }
 
 
