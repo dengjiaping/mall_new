@@ -302,6 +302,9 @@
             android:name=".index.view.activity.ActivationStatusActivity"
             android:label="钱包激活状态" />
         <activity
+            android:name=".index.view.activity.SetPwdStatusActivity"
+            android:label="设置交易密码成功页" />
+        <activity
             android:name=".index.view.activity.TransactionPwdActivity"
             android:label="钱包激活设置交易密码" />
         <activity

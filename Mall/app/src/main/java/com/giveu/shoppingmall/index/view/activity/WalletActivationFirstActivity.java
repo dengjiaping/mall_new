@@ -132,12 +132,14 @@ public class WalletActivationFirstActivity extends BaseActivity {
                                         @Override
                                         public void onDismiss() {
                                             //显示成功页
-                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson());
+                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success");
+                                            finish();
                                         }
                                     });
                                 } else {
                                     //显示成功页
-                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson());
+                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success");
+                                    finish();
                                 }
 
                             } else {//未激活
@@ -152,7 +154,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
                     //没有资质
                     if ("sc800705".equals(errorBean.code)) {
                         //跳转激活失败，无重新激活按钮
-                        ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
+                        ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, "fail");
                     } else {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
