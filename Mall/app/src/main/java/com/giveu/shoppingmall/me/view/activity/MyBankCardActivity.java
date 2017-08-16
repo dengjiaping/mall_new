@@ -258,7 +258,8 @@ public class MyBankCardActivity extends BaseActivity {
                                         //交易密码校验成功
                                         if (DELETE.equals(flag)) {
                                             //解绑银行卡
-                                            deleteBankCard(id, position, bankListAdapter);
+                                            deleteBankCard(id, position, pwdResponse.code, bankListAdapter);
+
                                             pwdDialog.dissmissDialog();
                                         } else {
                                             //设置默认卡
@@ -347,8 +348,8 @@ public class MyBankCardActivity extends BaseActivity {
      * @param id
      * @param position
      */
-    public void deleteBankCard(String id, final int position, final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter) {
-        ApiImpl.deleteBankInfo(mBaseContext, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void deleteBankCard(String id, final int position, String code, final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter) {
+        ApiImpl.deleteBankInfo(mBaseContext, code, id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (bankListAdapter != null && bankListAdapter.getData() != null && bankListAdapter.getData().size() > position) {
@@ -357,7 +358,6 @@ public class MyBankCardActivity extends BaseActivity {
                     ToastUtils.showShortToast("删除成功！");
                 }
             }
-
             @Override
             public void onError(BaseBean errorBean) {
                 CommonLoadingView.showErrorToast(errorBean);

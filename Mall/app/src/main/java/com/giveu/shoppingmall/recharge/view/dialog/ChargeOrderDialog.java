@@ -16,10 +16,19 @@ import android.widget.TextView;
 import com.android.volley.mynet.ApiUrl;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.event.PwdDialogEvent;
+import com.giveu.shoppingmall.index.view.activity.PerfectContactsActivity;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
+import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 /**
@@ -113,7 +122,7 @@ public class ChargeOrderDialog {
                 CustomWebViewActivity.startIt(mActivity, ApiUrl.WebUrl.oConsumeLoanStatic, "《贷款及咨询服务合同标准条款》");
             }
         });
-
+      //  registerEventBus();//注册EventBus
         setListener();
 
     }
@@ -186,9 +195,8 @@ public class ChargeOrderDialog {
             @Override
             public void onClick(View view) {
                 if (tv_payment.isClickEnabled()) {
-                    if (listener != null) {
-                        listener.onConfirm(paymentType);
-                    }
+
+                    canShowPwdDialog();
 /*                    pwdDialog.showDialog();
                     CommonUtils.openSoftKeyBoard(mActivity);
                     pwdDialog.setdismissListener(new DialogInterface.OnDismissListener() {
@@ -204,6 +212,37 @@ public class ChargeOrderDialog {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showPwdDialog(PwdDialogEvent event) {
+        //填写完居住地址回来弹出密码框（LivingAddressActivity）
+        if (listener != null) {
+            listener.onConfirm(paymentType);
+        }
+    }
+    /**
+     * 资料是否完善的判断
+     */
+    public void canShowPwdDialog(){
+        if (LoginHelper.getInstance().hasExistOther()) {
+            //添加了联系人
+            if (LoginHelper.getInstance().hasExistLive()) {
+                //添加了居住地址,判断是否设置了交易密码
+                if (LoginHelper.getInstance().hasSetPwd()) {
+                    if (listener != null) {
+                        listener.onConfirm(paymentType);
+                    }
+                } else {
+                    TransactionPwdActivity.startIt(mActivity, LoginHelper.getInstance().getIdPerson());
+                }
+            } else {
+                //未添加地址
+                LivingAddressActivity.startIt(mActivity);
+            }
+        } else {
+            //未添加联系人
+            PerfectContactsActivity.startIt(mActivity, Const.CASH);
+        }
+    }
     public interface OnConfirmListener {
         void onConfirm(int paymentType);
     }
