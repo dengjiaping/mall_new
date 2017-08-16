@@ -172,10 +172,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                         if (LoginHelper.getInstance().hasSetPwd()) {
                             //可用金额是否大于充值产品金额
                             if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
-                                double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
-                                warnningDialog.setContent("您已超出每月500元充值上限（已消费"
-                                        + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
-                                warnningDialog.show();
+                                ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
                             } else {
                                 salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
                                 mobile = etRecharge.getText().toString();
@@ -358,43 +355,40 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             case 0:
                 //话费充值
                 //中国移动
-                if ("0".equals(currentOperator)) {
-                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                if (rechargeResponse != null && rechargeResponse.call != null) {
+                    if ("0".equals(currentOperator)) {
                         rechargeAdapter.setData(rechargeResponse.call.cmccs);
-                    }
-                } else if ("1".equals(currentOperator)) {
-                    //中国联通
-                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                    } else if ("1".equals(currentOperator)) {
+                        //中国联通
                         rechargeAdapter.setData(rechargeResponse.call.cuccs);
-                    }
-
-                } else if ("2".equals(currentOperator)) {
-                    //中国电信
-                    if (rechargeResponse != null && rechargeResponse.call != null) {
+                    } else if ("2".equals(currentOperator)) {
+                        //中国电信
                         rechargeAdapter.setData(rechargeResponse.call.ctcs);
                     }
+                } else {
+                    rechargeAdapter.setData(null);
                 }
+
                 break;
 
             case 1:
                 //流量充值
                 //中国移动
-                if ("0".equals(currentOperator)) {
-                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                    if ("0".equals(currentOperator)) {
                         rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
-                    }
-                } else if ("1".equals(currentOperator)) {
-                    //中国联通
-                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                    } else if ("1".equals(currentOperator)) {
+                        //中国联通
                         rechargeAdapter.setData(rechargeResponse.traffic.cuccs);
-                    }
 
-                } else if ("2".equals(currentOperator)) {
-                    //中国电信
-                    if (rechargeResponse != null && rechargeResponse.traffic != null) {
+                    } else if ("2".equals(currentOperator)) {
+                        //中国电信
                         rechargeAdapter.setData(rechargeResponse.traffic.ctcs);
                     }
+                } else {
+                    rechargeAdapter.setData(null);
                 }
+
                 break;
         }
         //如果当前并没有输入手机号，默认显示移动的产品
@@ -402,10 +396,14 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             if (tabIndex == 0) {
                 if (rechargeResponse != null && rechargeResponse.call != null) {
                     rechargeAdapter.setData(rechargeResponse.call.cmccs);
+                } else {
+                    rechargeAdapter.setData(null);
                 }
             } else {
                 if (rechargeResponse != null && rechargeResponse.traffic != null) {
                     rechargeAdapter.setData(rechargeResponse.traffic.cmccs);
+                } else {
+                    rechargeAdapter.setData(null);
                 }
             }
         }
@@ -514,7 +512,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void showProducts(RechargeResponse data) {
         //默认显示中国移动话费充值
-        if(data.call==null){
+        if (data.call == null) {
             return;
         }
         rechargeResponse = data;
@@ -546,7 +544,13 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     public void showPhoneInfo(SegmentResponse data) {
         //查询手机归属地成功的回调
         isVailable = true;
-        tvMessage.setText(data.city + data.isp);
+        String phone = etRecharge.getText().toString();
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getPhone())
+                && LoginHelper.getInstance().getPhone().equals(phone.replaceAll(" ", ""))) {
+            tvMessage.setText("账户绑定用户(" + data.city + data.isp + ")");
+        } else {
+            tvMessage.setText(data.city + data.isp);
+        }
         tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
         currentOperator = data.code;
         showContentData();
@@ -565,27 +569,33 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //创建订单成功
         orderDialog = new ChargeOrderDialog(mBaseContext, phoneArea, productName, mobile, salePrice);
         orderDialog.setProductType(productType);
+        //可用消费额度小于当前要充值的金额，默认选择微信支付
+        if (StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit()) < StringUtils.string2Double(salePrice)) {
+            orderDialog.setDefaultPay(1);
+        }
         orderDialog.setOnConfirmListener(new ChargeOrderDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int paymentType) {
-                //钱包可用金额是否大于充值产品金额
-                if (paymentType == 1 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
-                    double alreadyConsume = 500 - StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit());
-                    warnningDialog.setContent("您已超出每月500元充值上限（已消费"
-                            + StringUtils.format2(alreadyConsume + "") + "元），请下个月进行充值");
-                    warnningDialog.show();
+                //是否超过500额度充值上限
+                if (paymentType == 0 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
+                    ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
                 } else {
                     RechargeFragment.this.paymentType = paymentType;
                     if (paymentType == 0) {
                         //钱包支付
-                        pwdDialog = new PwdDialog(mBaseContext);
-                        pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
-                            @Override
-                            public void checkPwd(String payPwd) {
-                                presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
-                            }
-                        });
-                        pwdDialog.showDialog();
+                        if (StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit()) >= StringUtils.string2Double(salePrice)) {
+                            pwdDialog = new PwdDialog(mBaseContext);
+                            pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
+                                @Override
+                                public void checkPwd(String payPwd) {
+                                    presenter.checkPwd(LoginHelper.getInstance().getIdPerson(), payPwd);
+                                }
+                            });
+                            pwdDialog.showDialog();
+                        } else {
+                            ToastUtils.showLongToast("可用消费额度不足，请使用其他支付方式");
+                        }
+
                     } else {
                         //微信支付或支付宝支付
                         presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNoResponse, paymentType, "", "");
@@ -611,6 +621,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //交易密码错误,弹出密码错误框
         pwdDialog.showPwdError(remainTimes);
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void orderDialogShow(OrderDialogEvent event) {

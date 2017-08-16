@@ -10,8 +10,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
  */
 public class DebugConfig {
 
-    public static final boolean isTest = false;
-    public static final boolean isDev = true;
+    public static final boolean isTest = true;
+    public static final boolean isDev = false;
     public static final boolean isOnline = false;
 
 

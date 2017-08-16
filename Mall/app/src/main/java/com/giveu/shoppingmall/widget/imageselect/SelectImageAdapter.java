@@ -24,7 +24,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
     private Context context;
     private int width;
     private LayoutParams params;
-    List<ImageItem> list = new ArrayList<>();
+    List<ImageItem> selectPhotoList = new ArrayList<>();
 
     public SelectImageAdapter(Context c) {
         super(c);
@@ -32,12 +32,12 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
         this.context = c;
         width = DensityUtils.getWidth() / 3;
         params = new LayoutParams(width, width);
-        list.clear();
-        list.addAll(ImageInfo.selectImageItems);
+        selectPhotoList.clear();
+        selectPhotoList.addAll(ImageInfo.selectImageItems);
     }
 
     public List<ImageItem> getImageList() {
-        return list;
+        return selectPhotoList;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
             holder.image_photo.setVisibility(View.INVISIBLE);
             holder.image.setVisibility(View.VISIBLE);
             ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, bean.imagePath, holder.image);
-            if (ImageSelectViewUtil.isContainsImage(list, bean)) {
+            if (ImageSelectViewUtil.isContainsImage(selectPhotoList, bean)) {
                 holder.check.setChecked(true);
                 holder.image.setColorFilter(Color.parseColor("#77000000"));
             } else {
@@ -91,22 +91,22 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
             holder.image_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ImageSelectViewUtil.isContainsImage(list, bean)) {
+                    if (ImageSelectViewUtil.isContainsImage(selectPhotoList, bean)) {
                         holder.check.setChecked(false);
                         holder.image.setColorFilter(null);
                         int needRemovePos = -1;
-                        for (int i = 0; i < list.size(); i++) {
-                            ImageItem imageItem = list.get(i);
+                        for (int i = 0; i < selectPhotoList.size(); i++) {
+                            ImageItem imageItem = selectPhotoList.get(i);
                             if (imageItem.imagePath.equals(bean.imagePath)) {
                                 needRemovePos = i;
                                 break;
                             }
                         }
-                        if (needRemovePos != -1 && needRemovePos < list.size()) {
-                            list.remove(needRemovePos);
+                        if (needRemovePos != -1 && needRemovePos < selectPhotoList.size()) {
+                            selectPhotoList.remove(needRemovePos);
                         }
                     } else {
-                        if (list.size() >= ImageInfo.MAX_SELECT_SIZE) {
+                        if (selectPhotoList.size() >= ImageInfo.MAX_SELECT_SIZE) {
                             ToastUtils.showShortToast("你最多可以选择" + ImageInfo.MAX_SELECT_SIZE + "张图片");
                             return;
                         }
@@ -116,7 +116,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
                         }
                         holder.check.setChecked(true);
                         holder.image.setColorFilter(Color.parseColor("#77000000"));
-                        list.add(bean);
+                        selectPhotoList.add(bean);
                         //  ImageInfo.selectImageItems.add(bean);
                     }
 
@@ -132,7 +132,7 @@ public class SelectImageAdapter extends ParentAdapter<ImageItem> {
             @Override
             public void onClick(View v) {
                 if (bean.isTakeCamera) {
-                    if (ImageInfo.selectImageItems.size() >= ImageInfo.MAX_SELECT_SIZE) {
+                    if (selectPhotoList.size() >= ImageInfo.MAX_SELECT_SIZE) {
                         ToastUtils.showShortToast("你最多可以选择" + ImageInfo.MAX_SELECT_SIZE + "张图片");
                         return;
                     }

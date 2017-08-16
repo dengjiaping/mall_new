@@ -37,8 +37,8 @@ public class Act_ImageSelectPreActivity extends AbsImgPreviewActivity {
     }
 
     @Override
-    public void back(boolean returnBack) {
-        if (!returnBack) {
+    public void back(boolean isCancel) {
+        if (!isCancel) {
             setResult(RESULT_OK, new Intent());
         }
         finish();

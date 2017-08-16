@@ -148,7 +148,7 @@ public abstract class AbsImgPreviewActivity extends BaseActivity implements OnPa
     /**
      * 返回操作
      */
-    public abstract void back(boolean returnBack);
+    public abstract void back(boolean isCancel);
 
     /**
      * 点击右边操作

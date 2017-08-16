@@ -43,14 +43,21 @@ public class PaymentTypeDialog {
         paymentTypeList.add(bean1);
         paymentTypeList.add(bean2);
         paymentTypeList.add(bean3);
-    }
-
-    public void showDialog() {
         View contentView = View.inflate(mActivity, R.layout.dialog_payment_type, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
         initView(contentView);
         mDialog.setCancelable(false);
+    }
+
+    public void showDialog(int defaulChoose) {
         mDialog.show();
+        //选中的支付方式
+        if (defaulChoose < paymentTypeList.size()) {
+            for (PaymentTypeListResponse.ListBean listBean : paymentTypeList) {
+                listBean.isChecked = false;
+            }
+            paymentTypeList.get(defaulChoose).isChecked = true;
+        }
     }
 
     private void initView(View contentView) {

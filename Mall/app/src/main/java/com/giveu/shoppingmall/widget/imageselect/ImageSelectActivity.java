@@ -330,48 +330,46 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /**
-         * 拍照返回
-         */
-        if (requestCode == CODE_CAMERA) {
-            if (camerafile == null || camerafile.length() == 0 || camearItem == null) {
-                return;
-            }
-            FileUtils.rotateCameraFile(camerafile, this);
-            if (form == ImageSelectViewUtil.REQUEST_CODE_SELECT_IMAGE) {
-
-            } else {
-                String urlString = ImageUtils.notifysaveImage(this, camerafile, true, false);
-                String newPath = getImagePathByUri(this, urlString);
-                if (StringUtils.isNotNull(newPath)) {
-                    camearItem.imagePath = newPath;
+        if (resultCode == RESULT_OK) {
+            /**
+             * 拍照返回
+             */
+            if (requestCode == CODE_CAMERA) {
+                if (camerafile == null || camerafile.length() == 0 || camearItem == null) {
+                    return;
                 }
-            }
-            ImageInfo.selectImageItems.add(camearItem);
-            back(true);
-        }
+                FileUtils.rotateCameraFile(camerafile, this);
+                if (form == ImageSelectViewUtil.REQUEST_CODE_SELECT_IMAGE) {
 
-        /**
-         * 预览大图返回
-         */
-        if (requestCode == CODE_IMAGE_PREVIEW) {
-            if (mAdapter != null) {
-                mAdapter.getImageList().clear();
-                mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
-                mAdapter.notifyDataSetChanged();
-                setSelectText();
-            }
-        }
-
-        /**
-         * 选择大图返回
-         */
-        if (requestCode == CODE_IMAGE_SELECT_PREVIEW) {
-            if (mAdapter != null) {
-                mAdapter.getImageList().clear();
-                mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
-                mAdapter.notifyDataSetChanged();
-                setSelectText();
+                } else {
+                    String urlString = ImageUtils.notifysaveImage(this, camerafile, true, false);
+                    String newPath = getImagePathByUri(this, urlString);
+                    if (StringUtils.isNotNull(newPath)) {
+                        camearItem.imagePath = newPath;
+                    }
+                }
+                ImageInfo.selectImageItems.clear();
+                if (mAdapter != null) {
+                    mAdapter.getImageList().add(camearItem);
+                    ImageInfo.selectImageItems.addAll(mAdapter.getImageList());
+                }
+                back(true);
+            } else if (requestCode == CODE_IMAGE_PREVIEW) {
+                //预览大图返回
+                if (mAdapter != null) {
+                    mAdapter.getImageList().clear();
+                    mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
+                    mAdapter.notifyDataSetChanged();
+                    setSelectText();
+                }
+            } else if (requestCode == CODE_IMAGE_SELECT_PREVIEW) {
+                //选择大图返回
+                if (mAdapter != null) {
+                    mAdapter.getImageList().clear();
+                    mAdapter.getImageList().addAll(ImageInfo.selectImageItems);
+                    mAdapter.notifyDataSetChanged();
+                    setSelectText();
+                }
             }
         }
     }

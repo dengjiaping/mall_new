@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.giveu.shoppingmall.utils.CommonUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,13 +38,19 @@ public abstract class LvCommonAdapter<T> extends MultiItemTypeAdapter<T> {
     protected abstract void convert(ViewHolder viewHolder, T item, int position);
 
     public void setData(List<T> dataList) {
+        if (mDatas == null) {
+            mDatas = new ArrayList<>();
+        }
         if (CommonUtils.isNotNullOrEmpty(dataList)) {
-            this.mDatas = dataList;
+            mDatas.clear();
+            mDatas.addAll(dataList);
+        } else {
+            mDatas.clear();
         }
 
     }
 
-    public List<T> getData(){
+    public List<T> getData() {
         return mDatas;
     }
 

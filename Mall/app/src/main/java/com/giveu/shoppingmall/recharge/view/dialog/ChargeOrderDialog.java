@@ -40,6 +40,7 @@ public class ChargeOrderDialog {
     private TextView tvProduct;
     String paymentTypeStr = "即有钱包";//支付方式，默认
     int paymentType = 0;//支付方式，默认即有钱包
+    private PaymentTypeDialog paymentTypeDialog;
 
     public ChargeOrderDialog(Activity activity) {
         this.mActivity = activity;
@@ -72,8 +73,29 @@ public class ChargeOrderDialog {
         tv_recharge_phone.setText(phone.replace(" ", "-") + "【" + phoneArea + "】");
         tv_price.setText(price);
         tv_sum.setText(price);
+        paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeStr);
 
 //        pwdDialog = new PwdDialog(mActivity, PwdDialog.statusType.RECHARGE);
+    }
+
+    public void setDefaultPay(int defaultPay) {
+        switch (defaultPay) {
+            default:
+            case 0:
+                paymentTypeStr = "即有钱包";
+                paymentType = 0;
+
+                break;
+            case 1:
+                paymentTypeStr = "微信支付";
+                paymentType = 1;
+                break;
+            case 2:
+                paymentTypeStr = "支付宝";
+                paymentType = 2;
+                break;
+        }
+        tv_payment_type.setText(paymentTypeStr);
     }
 
     public void showDialog() {
@@ -158,12 +180,11 @@ public class ChargeOrderDialog {
                 }
             }
         });
-        final PaymentTypeDialog paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeStr);
         ll_payment_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //选择支付方式
-                paymentTypeDialog.showDialog();
+                paymentTypeDialog.showDialog(paymentType);
                 paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
                     @Override
                     public void onChooseType(int type) {

@@ -48,8 +48,8 @@ public class Act_ImagePreActivity extends AbsImgPreviewActivity {
     }
 
     @Override
-    public void back(boolean backReturn) {
-        if (!backReturn) {
+    public void back(boolean isCancel) {
+        if (!isCancel) {
             setResult(RESULT_OK, new Intent());
         }
         finish();
