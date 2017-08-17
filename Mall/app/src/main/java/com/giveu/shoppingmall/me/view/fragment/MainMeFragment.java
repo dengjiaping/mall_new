@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
+import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
@@ -50,6 +51,8 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llBill;
     @BindView(R.id.ll_account_manage)
     LinearLayout llAcountManage;
+    @BindView(R.id.ll_my_coupon)
+    LinearLayout llMyCoupon;
     @BindView(R.id.ll_help)
     LinearLayout llHelp;
     @BindView(R.id.iv_avatar)
@@ -69,6 +72,8 @@ public class MainMeFragment extends BaseFragment {
     @BindView(R.id.tv_see)
     TextView tvSee;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    @BindView(R.id.view_divider)
+    View viewDivider;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,28 +115,31 @@ public class MainMeFragment extends BaseFragment {
                 tvLogin.setText(LoginHelper.getInstance().getName());
                 tvWithdrawals.setText("可用额度" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()) + "元");
                 tvSee.setVisibility(View.VISIBLE);
+                String remainDays = LoginHelper.getInstance().getRemainDays();
+                if (StringUtils.isNotNull(remainDays)) {
+                    if (StringUtils.string2Int(remainDays) < 0) {
+                        //剩余天数为负数
+                        tvDays.setText("已逾期");
+                    } else {
+                        SpannableString msp = new SpannableString("剩余" + remainDays + "天");
+                        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tvDays.setText(msp);
+                    }
+                }
             } else {
                 tvLogin.setText(LoginHelper.getInstance().getUserName());
                 tvWithdrawals.setText("查看信用钱包额度");
                 tvStatus.setVisibility(View.VISIBLE);
                 tvSee.setVisibility(View.GONE);
+                tvDays.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a));
+                tvDays.setText("- -");
+
             }
             tvWaittingPay.setText(StringUtils.format2(LoginHelper.getInstance().getRepayAmount()));
             tvPayAmounts.setText(LoginHelper.getInstance().getCreditCount());
-            String remainDays = LoginHelper.getInstance().getRemainDays();
-            if(StringUtils.isNotNull(remainDays)){
-                if (StringUtils.string2Int(remainDays) < 0) {
-                    //剩余天数为负数
-                    tvDays.setText("已逾期");
-                } else {
-                    SpannableString msp = new SpannableString("剩余" + remainDays + "天");
-                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tvDays.setText(msp);
-                }
-            }
-
+            viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.VISIBLE);
         } else {
             //未登录状态
@@ -141,6 +149,7 @@ public class MainMeFragment extends BaseFragment {
             tvSee.setVisibility(View.GONE);
             ivAvatar.setImageResource(R.drawable.ic_default_avatar);
             tvDays.setText("--");
+            viewDivider.setVisibility(View.GONE);
             llPayStatus.setVisibility(View.GONE);
         }
     }
@@ -165,7 +174,7 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_quota})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -206,6 +215,12 @@ public class MainMeFragment extends BaseFragment {
                 }
                 break;
 
+            case R.id.ll_my_coupon:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    MyCouponActivity.startIt(mBaseContext);
+                }
+                break;
+
             case R.id.ll_quota:
                 //激活钱包用户直接查看额度，否则先去激活
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
@@ -220,5 +235,13 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

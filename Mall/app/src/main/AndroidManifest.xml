@@ -358,6 +358,9 @@
         <activity
             android:name=".me.view.activity.MessageActivity"
             android:label="消息列表" />
+        <activity
+            android:name=".me.view.activity.MyCouponActivity"
+            android:label="我的优惠券" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"
