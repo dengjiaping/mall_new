@@ -7,6 +7,8 @@ import android.text.Editable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -44,6 +46,9 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     SendCodeTextView tvSendCode;
     private CustomDialog callDialog;
     private TextView tvDial;
+    private ImageView ivCancel;
+    private TextView tvPhone;
+    private LinearLayout llPhone;
     private RequestPwdPresenter presenter;
     public static final int FIND_LOGIN_PWD = 1;
     public static final int CHANGE_LOGIN_PWD = 2;
@@ -89,13 +94,23 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     }
 
     private void initCallDialog() {
-        callDialog = new CustomDialog(mBaseContext, R.layout.dialg_dial_phone, R.style.customerDialog, Gravity.CENTER, false);
+        callDialog = new CustomDialog(mBaseContext, R.layout.dialog_dial, R.style.customerDialog, Gravity.CENTER, false);
         tvDial = (TextView) callDialog.findViewById(R.id.tv_dial);
+        ivCancel = (ImageView) callDialog.findViewById(R.id.iv_cancel);
+        tvPhone = (TextView) callDialog.findViewById(R.id.tv_phone);
+        llPhone = (LinearLayout) callDialog.findViewById(R.id.ll_phone);
+        llPhone.setVisibility(View.GONE);
         tvDial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callDialog.dismiss();
                 CommonUtils.callPhone(mBaseContext, "4001868888");
+            }
+        });
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callDialog.dismiss();
             }
         });
     }
@@ -212,6 +227,9 @@ public class RequestPasswordActivity extends BaseActivity implements IRequestPwd
     public void sendSMSSuccess() {
         tvSendCode.startCount(null);
         canClick(false);
+        //验证码发送成功，则在弹出框显示手机号码
+        llPhone.setVisibility(View.VISIBLE);
+        tvPhone.setText(etPhone.getText().toString());
     }
 
     @Override

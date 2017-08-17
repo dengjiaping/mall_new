@@ -123,13 +123,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="55dp">
 
                 <TextView
                     android:id="@+id/tv_register"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="@dimen/default_layout_screen_gap"
                     android:paddingRight="@dimen/default_layout_screen_gap"
                     android:text="快速注册"
@@ -139,24 +139,38 @@
                 <TextView
                     android:id="@+id/tv_forget_pwd"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="@dimen/default_layout_screen_gap"
                     android:paddingRight="@dimen/default_layout_screen_gap"
                     android:text="忘记密码？"
                     android:textColor="@color/color_00bbc0"
                     android:textSize="@dimen/ts_14" />
 
+                <TextView
+                    android:id="@+id/tv_forget_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="35dp"
+                    android:paddingLeft="@dimen/default_layout_screen_gap"
+                    android:paddingRight="@dimen/default_layout_screen_gap"
+                    android:text="忘记账号？"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_14" />
+
 
             </RelativeLayout>
+
+
 
             <com.giveu.shoppingmall.widget.ClickEnabledTextView
                 android:id="@+id/tv_login"
                 style="@style/click_enabled_bt"
                 android:layout_marginLeft="@dimen/default_layout_screen_gap"
                 android:layout_marginRight="@dimen/default_layout_screen_gap"
-                android:layout_marginTop="41dp"
+                android:layout_marginTop="31dp"
                 android:text="登录" />
 
 
