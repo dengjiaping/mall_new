@@ -7,6 +7,27 @@
         android:name="com.giveu.shoppingmall.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
     <!-- Required -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Optional. Required for location feature -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Required -->
     <uses-permission android:name="com.giveu.shoppingmall.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
@@ -281,6 +302,9 @@
             android:name=".index.view.activity.ActivationStatusActivity"
             android:label="钱包激活状态" />
         <activity
+            android:name=".index.view.activity.SetPwdStatusActivity"
+            android:label="设置交易密码成功页" />
+        <activity
             android:name=".index.view.activity.TransactionPwdActivity"
             android:label="钱包激活设置交易密码" />
         <activity
@@ -351,7 +375,9 @@
         <activity
             android:name=".me.view.activity.CustomWebViewActivity"
             android:label="Web网页" />
-
+        <activity
+            android:name=".me.view.activity.MessageActivity"
+            android:label="消息列表" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"

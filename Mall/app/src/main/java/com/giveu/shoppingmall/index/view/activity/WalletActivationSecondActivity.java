@@ -58,7 +58,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-
 /**
  * 钱包激活二级页面
  * Created by 101900 on 2017/6/19.
@@ -408,12 +407,12 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                                             @Override
                                             public void onDismiss() {
                                                 //显示成功页
-                                                activationSuccess(mBaseContext, response, idPerson);
+                                                activationSuccess(mBaseContext, response, idPerson, "success");
                                             }
                                         });
                                     } else {
                                         //显示成功页
-                                        activationSuccess(mBaseContext, response, idPerson);
+                                        activationSuccess(mBaseContext, response, idPerson, "success");
                                     }
                                 }
                             }
@@ -421,7 +420,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
 
                         @Override
                         public void onError(BaseBean errorBean) {
-                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, errorBean.result);
+                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, "fail");
                         }
                     });
                 } else {
@@ -434,10 +433,10 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     /**
      * 激活成功显示状态页面
      */
-    public void activationSuccess(Activity activity, WalletActivationResponse wallResponse, String idPerson) {
-        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson);
-        finish();
+    public void activationSuccess(Activity activity, WalletActivationResponse wallResponse, String idPerson, String status) {
+        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson, status);
         setResult(RESULT_OK);
+        finish();
         LoginHelper.getInstance().setIdPerson(idPerson);
         BaseApplication.getInstance().fetchUserInfo();//刷新状态
     }

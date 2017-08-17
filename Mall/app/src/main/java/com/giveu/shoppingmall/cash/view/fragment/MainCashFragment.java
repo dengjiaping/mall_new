@@ -63,7 +63,7 @@ public class MainCashFragment extends BaseFragment {
 
     @Override
     protected void setListener() {
-        tvLoan.setOnClickListener(new View.OnClickListener() {
+        llTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isLoginAndActivation()){

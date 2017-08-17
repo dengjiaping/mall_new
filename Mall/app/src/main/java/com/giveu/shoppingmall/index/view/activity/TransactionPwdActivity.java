@@ -46,7 +46,7 @@ public class TransactionPwdActivity extends BaseActivity {
     public static void startIt(Activity mActivity, String idPerson) {
         Intent intent = new Intent(mActivity, TransactionPwdActivity.class);
         intent.putExtra("idPerson", idPerson);
-        mActivity.startActivityForResult(intent, 101);
+        mActivity.startActivity(intent);
     }
 
     public static void startItWithCode(Activity mActivity, String phone, String smsCode) {
@@ -89,7 +89,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                 ApiImpl.resetPayPwd(mBaseContext, confirmPwd, LoginHelper.getInstance().getIdPerson(), newPwd, phone, smsCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
-                                        ActivationStatusActivity.startSetPwd(mBaseContext,"transaction");
+                                        SetPwdStatusActivity.startSetPwd(mBaseContext,"transaction");
                                         finish();
                                     }
 
@@ -108,7 +108,7 @@ public class TransactionPwdActivity extends BaseActivity {
                                         LoginHelper.getInstance().setHasSetPwd(true);
                                         //再调用户信息，刷新数据
                                         BaseApplication.getInstance().fetchUserInfo();
-                                        ActivationStatusActivity.startSetPwd(mBaseContext);
+                                        SetPwdStatusActivity.startSetPwd(mBaseContext);
                                         finish();
                                     }
 

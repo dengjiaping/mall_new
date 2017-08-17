@@ -13,12 +13,14 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.index.presenter.ContactsPresenter;
 import com.giveu.shoppingmall.index.view.agent.IContactsView;
 import com.giveu.shoppingmall.me.view.activity.LivingAddressActivity;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -134,6 +136,8 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
         switch (flag) {
             case Const.CASH:
                 //取现跳转过来
+            case Const.RECHARGE:
+                //充值跳转过来
                 baseLayout.setTitle("请完善资料");
                 tvNext.setText("下一步");
                 break;
@@ -141,9 +145,6 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
                 //个人中心跳转过来
                 baseLayout.setTitle("我的联系人");
                 tvNext.setText("提交");
-                break;
-            case Const.RECHARGE:
-                //充值跳转过来
                 break;
         }
     }
@@ -209,8 +210,11 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
         switch (flag) {
             case Const.CASH:
                 //取现跳转过来,还需添加
+            case Const.RECHARGE:
+                //充值跳转过来
                 if (LoginHelper.getInstance().hasExistLive()) {
                     //设置了地址
+                    EventBusUtils.poseEvent(new PwdDialogEvent());
                 } else {
                     //没设置地址，去设置
                     LivingAddressActivity.startIt(mBaseContext);
@@ -219,9 +223,6 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
             case Const.PERSONCENTER:
                 //个人中心跳转过来
                 ToastUtils.showShortToast("添加联系人成功");
-                break;
-            case Const.RECHARGE:
-                //充值跳转过来
                 break;
         }
         finish();

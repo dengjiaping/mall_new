@@ -30,6 +30,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
+import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.event.RechargePayEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
@@ -198,7 +199,11 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //更新手机号
         initPhoneAndQuery();
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showPwdDialog(PwdDialogEvent event) {
+        //填写完居住地址回来弹出密码框（PwdDialog）
+        pwdDialog.showDialog();
+    }
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
@@ -512,7 +517,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void showProducts(RechargeResponse data) {
         //默认显示中国移动话费充值
-        if (data.call == null) {
+        if(data==null||data.call==null){
             return;
         }
         rechargeResponse = data;

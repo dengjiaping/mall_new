@@ -272,10 +272,11 @@ public class ApiImpl {
     }
 
     //删除银行卡
-    public static void deleteBankInfo(Activity context, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{id, StringUtils.string2Long(idPerson)});
+    public static void deleteBankInfo(Activity context,String code, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code","id", "idPerson"}, new Object[]{code,id, StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_deleteBankInfo, BaseBean.class, context, responseListener);
     }
+
 
     //设置默认代扣卡
     public static void setDefaultCard(Activity context, String code, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {

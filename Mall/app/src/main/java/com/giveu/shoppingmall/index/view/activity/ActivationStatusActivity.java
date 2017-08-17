@@ -12,8 +12,6 @@ import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.me.view.activity.IdentifyActivity;
-import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -48,25 +46,12 @@ public class ActivationStatusActivity extends BaseActivity {
     public final int BACK = 1;
     public final int SETPWD = 2;
     public final int REPEAT = 3;
-    String flag;//找回交易密码的标记
 
-    //钱包激活设置交易密码
-    public static void startSetPwd(Activity mActivity) {
-        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        mActivity.startActivity(intent);
-    }
-
-    //用于finish之前页面（找回交易密码）
-    public static void startSetPwd(Activity mActivity, String flag) {
-        Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
-        intent.putExtra("flag", flag);
-        mActivity.startActivity(intent);
-    }
     //显示手Q用户激活成功结果
-    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson) {
+    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson,String status) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
-            intent.putExtra("status", response.result);
+            intent.putExtra("status", status);
             if (response.data != null) {
                 //总额度
                 intent.putExtra("globleLimit", response.data.globleLimit);
@@ -80,25 +65,14 @@ public class ActivationStatusActivity extends BaseActivity {
                 intent.putExtra("lab", response.data.lab);
             }
         }
-//        else{
-//            //手q用户
-//            intent.putExtra("status", "success");
-//            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
-//            //提现额度
-//            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
-//            //消费额度
-//            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
-//            //TODO:额度为0的提示语
-//            //  intent.putExtra("lab", response.data.lab);
-//        }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
     //显示成功结果
-    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson) {
+    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson,String status) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
-            intent.putExtra("status", response.result);
+            intent.putExtra("status", status);
             if (response.data != null) {
                 //总额度
                 intent.putExtra("globleLimit", response.data.globleLimit);
@@ -110,17 +84,6 @@ public class ActivationStatusActivity extends BaseActivity {
                 intent.putExtra("lab", response.data.lab);
             }
         }
-//        else{
-//            //手q用户
-//            intent.putExtra("status", "success");
-//            intent.putExtra("globleLimit", LoginHelper.getInstance().getGlobleLimit());
-//            //提现额度
-//            intent.putExtra("cyLimit",LoginHelper.getInstance().getCylimit());
-//            //消费额度
-//            intent.putExtra("posLimit",LoginHelper.getInstance().getPosLimit());
-//            //TODO:额度为0的提示语
-//            //  intent.putExtra("lab", response.data.lab);
-//        }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
@@ -160,11 +123,6 @@ public class ActivationStatusActivity extends BaseActivity {
                 break;
             case BACK:
                 //返回
-                if ("transaction".equals(flag)) {
-                    BaseApplication.getInstance().finishActivity(IdentifyActivity.class);
-                    BaseApplication.getInstance().finishActivity(TransactionPwdActivity.class);
-                    BaseApplication.getInstance().finishActivity(RequestPasswordActivity.class);
-                }
                 finish();
                 break;
             case REPEAT:
@@ -177,12 +135,6 @@ public class ActivationStatusActivity extends BaseActivity {
     @Override
     public void setData() {
         String status = StringUtils.nullToEmptyString(getIntent().getStringExtra("status"));
-        flag = getIntent().getStringExtra("flag");
-        if ("transaction".equals(flag)) {
-            baseLayout.setTitle("设置成功");
-        } else {
-            baseLayout.setTitle("钱包激活");
-        }
         switch (status) {
             case "success":
                 //激活成功
@@ -230,24 +182,9 @@ public class ActivationStatusActivity extends BaseActivity {
                 }
                 break;
             default:
-                //设置完交易密码后跳转的设置成功页
-                tvHintBottom.setVisibility(View.GONE);
-                llDate.setVisibility(View.GONE);
-                tvHintMid.setVisibility(View.VISIBLE);
-                ivStatus.setImageResource(R.drawable.ic_activation_success);
-                tvStatus.setText("设置成功");
-                tvHintMid.setText("设置成功！请牢记你的交易密码");
-                tvSetTransactionPwd.setText("返回");
-                tvSetTransactionPwd.setTag(BACK);
+                //异常隐藏按钮
+                tvSetTransactionPwd.setVisibility(View.GONE);
                 break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 101) {
-            finish();
         }
     }
 }

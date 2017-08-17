@@ -114,11 +114,11 @@ android {
     productFlavors {
         official_offline {
             //开发环境
-            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: ""]
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: "2a7d0ac7875eb8714e7a13c0"]
         }
         official_online {
             //正式环境
-            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: ""]
+            manifestPlaceholders = [VERSION_NAME_VALUE: project.VERSION_NAME, JPUSH_APPKEY: "2a7d0ac7875eb8714e7a13c0"]
         }
 
     }

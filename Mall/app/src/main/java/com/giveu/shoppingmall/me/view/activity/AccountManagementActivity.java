@@ -149,7 +149,13 @@ public class AccountManagementActivity extends BaseActivity {
                 //完善个人资料
                 if (!LoginHelper.getInstance().hasAverageUser()) {
                     // 不是假数据激活用户，跳转填写
-                    PerfectInfoActivity.startIt(mBaseContext);
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        //其他用户已激活
+                        PerfectInfoActivity.startIt(mBaseContext);
+                    } else {
+                        //未激活
+                        notActiveDialog.showDialog();
+                    }
                 }
                 break;
             case R.id.tv_finish:
