@@ -16,9 +16,15 @@ public class FingerPrintHelper {
     private Activity mBaseContext;
 
     public FingerPrintHelper(Activity mBaseContext) {
-        try {
-            mFingerprintIdentify = new FingerprintIdentify(mBaseContext, null);
-        } catch (Exception e) {
+        String brand = android.os.Build.BRAND;
+        if (brand != null) {
+            brand = brand.toUpperCase();
+        }
+        if (brand != null && !brand.contains("GIONEE")) {
+            try {
+                mFingerprintIdentify = new FingerprintIdentify(mBaseContext, null);
+            } catch (Exception e) {
+            }
         }
         this.mBaseContext = mBaseContext;
     }
@@ -29,6 +35,9 @@ public class FingerPrintHelper {
      * @return
      */
     public boolean isFingerprintEnable() {
+        if (mFingerprintIdentify == null) {
+            return false;
+        }
         boolean isFingerPrintEnable = false;
         try {
             isFingerPrintEnable = mFingerprintIdentify.isFingerprintEnable();
@@ -44,6 +53,9 @@ public class FingerPrintHelper {
      * @return
      */
     public boolean isHardwareEnable() {
+        if (mFingerprintIdentify == null) {
+            return false;
+        }
         boolean isHardwareEnable = false;
         try {
             isHardwareEnable = mFingerprintIdentify.isHardwareEnable();
