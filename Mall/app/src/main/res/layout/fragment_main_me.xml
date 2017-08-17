@@ -231,6 +231,31 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_my_coupon"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/default_layout_screen_gap"
+            android:paddingRight="@dimen/default_layout_screen_gap">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="我的优惠券"
+                android:textSize="@dimen/ts_15" />
+
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_detail_grey" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/ll_help"
             android:layout_width="match_parent"
             android:layout_height="48dp"

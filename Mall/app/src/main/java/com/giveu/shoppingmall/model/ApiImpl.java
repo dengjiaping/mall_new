@@ -433,6 +433,9 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getOtherContact, ContactsBean.class, context, responseListener);
     }
+
+//    //获取优惠券列表
+//    public static void getCouponList
 }
 
 

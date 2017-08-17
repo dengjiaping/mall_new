@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
+import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
@@ -50,6 +51,8 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llBill;
     @BindView(R.id.ll_account_manage)
     LinearLayout llAcountManage;
+    @BindView(R.id.ll_my_coupon)
+    LinearLayout llMyCoupon;
     @BindView(R.id.ll_help)
     LinearLayout llHelp;
     @BindView(R.id.iv_avatar)
@@ -165,7 +168,7 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_quota})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -203,6 +206,12 @@ public class MainMeFragment extends BaseFragment {
             case R.id.ll_account_manage:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     AccountManagementActivity.startIt(mBaseContext);
+                }
+                break;
+
+            case R.id.ll_my_coupon:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    MyCouponActivity.startIt(mBaseContext);
                 }
                 break;
 
