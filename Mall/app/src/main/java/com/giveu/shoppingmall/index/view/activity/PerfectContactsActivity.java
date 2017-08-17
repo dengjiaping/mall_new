@@ -83,7 +83,7 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
     }
 
     /**
-     * 初始化其他证明选择对话框
+     * 初始化联系人关系选择对话框
      */
     private void initChooseDialog() {
         contactsDialog = new CustomListDialog(mBaseContext, new AdapterView.OnItemClickListener() {
@@ -114,17 +114,6 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
             public void afterTextChanged(Editable s) {
                 //按钮置灰的判断
                 nextButtonCanClick(false);
-            }
-        });
-        llChooseRelationship.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CommonUtils.isNullOrEmpty(contactsCodeList) || CommonUtils.isNullOrEmpty(contactsTextList)) {
-                    //没有获取到列表
-                    saveContactsList();
-                } else {
-                    contactsDialog.show();
-                }
             }
         });
     }
@@ -189,6 +178,12 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
         super.onClick(view);
         switch (view.getId()) {
             case R.id.ll_choose_relationship:
+                if (CommonUtils.isNullOrEmpty(contactsCodeList) || CommonUtils.isNullOrEmpty(contactsTextList)) {
+                    //没有获取到列表
+                    saveContactsList();
+                } else {
+                    contactsDialog.show();
+                }
                 break;
             case R.id.tv_next:
                 if (tvNext.isClickEnabled()) {
@@ -236,8 +231,11 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
     @Override
     public void showContactsList(List<ContactsResponse> data) {
         for (ContactsResponse contactsResponse : data) {
-            contactsTextList.add(contactsResponse.typeName);
-            contactsCodeList.add(contactsResponse.personType);
+            if (contactsResponse != null) {
+                contactsTextList.add(contactsResponse.typeName);
+                contactsCodeList.add(contactsResponse.personType);
+            }
         }
+        contactsDialog.setData(contactsTextList);
     }
 }

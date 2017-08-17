@@ -38,7 +38,9 @@ public class ContactsPresenter extends BasePresenter<IContactsView> {
             @Override
             public void onSuccess(ContactsResponse response) {
                 if (getView() != null) {
-                    getView().showContactsList(response.data);
+                    if(response != null){
+                        getView().showContactsList(response.data);
+                    }
                 }
             }
 
