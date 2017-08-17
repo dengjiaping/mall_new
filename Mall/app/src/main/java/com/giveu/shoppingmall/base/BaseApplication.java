@@ -133,7 +133,7 @@ public class BaseApplication extends MultiDexApplication {
                 @Override
                 public void onSuccess(LoginResponse response) {
                     response.data.accessToken = SharePrefUtil.getAppToken();
-                    LoginHelper.getInstance().saveLoginStatus(response.data);
+                    LoginHelper.getInstance().saveLoginStatus(response.data,false);
                     //发送通知，使订阅者更新ui
                     EventBusUtils.poseEvent(response.data);
                 }

@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.recharge.view.fragment;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -91,8 +92,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @BindView(R.id.iv_mail_list)
     ImageView ivMailList;
     private String phoneArea;
-    //用户名
-    private String username;
     //运营商
     private String salePrice;
     private String mobile;
@@ -115,6 +114,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private PermissionDialog permissionDialog;
     private MainActivity mainActivity;
+    private boolean pwdDismissByCancel = true;//密码框是否因为点击返回键而消失的标识
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,6 +126,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
         notActiveDialog = new NotActiveDialog(mBaseContext);
+        pwdDialog = new PwdDialog(mBaseContext);
         initPermissionDialog();
         registerEventBus();
         mainActivity = (MainActivity) mBaseContext;
@@ -162,6 +163,18 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 }
             }
         });
+        pwdDialog.setdismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //当密码弹框消失时，判断是不是因为点击返回键消失的
+                // 如果是那么需要展示订单弹框，避免因为订单消失而重复创建订单
+                if (pwdDismissByCancel && orderDialog != null) {
+                    ToastUtils.showShortToast("支付取消");
+                    orderDialog.showDialog();
+                }
+                pwdDismissByCancel = true;
+            }
+        });
 
         gvRecharge.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -171,18 +184,13 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         //判断是否设置了交易密码
                         if (LoginHelper.getInstance().hasSetPwd()) {
-                            //可用金额是否大于充值产品金额
-                            if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < rechargeAdapter.getItem(checkId).salePrice) {
-                                ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
-                            } else {
-                                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                                mobile = etRecharge.getText().toString();
-                                productType = rechargeAdapter.getItem(checkId).productType;
-                                productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                                productName = rechargeAdapter.getItem(checkId).name;
-                                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                        rechargeAdapter.getItem(checkId).callTrafficId);
-                            }
+                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                            mobile = etRecharge.getText().toString();
+                            productType = rechargeAdapter.getItem(checkId).productType;
+                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                            productName = rechargeAdapter.getItem(checkId).name;
+                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                    rechargeAdapter.getItem(checkId).callTrafficId);
                         } else {
                             TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                         }
@@ -199,11 +207,15 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //更新手机号
         initPhoneAndQuery();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showPwdDialog(PwdDialogEvent event) {
         //填写完居住地址回来弹出密码框（PwdDialog）
-        pwdDialog.showDialog();
+        if (pwdDialog != null) {
+            pwdDialog.showDialog();
+        }
     }
+
     private void initPermissionDialog() {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
@@ -337,9 +349,11 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 CommonUtils.closeSoftKeyBoard(mBaseContext);
                 //获取该手机号运营商
                 presenter.getPhoneInfo(phone);
+                tvMessage.setText("");
             } else {
                 isVailable = false;
-                tvMessage.setText("");
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+                tvMessage.setText("错误号码");
                 if (rechargeAdapter != null) {
                     changeItemCanClick(rechargeAdapter.getData());
                 }
@@ -451,9 +465,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 return;
             }
             cursor.moveToFirst();
-            // 获得DATA表中的名字
-            username = cursor.getString(cursor
-                    .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             // 条件为联系人ID
             String contactId = cursor.getString(cursor
                     .getColumnIndex(ContactsContract.Contacts._ID));
@@ -517,7 +528,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void showProducts(RechargeResponse data) {
         //默认显示中国移动话费充值
-        if(data==null||data.call==null){
+        if (data == null || data.call == null) {
             return;
         }
         rechargeResponse = data;
@@ -565,8 +576,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void showErrorInfo(String message) {
         //查询手机归属地失败后的回调
-        tvMessage.setText(message);
-        tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+        ToastUtils.showShortToast(message);
     }
 
     @Override
@@ -589,7 +599,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     if (paymentType == 0) {
                         //钱包支付
                         if (StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit()) >= StringUtils.string2Double(salePrice)) {
-                            pwdDialog = new PwdDialog(mBaseContext);
                             pwdDialog.setOnCheckPwdListener(new PwdDialog.OnCheckPwdListener() {
                                 @Override
                                 public void checkPwd(String payPwd) {
@@ -616,6 +625,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
 
     @Override
     public void pwdSuccess() {
+        pwdDismissByCancel = false;
         //交易密码校验成功
         pwdDialog.dissmissDialog();
         VerifyActivity.startItForRecharge(mBaseContext, mobile.replace(" ", ""), productId, orderNo, paymentType, salePrice);
