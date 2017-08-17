@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
 
 
@@ -237,9 +236,9 @@ public class BaseApplication extends MultiDexApplication {
     }
 
     private void initPush() {
-        JPushInterface.init(this);
-        JPushInterface.setDebugMode(true);
-        LogUtil.e("registerId: "+JPushInterface.getRegistrationID(this));
+//        JPushInterface.init(this);
+//        JPushInterface.setDebugMode(true);
+//        LogUtil.e("registerId: "+JPushInterface.getRegistrationID(this));
     }
 
 
