@@ -286,7 +286,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                         case 10:
                         case 12:
                         case 13:
-                            permissionDialog.setPermissionStr("请检查网络或位置权限");
+                            permissionDialog.setPermissionStr("钱包激活需要开启网络和定位权限，是否开启？");
                             permissionDialog.show();
                             break;
                         default:
