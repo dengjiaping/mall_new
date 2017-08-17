@@ -154,7 +154,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
 
     @Override
     public void onLoginSuccess(LoginResponse data) {
-        LoginHelper.getInstance().saveLoginStatus(data);
+        LoginHelper.getInstance().saveLoginStatus(data, true);
         if (isForSetting) {
             //关闭手势或指纹
             if (isForClosePattern) {

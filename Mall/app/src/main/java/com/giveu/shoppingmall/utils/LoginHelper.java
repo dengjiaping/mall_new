@@ -111,7 +111,7 @@ public class LoginHelper extends AbsSharePref {
     }
 
     //保存用户登录信息
-    public void saveLoginStatus(LoginResponse personInfo) {
+    public void saveLoginStatus(LoginResponse personInfo, boolean isLogin) {
         SharePrefUtil.setAppToken(personInfo.accessToken);
         putString(ACCESS_TOKEN, personInfo.accessToken);
         putString(ACTIVE_DATE, personInfo.activeDate);
@@ -120,6 +120,10 @@ public class LoginHelper extends AbsSharePref {
         putString(CERTNO, personInfo.ident);
         putString(CYLIMIT, personInfo.cyLimit);
         putString(END_DATE, personInfo.endDate);
+        //只有登录的时候才保存userId，查询个人信息不保存，防止后台查询个人信息时返回userId为空
+        if (isLogin) {
+            putString(USER_ID, personInfo.userId);
+        }
         putString(GLOBLE_LIMIT, personInfo.globleLimit);
         putString(ID_PERSON, personInfo.idPerson);
         putString(PHONE, personInfo.phone);
@@ -127,7 +131,6 @@ public class LoginHelper extends AbsSharePref {
         putString(POS_LIMIT, personInfo.posLimit);
         putString(NAME, personInfo.name);
         putBoolean(STATUS, personInfo.status);
-        putString(USER_ID, personInfo.userId);
         putString(USER_NAME, personInfo.userName);
         putString(USER_PIC, personInfo.userPic);
         putString(AVAILABLE_RECHARGE_LIMIT, personInfo.availableRechargeLimit);
@@ -163,7 +166,6 @@ public class LoginHelper extends AbsSharePref {
         }
         getLoginStatus();
     }
-
 
     //退出登录，清空信息
     public void logout() {

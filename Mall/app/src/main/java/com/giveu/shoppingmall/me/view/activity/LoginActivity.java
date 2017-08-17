@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
@@ -66,6 +69,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     private int keyHeight = 0; //软件盘弹起后所占高度
 
     private LoginPresenter presenter;
+    private CustomDialog accountDialog;
+    private TextView tvConfirm;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
@@ -110,7 +115,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
 
     @OnClick({R.id.tv_login, R.id.iv_delete_account, R.id.iv_delete_pwd,
-            R.id.tv_register, R.id.tv_forget_pwd, R.id.iv_wechat_login, R.id.iv_qq_login, R.id.iv_weibo_login})
+            R.id.tv_register, R.id.tv_forget_pwd, R.id.iv_wechat_login, R.id.iv_qq_login, R.id.iv_weibo_login, R.id.tv_forget_account})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -154,9 +159,25 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 presenter.SinaWeiboLogin();
                 break;
 
+            case R.id.tv_forget_account:
+                initAccountDialog();
+                accountDialog.show();
+                break;
+
             default:
                 break;
         }
+    }
+
+    private void initAccountDialog() {
+        accountDialog = new CustomDialog(mBaseContext, R.layout.dialog_login_hint, R.style.customerDialog, Gravity.CENTER, false);
+        tvConfirm = (TextView) accountDialog.findViewById(R.id.tv_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accountDialog.dismiss();
+            }
+        });
     }
 
     private boolean canClick(boolean showToast) {
@@ -196,7 +217,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         //重新登录后要先清空之前的登录信息，使用户有两次设置指纹或手势的机会,再重新保存用户信息
         LoginHelper.getInstance().logout();
         ToastUtils.showLongToast("登录成功");
-        LoginHelper.getInstance().saveLoginStatus(data);
+        LoginHelper.getInstance().saveLoginStatus(data,true);
         //统计登录次数
         MobclickAgent.onEvent(mBaseContext, "Forward");
         MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);

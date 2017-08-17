@@ -12,6 +12,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -19,8 +20,10 @@ import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 
@@ -113,6 +116,17 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 codeType = "recharge";
                 break;
         }
+        baseLayout.setBackClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //当前界面是充值过来的，点击返回键退出时，让充值界面的订单框弹出来
+                if (RECHARGE.equals(statusType)) {
+                    ToastUtils.showShortToast("支付取消");
+                    EventBusUtils.poseEvent(new OrderDialogEvent());
+                }
+                finish();
+            }
+        });
         presenter.sendSMSCode(LoginHelper.getInstance().getPhone(), codeType);
     }
 
@@ -225,6 +239,16 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 break;
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //当前界面是充值过来的，点击返回键退出时，让充值界面的订单框弹出来
+        if (RECHARGE.equals(statusType)) {
+            ToastUtils.showShortToast("支付取消");
+            EventBusUtils.poseEvent(new OrderDialogEvent());
+        }
+        super.onBackPressed();
     }
 
     @Override
