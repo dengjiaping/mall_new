@@ -383,6 +383,19 @@ public class StringUtils {
         return result;
     }
 
+    public static String convertTime(String timeStamp) {
+        String result = "";
+        if (isNotNull(timeStamp)) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+            try {
+                result = format.format(new Date(Long.parseLong(timeStamp)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
     //2016/11/26转成11/26
     public static String transactionSearchDate(String sourceDate) {
         String repayDate = "";

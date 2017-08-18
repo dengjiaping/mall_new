@@ -44,6 +44,13 @@ public class CouponListResponse extends BaseBean<ArrayList<CouponListResponse>> 
     public String useRule;
     public String useRuleDesc;
     public int userId;
-    public boolean isNotLine;
+    public boolean isDivider;
+
+    /**
+     * cardType : OPPO
+     */
+
+    private String cardType;
+
 
 }

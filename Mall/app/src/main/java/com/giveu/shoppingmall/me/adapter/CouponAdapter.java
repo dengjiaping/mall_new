@@ -1,12 +1,19 @@
 package com.giveu.shoppingmall.me.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.model.bean.response.CouponBean;
+import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
+import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 
 import java.util.List;
 
@@ -14,43 +21,105 @@ import java.util.List;
  * Created by 101912 on 2017/8/16.
  */
 
-public class CouponAdapter extends MultiItemTypeAdapter<CouponBean> {
+public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
 
-    private boolean isInvalidCoupon;//是否有失效优惠券
 
-    public CouponAdapter(Context context, List<CouponBean> datas) {
+    private CustomDialog dialog;
+
+    public CouponAdapter(Context context, final List<CouponListResponse> datas) {
         super(context, datas);
-        addItemViewDelegate(new ItemViewDelegate<CouponBean>() {
+        addItemViewDelegate(new ItemViewDelegate<CouponListResponse>() {
             @Override
             public int getItemViewLayoutId() {
                 return R.layout.lv_coupon_item;
             }
 
             @Override
-            public boolean isForViewType(CouponBean item, int position) {
-                return item.isNotLine;
+            public boolean isForViewType(CouponListResponse item, int position) {
+                return !item.isDivider;
             }
 
             @Override
-            public void convert(ViewHolder holder, CouponBean couponBean, int position) {
-
+            public void convert(ViewHolder holder, final CouponListResponse couponBean, int position) {
+                if ("0".equals(couponBean.status) || "1".equals(couponBean.status)) {
+                    holder.setBackgroundRes(R.id.rl_item_left, R.drawable.bg_valid);
+                    holder.setVisible(R.id.iv_used, false);
+                    holder.setVisible(R.id.iv_overdue, false);
+                    holder.setVisible(R.id.rl_oval_button, true);
+                } else {
+                    holder.setBackgroundRes(R.id.rl_item_left, R.drawable.bg_invalid);
+                    holder.setVisible(R.id.rl_oval_button, false);
+                    if ("2".equals(couponBean.status)) {
+                        holder.setVisible(R.id.iv_used, true);
+                        holder.setVisible(R.id.iv_overdue, false);
+                    } else {
+                        holder.setVisible(R.id.iv_used, false);
+                        holder.setVisible(R.id.iv_overdue, true);
+                    }
+                }
+                holder.setText(R.id.tv_descpt, couponBean.descpt);
+                if (StringUtils.isNotNull(couponBean.price))
+                    holder.setText(R.id.tv_price, couponBean.price);
+                holder.setText(R.id.iv_subtitle, couponBean.subtitle);
+                String startTime = StringUtils.convertTime(String.valueOf(couponBean.createTime));
+                String endTime = StringUtils.convertTime(String.valueOf(couponBean.endTime));
+                holder.setText(R.id.tv_date, startTime + "-" + endTime);
+                //立即使用button
+                holder.setOnClickListener(R.id.tv_button, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showLongToast(couponBean.useRuleDesc);
+                    }
+                });
+                //使用规则dialog
+                holder.setOnClickListener(R.id.rl_detail, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        initDialog(couponBean.useRule);
+                        dialog.show();
+                    }
+                });
             }
         });
 
-        addItemViewDelegate(new ItemViewDelegate<CouponBean>() {
+        addItemViewDelegate(new ItemViewDelegate<CouponListResponse>() {
             @Override
             public int getItemViewLayoutId() {
                 return R.layout.lv_invalid_item;
             }
 
             @Override
-            public boolean isForViewType(CouponBean item, int position) {
-                return !item.isNotLine;
+            public boolean isForViewType(CouponListResponse item, int position) {
+                return item.isDivider;
             }
 
             @Override
-            public void convert(ViewHolder holder, CouponBean couponBean, int position) {
+            public void convert(ViewHolder holder, CouponListResponse couponBean, int position) {
+                holder.setOnClickListener(R.id.rl_divider, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
 
+            }
+        });
+    }
+
+    //初始化使用规则dialog
+    private void initDialog(String useRule) {
+        dialog = new CustomDialog((Activity) mContext, R.layout.dialog_coupon_rule, R.style.customerDialog, Gravity.CENTER, false);
+        TextView tv_rule1 = (TextView) dialog.findViewById(R.id.tv_rule1);
+        TextView tv_rule2 = (TextView) dialog.findViewById(R.id.tv_rule2);
+        TextView tv_rule3 = (TextView) dialog.findViewById(R.id.tv_rule3);
+        TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
+        String[] rules = useRule.split("；");
+        tv_rule1.setText(rules[0]);
+        tv_rule2.setText(rules[1]);
+        tv_rule3.setText(rules[2]);
+        tv_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }
