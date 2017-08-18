@@ -10,8 +10,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
  */
 public class DebugConfig {
 
-    public static final boolean isTest = true;
-    public static final boolean isDev = false;
+    public static final boolean isTest = false;
+    public static final boolean isDev = true;
     public static final boolean isOnline = false;
 
 
@@ -32,7 +32,7 @@ public class DebugConfig {
 
     private static String DOMAIN_DEV = "http://10.10.11.140:9000/";//开发域名
     private static String DOMAIN_TEST = " http://dafyshop.dafysz.cn:10001/";//域名
-    private static String DOMAIN_ONLINE = "http://dafyshop.dafycredit.cn/";//域名
+    private static String DOMAIN_ONLINE = "http://dafyshop01.dafysz.cn/";//域名
 
 
     public static final String API_VERSION = "v1/";//api版本，开发，正式环境可用
