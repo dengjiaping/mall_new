@@ -146,7 +146,7 @@ public class ApiImpl {
 
     //用户注册
     public static void register(Activity context, String mobile, String password, String randCode, BaseRequestAgent.ResponseListener<RegisterResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode","platform"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode,"Android"});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "mobile", "password", "randCode", "platform"}, new String[]{SharePrefUtil.getUUId(), mobile, password, randCode, "Android"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_register, RegisterResponse.class, context, responseListener);
     }
 
@@ -170,7 +170,7 @@ public class ApiImpl {
 
     //用户登录
     public static void login(Activity context, String userName, String password, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password", "platform"}, new String[]{SharePrefUtil.getUUId(), userName, password,"Android"});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password", "platform"}, new String[]{SharePrefUtil.getUUId(), userName, password, "Android"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
     }
 
@@ -273,8 +273,8 @@ public class ApiImpl {
     }
 
     //删除银行卡
-    public static void deleteBankInfo(Activity context,String code, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code","id", "idPerson"}, new Object[]{code,id, StringUtils.string2Long(idPerson)});
+    public static void deleteBankInfo(Activity context, String code, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"code", "id", "idPerson"}, new Object[]{code, id, StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_bankCard_deleteBankInfo, BaseBean.class, context, responseListener);
     }
 
@@ -429,6 +429,7 @@ public class ApiImpl {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getLiveAddress, LivingAddressBean.class, context, responseListener);
     }
+
     //获取居住地址信息
     public static void getOtherContact(Activity context, String idPerson, BaseRequestAgent.ResponseListener<ContactsBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
@@ -436,9 +437,9 @@ public class ApiImpl {
     }
 
     //获取优惠券列表
-    public static void getCouponList(String personId, BaseRequestAgent.ResponseListener<CouponListResponse> responseListener) {
+    public static void getCouponList(Activity context, String personId, BaseRequestAgent.ResponseListener<CouponListResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId"}, new Object[]{StringUtils.string2Long(personId)});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_getCourtesyCardList, CouponListResponse.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_getCourtesyCardList, CouponListResponse.class, context, responseListener);
     }
 
     //领取优惠券

@@ -239,7 +239,7 @@
             android:id="@+id/ll_my_coupon"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:background="@color/white"
             android:paddingLeft="@dimen/default_layout_screen_gap"
             android:paddingRight="@dimen/default_layout_screen_gap">

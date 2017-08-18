@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="85dp"
     android:layout_gravity="center"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
 
     <RelativeLayout
+        android:id="@+id/rl_item_left"
         android:layout_width="100dp"
         android:layout_height="85dp"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
@@ -20,15 +20,35 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_50_valid" />
+                android:orientation="horizontal">
 
-            <ImageView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="50"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ts_19" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/iv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_valid_rule" />
+                android:text="满60元可用"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_10" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -48,6 +68,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_descpt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="现取500元免费用7天"
@@ -55,6 +76,7 @@
                 android:textSize="@dimen/ts_15" />
 
             <TextView
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -66,12 +88,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_marginTop="8dp"
+                android:layerType="software"
                 android:src="@drawable/shape_dash_line" />
 
             <RelativeLayout
+                android:id="@+id/rl_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_height="match_parent"
+                android:paddingTop="4dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -91,6 +115,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_oval_button"
             android:layout_width="50dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
@@ -100,6 +125,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/tv_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="立即使用"
@@ -113,16 +139,18 @@
             android:layout_alignParentRight="true">
 
             <ImageView
+                android:id="@+id/iv_used"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_coupon_used"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
+                android:id="@+id/iv_overdue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_coupon_overdue"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
