@@ -20,6 +20,7 @@ import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
+import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
@@ -434,8 +435,17 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getOtherContact, ContactsBean.class, context, responseListener);
     }
 
-//    //获取优惠券列表
-//    public static void getCouponList
+    //获取优惠券列表
+    public static void getCouponList(String personId, BaseRequestAgent.ResponseListener<CouponListResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId"}, new Object[]{StringUtils.string2Long(personId)});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_account_getCouponList, CouponListResponse.class, responseListener);
+    }
+
+    //领取优惠券
+    public static void receiveCoupon(String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{StringUtils.string2Long(personId), userId});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.receiveCoupon, BaseBean.class, responseListener);
+    }
 
 }
 

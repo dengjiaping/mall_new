@@ -10,6 +10,7 @@
     <dimen name="ts_base_layout_title">17sp</dimen>
     <dimen name="ts_pull_footer">15sp</dimen>
 
+    <dimen name="ts_9">9sp</dimen>
     <dimen name="ts_10">10sp</dimen>
     <dimen name="ts_11">11sp</dimen>
     <dimen name="ts_12">12sp</dimen>
