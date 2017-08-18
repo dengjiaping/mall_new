@@ -12,6 +12,7 @@ import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.index.view.dialog.CouponDialog;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -46,9 +47,10 @@ public class ActivationStatusActivity extends BaseActivity {
     public final int BACK = 1;
     public final int SETPWD = 2;
     public final int REPEAT = 3;
+    CouponDialog couponDialog;
 
     //显示手Q用户激活成功结果
-    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson,String status) {
+    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson,String status,boolean isShow,boolean hasShowCoupon) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
             intent.putExtra("status", status);
@@ -63,13 +65,17 @@ public class ActivationStatusActivity extends BaseActivity {
                 intent.putExtra("isSetPwd", response.data.isSetPwd);
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
+                //当前日期是否还能领取优惠券
+                intent.putExtra("isShow",isShow);
+                //实现满足额度为0条件显示领取优惠券弹窗
+                intent.putExtra("hasShowCoupon",hasShowCoupon);
             }
         }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
     //显示成功结果
-    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson,String status) {
+    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson,String status,boolean isShow,boolean hasShowCoupon) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
             intent.putExtra("status", status);
@@ -82,6 +88,10 @@ public class ActivationStatusActivity extends BaseActivity {
                 intent.putExtra("posLimit", response.data.posLimit);
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
+                //当前日期是否还能领取优惠券
+                intent.putExtra("isShow",isShow);
+                //实现满足额度为0条件显示领取优惠券弹窗
+                intent.putExtra("hasShowCoupon",hasShowCoupon);
             }
         }
         intent.putExtra("idPerson", idPerson);
@@ -101,6 +111,14 @@ public class ActivationStatusActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_activation_status);
         baseLayout.setTitle("钱包激活");
+        boolean isShow = getIntent().getBooleanExtra("isShow",false);
+        boolean hasShowCoupon = getIntent().getBooleanExtra("hasShowCoupon",false);
+        couponDialog = new CouponDialog(mBaseContext);
+        if(isShow && hasShowCoupon){
+            //当前日期还能领取优惠券 && 取现和消费额度都为0
+            //showDialog
+            couponDialog.showDialog();
+        }
     }
 
 

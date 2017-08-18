@@ -434,7 +434,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
      * 激活成功显示状态页面
      */
     public void activationSuccess(Activity activity, WalletActivationResponse wallResponse, String idPerson, String status) {
-        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson, status);
+        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson, status,true,wallResponse.hasShowCouponDialog());
         setResult(RESULT_OK);
         finish();
         LoginHelper.getInstance().setIdPerson(idPerson);

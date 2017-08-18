@@ -132,13 +132,13 @@ public class WalletActivationFirstActivity extends BaseActivity {
                                         @Override
                                         public void onDismiss() {
                                             //显示成功页
-                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success");
+                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success",true,response.data.hasShowCouponDialog());
                                             finish();
                                         }
                                     });
                                 } else {
                                     //显示成功页
-                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success");
+                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success",true,response.data.hasShowCouponDialog());
                                     finish();
                                 }
 

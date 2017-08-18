@@ -49,6 +49,9 @@ public class DebugConfig {
     public static String H5_ONLINE = "http://3c.dafysz.cn/";
     public static String H5_TEST = "http://wx.dafycredit.cn/";
 
+    //优惠券 baseurl
+    public static String COURTESY_DEV = "http://idcwxtest.dafysz.cn/";
+    public static String COURTESY_TEST = "http://wx.dafycredit.cn/";
 
     /**
      * 反馈的域名
