@@ -2,13 +2,22 @@ package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.explosionfield.ExplosionField;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 
 /**
@@ -18,27 +27,59 @@ import com.giveu.shoppingmall.base.CustomDialog;
 public class CouponDialog {
     private CustomDialog mDialog;
     private Activity mActivity;
+    private ExplosionField mExplosionField;
+    ImageView ivCoupon, ivReceive, ivClose;
 
-    public CouponDialog(Activity mActivity) {
+    public CouponDialog(final Activity mActivity) {
         this.mActivity = mActivity;
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.activity_receive_coupon, null);
-        ImageView ivClose = (ImageView) convertView.findViewById(R.id.iv_close);
-        ImageView ivReceive = (ImageView) convertView.findViewById(R.id.iv_receive);
-        initView(convertView);
+        ivClose = (ImageView) convertView.findViewById(R.id.iv_close);
+        ivCoupon = (ImageView) convertView.findViewById(R.id.iv_coupon);
+        ivReceive = (ImageView) convertView.findViewById(R.id.iv_receive);
         mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, true);
         mDialog.setCancelable(false);
+        mExplosionField = ExplosionField.attach2Window(mDialog);
+        Window window = mDialog.getWindow();
+        if (window != null) {
+            window.setWindowAnimations(R.style.dialogWindowCouponAnim); //设置窗口弹出动画
+        }
+        initView(convertView);
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialog.dismiss();
+                //mDialog.dismiss();
+                mExplosionField.explode(ivClose);
+                mExplosionField.explode(ivCoupon);
+                mExplosionField.explode(ivReceive);
+                view.setOnClickListener(null);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mActivity != null && !mActivity.isFinishing() && mDialog != null && mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+                    }
+                }, 1000);
             }
         });
+
         ivReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialog.dismiss();
-                //调接口
+                // ApiImpl.receiveCoupon("15079999999","402", new BaseRequestAgent.ResponseListener<BaseBean>() {
+                ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+                    @Override
+                    public void onSuccess(BaseBean response) {
+                        ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
+                        mDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                });
             }
         });
     }
@@ -47,7 +88,7 @@ public class CouponDialog {
         mDialog.show();
     }
 
-    public void initView(View view){
+    public void initView(View view) {
 
     }
 }

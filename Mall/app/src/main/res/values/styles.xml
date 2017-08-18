@@ -401,7 +401,10 @@
         <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
     </style>
-
+    <!--领取优惠券弹窗动画-->
+    <style name="dialogWindowCouponAnim" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/dialog_coupon_enter_anim</item>
+    </style>
     <style name="order_dialog_style" parent="Theme.AppCompat.Dialog">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@android:color/transparent</item>

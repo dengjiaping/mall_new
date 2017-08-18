@@ -10,8 +10,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
  */
 public class DebugConfig {
 
-    public static final boolean isTest = false;
-    public static final boolean isDev = true;
+    public static final boolean isTest = true;
+    public static final boolean isDev = false;
     public static final boolean isOnline = false;
 
 
@@ -95,6 +95,21 @@ public class DebugConfig {
             return H5_ONLINE;
         } else {
             return H5_TEST;
+        }
+    }
+
+    /**
+     * 领取优惠券
+     * @return
+     */
+    public static String getCourtesyUrl() {
+        if (isOnline) {
+            //还没拿到
+            return "";
+        } else if (isDev) {
+            return COURTESY_DEV;
+        } else {
+            return COURTESY_TEST;
         }
     }
 }

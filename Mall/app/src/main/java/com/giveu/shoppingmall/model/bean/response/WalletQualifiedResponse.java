@@ -37,6 +37,7 @@ public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
     public String isActivation;//1 手Q激活
     public boolean isPhoneChage;
     public boolean isSetPwd;
+    public boolean coupon;
     public String posLimit;
     public String lab;
 
@@ -63,7 +64,7 @@ public class WalletQualifiedResponse extends BaseBean<WalletQualifiedResponse> {
     public boolean hasShowCouponDialog() {
         //取现额度和消费额度为0的用户
         if (StringUtils.isNotNull(cyLimit) && StringUtils.isNotNull(posLimit)) {
-            if (0 == Double.parseDouble(cyLimit) && 0 == Double.parseDouble(posLimit)) {
+            if ((0 == Double.parseDouble(cyLimit)) && (0 == Double.parseDouble(posLimit))) {
                 return true;
             }
         }

@@ -96,6 +96,7 @@ public class ActivationStatusActivity extends BaseActivity {
         }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
+
     }
 
     //显示失败结果
@@ -116,7 +117,6 @@ public class ActivationStatusActivity extends BaseActivity {
         couponDialog = new CouponDialog(mBaseContext);
         if(isShow && hasShowCoupon){
             //当前日期还能领取优惠券 && 取现和消费额度都为0
-            //showDialog
             couponDialog.showDialog();
         }
     }

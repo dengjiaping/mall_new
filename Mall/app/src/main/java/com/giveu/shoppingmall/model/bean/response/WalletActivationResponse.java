@@ -22,6 +22,7 @@ public class WalletActivationResponse extends BaseBean<WalletActivationResponse>
     public String cyLimit;
     public String globleLimit;
     public boolean isPhoneChage;
+    public boolean coupon;
     public String lab;
     public String posLimit;
 
@@ -32,7 +33,7 @@ public class WalletActivationResponse extends BaseBean<WalletActivationResponse>
     public boolean hasShowCouponDialog(){
         //取现额度和消费额度为0的用户
         if(StringUtils.isNotNull(cyLimit) && StringUtils.isNotNull(posLimit)){
-            if(0 == Double.parseDouble(cyLimit) && 0 == Double.parseDouble(posLimit)){
+            if((0 == Double.parseDouble(cyLimit)) && (0 == Double.parseDouble(posLimit))){
                 return true;
             }
         }

@@ -47,6 +47,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
     @BindView(R.id.tv_next)
     ClickEnabledTextView tvNext;
     NormalHintDialog walletActivationDialog;
+
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, WalletActivationFirstActivity.class);
         mActivity.startActivity(intent);
@@ -115,7 +116,7 @@ public class WalletActivationFirstActivity extends BaseActivity {
         if (tvNext.isClickEnabled()) {
             String ident = StringUtils.getTextFromView(etIdent);
             String name = StringUtils.getTextFromView(etName);
-            ApiImpl.getWalletQualified(mBaseContext,LoginHelper.getInstance().getUserId(), ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
+            ApiImpl.getWalletQualified(mBaseContext, LoginHelper.getInstance().getUserId(), ident, name, new BaseRequestAgent.ResponseListener<WalletQualifiedResponse>() {
                 @Override
                 public void onSuccess(final WalletQualifiedResponse response) {
                     //有资质继续填写资料
@@ -132,13 +133,13 @@ public class WalletActivationFirstActivity extends BaseActivity {
                                         @Override
                                         public void onDismiss() {
                                             //显示成功页
-                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success",true,response.data.hasShowCouponDialog());
+                                            ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(), "success", response.data.coupon, response.data.hasShowCouponDialog());
                                             finish();
                                         }
                                     });
                                 } else {
                                     //显示成功页
-                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(),"success",true,response.data.hasShowCouponDialog());
+                                    ActivationStatusActivity.startShowQQResultSuccess(mBaseContext, response, LoginHelper.getInstance().getIdPerson(), "success", response.data.coupon, response.data.hasShowCouponDialog());
                                     finish();
                                 }
 

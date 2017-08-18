@@ -438,13 +438,13 @@ public class ApiImpl {
     //获取优惠券列表
     public static void getCouponList(String personId, BaseRequestAgent.ResponseListener<CouponListResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId"}, new Object[]{StringUtils.string2Long(personId)});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_account_getCouponList, CouponListResponse.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_getCourtesyCardList, CouponListResponse.class, responseListener);
     }
 
     //领取优惠券
     public static void receiveCoupon(String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{StringUtils.string2Long(personId), userId});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.receiveCoupon, BaseBean.class, responseListener);
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, responseListener);
     }
 
 }

@@ -10,6 +10,7 @@ public interface ApiUrl {
     String BASE_URL = DebugConfig.getBaseUrl();
     String H5_BASE_URL = DebugConfig.getH5BaseUrl();
     String FEED_BACK_URL = DebugConfig.getFeedBackBaseUrl();
+    String RECEIVE_COUPON = DebugConfig.getCourtesyUrl();
 
     interface WebUrl {
         String commonProblem = DebugConfig.getCommonQuestionBaseUrl() + "question/";//常见问题
@@ -35,7 +36,7 @@ public interface ApiUrl {
     //验证密码
     String sales_account_checkPwd = BASE_URL + "sales/account/checkPwd";
     //应用更新
-    String personCenter_account_getVersion = BASE_URL+"personCenter/account/getVersion";
+    String personCenter_account_getVersion = BASE_URL + "personCenter/account/getVersion";
     //公用请求蜂鸟接口
     String common_url = BASE_URL + "sales/public/commonsMethod";
     //公用请求蜂鸟path对应的key
@@ -127,16 +128,16 @@ public interface ApiUrl {
     //还款结果查询
     String pay_query = BASE_URL + "pay/query";
     //添加现居住地址
-    String personCenter_account_addLiveAddress = BASE_URL+"personCenter/account/addLiveAddress";
+    String personCenter_account_addLiveAddress = BASE_URL + "personCenter/account/addLiveAddress";
     //京东地址Json数据
-    String personCenter_address_getAddListJson = BASE_URL+"personCenter/address/getAddListJson";
+    String personCenter_address_getAddListJson = BASE_URL + "personCenter/address/getAddListJson";
     //获取居住地址信息
-    String personCenter_address_getLiveAddress = BASE_URL+"personCenter/account/getLiveAddress";
+    String personCenter_address_getLiveAddress = BASE_URL + "personCenter/account/getLiveAddress";
     //获取其他联系人信息
-    String personCenter_account_getOtherContact = BASE_URL+"personCenter/account/getOtherContact";
+    String personCenter_account_getOtherContact = BASE_URL + "personCenter/account/getOtherContact";
     //获取优惠券列表
-    String personCenter_account_getCouponList = "http://wx.dafycredit.cn/activity-biz/act/getCourtesyCardList";
+    String act_getCourtesyCardList = RECEIVE_COUPON + "activity-biz/act/getCourtesyCardList";
     //领取优惠券列表
-    String receiveCoupon = "http://wx.dafycredit.cn/activity-biz/act/receiveCourtesyCard";
+    String act_receiveCourtesyCard = RECEIVE_COUPON + "activity-biz/act/receiveCourtesyCard";
 }
 
