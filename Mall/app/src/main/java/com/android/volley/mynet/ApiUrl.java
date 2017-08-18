@@ -134,5 +134,9 @@ public interface ApiUrl {
     String personCenter_address_getLiveAddress = BASE_URL+"personCenter/account/getLiveAddress";
     //获取其他联系人信息
     String personCenter_account_getOtherContact = BASE_URL+"personCenter/account/getOtherContact";
+    //获取优惠券列表
+    String personCenter_account_getCouponList = "http://wx.dafycredit.cn/activity-biz/act/getCourtesyCardList";
+    //领取优惠券列表
+    String receiveCoupon = "http://wx.dafycredit.cn/activity-biz/act/receiveCourtesyCard";
 }
 

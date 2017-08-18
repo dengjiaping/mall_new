@@ -4,9 +4,9 @@ package com.giveu.shoppingmall.model.bean.response;
  * Created by 101912 on 2017/8/16.
  */
 
-public class CouponResponse {
+public class CouponBean {
 
-    public CouponResponse(String date, boolean isNotLine) {
+    public CouponBean(String date, boolean isNotLine) {
         this.date = date;
         this.isNotLine = isNotLine;
     }
