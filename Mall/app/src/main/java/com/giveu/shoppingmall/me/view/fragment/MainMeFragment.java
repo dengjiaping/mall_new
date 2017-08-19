@@ -217,7 +217,11 @@ public class MainMeFragment extends BaseFragment {
 
             case R.id.ll_my_coupon:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyCouponActivity.startIt(mBaseContext);
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        MyCouponActivity.startIt(mBaseContext);
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
                 }
                 break;
 
