@@ -11,8 +11,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
 public class DebugConfig {
 
     public static final boolean isTest = false;
-    public static final boolean isDev = true;
-    public static final boolean isOnline = false;
+    public static final boolean isDev = false;
+    public static final boolean isOnline = true;
 
 
     public static boolean isDebug;//true=测试，开发环境 .false=正式环境
@@ -30,9 +30,9 @@ public class DebugConfig {
         }
     }
 
-    private static String DOMAIN_DEV = "http://10.10.11.140:9000/";//开发域名
-    private static String DOMAIN_TEST = " http://dafyshop.dafysz.cn:10001/";//域名
-    private static String DOMAIN_ONLINE = "http://dafyshop01.dafysz.cn/";//域名
+    private static String DOMAIN_DEV = "http://devdfshop.dafycredit.cn:9000/";//开发域名
+    private static String DOMAIN_TEST = " http://dafyshop.dafysz.cn:10001/";//测试域名
+    private static String DOMAIN_ONLINE = "http://dafyshop01.dafysz.cn/";//正式域名
 
 
     public static final String API_VERSION = "v1/";//api版本，开发，正式环境可用
@@ -50,6 +50,7 @@ public class DebugConfig {
     public static String H5_TEST = "http://wx.dafycredit.cn/";
 
     //优惠券 baseurl
+    public static String COURTESY_ONLINE = "http://wx.dafysz.cn/";
     public static String COURTESY_DEV = "http://idcwxtest.dafysz.cn/";
     public static String COURTESY_TEST = "http://wx.dafycredit.cn/";
 
@@ -66,7 +67,7 @@ public class DebugConfig {
         }
     }
 
-    public static String getCommonQuestionBaseUrl(){
+    public static String getCommonQuestionBaseUrl() {
         if (isOnline) {
             return "http://wx.dafysz.cn/";
         } else {
@@ -100,12 +101,12 @@ public class DebugConfig {
 
     /**
      * 领取优惠券
+     *
      * @return
      */
     public static String getCourtesyUrl() {
         if (isOnline) {
-            //还没拿到
-            return "";
+            return COURTESY_ONLINE;
         } else if (isDev) {
             return COURTESY_DEV;
         } else {
