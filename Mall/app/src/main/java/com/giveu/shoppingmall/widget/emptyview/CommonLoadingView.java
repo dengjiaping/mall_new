@@ -33,7 +33,7 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
 
     private Activity mContext;
 
-    public static int DEFAULT_ICON = R.drawable.base_empty_default_icon;// 默认显示图标
+    public static int DEFAULT_ICON = R.drawable.icon_network_error;// 默认显示图标
 
     @BindView(R.id.ll_loading)
     LinearLayout ll_loading;
