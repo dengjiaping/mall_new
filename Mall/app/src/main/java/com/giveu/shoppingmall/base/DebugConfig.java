@@ -11,8 +11,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
 public class DebugConfig {
 
     public static final boolean isTest = false;
-    public static final boolean isDev = true;
-    public static final boolean isOnline = false;
+    public static final boolean isDev = false;
+    public static final boolean isOnline = true;
 
 
     public static boolean isDebug;//true=测试，开发环境 .false=正式环境
