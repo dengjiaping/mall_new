@@ -35,6 +35,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +66,16 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (DebugConfig.isDev){
+            //开发环境初始化LeakCanary
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                // This process is dedicated to LeakCanary for heap analysis.
+                // You should not init your app in this process.
+                return;
+            }
+            LeakCanary.install(this);
+        }
+
         MultiDex.install(this);
         mInstance = this;
         undestroyActivities = new ArrayList<Activity>();
@@ -206,7 +217,6 @@ public class BaseApplication extends MultiDexApplication {
 
     private void initCrashReport() {
         try {
-
             if (!DebugConfig.isDev) {
                 //自定义UncaughtExceptionHandler，崩溃之后应用整体销毁
                 CrashHandler crashHandler = new CrashHandler(this);
