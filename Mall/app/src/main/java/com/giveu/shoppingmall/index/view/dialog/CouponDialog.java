@@ -48,31 +48,20 @@ public class CouponDialog {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mDialog.dismiss();
-                mExplosionField.explode(ivClose);
-                mExplosionField.explode(ivCoupon);
-                mExplosionField.explode(ivReceive);
-                view.setOnClickListener(null);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mActivity != null && !mActivity.isFinishing() && mDialog != null && mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-                    }
-                }, 1000);
+                //运行爆炸动画,关闭dialog
+                startExplosionField(mActivity,mDialog,view,ivClose,ivCoupon,ivReceive);
             }
         });
 
         ivReceive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                // ApiImpl.receiveCoupon("15079999999","402", new BaseRequestAgent.ResponseListener<BaseBean>() {
+            public void onClick(final View view) {
                 ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
                     @Override
                     public void onSuccess(BaseBean response) {
                         ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
-                        mDialog.dismiss();
+                        //运行爆炸动画,关闭dialog
+                        startExplosionField(mActivity,mDialog,view,ivClose,ivCoupon,ivReceive);
                     }
 
                     @Override
@@ -80,6 +69,7 @@ public class CouponDialog {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
+
             }
         });
     }
@@ -90,5 +80,23 @@ public class CouponDialog {
 
     public void initView(View view) {
 
+    }
+
+    /**
+     * 执行爆炸动画,并关闭dialog
+     */
+    public void startExplosionField(final Activity mActivity, final CustomDialog mDialog, View view, ImageView ivClose, ImageView ivCoupon, ImageView ivReceive){
+        mExplosionField.explode(ivClose);
+        mExplosionField.explode(ivCoupon);
+        mExplosionField.explode(ivReceive);
+        view.setOnClickListener(null);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity != null && !mActivity.isFinishing() && mDialog != null && mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+            }
+        }, 1000);
     }
 }
