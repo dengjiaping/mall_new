@@ -67,7 +67,7 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                 String endTime = StringUtils.convertTime(String.valueOf(couponBean.endTime));
                 holder.setText(R.id.tv_date, startTime + "-" + endTime);
                 //立即使用button
-                holder.setOnClickListener(R.id.rl_oval_button, new View.OnClickListener() {
+                holder.setOnClickListener(R.id.ll_root, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ToastUtils.showLongToast(couponBean.useRuleDesc);
