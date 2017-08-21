@@ -35,15 +35,15 @@ public class CouponListResponse extends BaseBean<ArrayList<CouponListResponse>> 
     public long createTime;
     public String descpt;
     public long endTime;
-    public int id;
-    public int personId;
+    public String id;
+    public String personId;
     public String price;
     public String status;
     public String subtitle;
     public long updateTime;
     public String useRule;
     public String useRuleDesc;
-    public int userId;
+    public String userId;
     public boolean isDivider;
 
     /**
