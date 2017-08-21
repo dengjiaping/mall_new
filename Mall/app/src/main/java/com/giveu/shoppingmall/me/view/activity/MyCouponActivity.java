@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.google.gson.Gson;
 
@@ -63,6 +64,9 @@ public class MyCouponActivity extends BaseActivity {
                 String originalStr = errorBean == null ? "" : errorBean.originResultString;
                 //后台返回空字符串，直接返回
                 if (StringUtils.isNull(originalStr)) {
+                    if (errorBean != null) {
+                        ToastUtils.showShortToast(errorBean.message);
+                    }
                     return;
                 }
                 try {
@@ -84,7 +88,7 @@ public class MyCouponActivity extends BaseActivity {
                                 }
                             }
                             couponAdapter.notifyDataSetChanged();
-                        }else {
+                        } else {
                             baseLayout.showEmpty("暂无优惠券");
                         }
                     } else {
