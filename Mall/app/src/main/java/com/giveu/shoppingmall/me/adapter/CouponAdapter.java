@@ -41,6 +41,8 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
 
             @Override
             public void convert(ViewHolder holder, final CouponListResponse couponBean, int position) {
+                //status为0表示未激活，1表示已激活，两者都是为使用状态，显示样式一致
+                //status为2表示已使用，3表示已失效
                 if ("0".equals(couponBean.status) || "1".equals(couponBean.status)) {
                     holder.setBackgroundRes(R.id.rl_item_left, R.drawable.bg_valid);
                     holder.setVisible(R.id.iv_used, false);
@@ -61,11 +63,11 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                 if (StringUtils.isNotNull(couponBean.price))
                     holder.setText(R.id.tv_price, couponBean.price);
                 holder.setText(R.id.iv_subtitle, couponBean.subtitle);
-                String startTime = StringUtils.convertTime(String.valueOf(couponBean.createTime));
+                String startTime = StringUtils.convertTime(String.valueOf(couponBean.beginTime));
                 String endTime = StringUtils.convertTime(String.valueOf(couponBean.endTime));
                 holder.setText(R.id.tv_date, startTime + "-" + endTime);
                 //立即使用button
-                holder.setOnClickListener(R.id.tv_button, new View.OnClickListener() {
+                holder.setOnClickListener(R.id.rl_oval_button, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ToastUtils.showLongToast(couponBean.useRuleDesc);
