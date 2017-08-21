@@ -128,7 +128,7 @@
                 android:id="@+id/tv_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="立即使用"
+                android:text="去使用"
                 android:textColor="@color/color_00bbc0"
                 android:textSize="@dimen/ts_9" />
         </RelativeLayout>
