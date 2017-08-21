@@ -15,9 +15,12 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.explosionfield.ExplosionField;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+
+import org.json.JSONObject;
 
 
 /**
@@ -49,7 +52,7 @@ public class CouponDialog {
             @Override
             public void onClick(View view) {
                 //运行爆炸动画,关闭dialog
-                startExplosionField(mActivity,mDialog,view,ivClose,ivCoupon,ivReceive);
+                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
             }
         });
 
@@ -61,12 +64,31 @@ public class CouponDialog {
                     public void onSuccess(BaseBean response) {
                         ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
                         //运行爆炸动画,关闭dialog
-                        startExplosionField(mActivity,mDialog,view,ivClose,ivCoupon,ivReceive);
+                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
                     }
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        CommonLoadingView.showErrorToast(errorBean);
+                        String originalStr = errorBean == null ? "" : errorBean.originResultString;
+                        //后台返回空字符串，直接返回
+                        if (StringUtils.isNull(originalStr)) {
+                            if (errorBean != null) {
+                                ToastUtils.showShortToast(errorBean.message);
+                            }
+                            return;
+                        }
+                        try {
+                            JSONObject jsonObject = new JSONObject(originalStr);
+                            if ("success".equals(jsonObject.getString("status"))) {
+                                ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
+                                //运行爆炸动画,关闭dialog
+                                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                            } else {
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -85,7 +107,7 @@ public class CouponDialog {
     /**
      * 执行爆炸动画,并关闭dialog
      */
-    public void startExplosionField(final Activity mActivity, final CustomDialog mDialog, View view, ImageView ivClose, ImageView ivCoupon, ImageView ivReceive){
+    public void startExplosionField(final Activity mActivity, final CustomDialog mDialog, View view, ImageView ivClose, ImageView ivCoupon, ImageView ivReceive) {
         mExplosionField.explode(ivClose);
         mExplosionField.explode(ivCoupon);
         mExplosionField.explode(ivReceive);

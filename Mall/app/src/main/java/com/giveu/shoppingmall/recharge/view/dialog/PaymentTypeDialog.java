@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.PaymentTypeListResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,14 @@ public class PaymentTypeDialog {
         this.paymentType = paymentType;
 
         paymentTypeList = new ArrayList<>();
+
         PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wallet, true);
         PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
         PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
-        paymentTypeList.add(bean1);
+        //假资质用户没有钱包支付选项
+        if (!LoginHelper.getInstance().hasAverageUser()) {
+            paymentTypeList.add(bean1);
+        }
 //        paymentTypeList.add(bean2);
         paymentTypeList.add(bean3);
         View contentView = View.inflate(mActivity, R.layout.dialog_payment_type, null);

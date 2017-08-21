@@ -591,8 +591,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         orderDialog.setOnConfirmListener(new ChargeOrderDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int paymentType) {
-                //因为关闭了微信支付，所以需要做处理
-                if (paymentType == 1) {
+                //因为关闭了微信支付，所以需要做处理,假资质用户默认选中的是支付宝支付
+                if (paymentType == 1 || LoginHelper.getInstance().hasAverageUser()) {
                     paymentType = 2;
                 }
                 //是否超过500额度充值上限

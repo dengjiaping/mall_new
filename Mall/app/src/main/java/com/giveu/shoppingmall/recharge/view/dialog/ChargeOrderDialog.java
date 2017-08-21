@@ -190,7 +190,12 @@ public class ChargeOrderDialog {
             public void onClick(View v) {
                 //选择支付方式，因为关闭了微信支付，所以需处理
                 if (paymentType >= 1) {
-                    paymentTypeDialog.showDialog(1);
+                    //假资质用户默认显示支付宝支付
+                    if (LoginHelper.getInstance().hasAverageUser()) {
+                        paymentTypeDialog.showDialog(0);
+                    } else {
+                        paymentTypeDialog.showDialog(1);
+                    }
                 } else {
                     paymentTypeDialog.showDialog(paymentType);
                 }
@@ -216,8 +221,14 @@ public class ChargeOrderDialog {
             @Override
             public void onClick(View view) {
                 if (tv_payment.isClickEnabled()) {
-
-                    canShowPwdDialog();
+                    //非假资质用户需要补充个人信息
+                    if (!LoginHelper.getInstance().hasAverageUser()) {
+                        canShowPwdDialog();
+                    } else {
+                        if (listener != null) {
+                            listener.onConfirm(paymentType);
+                        }
+                    }
 /*                    pwdDialog.showDialog();
                     CommonUtils.openSoftKeyBoard(mActivity);
                     pwdDialog.setdismissListener(new DialogInterface.OnDismissListener() {
@@ -238,6 +249,13 @@ public class ChargeOrderDialog {
      * 资料是否完善的判断
      */
     public void canShowPwdDialog() {
+        //非钱包支付不用判断，直接确认付款
+        if (paymentType != 0) {
+            if (listener != null) {
+                listener.onConfirm(paymentType);
+            }
+            return;
+        }
         if (LoginHelper.getInstance().hasExistOther()) {
             //添加了联系人
             if (LoginHelper.getInstance().hasExistLive()) {

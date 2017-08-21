@@ -56,11 +56,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
                 android:text="完善个人资料"
+                android:visibility="gone"
                 android:textColor="@color/color_282828"
                 android:textSize="@dimen/ts_16" />
 
             <ImageView
                 android:id="@+id/iv_right"
+                android:visibility="gone"
                 style="@style/arrow_common_problem_style" />
 
         </LinearLayout>
