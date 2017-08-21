@@ -188,8 +188,12 @@ public class ChargeOrderDialog {
         ll_payment_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //选择支付方式
-                paymentTypeDialog.showDialog(paymentType);
+                //选择支付方式，因为关闭了微信支付，所以需处理
+                if (paymentType >= 1) {
+                    paymentTypeDialog.showDialog(1);
+                } else {
+                    paymentTypeDialog.showDialog(paymentType);
+                }
                 paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
                     @Override
                     public void onChooseType(int type) {
@@ -233,7 +237,7 @@ public class ChargeOrderDialog {
     /**
      * 资料是否完善的判断
      */
-    public void canShowPwdDialog(){
+    public void canShowPwdDialog() {
         if (LoginHelper.getInstance().hasExistOther()) {
             //添加了联系人
             if (LoginHelper.getInstance().hasExistLive()) {
@@ -254,6 +258,7 @@ public class ChargeOrderDialog {
             PerfectContactsActivity.startIt(mActivity, Const.CASH);
         }
     }
+
     public interface OnConfirmListener {
         void onConfirm(int paymentType);
     }

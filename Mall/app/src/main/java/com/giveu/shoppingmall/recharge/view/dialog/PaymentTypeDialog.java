@@ -41,7 +41,7 @@ public class PaymentTypeDialog {
         PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
         PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
         paymentTypeList.add(bean1);
-        paymentTypeList.add(bean2);
+//        paymentTypeList.add(bean2);
         paymentTypeList.add(bean3);
         View contentView = View.inflate(mActivity, R.layout.dialog_payment_type, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);

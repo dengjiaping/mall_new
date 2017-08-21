@@ -16,33 +16,7 @@
 #   public *;
 #}
 
-#-------------------------------------------基本不用动区域--------------------------------------------
-#---------------------------------基本指令区----------------------------------
--optimizationpasses 5
--dontskipnonpubliclibraryclassmembers
--printmapping proguardMapping.txt
--optimizations !code/simplification/cast,!field/*,!class/merging/*
--keepattributes *Annotation*,InnerClasses
--keepattributes Signature
--keepattributes SourceFile,LineNumberTable
-#不压缩输入的类文件
--dontshrink
-#不优化输入的类文件
--dontoptimize
-#----------------------------------------------------------------------------
 
-#---------------------------------默认保留区---------------------------------
-#继承activity,application,service,broadcastReceiver,contentprovider....不进行混淆
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.support.multidex.MultiDexApplication
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
--keep public class * extends android.view.View
--keep public class com.android.vending.licensing.ILicensingService
 -keep class android.support.** {*;}
 
 -keep public class * extends android.view.View{
@@ -301,8 +275,7 @@ public void xxxxxx(**);
 -keep class android.support.design.** { *; }
 -keep interface android.support.design.** { *; }
 -keep public class android.support.design.R$* { *; }
-#-------------------------------------------------------------------------
-
+#----
 
 # #  ############### volley混淆  ###############
 -keep class com.android.volley.** {*;}
@@ -315,10 +288,6 @@ public void xxxxxx(**);
 -keep class org.apache.http.**{*;}
 -dontwarn org.apache.http.**
 -dontwarn com.android.volley.**
-
-#jpush极光推送
--dontwarn cn.jpush.**
--keep class cn.jpush.** { *; }
 
 
 
@@ -338,7 +307,7 @@ public void xxxxxx(**);
 #---------------------------------与js互相调用的类------------------------
 -keep class com.giveu.shoppingmall.base.web.**  {*;}
 #---------------------------------自定义View的类------------------------
--keep class com.giveu.shoppingmall.** { *; }
+-keep class com.giveu.shoppingmall.widget.** { *; }
 -keep class com.wei.android.lib.fingerprintidentify.** { *; }
 -keep class com.lichfaker.scaleview.** { *; }
 -keep class cn.sharesdk.onekeyshare.** { *; }
@@ -346,6 +315,7 @@ public void xxxxxx(**);
 -keep class com.soundcloud.android.crop.** { *; }
 -dontwarn com.giveu.shoppingmall.**
 -dontwarn okhttp3.internal.huc.**
+
 #指纹识别
 # MeiZuFingerprint
 -keep class com.fingerprints.service.** { *; }
@@ -365,5 +335,30 @@ public void xxxxxx(**);
 -keep public class java.nio.* { *; }
 # Retrolambda
 -dontwarn java.lang.invoke.*
+
+#极光推送
+-dontoptimize
+-dontpreverify
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+#以下是该包全keep了，有优化可能
+-keep class com.huawei.hms.**{*;}
+
+-dontwarn retrofit.**
+-keep class retrofit.**{*;}
+
+-dontwarn com.android.org.**
+-keep class com.android.org.**{*;}
+-dontwarn java.net.**
+-keep class java.net.**{*;}
+
+-dontwarn  com.networkbench.**
+-keep class com.networkbench.**{*;}
+-keep class com.networkbench.agent.**{*;}
+
+-dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
 
 
