@@ -18,6 +18,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -29,7 +31,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="￥"
+                    android:text="¥ "
                     android:textColor="@color/white"
                     android:textSize="@dimen/ts_15" />
 
@@ -47,6 +49,7 @@
                 android:id="@+id/iv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="满60元可用"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_10" />

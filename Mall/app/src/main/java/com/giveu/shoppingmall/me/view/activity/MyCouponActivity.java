@@ -89,7 +89,8 @@ public class MyCouponActivity extends BaseActivity {
                             }
                             couponAdapter.notifyDataSetChanged();
                         } else {
-                            baseLayout.showEmpty("暂无优惠券");
+                            baseLayout.showEmpty("您暂时还没有优惠\n" +
+                                    "敬请关注即有钱包其他活动");
                         }
                     } else {
                         CommonLoadingView.showErrorToast(errorBean);
