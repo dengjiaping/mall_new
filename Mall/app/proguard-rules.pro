@@ -342,22 +342,10 @@ public void xxxxxx(**);
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
 
-#以下是该包全keep了，有优化可能
--keep class com.huawei.hms.**{*;}
 
--dontwarn retrofit.**
--keep class retrofit.**{*;}
-
--dontwarn com.android.org.**
--keep class com.android.org.**{*;}
--dontwarn java.net.**
--keep class java.net.**{*;}
-
--dontwarn  com.networkbench.**
--keep class com.networkbench.**{*;}
+-dontwarn  com.networkbench.agent.**
 -keep class com.networkbench.agent.**{*;}
 
--dontwarn okio.**
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
 
