@@ -46,6 +46,7 @@ public class ChargeOrderDialog {
     String paymentTypeStr = "即有钱包";//支付方式，默认
     int paymentType = 0;//支付方式，默认即有钱包
     private PaymentTypeDialog paymentTypeDialog;
+    private View ll_agreement;
 
     public ChargeOrderDialog(Activity activity) {
         this.mActivity = activity;
@@ -92,15 +93,21 @@ public class ChargeOrderDialog {
             default:
             case 0:
                 paymentTypeStr = "即有钱包";
+                ll_agreement.setVisibility(View.VISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 0;
 
                 break;
             case 1:
                 paymentTypeStr = "微信支付";
+                ll_agreement.setVisibility(View.INVISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 1;
                 break;
             case 2:
                 paymentTypeStr = "支付宝";
+                ll_agreement.setVisibility(View.INVISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 2;
                 break;
         }
@@ -133,6 +140,7 @@ public class ChargeOrderDialog {
         cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
         tv_payment.setClickEnabled(true);
         tvProduct = (TextView) contentView.findViewById(R.id.tv_product);
+        ll_agreement = contentView.findViewById(R.id.ll_agreement);
 //
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
 //        isCheckBoxChecked = cb_agreement.isChecked();
@@ -213,6 +221,19 @@ public class ChargeOrderDialog {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         tv_payment_type.setText(paymentTypeDialog.paymentType + "");
+                        switch (paymentTypeDialog.paymentType){
+                            case "即有钱包":
+                                ll_agreement.setVisibility(View.VISIBLE);
+                                break;
+                            case "微信支付":
+                                cb_agreement.setChecked(true);
+                                ll_agreement.setVisibility(View.INVISIBLE);
+                                break;
+                            case "支付宝":
+                                cb_agreement.setChecked(true);
+                                ll_agreement.setVisibility(View.INVISIBLE);
+                                break;
+                        }
 //                        CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(), mActivity);
                     }
                 });
