@@ -1,23 +1,15 @@
 package com.giveu.shoppingmall.recharge.view.dialog;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
-import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
-import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.model.bean.response.PaymentTypeListResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 支付方式弹窗
@@ -26,28 +18,18 @@ import java.util.List;
 
 public class PaymentTypeDialog {
     private CustomDialog mDialog;
-    Activity mActivity;
-    LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentTypeAdapter;
-    ListView lv_payment_type;
-    ImageView iv_back;
+    private Activity mActivity;
+    private ImageView iv_back;
+    private LinearLayout llWallet;
+    private LinearLayout llWeChat;
+    private LinearLayout llALi;
+    private CheckBox cbWalletCheck;
+    private CheckBox cbWechatCheck;
+    private CheckBox cbALiCheck;
     public String paymentType;//支付类型
-    List<PaymentTypeListResponse.ListBean> paymentTypeList;
 
-    public PaymentTypeDialog(Activity mActivity, String paymentType) {
+    public PaymentTypeDialog(Activity mActivity) {
         this.mActivity = mActivity;
-        this.paymentType = paymentType;
-
-        paymentTypeList = new ArrayList<>();
-
-        PaymentTypeListResponse.ListBean bean1 = new PaymentTypeListResponse.ListBean("即有钱包", R.drawable.ic_wallet, true);
-        PaymentTypeListResponse.ListBean bean2 = new PaymentTypeListResponse.ListBean("微信支付", R.drawable.ic_wechat, false);
-        PaymentTypeListResponse.ListBean bean3 = new PaymentTypeListResponse.ListBean("支付宝", R.drawable.ic_zhifubao, false);
-        //假资质用户没有钱包支付选项
-        if (!LoginHelper.getInstance().hasAverageUser()) {
-            paymentTypeList.add(bean1);
-        }
-//        paymentTypeList.add(bean2);
-        paymentTypeList.add(bean3);
         View contentView = View.inflate(mActivity, R.layout.dialog_payment_type, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
         initView(contentView);
@@ -55,60 +37,34 @@ public class PaymentTypeDialog {
     }
 
     public void showDialog(int defaulChoose) {
-        mDialog.show();
-        //选中的支付方式
-        if (defaulChoose < paymentTypeList.size()) {
-            for (PaymentTypeListResponse.ListBean listBean : paymentTypeList) {
-                listBean.isChecked = false;
-            }
-            paymentTypeList.get(defaulChoose).isChecked = true;
+        resetCheck();
+        switch (defaulChoose) {
+            case 0:
+                cbWalletCheck.setChecked(true);
+                break;
+            case 1:
+                cbWechatCheck.setChecked(true);
+                break;
+            case 2:
+                cbALiCheck.setChecked(true);
+                break;
         }
+        mDialog.show();
     }
 
     private void initView(View contentView) {
-        lv_payment_type = (ListView) contentView.findViewById(R.id.lv_payment_type);
         iv_back = (ImageView) contentView.findViewById(R.id.iv_back);
-        paymentTypeAdapter = new LvCommonAdapter<PaymentTypeListResponse.ListBean>(mActivity, R.layout.lv_payment_type_item, paymentTypeList) {
-            @Override
-            protected void convert(ViewHolder viewHolder, final PaymentTypeListResponse.ListBean item, final int position) {
-                ImageView iv_payment_icon = viewHolder.getView(R.id.iv_payment_icon);
-                TextView tv_payment_type = viewHolder.getView(R.id.tv_payment_type);
-                final CheckBox cb_check = viewHolder.getView(R.id.cb_check);
-                iv_payment_icon.setImageResource(item.Icon);
-                tv_payment_type.setText(item.typeName);
-                if (item.isChecked) {
-                    cb_check.setChecked(true);
-                } else {
-                    cb_check.setChecked(false);
-                }
-                cb_check.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onChoosePaymentType(position, paymentTypeAdapter);
-                    }
-                });
-
-                viewHolder.getView(R.id.ll_pay_type).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onChoosePaymentType(position, paymentTypeAdapter);
-                    }
-                });
-            }
-        };
+        llWallet = (LinearLayout) contentView.findViewById(R.id.ll_wallet);
+        cbWalletCheck = (CheckBox) contentView.findViewById(R.id.cb_wallet_check);
+        llWeChat = (LinearLayout) contentView.findViewById(R.id.ll_wechat);
+        cbWechatCheck = (CheckBox) contentView.findViewById(R.id.cb_wechat_check);
+        llALi = (LinearLayout) contentView.findViewById(R.id.ll_ali);
+        cbALiCheck = (CheckBox) contentView.findViewById(R.id.cb_ali_check);
+        if (LoginHelper.getInstance().hasAverageUser()) {
+            llWallet.setVisibility(View.GONE);
+            cbALiCheck.setChecked(true);
+        }
         setListener();
-        lv_payment_type.setAdapter(paymentTypeAdapter);
-    }
-
-    /**
-     * 支付弹窗关闭的监听
-     *
-     * @param dismissListener
-     * @return
-     */
-    public PaymentTypeDialog setdismissListener(DialogInterface.OnDismissListener dismissListener) {
-        mDialog.setOnDismissListener(dismissListener);
-        return this;
     }
 
     private void setListener() {
@@ -118,34 +74,73 @@ public class PaymentTypeDialog {
                 mDialog.dismiss();
             }
         });
+        llWallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbWalletCheck.performClick();
+            }
+        });
+        llWeChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbWechatCheck.performClick();
+            }
+        });
+
+        llALi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbALiCheck.performClick();
+            }
+        });
+        cbWalletCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetCheck();
+                cbWalletCheck.setChecked(true);
+                onChoosePaymentType(0, "即有钱包");
+            }
+        });
+        cbWechatCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetCheck();
+                cbWechatCheck.setChecked(true);
+                onChoosePaymentType(1, "微信支付");
+            }
+        });
+
+        cbALiCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetCheck();
+                cbALiCheck.setChecked(true);
+                onChoosePaymentType(2, "支付宝");
+            }
+        });
+    }
+
+    private void resetCheck() {
+        cbWalletCheck.setChecked(false);
+        cbWechatCheck.setChecked(false);
+        cbALiCheck.setChecked(false);
     }
 
     /**
      * 点击改变选中的支付类型，获取的支付类型名称，并关闭支付弹窗
      *
-     * @param position           选中项
-     * @param paymentTypeAdapter 支付方式adapter
+     * @param paymentType 支付方式
      */
-    public void onChoosePaymentType(int position, LvCommonAdapter<PaymentTypeListResponse.ListBean> paymentTypeAdapter) {
-        for (int i = 0; i < paymentTypeList.size(); i++) {
-            PaymentTypeListResponse.ListBean item = paymentTypeAdapter.getItem(i);
-            if (i == position) {
-                item.isChecked = true;
-                paymentType = item.typeName;
-            } else {
-                item.isChecked = false;
-            }
-        }
+    public void onChoosePaymentType(int paymentType, String paymentTypeStr) {
         if (listener != null) {
-            listener.onChooseType(position);
+            listener.onChooseType(paymentType, paymentTypeStr);
         }
-        paymentTypeAdapter.notifyDataSetChanged();
         mDialog.dismiss();
     }
 
     public interface OnChoosePayTypeListener {
         //选中的支付方式，0为钱包，1为微信，2为支付宝
-        void onChooseType(int type);
+        void onChooseType(int type, String paymentTypeStr);
     }
 
     private OnChoosePayTypeListener listener;

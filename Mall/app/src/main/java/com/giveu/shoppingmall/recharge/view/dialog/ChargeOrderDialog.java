@@ -2,7 +2,6 @@ package com.giveu.shoppingmall.recharge.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
  * 充值订单详情的弹框
  */
 public class ChargeOrderDialog {
-    // private CallsParam callsParam;
     private CustomDialog mDialog;
     private ImageView iv_dialog_close;
     //sumPrice 实际付款
@@ -40,31 +38,16 @@ public class ChargeOrderDialog {
     private LinearLayout ll_payment_type;
     private CheckBox cb_agreement;
     //充值显示的价格（没使用优惠券的时候）
-    public String OldPrice;
+    public String oldPrice;
     Activity mActivity;
     private TextView tvProduct;
     String paymentTypeStr = "即有钱包";//支付方式，默认
     int paymentType = 0;//支付方式，默认即有钱包
     private PaymentTypeDialog paymentTypeDialog;
 
-    public ChargeOrderDialog(Activity activity) {
-        this.mActivity = activity;
-
-        //   callsParam = new CallsParam();
-        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View contentView = inflater.inflate(R.layout.dialog_recharge, null);
-        mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
-        Window window = mDialog.getWindow();
-        if (window != null) {
-            window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
-        }
-        initView(contentView);
-    }
-
     public ChargeOrderDialog(Activity activity, String phoneArea, final String rechargeAmount, final String phone, String price) {
         this.mActivity = activity;
 
-        //   callsParam = new CallsParam();
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View contentView = inflater.inflate(R.layout.dialog_recharge, null);
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.BOTTOM, true);
@@ -72,19 +55,13 @@ public class ChargeOrderDialog {
         if (window != null) {
             window.setWindowAnimations(R.style.dialogWindowAnim); //设置窗口弹出动画
         }
+        paymentTypeDialog = new PaymentTypeDialog(mActivity);
         initView(contentView);
-        OldPrice = price.replace("￥", "");
+        oldPrice = price.replace("￥", "");
         tv_recharge_amount.setText(rechargeAmount);
         tv_recharge_phone.setText(phone.replace(" ", "-") + "【" + phoneArea + "】");
         tv_price.setText(price);
         tv_sum.setText(price);
-        //假资质用户只有支付宝
-        if (LoginHelper.getInstance().hasAverageUser()) {
-            paymentTypeStr = "支付宝";
-        }
-        paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeStr);
-
-//        pwdDialog = new PwdDialog(mActivity, PwdDialog.statusType.RECHARGE);
     }
 
     public void setDefaultPay(int defaultPay) {
@@ -120,8 +97,6 @@ public class ChargeOrderDialog {
     }
 
     private void initView(final View contentView) {
-
-
         iv_dialog_close = (ImageView) contentView.findViewById(R.id.iv_dialog_close);
         tv_recharge_amount = (TextView) contentView.findViewById(R.id.tv_date_top);
         tv_payment_type = (TextView) contentView.findViewById(R.id.tv_payment_type);
@@ -133,10 +108,7 @@ public class ChargeOrderDialog {
         cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
         tv_payment.setClickEnabled(true);
         tvProduct = (TextView) contentView.findViewById(R.id.tv_product);
-//
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
-//        isCheckBoxChecked = cb_agreement.isChecked();
-//        ll_recharge_preferential = (LinearLayout) contentView.findViewById(R.id.ll_recharge_preferential);
         CommonUtils.setTextWithSpan(tv_agreement, false, "已阅读并同意", "《贷款及咨询服务合同标准条款》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,9 +116,7 @@ public class ChargeOrderDialog {
                 CustomWebViewActivity.startIt(mActivity, ApiUrl.WebUrl.oConsumeLoanStatic, "《贷款及咨询服务合同标准条款》");
             }
         });
-
         setListener();
-
     }
 
     public void setProductType(int productType) {
@@ -167,7 +137,6 @@ public class ChargeOrderDialog {
 
 
     private void setListener() {
-
         //勾选协议
         cb_agreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -179,7 +148,6 @@ public class ChargeOrderDialog {
                 }
             }
         });
-
         //关闭弹窗
         iv_dialog_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,32 +160,14 @@ public class ChargeOrderDialog {
         ll_payment_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //选择支付方式，因为关闭了微信支付，所以需处理
-                if (paymentType >= 1) {
-                    //假资质用户默认显示支付宝支付
-                    if (LoginHelper.getInstance().hasAverageUser()) {
-                        paymentTypeDialog.showDialog(0);
-                    } else {
-                        paymentTypeDialog.showDialog(1);
-                    }
-                } else {
-                    paymentTypeDialog.showDialog(paymentType);
-                }
-                paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
-                    @Override
-                    public void onChooseType(int type) {
-                        paymentType = type;
-                    }
-                });
-                paymentTypeDialog.setdismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        tv_payment_type.setText(paymentTypeDialog.paymentType + "");
-//                        CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(), mActivity);
-                    }
-                });
-
-
+                paymentTypeDialog.showDialog(paymentType);
+            }
+        });
+        paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
+            @Override
+            public void onChooseType(int type, String paymentTypeStr) {
+                paymentType = type;
+                tv_payment_type.setText(paymentTypeStr);
             }
         });
         //付款按钮
@@ -233,14 +183,6 @@ public class ChargeOrderDialog {
                             listener.onConfirm(paymentType);
                         }
                     }
-/*                    pwdDialog.showDialog();
-                    CommonUtils.openSoftKeyBoard(mActivity);
-                    pwdDialog.setdismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            CommonUtils.closeSoftKeyBoard(pwdDialog.inputView.getWindowToken(),mActivity);
-                        }
-                    });*/
                 } else {
                     ToastUtils.showShortToast("请勾选贷款及咨询服务合同标准条款");
                 }

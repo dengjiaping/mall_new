@@ -584,17 +584,13 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         //创建订单成功
         orderDialog = new ChargeOrderDialog(mBaseContext, phoneArea, productName, mobile, salePrice);
         orderDialog.setProductType(productType);
-        //可用消费额度小于当前要充值的金额，默认选择微信支付
+        //可用消费额度小于当前要充值的金额，默认选择支付宝支付
         if (StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit()) < StringUtils.string2Double(salePrice)) {
             orderDialog.setDefaultPay(2);
         }
         orderDialog.setOnConfirmListener(new ChargeOrderDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int paymentType) {
-                //因为关闭了微信支付，所以需要做处理,假资质用户默认选中的是支付宝支付
-                if (paymentType == 1 || LoginHelper.getInstance().hasAverageUser()) {
-                    paymentType = 2;
-                }
                 //是否超过500额度充值上限
                 if (paymentType == 0 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
                     ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");

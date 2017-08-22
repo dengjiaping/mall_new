@@ -3,38 +3,144 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">
+
             <ImageView
                 android:id="@+id/iv_back"
                 android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:padding="@dimen/default_layout_screen_gap"
-                android:src="@drawable/ic_back"/>
+                android:src="@drawable/ic_back" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:text="支付方式"
                 android:textColor="@color/black"
-                android:textSize="@dimen/ts_18"
-                android:text="支付方式"/>
+                android:textSize="@dimen/ts_18" />
         </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/line_bg"/>
-        <com.giveu.shoppingmall.widget.NoScrollListView
-            android:id="@+id/lv_payment_type"
+            android:background="@color/line_bg" />
+
+        <LinearLayout
+            android:id="@+id/ll_wallet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/line_bg"
-            android:dividerHeight="1px"
-            android:layout_marginBottom="100dp"/>
+            android:layout_height="62dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:src="@drawable/ic_wallet" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="即有钱包"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_14" />
+
+            <CheckBox
+                android:id="@+id/cb_wallet_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/default_layout_screen_gap"
+                android:button="@drawable/selector_checkbox_register" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_bg" />
+
+        <LinearLayout
+            android:id="@+id/ll_wechat"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:src="@drawable/ic_wechat" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="微信支付"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_14" />
+
+            <CheckBox
+                android:id="@+id/cb_wechat_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/default_layout_screen_gap"
+                android:button="@drawable/selector_checkbox_register" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_ali"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_payment_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:src="@drawable/ic_zhifubao" />
+
+            <TextView
+                android:id="@+id/tv_payment_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="支付宝"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_14" />
+
+            <CheckBox
+                android:id="@+id/cb_ali_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/default_layout_screen_gap"
+                android:button="@drawable/selector_checkbox_register" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="100dp"
+            android:background="@color/line_bg" />
     </LinearLayout>
 
 </ScrollView>
