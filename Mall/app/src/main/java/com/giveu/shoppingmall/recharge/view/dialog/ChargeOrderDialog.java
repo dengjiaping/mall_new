@@ -78,6 +78,10 @@ public class ChargeOrderDialog {
         tv_recharge_phone.setText(phone.replace(" ", "-") + "【" + phoneArea + "】");
         tv_price.setText(price);
         tv_sum.setText(price);
+        //假资质用户只有支付宝
+        if (LoginHelper.getInstance().hasAverageUser()) {
+            paymentTypeStr = "支付宝";
+        }
         paymentTypeDialog = new PaymentTypeDialog(mActivity, paymentTypeStr);
 
 //        pwdDialog = new PwdDialog(mActivity, PwdDialog.statusType.RECHARGE);
