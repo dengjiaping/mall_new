@@ -42,6 +42,7 @@ public class CouponDialog {
         ivReceive = (ImageView) convertView.findViewById(R.id.iv_receive);
         mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, true);
         mDialog.setCancelable(false);
+        mDialog.setCanceledOnTouchOutside(false);
         mExplosionField = ExplosionField.attach2Window(mDialog);
         Window window = mDialog.getWindow();
         if (window != null) {
@@ -51,50 +52,64 @@ public class CouponDialog {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //运行爆炸动画,关闭dialog
-                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                //领取优惠券
+                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
             }
         });
 
         ivReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
-                    @Override
-                    public void onSuccess(BaseBean response) {
-                        ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
-                        //运行爆炸动画,关闭dialog
-                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
-                    }
-
-                    @Override
-                    public void onError(BaseBean errorBean) {
-                        String originalStr = errorBean == null ? "" : errorBean.originResultString;
-                        //后台返回空字符串，直接返回
-                        if (StringUtils.isNull(originalStr)) {
-                            if (errorBean != null) {
-                                ToastUtils.showShortToast(errorBean.message);
-                            }
-                            return;
-                        }
-                        try {
-                            JSONObject jsonObject = new JSONObject(originalStr);
-                            if ("success".equals(jsonObject.getString("status"))) {
-                                ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
-                                //运行爆炸动画,关闭dialog
-                                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
-                            } else {
-                                CommonLoadingView.showErrorToast(errorBean);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
+                //领取优惠券
+                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
             }
         });
     }
+
+    /**
+     * 领取优惠券调用接口
+     * @param mActivity
+     * @param mDialog
+     * @param view
+     * @param ivClose
+     * @param ivCoupon
+     * @param ivReceive
+     */
+    public void receiveCoupon(final Activity mActivity, final CustomDialog mDialog, final View view, final ImageView ivClose, final ImageView ivCoupon, final ImageView ivReceive){
+        ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
+                //运行爆炸动画,关闭dialog
+                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                String originalStr = errorBean == null ? "" : errorBean.originResultString;
+                //后台返回空字符串，直接返回
+                if (StringUtils.isNull(originalStr)) {
+                    if (errorBean != null) {
+                        ToastUtils.showShortToast(errorBean.message);
+                    }
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(originalStr);
+                    if ("success".equals(jsonObject.getString("status"))) {
+                        ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
+                        //运行爆炸动画,关闭dialog
+                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                    } else {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     public void showDialog() {
         mDialog.show();
@@ -121,4 +136,6 @@ public class CouponDialog {
             }
         }, 1000);
     }
+
+
 }

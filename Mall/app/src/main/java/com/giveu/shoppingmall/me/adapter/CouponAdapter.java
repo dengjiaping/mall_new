@@ -4,17 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
+import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +29,8 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
 
 
     private CustomDialog dialog;
+    private LvCommonAdapter<String> dialogAdapter;
+    private ArrayList<String> rulesData;
 
     public CouponAdapter(Context context, final List<CouponListResponse> datas) {
         super(context, datas);
@@ -77,8 +83,10 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                 holder.setOnClickListener(R.id.rl_detail, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initDialog(couponBean.useRule);
-                        dialog.show();
+                        if (CommonUtils.isNotNullOrEmpty(couponBean.useRule)) {
+                            initDialog(couponBean.useRule);
+                            dialog.show();
+                        }
                     }
                 });
             }
@@ -110,21 +118,25 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
     //初始化使用规则dialog
     private void initDialog(String useRule) {
         dialog = new CustomDialog((Activity) mContext, R.layout.dialog_coupon_rule, R.style.customerDialog, Gravity.CENTER, false);
-        TextView tv_rule1 = (TextView) dialog.findViewById(R.id.tv_rule1);
-        TextView tv_rule2 = (TextView) dialog.findViewById(R.id.tv_rule2);
-        TextView tv_rule3 = (TextView) dialog.findViewById(R.id.tv_rule3);
-        TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
+        ListView lvDialogRule = (ListView) dialog.findViewById(R.id.lv_dialog_rule);
+        TextView tvConfirm = (TextView) dialog.findViewById(R.id.tv_confirm);
+        rulesData = new ArrayList<>();
         String[] rules = useRule.split("；");
-        tv_rule1.setText(rules[0]);
-        tv_rule2.setText(rules[1]);
-        tv_rule3.setText(rules[2]);
-        tv_confirm.setOnClickListener(new View.OnClickListener() {
+        for (int i = 0; i < rules.length; i++) {
+            rulesData.add(rules[i]);
+        }
+        dialogAdapter = new LvCommonAdapter<String>(mContext, R.layout.lv_dialog_item, rulesData) {
+            @Override
+            protected void convert(ViewHolder viewHolder, String item, int position) {
+                viewHolder.setText(R.id.tv_rule, item);
+            }
+        };
+        lvDialogRule.setAdapter(dialogAdapter);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
     }
-
-
 }

@@ -44,6 +44,7 @@ public class ChargeOrderDialog {
     String paymentTypeStr = "即有钱包";//支付方式，默认
     int paymentType = 0;//支付方式，默认即有钱包
     private PaymentTypeDialog paymentTypeDialog;
+    private View ll_agreement;
 
     public ChargeOrderDialog(Activity activity, String phoneArea, final String rechargeAmount, final String phone, String price) {
         this.mActivity = activity;
@@ -69,15 +70,21 @@ public class ChargeOrderDialog {
             default:
             case 0:
                 paymentTypeStr = "即有钱包";
+                ll_agreement.setVisibility(View.VISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 0;
 
                 break;
             case 1:
                 paymentTypeStr = "微信支付";
+                ll_agreement.setVisibility(View.INVISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 1;
                 break;
             case 2:
                 paymentTypeStr = "支付宝";
+                ll_agreement.setVisibility(View.INVISIBLE);
+                cb_agreement.setChecked(true);
                 paymentType = 2;
                 break;
         }
@@ -108,6 +115,7 @@ public class ChargeOrderDialog {
         cb_agreement = (CheckBox) contentView.findViewById(R.id.cb_agreement);
         tv_payment.setClickEnabled(true);
         tvProduct = (TextView) contentView.findViewById(R.id.tv_product);
+        ll_agreement = contentView.findViewById(R.id.ll_agreement);
         tv_sum = (TextView) contentView.findViewById(R.id.tv_sum);
         CommonUtils.setTextWithSpan(tv_agreement, false, "已阅读并同意", "《贷款及咨询服务合同标准条款》", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
@@ -168,6 +176,22 @@ public class ChargeOrderDialog {
             public void onChooseType(int type, String paymentTypeStr) {
                 paymentType = type;
                 tv_payment_type.setText(paymentTypeStr);
+                //非钱包支付隐藏协议
+                switch (type) {
+                    case 0:
+                        ll_agreement.setVisibility(View.VISIBLE);
+                        cb_agreement.setChecked(true);
+
+                        break;
+                    case 1:
+                        ll_agreement.setVisibility(View.INVISIBLE);
+                        cb_agreement.setChecked(true);
+                        break;
+                    case 2:
+                        ll_agreement.setVisibility(View.INVISIBLE);
+                        cb_agreement.setChecked(true);
+                        break;
+                }
             }
         });
         //付款按钮
@@ -175,8 +199,8 @@ public class ChargeOrderDialog {
             @Override
             public void onClick(View view) {
                 if (tv_payment.isClickEnabled()) {
-                    //非假资质用户需要补充个人信息
-                    if (!LoginHelper.getInstance().hasAverageUser()) {
+                    //非假资质用户需要补充个人信息，否则因为假资质用户没有钱包支付，所以可以直接进行支付（支付宝或微信）
+                    if (!LoginHelper.getInstance().hasAverageUser() && paymentType == 0) {
                         canShowPwdDialog();
                     } else {
                         if (listener != null) {
@@ -195,13 +219,6 @@ public class ChargeOrderDialog {
      * 资料是否完善的判断
      */
     public void canShowPwdDialog() {
-        //非钱包支付不用判断，直接确认付款
-        if (paymentType != 0) {
-            if (listener != null) {
-                listener.onConfirm(paymentType);
-            }
-            return;
-        }
         if (LoginHelper.getInstance().hasExistOther()) {
             //添加了联系人
             if (LoginHelper.getInstance().hasExistLive()) {

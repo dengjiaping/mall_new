@@ -249,7 +249,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="我的优惠券"
+                android:text="我的优惠"
                 android:textSize="@dimen/ts_15" />
 
             <ImageView
