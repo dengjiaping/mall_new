@@ -36,7 +36,7 @@
             android:layout_height="110dp"
             android:scaleType="centerInside"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/base_empty_default_icon" />
+            android:src="@drawable/icon_network_error" />
 
         <TextView
             android:id="@+id/txt_message"

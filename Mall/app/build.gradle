@@ -188,5 +188,7 @@ dependencies {
     compile files('libs/alipaySingle-20170510.jar')
     //听云
     compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7"
+    //leakcanary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 
 }

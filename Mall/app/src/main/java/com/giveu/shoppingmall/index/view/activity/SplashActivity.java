@@ -45,6 +45,7 @@ public class SplashActivity extends BasePermissionActivity {
     //回调后会执行onResume方法，导致setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
     //重复调用导致闪屏
     private boolean isPermissionReallyDeclined;
+    Handler handler = new Handler();
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -111,7 +112,6 @@ public class SplashActivity extends BasePermissionActivity {
         if (deltaTimeMillis > SPLASH_TIME) {
             deltaTimeMillis = SPLASH_TIME;
         }
-        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -159,6 +159,12 @@ public class SplashActivity extends BasePermissionActivity {
     protected void onPause() {
         super.onPause();
 //        JPushInterface.onPause(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     private void getAdSplashImage() {
