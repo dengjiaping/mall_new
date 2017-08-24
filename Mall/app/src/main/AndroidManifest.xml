@@ -383,6 +383,13 @@
             </intent-filter>
         </service>
 
+        <service android:name=".base.InitializeService">
+            <intent-filter>
+                <action android:name="com.giveu.shoppingmall.base.init" />
+            </intent-filter>
+
+        </service>
+
         <!-- User defined. 用户自定义的广播接收器-->
         <receiver
             android:name=".me.view.activity.CustomerPushReceiver"

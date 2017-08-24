@@ -109,6 +109,7 @@ public class MainActivity extends BasePermissionActivity {
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
+
         //跳转至消息列表
         if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);

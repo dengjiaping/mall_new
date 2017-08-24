@@ -3,7 +3,6 @@ package com.giveu.share;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.DrawableRes;
 import android.view.View;
 
 import com.giveu.share.listener.ShareListener;
@@ -47,7 +46,7 @@ public class SocialShareUtil {
      * @param label    平台名称
      * @param listener 事件监听
      */
-    public void addCustomPlatform(Context context, @DrawableRes int drawable, String label, View.OnClickListener listener) {
+    public void addCustomPlatform(Context context, int drawable, String label, View.OnClickListener listener) {
         if (!labels.contains(label)) {
             drawables.add(drawable);
             labels.add(label);
