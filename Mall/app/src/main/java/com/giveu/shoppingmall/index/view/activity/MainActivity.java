@@ -434,44 +434,53 @@ public class MainActivity extends BasePermissionActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            if (rechargeFragment != null) {
-                // ContentProvider展示数据类似一个单个数据库表
-                // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
-                ContentResolver reContentResolverol = getContentResolver();
-                // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
-                Uri contactData = data.getData();
-                // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
-                Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
-                if (cursor.getCount() == 0) {
-                    permissionDialog.show();
-                    return;
-                }
-                cursor.moveToFirst();
-                // 条件为联系人ID
-                String contactId = cursor.getString(cursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
-                // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
-                Cursor phone = reContentResolverol.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
-                                + contactId, null, null);
-                while (phone != null && phone.moveToNext()) {
-                    //填入号码
-                    String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    final StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
-                    if (sb.toString().length() != 11) {
-                        ToastUtils.showShortToast("手机号码格式有误");
-                    } else {
-                        sb.insert(3, " ");
-                        sb.insert(8, " ");
-                        rechargeFragment.setPhoneText(sb.toString());
+            try {
+                if (rechargeFragment != null) {
+                    // ContentProvider展示数据类似一个单个数据库表
+                    // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
+                    ContentResolver reContentResolverol = getContentResolver();
+                    // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
+                    Uri contactData = data.getData();
+                    // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
+                    Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
+                    //线上发现cursor有可能为空，如果为空不作任何处理
+                    if (cursor == null) {
+                        ToastUtils.showShortToast("获取通讯录失败");
+                        return;
+                    }
+                    if (cursor.getCount() == 0) {
+                        permissionDialog.show();
+                        return;
+                    }
+                    cursor.moveToFirst();
+                    // 条件为联系人ID
+                    String contactId = cursor.getString(cursor
+                            .getColumnIndex(ContactsContract.Contacts._ID));
+                    // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+                    Cursor phone = reContentResolverol.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
+                                    + contactId, null, null);
+                    while (phone != null && phone.moveToNext()) {
+                        //填入号码
+                        String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        final StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
+                        if (sb.toString().length() != 11) {
+                            ToastUtils.showShortToast("手机号码格式有误");
+                        } else {
+                            sb.insert(3, " ");
+                            sb.insert(8, " ");
+                            rechargeFragment.setPhoneText(sb.toString());
+                        }
+                    }
+                    if (phone != null) {
+                        phone.close();
                     }
                 }
-                if (phone != null) {
-                    phone.close();
-                }
-            }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
