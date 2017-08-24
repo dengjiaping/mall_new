@@ -157,7 +157,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.code.gson:gson:2.8.0'
     //bugly
-    compile files('libs/bugly_crash_release.jar')
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    compile 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     //高德地图
     compile files('libs/Android_Map3D_SDK_V4.1.3_20161208.jar')
     //recyclerview
