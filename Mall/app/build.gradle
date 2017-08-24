@@ -77,11 +77,11 @@ android {
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"
 
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
             // 移除无用的resource文件
-            shrinkResources false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
@@ -90,11 +90,11 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
 
             // 是否进行混淆
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
             // 移除无用的resource文件
-            shrinkResources false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
