@@ -11,16 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/white_soild_top_gray_line"
-        >
+        android:background="@drawable/white_soild_top_gray_line">
 
         <LinearLayout
             android:id="@+id/ll_recharge"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <ImageView
@@ -41,12 +40,13 @@
 
         <LinearLayout
             android:id="@+id/ll_cash"
-            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/iv_cash"
                 android:layout_width="22dp"
@@ -64,12 +64,13 @@
 
         <LinearLayout
             android:id="@+id/ll_repayment"
-            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/iv_repayment"
                 android:layout_width="22dp"
@@ -87,12 +88,13 @@
 
         <LinearLayout
             android:id="@+id/ll_me"
-            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/iv_me"
                 android:layout_width="22dp"
@@ -183,5 +185,17 @@
         android:layout_height="match_parent"
         android:layout_above="@id/buttomBar"
         android:background="@color/default_layoutxml_bg" />
+
+    <ImageView
+        android:id="@+id/iv_small_lottery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttomBar"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp"
+        android:src="@drawable/ic_small_lottery"
+        android:visibility="gone" />
+
 
 </RelativeLayout>

@@ -11,8 +11,8 @@ import com.giveu.shoppingmall.utils.sharePref.DevSettingSharePref;
 public class DebugConfig {
 
     public static final boolean isTest = false;
-    public static final boolean isDev = false;
-    public static final boolean isOnline = true;
+    public static final boolean isDev = true;
+    public static final boolean isOnline = false;
 
 
     public static boolean isDebug;//true=测试，开发环境 .false=正式环境
@@ -50,9 +50,9 @@ public class DebugConfig {
     public static String H5_TEST = "http://wx.dafycredit.cn/";
 
     //优惠券 baseurl
-    public static String COURTESY_ONLINE = "http://wx.dafysz.cn/";
-    public static String COURTESY_DEV = "http://idcwxtest.dafysz.cn/";
-    public static String COURTESY_TEST = "http://wx.dafycredit.cn/";
+    public static String WECHAT_ONLINE = "http://wx.dafysz.cn/";
+    public static String WECHAT_DEV = "http://idcwxtest.dafysz.cn/";
+    public static String WECHAT_TEST = "http://wx.dafycredit.cn/";
 
     /**
      * 反馈的域名
@@ -106,11 +106,11 @@ public class DebugConfig {
      */
     public static String getCourtesyUrl() {
         if (isOnline) {
-            return COURTESY_ONLINE;
+            return WECHAT_ONLINE;
         } else if (isDev) {
-            return COURTESY_DEV;
+            return WECHAT_DEV;
         } else {
-            return COURTESY_TEST;
+            return WECHAT_TEST;
         }
     }
 }

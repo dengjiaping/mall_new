@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
@@ -218,6 +219,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         LoginHelper.getInstance().logout();
         ToastUtils.showLongToast("登录成功");
         LoginHelper.getInstance().saveLoginStatus(data,true);
+        //登录成功后需重新刷新周年庆活动状态
+        EventBusUtils.poseEvent(new LotteryEvent());
         //统计登录次数
         MobclickAgent.onEvent(mBaseContext, "Forward");
         MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);

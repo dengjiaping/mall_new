@@ -13,12 +13,14 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
+import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -171,6 +173,8 @@ public class AccountManagementActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LoginHelper.getInstance().logout();
+                //登录成功后需重新刷新周年庆活动状态
+                EventBusUtils.poseEvent(new LotteryEvent());
                 finish();
                 ApiImpl.logout(null, new BaseRequestAgent.ResponseListener<BaseBean>() {
                     @Override

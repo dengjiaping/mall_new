@@ -10,7 +10,7 @@ public interface ApiUrl {
     String BASE_URL = DebugConfig.getBaseUrl();
     String H5_BASE_URL = DebugConfig.getH5BaseUrl();
     String FEED_BACK_URL = DebugConfig.getFeedBackBaseUrl();
-    String RECEIVE_COUPON = DebugConfig.getCourtesyUrl();
+    String WECHAT_BASE_URL = DebugConfig.getCourtesyUrl();
 
     interface WebUrl {
         String commonProblem = DebugConfig.getCommonQuestionBaseUrl() + "question/";//常见问题
@@ -136,8 +136,10 @@ public interface ApiUrl {
     //获取其他联系人信息
     String personCenter_account_getOtherContact = BASE_URL + "personCenter/account/getOtherContact";
     //获取优惠券列表
-    String act_getCourtesyCardList = RECEIVE_COUPON + "activity-biz/act/getCourtesyCardList";
+    String act_getCourtesyCardList = WECHAT_BASE_URL + "activity-biz/act/getCourtesyCardList";
     //领取优惠券列表
-    String act_receiveCourtesyCard = RECEIVE_COUPON + "activity-biz/act/receiveCourtesyCard";
+    String act_receiveCourtesyCard = WECHAT_BASE_URL + "activity-biz/act/receiveCourtesyCard";
+    //获取活动信息
+    String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
 }
 

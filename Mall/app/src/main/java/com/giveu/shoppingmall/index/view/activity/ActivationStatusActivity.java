@@ -9,13 +9,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.dialog.CouponDialog;
+import com.giveu.shoppingmall.index.view.dialog.SmallLotteryDialog;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.LotteryResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletActivationResponse;
 import com.giveu.shoppingmall.model.bean.response.WalletQualifiedResponse;
+import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,9 +62,11 @@ public class ActivationStatusActivity extends BaseActivity {
     public final int SETPWD = 2;
     public final int REPEAT = 3;
     CouponDialog couponDialog;
+    private boolean isShow;
+    private boolean hasShowCoupon;
 
     //显示手Q用户激活成功结果
-    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson,String status,boolean isShow,boolean hasShowCoupon) {
+    public static void startShowQQResultSuccess(Activity mActivity, WalletQualifiedResponse response, String idPerson, String status, boolean isShow, boolean hasShowCoupon) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
             intent.putExtra("status", status);
@@ -66,16 +82,17 @@ public class ActivationStatusActivity extends BaseActivity {
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
                 //当前日期是否还能领取优惠券
-                intent.putExtra("isShow",isShow);
+                intent.putExtra("isShow", isShow);
                 //实现满足额度为0条件显示领取优惠券弹窗
-                intent.putExtra("hasShowCoupon",hasShowCoupon);
+                intent.putExtra("hasShowCoupon", hasShowCoupon);
             }
         }
         intent.putExtra("idPerson", idPerson);
         mActivity.startActivity(intent);
     }
+
     //显示成功结果
-    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson,String status,boolean isShow,boolean hasShowCoupon) {
+    public static void startShowResultSuccess(Activity mActivity, WalletActivationResponse response, String idPerson, String status, boolean isShow, boolean hasShowCoupon) {
         Intent intent = new Intent(mActivity, ActivationStatusActivity.class);
         if (response != null) {
             intent.putExtra("status", status);
@@ -89,9 +106,9 @@ public class ActivationStatusActivity extends BaseActivity {
                 //额度为0的提示语
                 intent.putExtra("lab", response.data.lab);
                 //当前日期是否还能领取优惠券
-                intent.putExtra("isShow",isShow);
+                intent.putExtra("isShow", isShow);
                 //实现满足额度为0条件显示领取优惠券弹窗
-                intent.putExtra("hasShowCoupon",hasShowCoupon);
+                intent.putExtra("hasShowCoupon", hasShowCoupon);
             }
         }
         intent.putExtra("idPerson", idPerson);
@@ -112,13 +129,83 @@ public class ActivationStatusActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_activation_status);
         baseLayout.setTitle("钱包激活");
-        boolean isShow = getIntent().getBooleanExtra("isShow",false);
-        boolean hasShowCoupon = getIntent().getBooleanExtra("hasShowCoupon",false);
         couponDialog = new CouponDialog(mBaseContext);
-        if(isShow && hasShowCoupon){
-            //当前日期还能领取优惠券 && 取现和消费额度都为0
-            couponDialog.showDialog();
-        }
+        isShow = getIntent().getBooleanExtra("isShow", false);
+        hasShowCoupon = getIntent().getBooleanExtra("hasShowCoupon", false);
+        //判断是否可进行抽奖
+        doLottery();
+    }
+
+    private void doLottery() {
+        ApiImpl.getActivityInfo(mBaseContext, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                String originalStr = errorBean == null ? "" : errorBean.originResultString;
+                //后台返回空字符串，直接返回
+                if (StringUtils.isNull(originalStr)) {
+                    if (errorBean != null) {
+                        ToastUtils.showShortToast(errorBean.message);
+                    }
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(originalStr);
+                    if ("success".equals(jsonObject.getString("status"))) {
+                        Gson gson = new Gson();
+                        final LotteryResponse lotteryResponse = gson.fromJson(originalStr, LotteryResponse.class);
+                        //活动有效期，可以进入抽奖，且直接进行领取优惠券活动（直接调接口）
+                        if (lotteryResponse != null && lotteryResponse.data != null && lotteryResponse.data.activatyStatus == 1) {
+                            //领取优惠券
+                            if (isShow && hasShowCoupon) {
+                                receiveCoupon();
+                            }
+                            if (lotteryResponse.data.justDo == 1) {
+                                SharePrefUtil.setNeedShowLottery(false);
+                                final SmallLotteryDialog lotteryDialog = new SmallLotteryDialog(mBaseContext);
+                                lotteryDialog.setOnConfirmListener(new SmallLotteryDialog.OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        EventBusUtils.poseEvent(new LotteryEvent());
+                                        if (lotteryResponse.data != null && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                                        }
+                                        lotteryDialog.dismissDialog();
+                                    }
+                                });
+                                lotteryDialog.showDialog();
+                            }
+                        } else {
+                            if (isShow && hasShowCoupon) {
+                                //当前日期还能领取优惠券 && 取现和消费额度都为0
+                                couponDialog.showDialog();
+                            }
+                        }
+                    } else {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void receiveCoupon() {
+        //这里是直接进行领取优惠券活动，不需要任何处理
+        ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+            }
+        });
     }
 
 
@@ -159,7 +246,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 String globleLimit = getIntent().getStringExtra("globleLimit");
                 String cyLimit = getIntent().getStringExtra("cyLimit");
                 String posLimit = getIntent().getStringExtra("posLimit");
-                boolean isSetPwd = getIntent().getBooleanExtra("isSetPwd",false);
+                boolean isSetPwd = getIntent().getBooleanExtra("isSetPwd", false);
                 String lab = StringUtils.nullToEmptyString(getIntent().getStringExtra("lab"));
                 llDate.setVisibility(View.VISIBLE);
                 tvHintMid.setVisibility(View.GONE);

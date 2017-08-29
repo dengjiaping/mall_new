@@ -24,5 +24,6 @@ public interface SharePrefKeys {
     String LOCK_PATTERN_PWD = "LOCK_PATTERN_PWD";
     String FINGER_PWD = "FINGER_PWD";
     String PERSON_INFO_RESPONSE = "PERSON_INFO_RESPONSE";
+    String SHOW_LOTTERY = "SHOW_LOTTERY";
 
 }

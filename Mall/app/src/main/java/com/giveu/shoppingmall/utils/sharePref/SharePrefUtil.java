@@ -115,6 +115,24 @@ public class SharePrefUtil extends AbsSharePref {
     }
 
     /**
+     * 是否需要显示抽奖活动
+     *
+     * @param isNeed
+     */
+    public static void setNeedShowLottery(boolean isNeed) {
+        getInstance().putBoolean(SharePrefKeys.SHOW_LOTTERY + LoginHelper.getInstance().getUserId(), isNeed);
+    }
+
+    /**
+     * 设置是否需要显示抽奖活动
+     *
+     * @return
+     */
+    public static boolean isNeedShowLottery() {
+        return getInstance().getBoolean(SharePrefKeys.SHOW_LOTTERY + LoginHelper.getInstance().getUserId(), true);
+    }
+
+    /**
      * 保存图案密码
      */
     public static void setPatternPwd(String pwd) {

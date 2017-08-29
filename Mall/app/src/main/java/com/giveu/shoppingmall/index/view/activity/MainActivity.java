@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -29,13 +30,17 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
+import com.giveu.shoppingmall.event.LotteryEvent;
+import com.giveu.shoppingmall.index.view.dialog.LotteryDialog;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
+import com.giveu.shoppingmall.model.bean.response.LotteryResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
@@ -46,10 +51,17 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 
@@ -76,6 +88,11 @@ public class MainActivity extends BasePermissionActivity {
     ImageView ivMe;
     @BindView(R.id.tv_me)
     TextView tvMe;
+    @BindView(R.id.ll_me)
+    LinearLayout llMe;
+    @BindView(R.id.iv_small_lottery)
+    ImageView ivSmallLottery;
+    private LotteryDialog lotteryDialog;
 
     private PermissionDialog permissionDialog;
 
@@ -90,6 +107,8 @@ public class MainActivity extends BasePermissionActivity {
     RadioButton rb1;
     private MainActivityAdapter mainAdapter;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    private LotteryResponse lotteryResponse;
+    private boolean needRefreshLottery;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -109,7 +128,7 @@ public class MainActivity extends BasePermissionActivity {
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
-
+        registerEventBus();
         //跳转至消息列表
         if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
@@ -140,8 +159,39 @@ public class MainActivity extends BasePermissionActivity {
                 permissionDialog.dismiss();
             }
         });
+        lotteryDialog = new LotteryDialog(mBaseContext);
+        lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
+            @Override
+            public void join() {
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        if (lotteryResponse != null && lotteryResponse.data != null
+                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl))
+                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+                }
+                lotteryDialog.dismissDialog();
+                ivSmallLottery.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void cancel() {
+                ivSmallLottery.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
+    /**
+     * 退出登录，登录成功都应该重新获取周年庆活动状态
+     *
+     * @param lotteryEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void resetLottery(LotteryEvent lotteryEvent) {
+        needRefreshLottery = true;
+    }
 
     /**
      * 6.0以上系统申请通讯录权限
@@ -224,12 +274,21 @@ public class MainActivity extends BasePermissionActivity {
     }
 
 
-    @OnClick({R.id.ll_recharge, R.id.ll_cash, R.id.ll_repayment, R.id.ll_me})
+    @OnClick({R.id.iv_small_lottery, R.id.ll_recharge, R.id.ll_cash, R.id.ll_repayment, R.id.ll_me})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         resetIconAndTextColor();
         switch (view.getId()) {
+            case R.id.iv_small_lottery:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+                }
+                break;
             case R.id.ll_recharge:
                 mViewPager.setCurrentItem(0, false);
                 selectIconAndTextColor(0);
@@ -280,7 +339,72 @@ public class MainActivity extends BasePermissionActivity {
 
     @Override
     public void setData() {
+        doLottery();
         doApkUpgrade();
+    }
+
+    private void doLottery() {
+        String idPerson = LoginHelper.getInstance().getIdPerson();
+        //未登录用户idPerson传空即可
+        if ("0".equals(idPerson)) {
+            idPerson = "";
+        }
+        ApiImpl.getActivityInfo(null, idPerson, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                String originalStr = errorBean == null ? "" : errorBean.originResultString;
+                //后台返回空字符串，直接返回
+                if (StringUtils.isNull(originalStr)) {
+                    if (errorBean != null) {
+                        ToastUtils.showShortToast(errorBean.message);
+                    }
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(originalStr);
+                    if ("success".equals(jsonObject.getString("status"))) {
+                        Gson gson = new Gson();
+                        lotteryResponse = gson.fromJson(originalStr, LotteryResponse.class);
+                        //展示活动对话框
+                        showLotteryDialog();
+                    } else {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        needRefreshLottery = false;
+    }
+
+    private void showLotteryDialog() {
+        //活动有效期内
+        if (lotteryResponse != null && lotteryResponse.data != null && lotteryResponse.data.activatyStatus == 1) {
+            //未抽奖，且第一次展示，使用大图
+            if (lotteryResponse.data.justDo == 1 && SharePrefUtil.isNeedShowLottery()) {
+                lotteryDialog.showDialog();
+                SharePrefUtil.setNeedShowLottery(false);
+            } else if (lotteryResponse.data.justDo == 1 || (lotteryResponse.data.justDo == 0 && !SharePrefUtil.isNeedShowLottery() && lotteryResponse.data.winning == 1)) {
+                //未抽奖或不可抽奖但已中奖
+                ivSmallLottery.setVisibility(View.VISIBLE);
+            } else {
+                //其余情况不显示抽奖入口
+                ivSmallLottery.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
     }
 
     private class MainActivityAdapter extends FragmentPagerAdapter {
@@ -332,6 +456,9 @@ public class MainActivity extends BasePermissionActivity {
 
         if (downloadApkUtils != null) {
             downloadApkUtils.onActivityResume();
+        }
+        if (needRefreshLottery) {
+            doLottery();
         }
 
         if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {

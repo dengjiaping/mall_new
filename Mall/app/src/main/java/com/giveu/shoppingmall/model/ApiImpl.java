@@ -7,6 +7,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
+import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
@@ -447,6 +448,14 @@ public class ApiImpl {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, responseListener);
     }
+
+    //获取活动信息
+    public static void getActivityInfo(BaseActivity context, String personId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, String> requestParam2 = BaseRequestAgent.getRequestParams(new String[]{"personId"}, new String[]{personId});
+        RequestAgent.getInstance().sendGetRequest(requestParam2, ApiUrl.anniversary_getActivityInfo, BaseBean.class, context, responseListener);
+
+    }
+
 
 }
 
