@@ -166,10 +166,12 @@ public class MainActivity extends BasePermissionActivity {
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         if (lotteryResponse != null && lotteryResponse.data != null
-                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl))
+                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
                             needRefreshLottery = true;
                             CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "");
+                        }
                     } else {
+                        ivSmallLottery.setVisibility(View.VISIBLE);
                         notActiveDialog.showDialog();
                     }
                 }
@@ -283,8 +285,11 @@ public class MainActivity extends BasePermissionActivity {
             case R.id.iv_small_lottery:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        needRefreshLottery = true;
-                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                        if (lotteryResponse != null && lotteryResponse.data != null
+                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                            needRefreshLottery = true;
+                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                        }
                     } else {
                         notActiveDialog.showDialog();
                     }

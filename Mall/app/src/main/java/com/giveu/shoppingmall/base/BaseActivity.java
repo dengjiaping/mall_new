@@ -314,11 +314,16 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     public Resources getResources() {
+        Resources res = null;
+        try {
+            res = super.getResources();
+            Configuration config = new Configuration();
+            config.setToDefaults();
+            res.updateConfiguration(config, res.getDisplayMetrics());
+        } catch (Exception e) {
+
+        }
         //设置字体大小不随系统字体大小而改变
-        Resources res = super.getResources();
-        Configuration config=new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config,res.getDisplayMetrics());
         return res;
     }
 
@@ -326,7 +331,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * 判断当前activity超时是否需要锁屏
      */
     private boolean isThisActivityNeedPattern() {
-        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class, FingerPrintActivity.class,LoginActivity.class,
+        Class[] classes = new Class[]{AdSplashActivity.class, SplashActivity.class, FingerPrintActivity.class, LoginActivity.class,
                 WelcomeActivity.class, GestureLoginActivity.class, CreateGestureActivity.class, VerifyPwdActivity.class};
         List<Class> notNeedPatternActivitys = Arrays.asList(classes);
 
