@@ -172,7 +172,7 @@ public class ActivationStatusActivity extends BaseActivity {
                                     public void onConfirm() {
                                         EventBusUtils.poseEvent(new LotteryEvent());
                                         if (lotteryResponse.data != null && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
-                                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "");
                                         }
                                         lotteryDialog.dismissDialog();
                                     }

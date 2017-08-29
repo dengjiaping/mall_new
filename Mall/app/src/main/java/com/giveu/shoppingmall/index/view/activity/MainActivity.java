@@ -167,13 +167,13 @@ public class MainActivity extends BasePermissionActivity {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         if (lotteryResponse != null && lotteryResponse.data != null
                                 && StringUtils.isNotNull(lotteryResponse.data.activityUrl))
-                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                            needRefreshLottery = true;
+                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "");
                     } else {
                         notActiveDialog.showDialog();
                     }
                 }
                 lotteryDialog.dismissDialog();
-                ivSmallLottery.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -283,6 +283,7 @@ public class MainActivity extends BasePermissionActivity {
             case R.id.iv_small_lottery:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
+                        needRefreshLottery = true;
                         CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
                     } else {
                         notActiveDialog.showDialog();
@@ -390,6 +391,7 @@ public class MainActivity extends BasePermissionActivity {
             if (lotteryResponse.data.justDo == 1 && SharePrefUtil.isNeedShowLottery()) {
                 lotteryDialog.showDialog();
                 SharePrefUtil.setNeedShowLottery(false);
+                ivSmallLottery.setVisibility(View.GONE);
             } else if (lotteryResponse.data.justDo == 1 || (lotteryResponse.data.justDo == 0 && !SharePrefUtil.isNeedShowLottery() && lotteryResponse.data.winning == 1)) {
                 //未抽奖或不可抽奖但已中奖
                 ivSmallLottery.setVisibility(View.VISIBLE);
