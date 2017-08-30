@@ -90,11 +90,11 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
 
             // 是否进行混淆
-            minifyEnabled true
-            zipAlignEnabled true
+            minifyEnabled false
+            zipAlignEnabled false
             // 移除无用的resource文件
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->

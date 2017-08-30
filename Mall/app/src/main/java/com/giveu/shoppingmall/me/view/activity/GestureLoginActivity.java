@@ -15,6 +15,8 @@ import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.LotteryEvent;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
@@ -141,6 +143,8 @@ public class GestureLoginActivity extends BaseActivity {
      * 手势登录成功（去首页）
      */
     private void loginGestureSuccess() {
+        //登录成功后需重新刷新周年庆活动状态
+        EventBusUtils.poseEvent(new LotteryEvent());
         //解锁成功，重新开始计时
         BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
         finish();

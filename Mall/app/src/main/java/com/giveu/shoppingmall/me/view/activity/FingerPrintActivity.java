@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.LotteryEvent;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
@@ -173,6 +175,8 @@ public class FingerPrintActivity extends BaseActivity {
                     tvMessage.setText("指纹解锁成功");
                 }
                 fingerHelper.onPauseIdentify();
+                //登录成功后需重新刷新周年庆活动状态
+                EventBusUtils.poseEvent(new LotteryEvent());
                 finish();
             }
 
