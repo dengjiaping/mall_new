@@ -349,4 +349,5 @@ public void xxxxxx(**);
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
 
-
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
