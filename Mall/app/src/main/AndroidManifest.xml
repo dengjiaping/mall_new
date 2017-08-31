@@ -361,6 +361,18 @@
         <activity
             android:name=".me.view.activity.MyCouponActivity"
             android:label="我的优惠券" />
+        <activity
+            android:name=".me.view.activity.MyOrderActivity"
+            android:label="我的订单" />
+        <activity
+            android:name=".me.view.activity.UploadMobileIMEIActivity"
+            android:label="上传手机串码" />
+        <activity
+            android:name=".me.view.activity.OrderInfoActivity"
+            android:label="订单详情" />
+        <activity
+            android:name=".me.view.activity.OrderTraceActivity"
+            android:label="订单跟踪" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"
