@@ -35,6 +35,7 @@ import com.giveu.shoppingmall.index.view.dialog.LotteryDialog;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
+import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
@@ -109,6 +110,7 @@ public class MainActivity extends BasePermissionActivity {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private LotteryResponse lotteryResponse;
     private boolean needRefreshLottery;
+    private boolean needSkip2H5;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -163,17 +165,19 @@ public class MainActivity extends BasePermissionActivity {
         lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
             @Override
             public void join() {
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                if (LoginHelper.getInstance().hasLogin()) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         if (lotteryResponse != null && lotteryResponse.data != null
                                 && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
                             needRefreshLottery = true;
-                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "");
+                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心", true);
                         }
                     } else {
-                        ivSmallLottery.setVisibility(View.VISIBLE);
                         notActiveDialog.showDialog();
+                        ivSmallLottery.setVisibility(View.VISIBLE);
                     }
+                } else {
+                    LoginActivity.startIt(mBaseContext, true);
                 }
                 lotteryDialog.dismissDialog();
             }
@@ -192,7 +196,13 @@ public class MainActivity extends BasePermissionActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void resetLottery(LotteryEvent lotteryEvent) {
-        needRefreshLottery = true;
+        if (lotteryEvent.skip2H5) {
+            needSkip2H5 = true;
+            doLottery();
+            needRefreshLottery = false;
+        } else {
+            needRefreshLottery = true;
+        }
     }
 
     /**
@@ -287,16 +297,18 @@ public class MainActivity extends BasePermissionActivity {
         resetIconAndTextColor();
         switch (view.getId()) {
             case R.id.iv_small_lottery:
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                if (LoginHelper.getInstance().hasLogin()) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         if (lotteryResponse != null && lotteryResponse.data != null
                                 && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
                             needRefreshLottery = true;
-                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心");
+                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心", true);
                         }
                     } else {
                         notActiveDialog.showDialog();
                     }
+                } else {
+                    LoginActivity.startIt(mBaseContext, true);
                 }
                 break;
             case R.id.ll_recharge:
@@ -398,18 +410,34 @@ public class MainActivity extends BasePermissionActivity {
         if (lotteryResponse != null && lotteryResponse.data != null && lotteryResponse.data.activatyStatus == 1) {
             //未抽奖，且第一次展示，使用大图
             if (lotteryResponse.data.justDo == 1 && SharePrefUtil.isNeedShowLottery()) {
-                lotteryDialog.showDialog();
+                if (needSkip2H5) {
+                    if (StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                        needRefreshLottery = true;
+                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心", true);
+                    }
+                } else {
+                    lotteryDialog.showDialog();
+                }
                 SharePrefUtil.setNeedShowLottery(false);
                 ivSmallLottery.setVisibility(View.GONE);
             } else if (lotteryResponse.data.justDo == 1 || (lotteryResponse.data.justDo == 0 && !SharePrefUtil.isNeedShowLottery() && lotteryResponse.data.winning == 1)) {
                 //未抽奖或不可抽奖但已中奖
                 ivSmallLottery.setVisibility(View.VISIBLE);
+                if (needSkip2H5) {
+                    if (StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                        needRefreshLottery = true;
+                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "个人中心", true);
+                    }
+                }
             } else {
                 //其余情况不显示抽奖入口
                 ivSmallLottery.setVisibility(View.GONE);
             }
 
+        } else {
+            ivSmallLottery.setVisibility(View.GONE);
         }
+        needSkip2H5 = false;
     }
 
     @Override

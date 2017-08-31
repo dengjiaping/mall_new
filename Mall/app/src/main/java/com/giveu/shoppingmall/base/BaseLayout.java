@@ -70,6 +70,7 @@ public class BaseLayout extends LinearLayout {
     public TextView top_tab_right_text;
     public TextView tv_left;
     public RelativeLayout rl_click_right;
+    public ImageView iv_close;
 
     /**
      * title bar
@@ -84,6 +85,7 @@ public class BaseLayout extends LinearLayout {
         baselayout_topbar = (LinearLayout) base_layout.findViewById(R.id.baselayout_topbar);
         tv_left = (TextView) base_layout.findViewById(R.id.tv_left);
         ll_tab_left_image = (LinearLayout) base_layout.findViewById(R.id.ll_tab_left_image);
+        iv_close = (ImageView) base_layout.findViewById(R.id.iv_close);
         top_left_image = (ImageView) base_layout.findViewById(R.id.top_left_image);
         rl_click_right = (RelativeLayout) base_layout.findViewById(R.id.rl_click_right);
         top_tab_center_image = (ImageView) base_layout.findViewById(R.id.top_tab_center_image);
@@ -110,6 +112,13 @@ public class BaseLayout extends LinearLayout {
             titlebar.setVisibility(VISIBLE);
         } else {
             titlebar.setVisibility(GONE);
+        }
+    }
+
+    public void setLeftImageListener(OnClickListener listener) {
+        iv_close.setVisibility(VISIBLE);
+        if (listener != null) {
+            iv_close.setOnClickListener(listener);
         }
     }
 

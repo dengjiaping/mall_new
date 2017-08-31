@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
+import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     LinearLayout llThirdLogin;
     @BindView(R.id.tv_login)
     ClickEnabledTextView tvLogin;
+    private boolean needActive;
 
     private int keyHeight = 0; //软件盘弹起后所占高度
 
@@ -74,7 +76,12 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     private TextView tvConfirm;
 
     public static void startIt(Activity activity) {
+        startIt(activity, false);
+    }
+
+    public static void startIt(Activity activity, boolean needActive) {
         Intent intent = new Intent(activity, LoginActivity.class);
+        intent.putExtra("needActive", needActive);
         activity.startActivity(intent);
     }
 
@@ -91,6 +98,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         keyHeight = DensityUtils.getHeight() / 3;//弹起高度为屏幕高度的1/3
         presenter = new LoginPresenter(this);
         initAccount();
+        needActive = getIntent().getBooleanExtra("needActive", false);
     }
 
     private void initAccount() {
@@ -218,13 +226,21 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         //重新登录后要先清空之前的登录信息，使用户有两次设置指纹或手势的机会,再重新保存用户信息
         LoginHelper.getInstance().logout();
         ToastUtils.showLongToast("登录成功");
-        LoginHelper.getInstance().saveLoginStatus(data,true);
-        //登录成功后需重新刷新周年庆活动状态
-        EventBusUtils.poseEvent(new LotteryEvent());
+        LoginHelper.getInstance().saveLoginStatus(data, true);
+        BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
         //统计登录次数
         MobclickAgent.onEvent(mBaseContext, "Forward");
-        MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
-        EventBusUtils.poseEvent(data);
+        LotteryEvent lotteryEvent = new LotteryEvent();
+        if (needActive) {
+            if(!LoginHelper.getInstance().hasQualifications()) {
+                WalletActivationFirstActivity.startIt(mBaseContext);
+            }else {
+                lotteryEvent.skip2H5 = true;
+            }
+        }else {
+            MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
+        }
+        EventBusUtils.poseEvent(lotteryEvent);
         finish();
     }
 

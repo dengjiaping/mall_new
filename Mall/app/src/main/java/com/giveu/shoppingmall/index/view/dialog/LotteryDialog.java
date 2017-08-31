@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 
 /**
  * Created by 513419 on 2017/8/29.
@@ -34,6 +35,8 @@ public class LotteryDialog {
         mDialog.setCancelable(false);
         ivLottery.getLayoutParams().width = DensityUtils.getWidth()-DensityUtils.dip2px(30);
         ivLottery.getLayoutParams().height = (DensityUtils.getWidth()-DensityUtils.dip2px(30))*1308/975;
+        LogUtil.e("WIDTH = "+ivLottery.getLayoutParams().width);
+        LogUtil.e("HEIGHT = "+ivLottery.getLayoutParams().height);
         mDialog.setCanceledOnTouchOutside(false);
         Window window = mDialog.getWindow();
         if (window != null) {
