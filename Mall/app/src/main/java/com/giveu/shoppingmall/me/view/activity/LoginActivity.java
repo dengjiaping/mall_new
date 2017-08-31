@@ -232,12 +232,14 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         MobclickAgent.onEvent(mBaseContext, "Forward");
         LotteryEvent lotteryEvent = new LotteryEvent();
         if (needActive) {
-            if(!LoginHelper.getInstance().hasQualifications()) {
+            Intent intent = new Intent(mBaseContext, MainActivity.class);
+            startActivity(intent);
+            if (!LoginHelper.getInstance().hasQualifications()) {
                 WalletActivationFirstActivity.startIt(mBaseContext);
-            }else {
+            } else {
                 lotteryEvent.skip2H5 = true;
             }
-        }else {
+        } else {
             MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
         }
         EventBusUtils.poseEvent(lotteryEvent);

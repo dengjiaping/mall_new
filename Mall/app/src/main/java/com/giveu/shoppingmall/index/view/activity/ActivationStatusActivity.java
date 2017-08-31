@@ -132,8 +132,6 @@ public class ActivationStatusActivity extends BaseActivity {
         couponDialog = new CouponDialog(mBaseContext);
         isShow = getIntent().getBooleanExtra("isShow", false);
         hasShowCoupon = getIntent().getBooleanExtra("hasShowCoupon", false);
-        //判断是否可进行抽奖
-        doLottery();
     }
 
     private void doLottery() {
@@ -266,6 +264,8 @@ public class ActivationStatusActivity extends BaseActivity {
 
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintBottom.setText(lab);
+                //判断是否可进行抽奖或者领取优惠券
+                doLottery();
                 break;
             case "fail":
                 // 激活失败，无额度，含中间提示语

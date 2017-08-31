@@ -314,15 +314,11 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     public Resources getResources() {
-        Resources res = null;
-        try {
-            res = super.getResources();
-            Configuration config = new Configuration();
-            config.setToDefaults();
-            res.updateConfiguration(config, res.getDisplayMetrics());
-        } catch (Exception e) {
+        Resources res = super.getResources();
+        Configuration config = new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
 
-        }
         //设置字体大小不随系统字体大小而改变
         return res;
     }

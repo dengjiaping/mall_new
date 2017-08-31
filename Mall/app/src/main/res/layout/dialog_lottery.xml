@@ -30,7 +30,6 @@
                 android:id="@+id/iv_lottery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
                 android:src="@drawable/ic_large_lottery" />
 
 
@@ -40,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/iv_lottery"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="13dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_join" />
         </RelativeLayout>
