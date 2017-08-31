@@ -19,12 +19,14 @@ public class SmallLotteryDialog {
     private CustomDialog mDialog;
     private Activity mActivity;
     private ImageView ivGo;
+    private ImageView ivClose;
 
     public SmallLotteryDialog(final Activity mActivity) {
         this.mActivity = mActivity;
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.dialog_small_lottery, null);
         ivGo = (ImageView) convertView.findViewById(R.id.iv_go);
+        ivClose = (ImageView) convertView.findViewById(R.id.iv_close);
         mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, true);
         mDialog.setCancelable(true);
         mDialog.setCanceledOnTouchOutside(true);
@@ -38,6 +40,12 @@ public class SmallLotteryDialog {
                 if (listener != null) {
                     listener.onConfirm();
                 }
+            }
+        });
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
             }
         });
     }

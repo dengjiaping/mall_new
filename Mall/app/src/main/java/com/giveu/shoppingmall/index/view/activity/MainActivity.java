@@ -219,9 +219,13 @@ public class MainActivity extends BasePermissionActivity {
     }
 
     public void skipToContactsContract() {
-        //跳转通讯录
-        startActivityForResult(new Intent(Intent.ACTION_PICK,
-                ContactsContract.Contacts.CONTENT_URI), 0);
+        try {
+            //跳转通讯录
+            startActivityForResult(new Intent(Intent.ACTION_PICK,
+                    ContactsContract.Contacts.CONTENT_URI), 0);
+        } catch (Exception e) {
+
+        }
     }
 
     @Override

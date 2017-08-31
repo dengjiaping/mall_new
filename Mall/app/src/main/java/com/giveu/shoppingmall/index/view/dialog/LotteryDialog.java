@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.utils.DensityUtils;
 
 /**
  * Created by 513419 on 2017/8/29.
@@ -20,6 +21,7 @@ public class LotteryDialog {
     private Activity mActivity;
     private ImageView ivJoin;
     private ImageView ivClose;
+    private ImageView ivLottery;
 
     public LotteryDialog(final Activity mActivity) {
         this.mActivity = mActivity;
@@ -27,8 +29,11 @@ public class LotteryDialog {
         View convertView = inflater.inflate(R.layout.dialog_lottery, null);
         ivClose = (ImageView) convertView.findViewById(R.id.iv_close);
         ivJoin = (ImageView) convertView.findViewById(R.id.iv_join);
-        mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, true);
+        ivLottery = (ImageView) convertView.findViewById(R.id.iv_lottery);
+        mDialog = new CustomDialog(mActivity, convertView, R.style.customerDialog, Gravity.CENTER, false);
         mDialog.setCancelable(false);
+        ivLottery.getLayoutParams().width = DensityUtils.getWidth()-DensityUtils.dip2px(30);
+        ivLottery.getLayoutParams().height = (DensityUtils.getWidth()-DensityUtils.dip2px(30))*1308/975;
         mDialog.setCanceledOnTouchOutside(false);
         Window window = mDialog.getWindow();
         if (window != null) {
