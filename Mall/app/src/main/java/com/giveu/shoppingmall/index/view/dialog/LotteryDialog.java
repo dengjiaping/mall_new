@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 
 /**
  * Created by 513419 on 2017/8/29.
@@ -35,17 +34,14 @@ public class LotteryDialog {
         mDialog = new CustomDialog(mActivity, convertView, R.style.customerDialog, Gravity.CENTER, false);
         mDialog.setCancelable(false);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivJoin.getLayoutParams();
-        float rate =  (DensityUtils.getWidth() - DensityUtils.dip2px(60) * 1.0f)/975;
-        ivJoin.getLayoutParams().width = (int) (478 * rate+DensityUtils.dip2px(20));
-        ivJoin.getLayoutParams().height = (int) (117 * rate+DensityUtils.dip2px(20));
-        LogUtil.e((478 * rate+DensityUtils.dip2px(20)) +"");
-        LogUtil.e((117 * rate+DensityUtils.dip2px(20)) +"");
-        if(rate>=1) {
+        float rate = (DensityUtils.getWidth() - DensityUtils.dip2px(60) * 1.0f) / 975;
+        ivJoin.getLayoutParams().width = (int) (478 * rate + DensityUtils.dip2px(20));
+        ivJoin.getLayoutParams().height = (int) (117 * rate + DensityUtils.dip2px(20));
+        if (rate >= 1) {
             params.bottomMargin = DensityUtils.dip2px(13 * rate);
         }
         ivLottery.getLayoutParams().width = DensityUtils.getWidth() - DensityUtils.dip2px(60);
         ivLottery.getLayoutParams().height = (int) (ivLottery.getLayoutParams().width * 1308 / 975f);
-
 
 
         mDialog.setCanceledOnTouchOutside(false);
