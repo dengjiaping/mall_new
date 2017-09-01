@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.index.view.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
+import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -34,6 +37,11 @@ public class CommodityDetailActivity extends BaseActivity {
     private CommodityInfoFragment commodityInfoFragment;
     private CommodityDetailFragment commodityDetailFragment;
     private String[] tabTitles = new String[]{"商品", "详情"};
+
+    public static void startIt(Context context){
+        Intent intent = new Intent(context,CommodityDetailActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -59,6 +67,8 @@ public class CommodityDetailActivity extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(vp_content);
         vp_content.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
+        CreditCommodityDialog creditCommodityDialog = new CreditCommodityDialog(mBaseContext);
+        creditCommodityDialog.show();
     }
 
     @Override
