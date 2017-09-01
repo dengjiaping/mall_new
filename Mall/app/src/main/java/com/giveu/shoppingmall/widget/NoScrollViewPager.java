@@ -11,23 +11,39 @@ import android.view.MotionEvent;
  */
 
 public class NoScrollViewPager extends ViewPager {
+    private boolean scrollDisabled = true;
+
+    public NoScrollViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
 
     public NoScrollViewPager(Context context) {
         super(context);
     }
 
-    public NoScrollViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public void setScrollDisabled(boolean scrollDisabled) {
+        this.scrollDisabled = scrollDisabled;
+    }
+
+    @Override
+    public void scrollTo(int x, int y) {
+        super.scrollTo(x, y);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
-        return false;
+        if (scrollDisabled)
+            return false;
+        else
+            return super.onTouchEvent(arg0);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        return false;
+        if (scrollDisabled)
+            return false;
+        else
+            return super.onInterceptTouchEvent(arg0);
     }
 }

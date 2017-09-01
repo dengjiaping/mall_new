@@ -81,7 +81,7 @@ android {
             zipAlignEnabled false
             // 移除无用的resource文件
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
@@ -90,11 +90,11 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
 
             // 是否进行混淆
-            minifyEnabled true
-            zipAlignEnabled true
+            minifyEnabled false
+            zipAlignEnabled false
             // 移除无用的resource文件
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
@@ -191,5 +191,7 @@ dependencies {
     compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7"
     //leakcanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    //轮播图
+    compile 'com.youth.banner:banner:1.4.9'
 
 }

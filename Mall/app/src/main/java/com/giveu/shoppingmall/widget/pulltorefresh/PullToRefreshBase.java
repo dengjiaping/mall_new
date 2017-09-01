@@ -577,7 +577,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         // Call OnPullEventListener
         if (null != mOnPullEventListener) {
-            //mOnPullEventListener.onPullEvent(this, mState, mCurrentMode);
+            mOnPullEventListener.onPullEvent(this, mState, mCurrentMode);
         }
     }
 
