@@ -76,7 +76,7 @@
         android:layout_marginTop="11dp"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:visibility="gone">
+        >
 
         <ImageView
             style="@style/iv_common_problem_style"

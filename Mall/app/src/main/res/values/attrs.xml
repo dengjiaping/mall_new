@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //scale
+    <!--商城订单选择控件-->
+    <declare-styleable name="ChooseView">
+        <attr name="cv_text_right_gravity" format="integer"/>
+        <attr name="cv_text_left_width" format="integer"/>
+        <attr name="text_left" format="string"/>
+        <attr name="text_right" format="string"/>
+        <attr name="text_left_color" format="color"/>
+        <attr name="text_right_color" format="color"/>
+        <attr name="text_right_maxLength" format="integer"/>
+        <attr name="iv_right" format="reference|color"/>
+    </declare-styleable>
+
     <declare-styleable name="RulerView">
         <attr name="indicateColor" format="color|reference" />
         <attr name="selectedLineColor" format="color|reference" />

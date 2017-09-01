@@ -7,6 +7,7 @@ import android.view.View;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
@@ -18,9 +19,10 @@ import java.util.List;
 public class AddressManageAdapter extends LvCommonAdapter<String> {
 
     private ConfirmDialog deleteDialog;
-
+    List<String> datas;
     public AddressManageAdapter(Context context, List<String> datas) {
         super(context, R.layout.lv_add_address_item, datas);
+        this.datas = datas;
         initDialog();
     }
 
@@ -41,13 +43,21 @@ public class AddressManageAdapter extends LvCommonAdapter<String> {
     }
 
     @Override
-    protected void convert(ViewHolder holder, String item, int position) {
+    protected void convert(ViewHolder holder, String item, final int position) {
         holder.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteDialog.show();
             }
         });
+        holder.setOnClickListener(R.id.cb_default, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                    ToastUtils.showShortToast("默认选中"+position);
+
+
+            }
+        });
     }
 }

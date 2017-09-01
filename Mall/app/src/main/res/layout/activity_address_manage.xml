@@ -8,13 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:layout_marginBottom="34dp"
-        android:dividerHeight="0dp" />
+        android:layout_marginBottom="54dp"
+        android:dividerHeight="10dp" />
 
     <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_add_address"
         style="@style/click_enabled_bt"
         android:background="@drawable/selector_login"
         android:text="添加收货地址"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>

@@ -12,7 +12,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:gravity="center_vertical"
             android:text="张超"
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginLeft="27dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="18118746525"
@@ -45,15 +45,16 @@
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginRight="@dimen/default_layout_screen_gap"
         android:layout_marginTop="26dp"
-        android:background="@color/default_layoutxml_bg" />
+        android:background="@color/line_bg" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="41dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@null"
@@ -94,8 +95,4 @@
             android:text="删除" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/default_layoutxml_bg" />
 </LinearLayout>
