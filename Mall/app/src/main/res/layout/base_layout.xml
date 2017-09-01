@@ -100,6 +100,7 @@
 
             </LinearLayout>
 
+
             <TextView
                 android:id="@+id/tv_left"
                 android:layout_width="wrap_content"
@@ -108,6 +109,18 @@
                 android:gravity="center"
                 android:layout_marginLeft="15dp"
                 android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="48dp"
+                android:padding="16dp"
+                android:layout_height="48dp"
+                android:text=""
+                android:src="@drawable/ic_web_close"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_toRightOf="@+id/ll_tab_left_image"
                 />
 
         </RelativeLayout>

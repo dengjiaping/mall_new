@@ -37,6 +37,14 @@
             android:src="@drawable/ic_go_lottery" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_coupon_close" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

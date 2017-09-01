@@ -53,10 +53,12 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     }
 
     @Override
-    public void setListener() {}
+    public void setListener() {
+    }
 
     @Override
-    public void setData() {}
+    public void setData() {
+    }
 
     public String getActivityTitle() {
         return "";
@@ -66,47 +68,67 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     public abstract String getWebviewUrl();
 
-    private String getUrlNotNull(){
+    private String getUrlNotNull() {
         return getUrlAddHttp(getWebviewUrl());
     }
 
     /**
      * @return 兼容www.baidu.com->http://www.baidu.com
      */
-    private String getUrlAddHttp(String rawUrl){
+    private String getUrlAddHttp(String rawUrl) {
         String url = StringUtils.isNull(rawUrl) ? "" : rawUrl;
-        if (url.indexOf("www.") == 0 || url.indexOf("wap.") == 0){//兼容www.baidu.com
+        if (url.indexOf("www.") == 0 || url.indexOf("wap.") == 0) {//兼容www.baidu.com
             url = "http://" + url;
         }
         return url;
     }
 
+    /**
+     * 是否需要关闭网页的按钮
+     */
+    protected void showCloseImage(){
+        baseLayout.setLeftImageListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 
 
     private void initLayout() {
 
         pBar = (ProgressBar) findViewById(R.id.pb_web);
+        baseLayout.setBackClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (webview.canGoBack()) {
+                    webview.goBack();
+                } else {
+                    finish();
+                }
+            }
+        });
         tv_title = baseLayout.top_tab_center_title;
         tv_title.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isWebPageFinished && webview != null){
+                if (isWebPageFinished && webview != null) {
                     webview.loadUrl("javascript:scrollTo(0,0);");
                 }
             }
         });
 
-
         this.ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         this.webview = (WebView) findViewById(R.id.webview);
         initWebview(webview);
 
-        if ( !fillWebviewWithHtmlData(webview) ) {
+        if (!fillWebviewWithHtmlData(webview)) {
             Intent intent = getIntentFromUrl(mBaseContext, getUrlNotNull());
-            if (intent != null){
+            if (intent != null) {
                 startActivity(intent);
                 finish();
-            }else {
+            } else {
                 this.webview.loadUrl(getUrlNotNull());
             }
         }
@@ -163,7 +185,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Intent intent = getIntentFromUrl(mBaseContext, url);
 
-                if (intent != null){
+                if (intent != null) {
                     startActivity(intent);
                     return true;
                 }
@@ -206,11 +228,12 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     /**
      * 上一个activity是谁
+     *
      * @return
      */
-    public static Activity getLastActivity(){
+    public static Activity getLastActivity() {
         int size = BaseApplication.getInstance().undestroyActivities.size();
-        if (size > 1){
+        if (size > 1) {
             return BaseApplication.getInstance().undestroyActivities.get(size - 1);
         }
 
@@ -221,7 +244,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
 
-        if (v == baseLayout.ll_tab_left_image){
+        if (v == baseLayout.ll_tab_left_image) {
             finish();
         }
 
@@ -232,7 +255,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 //        }
     }
 
-    private static boolean isCustomUrl(String str){
+    private static boolean isCustomUrl(String str) {
         Pattern urlPattern = Pattern.compile("^(((http|ftp|https)://)|www)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
 
         Matcher urlMatcher = urlPattern.matcher(str);
@@ -259,10 +282,10 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (webview!=null && webview.getParent()!=null){
-            ((ViewGroup)webview.getParent()).removeView(webview);
+        if (webview != null && webview.getParent() != null) {
+            ((ViewGroup) webview.getParent()).removeView(webview);
             webview.destroy();
-            webview=null;
+            webview = null;
         }
 
         super.onDestroy();

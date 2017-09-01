@@ -16,9 +16,16 @@ import com.giveu.shoppingmall.utils.StringUtils;
 public class CustomWebViewActivity extends BaseWebViewActivity {
     public static final String customWebUrlKey = "customWebUrlKey";
     public static final String customWebTitleKey = "customWebTitleKey";
+    public static final String needCloseImage = "needCloseImage";
+
 
     @Override
     public void afterInitView() {
+        boolean needColse = getIntent().getBooleanExtra(needCloseImage, false);
+        //是否需要关闭网页的按钮
+        if (needColse) {
+            showCloseImage();
+        }
     }
 
     @Override
@@ -34,8 +41,13 @@ public class CustomWebViewActivity extends BaseWebViewActivity {
     }
 
     public static void startIt(Context context, String url, String title) {
+        startIt(context, url, title, false);
+    }
+
+    public static void startIt(Context context, String url, String title, boolean needClose) {
         Intent intent = new Intent(context, CustomWebViewActivity.class);
         intent.putExtra(customWebUrlKey, url);
+        intent.putExtra(needCloseImage, needClose);
         if (StringUtils.isNotNull(title)) {
             intent.putExtra(customWebTitleKey, title);
         }

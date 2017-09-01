@@ -25,7 +25,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.squareup.leakcanary.LeakCanary;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,7 +48,7 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (DebugConfig.isDev) {
+/*        if (DebugConfig.isDev) {
             //开发环境初始化LeakCanary
             if (LeakCanary.isInAnalyzerProcess(this)) {
                 // This process is dedicated to LeakCanary for heap analysis.
@@ -57,7 +56,7 @@ public class BaseApplication extends MultiDexApplication {
                 return;
             }
             LeakCanary.install(this);
-        }
+        }*/
         MultiDex.install(this);
         mInstance = this;
         undestroyActivities = new ArrayList<Activity>();

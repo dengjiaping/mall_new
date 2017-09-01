@@ -13,12 +13,14 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -176,6 +178,8 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
             MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
         }
+        //登录成功后需重新刷新周年庆活动状态
+        EventBusUtils.poseEvent(new LotteryEvent());
         finish();
     }
 
