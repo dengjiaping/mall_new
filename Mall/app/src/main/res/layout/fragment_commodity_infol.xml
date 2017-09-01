@@ -288,7 +288,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="30dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_top"
             android:visibility="gone"
             app:backgroundTint="#ffffff"
             app:borderWidth="0dp"

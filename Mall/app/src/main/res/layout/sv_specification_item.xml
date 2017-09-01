@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_param"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/ts_13"
+        android:textColor="@color/color_4a4a4a"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical" />
+
+    <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout
+        android:id="@+id/tf_specification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zhy:max_select="1" />
+
+</LinearLayout>
