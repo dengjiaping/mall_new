@@ -2,7 +2,6 @@ package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -30,7 +30,7 @@ public class WebCommodityFragment extends Fragment {
     private WebSettings webSettings;
     private String url = "http://m.okhqb.com/item/description/1000334264.html?fromApp=true";
     private boolean fromCommodityDetail;
-    private FloatingActionButton fab_up_slide;
+    private ImageView fab_up_slide;
     private ScrollView mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
@@ -45,7 +45,7 @@ public class WebCommodityFragment extends Fragment {
 
     private void initView() {
         mContainer = (RelativeLayout) view.findViewById(R.id.mContainer);
-        fab_up_slide = (FloatingActionButton) view.findViewById(R.id.fab_up_slide);
+        fab_up_slide = (ImageView) view.findViewById(R.id.fab_up_slide);
         mScrollView = (ScrollView) view.findViewById(R.id.mScrollView);
         pBar = (ProgressBar) view.findViewById(R.id.pb_web);
 //        wvCommodity = (CommodityWebView) view.findViewById(R.id.wv_commodity);

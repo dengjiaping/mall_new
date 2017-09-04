@@ -21,7 +21,6 @@ public class CommodityDetailFragment extends BaseFragment {
     private RadioGroup rgCommodity;
     private WebCommodityFragment introduceFragment;
     private WebCommodityFragment paramsFragment;
-    private WebCommodityFragment afterSaleFragment;
     private FragmentManager fragmentManager;
     private boolean fromCommodityDetail;
 
@@ -54,10 +53,6 @@ public class CommodityDetailFragment extends BaseFragment {
 
                     case R.id.rb_params:
                         showFragment(1);
-                        break;
-
-                    case R.id.rb_after_sale:
-                        showFragment(2);
                         break;
 
                     default:
@@ -98,17 +93,6 @@ public class CommodityDetailFragment extends BaseFragment {
                     fragmentManager.beginTransaction().show(paramsFragment).commitAllowingStateLoss();
                 }
                 break;
-            case 2:
-                if (afterSaleFragment == null) {
-                    afterSaleFragment = new WebCommodityFragment();
-                    afterSaleFragment.setFromCommodityDetail(fromCommodityDetail);
-                    if (!afterSaleFragment.isAdded()) {
-                        fragmentManager.beginTransaction().add(R.id.mContainer, afterSaleFragment).commitAllowingStateLoss();
-                    }
-                } else {
-                    fragmentManager.beginTransaction().show(afterSaleFragment).commitAllowingStateLoss();
-                }
-                break;
         }
     }
 
@@ -121,9 +105,6 @@ public class CommodityDetailFragment extends BaseFragment {
         }
         if (paramsFragment != null && paramsFragment.isAdded()) {
             fragmentManager.beginTransaction().hide(paramsFragment).commitAllowingStateLoss();
-        }
-        if (afterSaleFragment != null && afterSaleFragment.isAdded()) {
-            fragmentManager.beginTransaction().hide(afterSaleFragment).commitAllowingStateLoss();
         }
     }
 

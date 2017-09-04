@@ -36,7 +36,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
 /**
  */
 public class BaseApplication extends MultiDexApplication {
@@ -45,6 +44,7 @@ public class BaseApplication extends MultiDexApplication {
     private static PauseOnScrollListener imageLoaderPauseOnScrollListener;
     private Timer tokenTimer;
     private String beforePayActivity;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -137,6 +137,7 @@ public class BaseApplication extends MultiDexApplication {
         }
         return null;
     }
+
 
     private void initPush() {
 //        JPushInterface.init(this);

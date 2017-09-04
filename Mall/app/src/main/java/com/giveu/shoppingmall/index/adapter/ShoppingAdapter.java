@@ -100,7 +100,7 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                         ivCommodity.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                CommodityDetailActivity.startIt(mContext);
+                                CommodityDetailActivity.startIt(mContext,false);
                             }
                         });
                         ImageUtils.loadImage("http://img5.imgtn.bdimg.com/it/u=1730776793,842511342&fm=200&gp=0.jpg", R.drawable.defalut_img_88_88, ivCommodity);
@@ -127,7 +127,7 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        CommodityDetailActivity.startIt(mContext);
+                        CommodityDetailActivity.startIt(mContext,true);
                     }
                 });
                 ImageUtils.loadImage("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=438802142,1975222280&fm=26&gp=0.jpg", R.drawable.defalut_img_88_88, ivCommodity);

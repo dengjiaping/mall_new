@@ -2,22 +2,34 @@
 <resources>
     //scale
     <!--商城订单选择控件-->
-    <declare-styleable name="ChooseView">
-        <attr name="cv_text_right_gravity" format="integer"/>
-        <attr name="cv_text_left_width" format="integer"/>
-        <attr name="text_left" format="string"/>
-        <attr name="text_right" format="string"/>
-        <attr name="text_left_color" format="color"/>
-        <attr name="text_right_color" format="color"/>
-        <attr name="text_right_maxLength" format="integer"/>
-        <attr name="iv_right" format="reference|color"/>
+    <declare-styleable name="DetailView">
+        <attr name="cv_text_right_gravity" format="integer" />
+        <attr name="cv_text_left_width" format="integer" />
+        <attr name="text_left" format="string" />
+        <attr name="text_middle" format="string" />
+        <attr name="text_right" format="string" />
+        <attr name="text_left_color" format="color" />
+        <attr name="text_middle_color" format="color" />
+        <attr name="text_right_color" format="color" />
+        <attr name="text_right_maxLength" format="integer" />
+        <attr name="iv_right" format="reference|color" />
+        <attr name="tv_left_visible" format="integer">
+            <enum name="VISIBLE" value="0x0" />
+            <enum name="INVISIBLE" value="0x1" />
+            <enum name="GONE" value="0x2" />
+        </attr>
+        <attr name="iv_right_visible" format="integer">
+            <enum name="VISIBLE" value="0x0" />
+            <enum name="INVISIBLE" value="0x1" />
+            <enum name="GONE" value="0x2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="RulerView">
         <attr name="indicateColor" format="color|reference" />
         <attr name="selectedLineColor" format="color|reference" />
         <attr name="textColor" format="color|reference" />
-        <attr name="textSize" format="dimension|reference"/>
+        <attr name="textSize" format="dimension|reference" />
         <attr name="begin" format="integer|reference" />
         <attr name="end" format="integer|reference" />
         <attr name="indicateWidth" format="dimension|reference" />
@@ -58,8 +70,8 @@
         <attr name="count" format="integer" />
         <attr name="border_color" format="color" />
         <attr name="dot_color" format="color" />
-        <attr name="text_visible" format="boolean"/>
-        <attr name="text_size" format="dimension"/>
+        <attr name="text_visible" format="boolean" />
+        <attr name="text_size" format="dimension" />
         <attr name="pwd_style">
             <flag name="rectangle" value="0x0" />
             <flag name="line" value="0x1" />

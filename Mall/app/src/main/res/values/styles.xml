@@ -327,9 +327,8 @@
     </style>
 
     <style name="fragment_newbuild_tv_style2">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:gravity">right|center_vertical</item>
         <item name="android:textSize">@dimen/ts_15</item>
         <item name="android:textColor">@color/title_color</item>

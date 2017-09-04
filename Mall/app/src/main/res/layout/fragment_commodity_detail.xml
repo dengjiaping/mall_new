@@ -6,6 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="50dp">
 
         <RadioGroup
@@ -26,6 +27,13 @@
                 android:text="商品介绍"
                 android:textColor="@drawable/selcector_rb_commodity" />
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="11dp"
+                android:layout_marginTop="11dp"
+                android:background="#eaeaea" />
+
             <com.giveu.shoppingmall.widget.CustomerRadioButton
                 android:id="@+id/rb_params"
                 android:layout_width="0dp"
@@ -33,17 +41,7 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
-                android:text="规格参数"
-                android:textColor="@drawable/selcector_rb_commodity" />
-
-            <com.giveu.shoppingmall.widget.CustomerRadioButton
-                android:id="@+id/rb_after_sale"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:button="@null"
-                android:gravity="center"
-                android:text="包装售后"
+                android:text="商品参数"
                 android:textColor="@drawable/selcector_rb_commodity" />
         </RadioGroup>
 

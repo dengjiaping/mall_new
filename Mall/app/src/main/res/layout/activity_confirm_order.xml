@@ -166,7 +166,7 @@
                 android:textColor="@color/red"
                 android:textSize="@dimen/ts_15" />
 
-            <com.giveu.shoppingmall.widget.ChooseView
+            <com.giveu.shoppingmall.widget.DetailView
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
@@ -178,7 +178,7 @@
                 android:layout_height="1px"
                 android:background="@color/line_bg" />
 
-            <com.giveu.shoppingmall.widget.ChooseView
+            <com.giveu.shoppingmall.widget.DetailView
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 mv:text_left="首付"
@@ -189,7 +189,7 @@
                 android:layout_height="1px"
                 android:background="@color/line_bg" />
 
-            <com.giveu.shoppingmall.widget.ChooseView
+            <com.giveu.shoppingmall.widget.DetailView
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 mv:text_left="分期数"
@@ -200,7 +200,7 @@
                 android:layout_height="1px"
                 android:background="@color/line_bg" />
 
-            <com.giveu.shoppingmall.widget.ChooseView
+            <com.giveu.shoppingmall.widget.DetailView
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 mv:text_left="月供金额："
@@ -367,7 +367,7 @@
                 android:layout_height="1px"
                 android:background="@color/line_bg" />
 
-            <com.giveu.shoppingmall.widget.ChooseView
+            <com.giveu.shoppingmall.widget.DetailView
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 mv:text_left="优惠券："
