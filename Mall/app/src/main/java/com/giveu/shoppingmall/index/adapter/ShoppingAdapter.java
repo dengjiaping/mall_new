@@ -10,6 +10,8 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
@@ -93,6 +95,12 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 for (int i = 0; i < 10; i++) {
                     hotList.add(i + "");
                 }
+                holder.getView(R.id.shopping_hot_more).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShoppingClassifyActivity.startIt(mContext);
+                    }
+                });
                 LvCommonAdapter<String> rvCommonAdapter = new LvCommonAdapter<String>(mContext, R.layout.rv_hot_item, hotList) {
                     @Override
                     protected void convert(ViewHolder holder, String s, int position) {
@@ -100,7 +108,8 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                         ivCommodity.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                CommodityDetailActivity.startIt(mContext);
+//                                CommodityDetailActivity.startIt(mContext);
+                                ShoppingListActivity.startIt(mContext);
                             }
                         });
                         ImageUtils.loadImage("http://img5.imgtn.bdimg.com/it/u=1730776793,842511342&fm=200&gp=0.jpg", R.drawable.defalut_img_88_88, ivCommodity);
@@ -127,7 +136,8 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        CommodityDetailActivity.startIt(mContext);
+//                        CommodityDetailActivity.startIt(mContext);
+                        ShoppingListActivity.startIt(mContext);
                     }
                 });
                 ImageUtils.loadImage("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=438802142,1975222280&fm=26&gp=0.jpg", R.drawable.defalut_img_88_88, ivCommodity);

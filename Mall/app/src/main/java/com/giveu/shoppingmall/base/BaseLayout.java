@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.base;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -163,12 +164,26 @@ public class BaseLayout extends LinearLayout {
      *
      * @param pageTitle
      */
-    public void setTitle(CharSequence pageTitle) {
+    public BaseLayout setTitle(CharSequence pageTitle) {
         top_tab_center_title.setText(pageTitle);
+        return this;
     }
 
-    public void setTitleListener(OnClickListener clickListener) {
+    public BaseLayout setTitleListener(OnClickListener clickListener) {
         top_tab_center_title.setOnClickListener(clickListener);
+        return this;
+    }
+
+    public BaseLayout setTitleWidth(int width) {
+        top_tab_center_title.getLayoutParams().width = width;
+        top_tab_center_title.requestLayout();
+        return this;
+    }
+
+    public BaseLayout setTitleHeight(int height) {
+        top_tab_center_title.getLayoutParams().height = height;
+        top_tab_center_title.requestLayout();
+        return this;
     }
 
     /**
@@ -176,13 +191,30 @@ public class BaseLayout extends LinearLayout {
      *
      * @param color
      */
-    public void setTitleTextColor(int color) {
+    public BaseLayout setTitleTextColor(int color) {
         top_tab_center_title.setTextColor(ContextCompat.getColor(mContext, color));
+        return this;
+    }
+
+    /**
+     * 设置标题背景样式
+     */
+    public BaseLayout setTitleTextBackground(int res) {
+        top_tab_center_title.setBackgroundResource(res);
+        return this;
+    }
+
+    /**
+     * 设置标题字体大小
+     */
+    public BaseLayout setTitleTextSize(int size) {
+        top_tab_center_title.setTextSize(size);
+        return this;
     }
 
 
     /**
-     * 设置title背景颜色
+     * 设置状态栏背景颜色
      */
     public void setTopBarBackgroundColor(int colorId) {
         baselayout_topbar.setBackgroundColor(mContext.getResources().getColor(colorId));

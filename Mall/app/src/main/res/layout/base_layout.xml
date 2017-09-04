@@ -55,7 +55,8 @@
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="@dimen/ts_base_layout_title" />
+                    android:textSize="@dimen/ts_base_layout_title"
+                    android:gravity="center"/>
 
             </RelativeLayout>
             <!-- right -->

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.giveu.shoppingmall.index.widget.LabelsFlowLayout
+        android:id="@+id/shopping_search_flowlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.giveu.shoppingmall.index.widget.LabelsFlowLayout>
+
+    <LinearLayout
+        android:id="@+id/search_history_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/contentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:text="历史搜索"
+            android:textSize="12sp" />
+
+        <ListView
+            android:id="@+id/search_history_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/gray"
+            android:dividerHeight="0.5dp"></ListView>
+
+        <Button
+            android:id="@+id/clear_history_btn"
+            android:layout_width="210dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:text="清除历史搜索记录"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

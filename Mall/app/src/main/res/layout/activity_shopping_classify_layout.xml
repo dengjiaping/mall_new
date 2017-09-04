@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.giveu.shoppingmall.index.widget.WrapLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/shopping_classify_left_recycler"
+        android:layout_width="80dp"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/shopping_classify_right_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.giveu.shoppingmall.index.widget.WrapLayout>

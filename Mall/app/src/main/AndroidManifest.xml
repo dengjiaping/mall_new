@@ -380,6 +380,16 @@
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"
             android:label="订单信息确认" />
+        <activity
+            android:name=".index.view.activity.ShoppingListActivity"
+            android:label="商品列表" />
+        <activity
+            android:name=".index.view.activity.ShoppingClassifyActivity"
+            android:label="商品分类" />
+
+        <activity
+            android:name=".index.view.activity.ShoppingSearchActivity"
+            android:label="商品搜索" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"
