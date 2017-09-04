@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.me.view.activity.CollectionActivity;
 
 /**
  * Created by 508632 on 2016/12/22.
@@ -16,7 +15,7 @@ public class UITest {
 //        if (!DebugConfig.isDev) {
 //            return;
 //        }
-        startActivity(CollectionActivity.class);
+//        startActivity(CashFinishStatusActivity.class);
      //   CashFinishStatusActivity.startIt(mContext, "success", "ddfgfg");
     }
 

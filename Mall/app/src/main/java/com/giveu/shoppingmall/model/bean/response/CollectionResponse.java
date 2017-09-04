@@ -7,9 +7,13 @@ import com.android.volley.mynet.BaseBean;
  */
 
 public class CollectionResponse extends BaseBean<CollectionResponse> {
-    public boolean isShowCb;
+    public boolean isShowCb;//每一项前面是否显示框
+    public boolean isCheck;//单项是否选中
+    public String test;//测试
 
-    public CollectionResponse(boolean isShowCb) {
+    public CollectionResponse(boolean isShowCb, boolean isCheck, String test) {
         this.isShowCb = isShowCb;
+        this.isCheck = isCheck;
+        this.test = test;
     }
 }
