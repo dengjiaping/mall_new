@@ -92,6 +92,7 @@
         android:background="@color/color_f8f8f8" />
 
     <TextView
+        android:id="@+id/tv_confirm"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/color_00bbc0"
@@ -102,6 +103,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/ll_credit"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
@@ -132,6 +134,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_choose_credit"
             android:layout_width="110dp"
             android:layout_height="match_parent"
             android:background="@color/color_00bbc0"

@@ -1,26 +1,34 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
-import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
-import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.giveu.shoppingmall.R.id.vp_content;
 
 /**
  * Created by 513419 on 2017/8/30.
@@ -28,47 +36,64 @@ import java.util.List;
  */
 
 public class CommodityDetailActivity extends BaseActivity {
-    public NoScrollViewPager vp_content;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
+    @BindView(vp_content)
+    public NoScrollViewPager vpContent;
+    @BindView(R.id.ll_credit)
+    LinearLayout llCredit;
+    @BindView(R.id.ll_collect)
+    LinearLayout llCollect;
+    @BindView(R.id.view_divider)
+    View viewDivider;
+    @BindView(R.id.iv_collect)
+    ImageView ivCollect;
+    @BindView(R.id.tv_collect)
+    TextView tvCollect;
+    @BindView(R.id.tv_buy)
+    TextView tvBuy;
     private List<Fragment> fragmentList = new ArrayList<>();
-    private BuyCommodityDialog buyCommodityDialog;
-    private TextView tvBuy;
-    private TextView tvCommodityDetail;
-    private TabLayout tabLayout;
     private CommodityInfoFragment commodityInfoFragment;
     private CommodityDetailFragment commodityDetailFragment;
     private String[] tabTitles = new String[]{"商品", "详情"};
+    private boolean isCredit;
 
-    public static void startIt(Context context){
-        Intent intent = new Intent(context,CommodityDetailActivity.class);
+    public static void startIt(Context context, boolean isCredit) {
+        Intent intent = new Intent(context, CommodityDetailActivity.class);
+        intent.putExtra("isCredit", isCredit);
         context.startActivity(intent);
     }
+
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_commodity_detail);
-        baseLayout.setTitleBarAndStatusBar(false,false);
-        vp_content = (NoScrollViewPager) findViewById(R.id.vp_content);
+        baseLayout.setTitleBarAndStatusBar(false, false);
+        isCredit = getIntent().getBooleanExtra("isCredit", false);
         commodityInfoFragment = new CommodityInfoFragment();
+        Bundle infoBundle = new Bundle();
+        infoBundle.putBoolean("isCredit", isCredit);
+        commodityInfoFragment.setArguments(infoBundle);
         commodityDetailFragment = new CommodityDetailFragment();
         //为了解决滑动冲突，在商品详情页时（是左右滑动的详情页而不是上下滑动产生的详情页），webview左右滑动禁止，以便让viewpager能够滑动
         commodityDetailFragment.setFromCommodityDetail(true);
         fragmentList.add(commodityInfoFragment);
         fragmentList.add(commodityDetailFragment);
-        tvBuy = (TextView) findViewById(R.id.tv_buy);
-        tvBuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buyCommodityDialog.show();
-            }
-        });
-        buyCommodityDialog = new BuyCommodityDialog(this, R.style.customerDialog);
-        tvCommodityDetail = (TextView) findViewById(R.id.tv_commodity_detail);
-        tvCommodityDetail.setAlpha(0);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(vp_content);
-        vp_content.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
-        CreditCommodityDialog creditCommodityDialog = new CreditCommodityDialog(mBaseContext);
-        creditCommodityDialog.show();
+        tabLayout.setupWithViewPager(vpContent);
+        //vpContent设置为可滑动
+        vpContent.setScrollDisabled(false);
+        vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
+        ivCollect.setTag(false);
+        //是否分期产品，分期产品显示月供
+        if (isCredit) {
+            llCollect.getLayoutParams().width = DensityUtils.dip2px(140);
+            llCredit.setVisibility(View.GONE);
+            viewDivider.setVisibility(View.GONE);
+        } else {
+            llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
+            llCredit.setVisibility(View.VISIBLE);
+            viewDivider.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -77,34 +102,61 @@ public class CommodityDetailActivity extends BaseActivity {
     }
 
     /**
-     * 透明度变化，坐标y变化
-     *
-     * @param targetView
-     * @param beginY
-     * @param endY
-     * @param beginAlpha
-     * @param endAlpha
+     * 收藏商品
      */
-    public void startAnimation(View targetView, float beginY, float endY, float beginAlpha, float endAlpha) {
-        PropertyValuesHolder translateYHolder = PropertyValuesHolder.ofFloat("translationY", beginY,
-                endY);
-        PropertyValuesHolder alphaHolder = PropertyValuesHolder.ofFloat("alpha", beginAlpha,
-                endAlpha);
-        ObjectAnimator.ofPropertyValuesHolder(targetView, translateYHolder, alphaHolder).setDuration(200).start();
+    private void collectCommodity() {
+        ivCollect.setImageResource(R.drawable.ic_collect_select);
+        tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleY", 1f, 1.5f, 1f);
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleX", 1f, 1.5f, 1f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleXAnimator).with(scaleYAnimator);
+        animSet.setDuration(500);
+        animSet.start();
+    }
+
+    /**
+     * 取消收藏
+     */
+    private void cancelCollect() {
+        tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_9b9b9b));
+        ivCollect.setImageResource(R.drawable.ic_collect_unselect);
     }
 
 
-    public void showTabLayout() {
-        startAnimation(tvCommodityDetail, 0, 200, 1, 0);
-        startAnimation(tabLayout, -200, 0, 0, 1);
-    }
+    @OnClick({R.id.tv_buy, R.id.ll_collect, R.id.ll_back})
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            case R.id.ll_back:
+                finish();
+                break;
 
-    public void hideTabLayout() {
-        startAnimation(tvCommodityDetail, 200, 0, 0, 1);
-        startAnimation(tabLayout, 0, -200, 1, 0);
+            case R.id.tv_buy:
+                commodityInfoFragment.showBuyDialog();
+                break;
+            case R.id.ll_collect:
+                boolean isCheck = (boolean) ivCollect.getTag();
+                //已收藏则取消收藏
+                if (isCheck) {
+                    cancelCollect();
+                } else {
+                    collectCommodity();
+                }
+                ivCollect.setTag(!isCheck);
+                break;
+        }
     }
 
     public void showCommodityDetail() {
-        vp_content.setCurrentItem(1);
+        vpContent.setCurrentItem(1, false);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

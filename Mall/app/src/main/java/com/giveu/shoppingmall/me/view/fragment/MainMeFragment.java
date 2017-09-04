@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
+import com.giveu.shoppingmall.me.view.activity.CollectionActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.MessageActivity;
 import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
@@ -75,6 +76,8 @@ public class MainMeFragment extends BaseFragment {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.view_divider)
     View viewDivider;
+    @BindView(R.id.ll_my_collection)
+    LinearLayout llMyCollection;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -175,7 +178,7 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage,R.id.ll_my_collection, R.id.ll_my_coupon, R.id.ll_quota})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -215,7 +218,13 @@ public class MainMeFragment extends BaseFragment {
                     AccountManagementActivity.startIt(mBaseContext);
                 }
                 break;
-
+            case R.id.ll_my_collection:
+                //我的收藏
+//                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+//                    CollectionActivity.startIt(mBaseContext);
+//                }
+                CollectionActivity.startIt(mBaseContext);
+                break;
             case R.id.ll_my_coupon:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
@@ -240,13 +249,5 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 }

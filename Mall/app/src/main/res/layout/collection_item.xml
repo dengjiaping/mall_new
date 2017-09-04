@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/cb_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/selector_checkbox_round"
+        android:drawablePadding="@dimen/default_layout_screen_gap"
+        android:paddingBottom="@dimen/default_layout_screen_gap"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:paddingTop="@dimen/default_layout_screen_gap"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/defalut_img_88_88" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="vivo Y55全网通高通8核超薄5.2英寸大屏4G智能美颜自拍手机"
+            android:textColor="@color/color_3e3e3e"
+            android:textSize="@dimen/ts_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="月供：￥407.00 起"
+            android:textColor="@color/red"
+            android:textSize="@dimen/ts_12" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="￥6880.00"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13" />
+    </LinearLayout>
+</LinearLayout>

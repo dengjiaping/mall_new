@@ -1,6 +1,5 @@
 package com.giveu.shoppingmall.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -92,7 +91,7 @@ public class StringUtils {
      * @param context
      * @param addressJson
      */
-    public static void saveAddress(Activity context, String addressJson) {
+    public static void saveAddress(Context context, String addressJson) {
         FileOutputStream out = null;
         BufferedWriter writer = null;
         try {
@@ -118,7 +117,7 @@ public class StringUtils {
      * @param context
      * @return
      */
-    public static String loadAddress(Activity context) {
+    public static String loadAddress(Context context) {
         FileInputStream in = null;
         BufferedReader reader = null;
         StringBuilder content = new StringBuilder();

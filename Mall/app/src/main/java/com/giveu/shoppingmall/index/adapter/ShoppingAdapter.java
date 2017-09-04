@@ -108,7 +108,6 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                         ivCommodity.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-//                                CommodityDetailActivity.startIt(mContext);
                                 ShoppingListActivity.startIt(mContext);
                             }
                         });
@@ -136,7 +135,6 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        CommodityDetailActivity.startIt(mContext);
                         ShoppingListActivity.startIt(mContext);
                     }
                 });

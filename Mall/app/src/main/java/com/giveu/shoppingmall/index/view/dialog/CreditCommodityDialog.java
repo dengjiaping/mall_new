@@ -106,13 +106,13 @@ public class CreditCommodityDialog extends CustomDialog {
         llContainer.addView(speView);
     }
 
-    private BuyCommodityDialog.OnChooseListener listener;
+    private OnConfirmListener listener;
 
-    public void setOnChooseListener(BuyCommodityDialog.OnChooseListener listener) {
+    public void setOnConfirmListener(OnConfirmListener listener) {
         this.listener = listener;
     }
 
-    public interface OnChooseListener {
+    public interface OnConfirmListener {
         void confirm();
 
         void cancle();

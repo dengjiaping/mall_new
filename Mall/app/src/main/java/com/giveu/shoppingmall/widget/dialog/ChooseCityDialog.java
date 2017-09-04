@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.base.rvadapter.RvCommonAdapter;
 import com.giveu.shoppingmall.base.rvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
 import com.giveu.shoppingmall.model.bean.response.CityBean;
+import com.giveu.shoppingmall.utils.AddressUtils;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -227,6 +228,17 @@ public class ChooseCityDialog extends CustomDialog {
         tabLayout.setupWithViewPager(vpAddress);
         vpAddress.setAdapter(addressAdapter);
         vpAddress.setOffscreenPageLimit(3);
+        AddressUtils.getAddressList(mAttachActivity, new AddressUtils.OnAddressLitener() {
+            @Override
+            public void onSuccess(ArrayList<AddressBean> addressList) {
+                initProvince(addressList);
+            }
+
+            @Override
+            public void onFail() {
+
+            }
+        });
     }
 
     private String initString(String str) {
