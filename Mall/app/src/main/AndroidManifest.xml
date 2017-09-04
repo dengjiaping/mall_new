@@ -380,6 +380,9 @@
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"
             android:label="订单信息确认" />
+        <activity
+            android:name=".me.view.activity.CollectionActivity"
+            android:label="我的收藏" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -231,7 +231,7 @@ public class BaseLayout extends LinearLayout {
      * @param rightText
      */
     public void setRightText(CharSequence rightText) {
-        setRightTextAndListener(rightText, null);
+        top_tab_right_text.setText(rightText);
     }
 
     public void setRightTextAndListener(CharSequence rightText, View.OnClickListener onClickListener) {
@@ -241,6 +241,14 @@ public class BaseLayout extends LinearLayout {
 
     public void setRightTextColor(@ColorRes int color) {
         top_tab_right_text.setTextColor(ContextCompat.getColor(getContext(), color));
+    }
+
+    /**
+     * 右边文字点击事件
+     * @param onClickListener
+     */
+    public void setRightTextListener(View.OnClickListener onClickListener) {
+        top_tab_right_text.setOnClickListener(onClickListener);
     }
 
     public void setRightImageAndListener(int resid, View.OnClickListener onClickListener) {
