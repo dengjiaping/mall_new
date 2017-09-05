@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/transparent"
-              android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/baselayout_topbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/title_color"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <ImageView
             android:id="@+id/iv_statusbar"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:src="@color/transparent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <RelativeLayout
             android:id="@+id/titlebar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_bar_height"
-            >
+            android:layout_height="@dimen/title_bar_height">
 
             <!-- left -->
 
@@ -51,12 +50,26 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:ellipsize="end"
+                    android:gravity="center"
                     android:maxLength="25"
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="@dimen/ts_base_layout_title"
-                    android:gravity="center"/>
+                    android:textSize="@dimen/ts_base_layout_title" />
+
+                <com.giveu.shoppingmall.index.widget.ClearEditText
+                    android:id="@+id/top_tab_center_editext"
+                    android:layout_width="240dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_title_background"
+                    android:hint="搜索商品"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:singleLine="true"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
             </RelativeLayout>
             <!-- right -->
@@ -106,27 +119,24 @@
                 android:id="@+id/tv_left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text=""
-                android:gravity="center"
                 android:layout_marginLeft="15dp"
-                android:visibility="gone"
-                />
+                android:gravity="center"
+                android:text=""
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/iv_close"
                 android:layout_width="48dp"
-                android:padding="16dp"
                 android:layout_height="48dp"
-                android:text=""
-                android:src="@drawable/ic_web_close"
-                android:gravity="center"
-                android:visibility="gone"
                 android:layout_toRightOf="@+id/ll_tab_left_image"
-                />
+                android:gravity="center"
+                android:padding="16dp"
+                android:src="@drawable/ic_web_close"
+                android:text=""
+                android:visibility="gone" />
 
         </RelativeLayout>
     </LinearLayout>
-
 
 
     <RelativeLayout
