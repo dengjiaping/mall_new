@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.index.bean.ShoppingBean;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class GodsAdapter extends RecyclerView.Adapter {
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CommodityDetailActivity.startIt(mContext, false);
+                    ShoppingListActivity.startIt(mContext);
                 }
             });
         }

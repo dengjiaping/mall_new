@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -72,7 +73,7 @@ public class BaseLayout extends LinearLayout {
     public TextView tv_left;
     public RelativeLayout rl_click_right;
     public ImageView iv_close;
-
+    public EditText top_tab_center_edittext;
     /**
      * title bar
      */
@@ -95,7 +96,7 @@ public class BaseLayout extends LinearLayout {
         iv_statusbar = (ImageView) base_layout.findViewById(R.id.iv_statusbar);
         top_tab_right_text = (TextView) base_layout.findViewById(R.id.top_tab_right_text);
         titlebar = (RelativeLayout) base_layout.findViewById(R.id.titlebar);
-
+        top_tab_center_edittext = (EditText) base_layout.findViewById(R.id.top_tab_center_editext);
 
         ll_baselayout_content = (LinearLayout) base_layout.findViewById(R.id.ll_baselayout_content);
         clv = (CommonLoadingView) base_layout.findViewById(R.id.clv);
@@ -184,6 +185,11 @@ public class BaseLayout extends LinearLayout {
         top_tab_center_title.getLayoutParams().height = height;
         top_tab_center_title.requestLayout();
         return this;
+    }
+
+    public void showCenterEditText() {
+        top_tab_center_edittext.setVisibility(View.VISIBLE);
+        top_tab_center_title.setVisibility(View.GONE);
     }
 
     /**
@@ -277,6 +283,7 @@ public class BaseLayout extends LinearLayout {
 
     /**
      * 右边文字点击事件
+     *
      * @param onClickListener
      */
     public void setRightTextListener(View.OnClickListener onClickListener) {

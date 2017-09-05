@@ -379,7 +379,9 @@
         <!--二期商城-->
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"
-            android:label="订单信息确认" />
+            android:label="订单信息确认"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:windowSoftInputMode="adjustPan|stateUnspecified"/>
         <activity
             android:name=".index.view.activity.ShoppingListActivity"
             android:label="商品列表" />
