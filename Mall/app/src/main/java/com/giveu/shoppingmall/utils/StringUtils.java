@@ -395,6 +395,19 @@ public class StringUtils {
         return result;
     }
 
+    public static String formatRestTime(long restTime) {
+        String result = "";
+        if (restTime != 0) {
+            SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+            try {
+                result = format.format(new Date(restTime));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
     //2016/11/26转成11/26
     public static String transactionSearchDate(String sourceDate) {
         String repayDate = "";

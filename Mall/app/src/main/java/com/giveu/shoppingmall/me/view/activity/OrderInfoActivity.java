@@ -10,6 +10,8 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 
+import java.util.List;
+
 /**
  * Created by 101912 on 2017/8/29.
  */
@@ -28,7 +30,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView{
         setContentView(R.layout.activity_order_info);
         baseLayout.setTitle("订单详情");
         presenter = new OrderHandlePresenter(this);
-        presenter.getOrderInfo();
+//        presenter.getOrderInfo();
     }
 
     @Override
@@ -41,8 +43,4 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView{
 
     }
 
-    @Override
-    public void showOrderInfo() {
-
-    }
 }

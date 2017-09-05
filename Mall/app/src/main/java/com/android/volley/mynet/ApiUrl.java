@@ -145,5 +145,7 @@ public interface ApiUrl {
     String collections_goodsSkus_all = BASE_URL + "sc/users/collections/goodsSkus/all";
     //删除商品收藏列表
     String collections_goodsSkus_collect = BASE_URL + "sc/users/collections/goodsSkus/collect";
+    //获取我的订单列表
+    String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
 }
 

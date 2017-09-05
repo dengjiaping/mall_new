@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:background="@color/default_layoutxml_bg"
+    >
 
     <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
         android:id="@+id/ptrlv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp"
+        android:divider="@color/default_layoutxml_bg"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_order_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="暂无任何订单"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_14" />
+
+    </LinearLayout>
+
+</RelativeLayout>

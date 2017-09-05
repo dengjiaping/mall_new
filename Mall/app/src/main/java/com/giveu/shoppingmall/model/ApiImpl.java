@@ -30,6 +30,7 @@ import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
@@ -459,8 +460,13 @@ public class ApiImpl {
 
     //获取商品收藏列表
     public static void getCollectionList(String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","pageNum","pageSize"}, new Object[]{StringUtils.string2Long(idPerson),pageNum,pageSize});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{StringUtils.string2Long(idPerson), pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class, responseListener);
+    }
+    //获取我的订单列表
+    public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, StringUtils.string2Long(idPerson), pageNum, pageSize, status});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.orderApp_myListOrder, OrderListResponse.class, context, responseListener);
     }
 
     //删除商品收藏

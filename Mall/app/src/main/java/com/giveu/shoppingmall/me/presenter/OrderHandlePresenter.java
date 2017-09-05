@@ -3,6 +3,9 @@ package com.giveu.shoppingmall.me.presenter;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
+import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
+
+import java.util.ArrayList;
 
 /**
  * Created by 101912 on 2017/8/30.
@@ -14,16 +17,6 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
         super(view);
     }
 
-    public void getOrderInfo() {
-        //处理订单详情
-        if (getView().getAct() instanceof OrderInfoActivity) {
-
-        }
-        else {
-
-        }
-        getView().showOrderInfo();
-    }
 
     //去支付
     public void onPay() {

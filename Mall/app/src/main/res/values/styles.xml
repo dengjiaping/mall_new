@@ -6,7 +6,6 @@
         <!--<item NAME="colorPrimary">@color/color_00adb2</item>-->
         <!--<item NAME="colorPrimaryDark">@color/color_00adb2</item>-->
         <!--<item NAME="colorAccent">@color/color_00adb2</item>-->
-        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">

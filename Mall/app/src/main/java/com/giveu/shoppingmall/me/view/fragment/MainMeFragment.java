@@ -15,11 +15,13 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.CollectionActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
 import com.giveu.shoppingmall.me.view.activity.MessageActivity;
 import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
+import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
@@ -76,8 +78,12 @@ public class MainMeFragment extends BaseFragment {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.view_divider)
     View viewDivider;
+
     @BindView(R.id.ll_my_collection)
     LinearLayout llMyCollection;
+
+    @BindView(R.id.ll_order_module)
+    LinearLayout llOrderModule;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,7 +184,8 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage,R.id.ll_my_collection, R.id.ll_my_coupon, R.id.ll_quota})
+
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota,R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -235,6 +242,11 @@ public class MainMeFragment extends BaseFragment {
                 }
                 break;
 
+            case R.id.ll_my_order:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext))
+                    MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);
+                break;
+
             case R.id.ll_quota:
                 //激活钱包用户直接查看额度，否则先去激活
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
@@ -245,6 +257,25 @@ public class MainMeFragment extends BaseFragment {
                     }
                 }
                 break;
+
+            case R.id.ll_waiting_pay:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    MyOrderActivity.startIt(mBaseContext, OrderState.WAITING_PAY);
+                }
+                break;
+
+            case R.id.ll_down_payment:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    MyOrderActivity.startIt(mBaseContext, OrderState.DOWN_PAYMENT);
+                }
+                break;
+
+            case R.id.ll_waiting_receive:
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    MyOrderActivity.startIt(mBaseContext, OrderState.WAITING_RECEIVE);
+                }
+                break;
+
             default:
                 break;
 
