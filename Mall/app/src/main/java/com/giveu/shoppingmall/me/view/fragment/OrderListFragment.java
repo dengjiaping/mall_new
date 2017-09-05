@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.adapter.OrderListAdapter;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by 101912 on 2017/8/25.
  */
 
-public class OrderListFragment extends BaseFragment implements IOrderInfoView{
+public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
@@ -64,7 +65,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView{
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            orderState = bundle.getString("orderState", "");
+            orderState = bundle.getString(OrderState.ORDER_TYPE, "");
         }
         baseLayout.setTitleBarAndStatusBar(false, false);
         fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
@@ -88,7 +89,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView{
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                OrderInfoActivity.startIt(mBaseContext);
+                //OrderInfoActivity.startIt(mBaseContext);
             }
         });
 
@@ -122,25 +123,25 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView{
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, "sc", LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, "qq", "10056737", "1111", pageNum + "", pageSize + "", "0", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
+                ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
+                ptrlv.setPullLoadEnable(false);
+                ptrlv.onRefreshComplete();
                 if (StringUtils.isNotNull(response.channelName)) {
                     channelName = response.channelName;
                 }
                 if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
-                    ll_emptyView.setVisibility(View.GONE);
                     if (pageNum == 1) {
                         mDatas.clear();
                         //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
                         if (response.data.skuInfo.size() >= pageSize) {
                             ptrlv.setPullLoadEnable(true);
                         } else {
-                            ptrlv.setPullLoadEnable(false);
                             ptrlv.showEnd("没有更多数据了");
                         }
-                        ptrlv.onRefreshComplete();
                     }
                     pageNum++;
                     mDatas.addAll(response.data.skuInfo);
@@ -150,13 +151,10 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView{
                     if (pageNum == 1) {
                         mDatas.clear();
                         adapter.notifyDataSetChanged();
-                        ptrlv.onRefreshComplete();
-                        ptrlv.setPullLoadEnable(false);
                         ll_emptyView.setVisibility(View.VISIBLE);
                     }
                     //刚好下一页没数据
                     else {
-                        ptrlv.setPullLoadEnable(false);
                         ptrlv.showEnd("没有更多数据了");
                     }
                 }
@@ -170,6 +168,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView{
         });
     }
 
+    @Override
+    public void showOrderDetail(BaseBean response) {
 
-
+    }
 }

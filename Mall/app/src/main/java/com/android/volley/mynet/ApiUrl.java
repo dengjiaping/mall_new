@@ -142,6 +142,11 @@ public interface ApiUrl {
     //获取活动信息
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
     //获取我的订单列表
-    String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
+    //String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
+    String orderApp_myListOrder = BASE_URL + "http://10.10.11.140:9090/v1/orderApp/myListOrder";
+    //获取我的订单数量
+    String orderApp_myOrderNumByStatus = BASE_URL + "orderApp/myOrderNumByStatus";
+    //获取订单详情
+    String order_orderDetail = BASE_URL + "order/orderDetail";
 }
 

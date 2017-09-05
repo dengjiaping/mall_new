@@ -45,7 +45,7 @@ public class MyOrderActivity extends BaseActivity {
 
     public static void startIt(Activity activity, String orderState) {
         Intent intent = new Intent(activity, MyOrderActivity.class);
-        intent.putExtra("orderState", orderState);
+        intent.putExtra(OrderState.ORDER_TYPE, orderState);
         activity.startActivity(intent);
     }
 
@@ -58,41 +58,47 @@ public class MyOrderActivity extends BaseActivity {
     @Override
     public void setData() {
         fragments = new ArrayList<>();
-        currentTab = Integer.parseInt(getIntent().getStringExtra("orderState"));
+        currentTab = Integer.parseInt(getIntent().getStringExtra(OrderState.ORDER_TYPE));
 
+        //全部订单
         allFragment = new OrderListFragment();
         Bundle allBundle = new Bundle();
-        allBundle.putString("orderState", OrderState.ALL_RESPONSE);
+        allBundle.putString(OrderState.ORDER_TYPE, OrderState.ALL_RESPONSE);
         allFragment.setArguments(allBundle);
         fragments.add(allFragment);
 
+        //待付款
         waitingPayFragment = new OrderListFragment();
         Bundle waitingPayBundle = new Bundle();
-        waitingPayBundle.putString("orderState", OrderState.WAITING_PAY);
+        waitingPayBundle.putString(OrderState.ORDER_TYPE, OrderState.WAITING_PAY);
         waitingPayFragment.setArguments(waitingPayBundle);
         fragments.add(waitingPayFragment);
 
+        //待首付
         downPaymentFragment = new OrderListFragment();
         Bundle downPaymentBundle = new Bundle();
-        downPaymentBundle.putString("orderState", OrderState.DOWN_PAYMENT);
+        downPaymentBundle.putString(OrderState.ORDER_TYPE, OrderState.DOWN_PAYMENT);
         downPaymentFragment.setArguments(downPaymentBundle);
         fragments.add(downPaymentFragment);
 
+        //待收货
         waitingReceiveFragment = new OrderListFragment();
         Bundle waitingReceiveBundle = new Bundle();
-        waitingReceiveBundle.putString("orderState", OrderState.WAITING_RECEIVE);
+        waitingReceiveBundle.putString(OrderState.ORDER_TYPE, OrderState.WAITING_RECEIVE);
         waitingReceiveFragment.setArguments(waitingReceiveBundle);
         fragments.add(waitingReceiveFragment);
 
+        //已完成
         finishedFragment = new OrderListFragment();
         Bundle finishedBundle = new Bundle();
-        finishedBundle.putString("orderState", OrderState.Finished_RESPONSE);
+        finishedBundle.putString(OrderState.ORDER_TYPE, OrderState.Finished_RESPONSE);
         finishedFragment.setArguments(finishedBundle);
         fragments.add(finishedFragment);
 
+        //已关闭
         closedFragment = new OrderListFragment();
         Bundle closedBundle = new Bundle();
-        closedBundle.putString("orderState", OrderState.CLOSED_RESPONSE);
+        closedBundle.putString(OrderState.ORDER_TYPE, OrderState.CLOSED_RESPONSE);
         closedFragment.setArguments(closedBundle);
         fragments.add(closedFragment);
 

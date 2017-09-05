@@ -1,12 +1,14 @@
 package com.giveu.shoppingmall.model.bean.response;
 
+import com.android.volley.mynet.BaseBean;
+
 import java.util.List;
 
 /**
  * Created by 101912 on 2017/9/4.
  */
 
-public class OrderTraceResponse {
+public class OrderTraceResponse extends BaseBean<OrderTraceResponse>{
 
 
     /**

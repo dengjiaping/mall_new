@@ -16,7 +16,7 @@
         <View
             android:id="@+id/view_up_line"
             android:layout_width="2dp"
-            android:layout_height="16dp"
+            android:layout_height="17dp"
             android:background="@drawable/shape_line_grey" />
 
         <ImageView

@@ -29,7 +29,9 @@ import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
+import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
@@ -53,6 +55,7 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -458,11 +461,22 @@ public class ApiImpl {
     }
 
     //获取我的订单列表
-    public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, StringUtils.string2Long(idPerson), pageNum, pageSize, status});
+    public static void getOrderList(Activity context, String channel, String idPerson, String openid, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "openid", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, openid, pageNum, pageSize, status});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.orderApp_myListOrder, OrderListResponse.class, context, responseListener);
     }
 
+    //MainMeFragment获取订单数量
+    public static void getOrderNum(String channel, String idPerson, BaseRequestAgent.ResponseListener<OrderNumResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson"}, new Object[]{channel, idPerson});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.orderApp_myOrderNumByStatus, OrderNumResponse.class, responseListener);
+    }
+
+    //获取订单详情
+    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
+    }
 }
 
 

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
@@ -25,14 +27,21 @@ import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,12 +87,18 @@ public class MainMeFragment extends BaseFragment {
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.view_divider)
     View viewDivider;
-
     @BindView(R.id.ll_my_collection)
     LinearLayout llMyCollection;
-
     @BindView(R.id.ll_order_module)
     LinearLayout llOrderModule;
+    @BindView(R.id.tv_waiting_pay)
+    TextView tvWaitingPay;
+    @BindView(R.id.tv_down_payment)
+    TextView tvDownPayment;
+    @BindView(R.id.tv_waiting_receive)
+    TextView tvWaitingReceive;
+
+    private List<OrderNumResponse.MyOrderBean> orderNumList;//订单各个种类的数量
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,12 +116,14 @@ public class MainMeFragment extends BaseFragment {
         });
         registerEventBus();
         ButterKnife.bind(this, view);
+        orderNumList = new ArrayList<>();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //getOrderNumByState();
         updateUserUi();
     }
 
@@ -151,15 +168,58 @@ public class MainMeFragment extends BaseFragment {
             tvPayAmounts.setText(LoginHelper.getInstance().getCreditCount());
             viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.VISIBLE);
+            //订单数量显示个数处理逻辑
+            if (CommonUtils.isNotNullOrEmpty(orderNumList)) {
+                for (OrderNumResponse.MyOrderBean response : orderNumList) {
+                    switch (response.status) {
+                        //待付款
+                        case OrderState.WAITINGPAY:
+                            if (response.num != 0) {
+                                tvWaitingPay.setVisibility(View.GONE);
+                                tvWaitingPay.setText(response.num);
+                            }
+                            else
+                                tvWaitingPay.setVisibility(View.GONE);
+                            break;
+                        //待首付
+                        case OrderState.DOWNPAYMENT:
+                            if (response.num != 0) {
+                                tvDownPayment.setVisibility(View.GONE);
+                                tvDownPayment.setText(response.num);
+                            }
+                            else
+                                tvDownPayment.setVisibility(View.GONE);
+                            break;
+                        //待收货
+                        case OrderState.WAITINGRECEIVE:
+                            if (response.num != 0) {
+                                tvWaitingReceive.setVisibility(View.GONE);
+                                tvWaitingReceive.setText(response.num);
+                            }
+                            else
+                                tvWaitingReceive.setVisibility(View.GONE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                tvWaitingPay.setVisibility(View.GONE);
+                tvDownPayment.setVisibility(View.GONE);
+                tvWaitingReceive.setVisibility(View.GONE);
+            }
         } else {
             //未登录状态
+            tvWaitingPay.setVisibility(View.GONE);
+            tvDownPayment.setVisibility(View.GONE);
+            tvWaitingReceive.setVisibility(View.GONE);
             tvStatus.setVisibility(View.GONE);
             tvWithdrawals.setText("查看信用钱包额度");
             tvLogin.setText("立即登录");
             tvSee.setVisibility(View.GONE);
             ivAvatar.setImageResource(R.drawable.ic_default_avatar);
             tvDays.setText("--");
-            viewDivider.setVisibility(View.GONE);
+            viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.GONE);
         }
     }
@@ -182,6 +242,26 @@ public class MainMeFragment extends BaseFragment {
     @Override
     public void initDataDelay() {
 
+    }
+
+    /**
+     * 获取待付款、待首付、待收货的订单数量
+     */
+    private void getOrderNumByState() {
+        ApiImpl.getOrderNum(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<OrderNumResponse>() {
+            @Override
+            public void onSuccess(OrderNumResponse response) {
+                orderNumList.clear();
+                if (CommonUtils.isNotNullOrEmpty(response.data.myOrder)) {
+                    orderNumList.addAll(response.data.myOrder);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
 

@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_time_left"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/color_00bbc0"
@@ -18,7 +19,7 @@
             android:src="@drawable/ic_hint" />
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_time_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -54,6 +55,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_orderNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
@@ -64,6 +66,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -98,6 +101,7 @@
                             android:src="@drawable/ic_location" />
 
                         <TextView
+                            android:id="@+id/tv_receiver_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -107,6 +111,7 @@
                             android:textSize="@dimen/ts_15" />
 
                         <TextView
+                            android:id="@+id/tv_mobile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -119,6 +124,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"
@@ -138,6 +144,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/iv_picture"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:src="@drawable/ic_small_lottery" />
@@ -150,6 +157,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
@@ -163,6 +171,7 @@
                             android:layout_marginTop="10dp">
 
                             <TextView
+                                android:id="@+id/tv_sale_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="¥3999元"
@@ -170,6 +179,7 @@
                                 android:textSize="@dimen/ts_19" />
 
                             <TextView
+                                android:id="@+id/tv_quantity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
@@ -201,6 +211,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -226,6 +237,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_pay_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -235,6 +247,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_down_payment"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="1dp"
@@ -251,15 +264,17 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_down_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="10%(599.90元)"
+                        android:text="10%(¥599.90)"
                         android:textColor="@color/color_00bbc0"
                         android:textSize="@dimen/ts_15" />
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_staging_num"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="1dp"
@@ -276,6 +291,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_staging_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -285,6 +301,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_month_payment"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="1dp"
@@ -301,6 +318,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_month_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -362,41 +380,52 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
                         android:paddingBottom="10dp"
+                        android:paddingTop="15dp"
                         android:text="增值服务"
                         android:textColor="@color/color_4a4a4a"
                         android:textSize="@dimen/ts_15" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        >
+                        android:layout_height="38dp">
 
                         <CheckBox
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:button="@drawable/selector_checkbox"
-                            android:checked="true" />
+                            android:checked="true"
+                            android:gravity="center" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="25dp"
+                            android:gravity="center"
                             android:text="手机延保："
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_4a4a4a"/>
+                            android:textColor="@color/color_4a4a4a"
+                            android:textSize="@dimen/ts_14" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="130dp"
+                            android:gravity="center"
                             android:text="¥99/月"
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_00bbc0"/>
+                            android:textColor="@color/color_00bbc0"
+                            android:textSize="@dimen/ts_14" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_detail_circle" />
+                        </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -406,58 +435,82 @@
                         <CheckBox
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:button="@drawable/selector_checkbox"
-                            android:checked="true" />
+                            android:checked="true"
+                            android:gravity="center" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="25dp"
+                            android:gravity="center"
                             android:text="碎屏险："
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_4a4a4a"/>
+                            android:textColor="@color/color_4a4a4a"
+                            android:textSize="@dimen/ts_14" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="130dp"
+                            android:gravity="center"
                             android:text="¥99/月"
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_00bbc0"/>
+                            android:textColor="@color/color_00bbc0"
+                            android:textSize="@dimen/ts_14" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_detail_circle" />
+                        </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
-                        android:layout_marginBottom="5dp" >
+                        android:layout_marginBottom="5dp">
 
                         <CheckBox
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:button="@drawable/selector_checkbox"
-                            android:checked="true" />
+                            android:checked="true"
+                            android:gravity="center" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="25dp"
+                            android:gravity="center"
                             android:text="人身意外险："
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_4a4a4a"/>
+                            android:textColor="@color/color_4a4a4a"
+                            android:textSize="@dimen/ts_14" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginLeft="130dp"
+                            android:gravity="center"
                             android:text="¥99/月"
-                            android:textSize="@dimen/ts_14"
-                            android:textColor="@color/color_00bbc0"/>
+                            android:textColor="@color/color_00bbc0"
+                            android:textSize="@dimen/ts_14" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_detail_circle" />
+                        </LinearLayout>
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -479,6 +532,7 @@
                         android:textSize="@dimen/ts_15" />
 
                     <TextView
+                        android:id="@+id/tv_coupon_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -503,6 +557,7 @@
                     android:paddingRight="15dp">
 
                     <TextView
+                        android:id="@+id/tv_user_comments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="15dp"
@@ -525,6 +580,7 @@
 
 
                     <CheckBox
+                        android:id="@+id/cb_contract"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:button="@drawable/selector_checkbox"
@@ -538,6 +594,7 @@
                         android:textSize="@dimen/ts_14" />
 
                     <TextView
+                        android:id="@+id/tv_contract"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="消费分期合同"
@@ -561,6 +618,7 @@
         android:gravity="center">
 
         <LinearLayout
+            android:id="@+id/ll_trace"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:gravity="end"
@@ -568,6 +626,7 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/tv_order_trace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -584,6 +643,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_trace_and_receice"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:gravity="end"
@@ -592,6 +652,7 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/tv_trace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -607,6 +668,7 @@
                 android:textSize="@dimen/ts_13" />
 
             <TextView
+                android:id="@+id/tv_comfirm_receive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -623,6 +685,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_pay"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:paddingLeft="15dp"
@@ -642,15 +705,18 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
+                    android:id="@+id/tv_total"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="¥3999.00"
                     android:textColor="@color/color_00bbc0"
-                    android:textSize="@dimen/ts_16" />
+                    android:textSize="@dimen/ts_16"
+                     />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
