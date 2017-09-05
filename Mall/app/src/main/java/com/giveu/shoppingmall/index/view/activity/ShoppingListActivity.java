@@ -57,7 +57,7 @@ public class ShoppingListActivity extends BaseActivity {
             shoppingList.add("i");
         }
 
-        itemAdapter = new ShopListItemAdapter(getBaseContext(), R.layout.adapter_shopping_list_item, shoppingList);
+        itemAdapter = new ShopListItemAdapter(mBaseContext, R.layout.adapter_shopping_list_item, shoppingList);
         mRecyclerView.setAdapter(itemAdapter);
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
