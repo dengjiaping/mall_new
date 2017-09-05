@@ -6,14 +6,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.adpter.AddressManageAdapter;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -27,9 +35,7 @@ public class AddressManageActivity extends BaseActivity {
     @BindView(R.id.tv_add_address)
     ClickEnabledTextView tvAddAddress;
     private AddressManageAdapter addressManageAdapter;
-    private ArrayList<String> addressList;
-    private int pageIndex = 1;
-    private final int pageSize = 10;
+    List<AddressListResponse> addressList;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, AddressManageActivity.class);
@@ -41,9 +47,6 @@ public class AddressManageActivity extends BaseActivity {
         setContentView(R.layout.activity_address_manage);
         baseLayout.setTitle("选择收货地址");
         addressList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            addressList.add(i + "");
-        }
         addressManageAdapter = new AddressManageAdapter(mBaseContext, addressList);
         ptrlv.setAdapter(addressManageAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
@@ -53,9 +56,34 @@ public class AddressManageActivity extends BaseActivity {
 
     @Override
     public void setData() {
+        ApiImpl.getAddressList(mBaseContext,LoginHelper.getInstance().getIdPerson(), "5", new BaseRequestAgent.ResponseListener<AddressListResponse>() {
+            @Override
+            public void onSuccess(AddressListResponse response) {
+                if (response != null && response.data != null) {
+                    addressList.clear();
+                    addressList.addAll(response.data);
+                    addressManageAdapter.notifyDataSetChanged();
+                    ptrlv.setPullRefreshEnable(true);
+                    ptrlv.onRefreshComplete();
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(Const.ADDADDRESS == requestCode && RESULT_OK == resultCode){
+            //添加成功回来刷新页面
+            setData();
+        }
+    }
 
     @Override
     public void setListener() {
@@ -63,7 +91,6 @@ public class AddressManageActivity extends BaseActivity {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                pageIndex = 1;
                 setData();
                 ptrlv.setPullLoadEnable(false);
 
@@ -72,7 +99,7 @@ public class AddressManageActivity extends BaseActivity {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 setData();
-                ptrlv.setPullRefreshEnable(true);
+                ptrlv.setPullRefreshEnable(false);
             }
         });
         tvAddAddress.setOnClickListener(new View.OnClickListener() {

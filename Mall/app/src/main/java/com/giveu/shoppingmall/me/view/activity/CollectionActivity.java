@@ -124,7 +124,7 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getCollectionList(LoginHelper.getInstance().getIdPerson(), 1, 1, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        ApiImpl.getCollectionList(mBaseContext,LoginHelper.getInstance().getIdPerson(), 1, 1, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (response != null && response.data != null) {
@@ -233,7 +233,7 @@ public class CollectionActivity extends BaseActivity {
      * @param removeList
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(LoginHelper.getInstance().getIdPerson(), skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext,LoginHelper.getInstance().getIdPerson(), skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {

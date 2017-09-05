@@ -19,7 +19,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/ts_14" />
 
-        <EditText
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_receiving_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -54,7 +54,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/ts_14" />
 
-        <TextView
+        <com.giveu.shoppingmall.widget.EditView
             android:id="@+id/et_receiving_phone"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -65,6 +65,8 @@
             android:gravity="center_vertical"
             android:hint="请输入收货人电话"
             android:singleLine="true"
+            android:maxLength="11"
+            android:inputType="number"
             android:textColor="@color/color_4a4a4a"
             android:textColorHint="@color/color_d8d8d8"
             android:textSize="@dimen/ts_14" />
@@ -83,6 +85,7 @@
         android:background="@color/line_bg" />
 
     <LinearLayout
+        android:id="@+id/ll_choose_address"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/white"
@@ -98,45 +101,7 @@
             android:textSize="@dimen/ts_14" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="请选择"
-            android:textColor="@color/color_00bbc0"
-            android:textSize="@dimen/ts_14" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:src="@drawable/ic_right" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/line_bg" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:gravity="left|center_vertical"
-            android:text="街道"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ts_14" />
-
-        <TextView
+            android:id="@+id/tv_address"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
@@ -160,6 +125,7 @@
         android:background="@color/line_bg" />
 
     <EditText
+        android:id="@+id/et_detail_address"
         android:layout_width="match_parent"
         android:layout_height="88dp"
         android:background="@color/white"
@@ -179,6 +145,7 @@
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_default"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
