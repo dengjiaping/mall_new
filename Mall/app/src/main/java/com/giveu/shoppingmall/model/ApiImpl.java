@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.BankListResponse;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
+import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
@@ -456,7 +457,17 @@ public class ApiImpl {
 
     }
 
+    //获取商品收藏列表
+    public static void getCollectionList(String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","pageNum","pageSize"}, new Object[]{StringUtils.string2Long(idPerson),pageNum,pageSize});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class, responseListener);
+    }
 
+    //删除商品收藏
+    public static void deleteCollection(String idPerson, List<String> skuCodes,int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","skuCodes","status"}, new Object[]{StringUtils.string2Long(idPerson),skuCodes,status});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class, responseListener);
+    }
 }
 
 
