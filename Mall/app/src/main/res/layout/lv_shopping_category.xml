@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/default_layout_screen_gap"
+    android:orientation="vertical">
+
+
+    <com.giveu.shoppingmall.widget.NoScrollGridView
+        android:id="@+id/gv_category"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:horizontalSpacing="@dimen/default_layout_screen_gap"
+        android:verticalSpacing="@dimen/default_layout_screen_gap"
+        android:numColumns="4" />
+
+</LinearLayout>
