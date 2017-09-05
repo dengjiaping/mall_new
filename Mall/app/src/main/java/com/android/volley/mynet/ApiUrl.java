@@ -146,7 +146,12 @@ public interface ApiUrl {
     //删除商品收藏列表
     String collections_goodsSkus_collect = BASE_URL + "sc/users/collections/goodsSkus/collect";
     //获取我的订单列表
-    String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
+    //String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
+    String orderApp_myListOrder = BASE_URL + "http://10.10.11.140:9090/v1/orderApp/myListOrder";
+    //获取我的订单数量
+    String orderApp_myOrderNumByStatus = BASE_URL + "orderApp/myOrderNumByStatus";
+    //获取订单详情
+    String order_orderDetail = BASE_URL + "order/orderDetail";
     //获取用户收货地址列表
     String personCenter_address_getAddress = BASE_URL + "personCenter/address/getAddress";
     //新增收货地址

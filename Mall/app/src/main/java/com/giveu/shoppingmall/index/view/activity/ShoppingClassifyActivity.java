@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.index.adapter.GodsAdapter;
 import com.giveu.shoppingmall.index.bean.ShoppingBean;
 import com.giveu.shoppingmall.index.widget.ItemHeaderDecoration;
 import com.giveu.shoppingmall.index.widget.RecyclerViewScrollHelper;
+import com.giveu.shoppingmall.utils.explosionfield.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,8 +53,8 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
         setContentView(R.layout.activity_shopping_classify_layout);
         baseLayout.setTitle("搜索")
                 .setTitleTextBackground(R.drawable.shape_title_background)
-                .setTitleWidth(800)
-                .setTitleHeight(100)
+                .setTitleWidth(Utils.dp2Px(260))
+                .setTitleHeight(Utils.dp2Px(30))
                 .setTitleTextSize(15)
                 .setTitleTextColor(R.color.color_textcolor)
                 .setTitleListener(new View.OnClickListener() {

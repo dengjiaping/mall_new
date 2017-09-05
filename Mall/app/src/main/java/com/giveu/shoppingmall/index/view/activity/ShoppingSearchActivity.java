@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.widget.LabelsFlowLayout;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.utils.explosionfield.Utils;
 
 import butterknife.BindView;
 
@@ -27,12 +29,7 @@ public class ShoppingSearchActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shopping_search_layout);
 
-        baseLayout.setTitle("搜索商品")
-                .setTitleTextBackground(R.drawable.shape_title_background)
-                .setTitleWidth(800)
-                .setTitleHeight(100)
-                .setTitleTextSize(15)
-                .setTitleTextColor(R.color.color_textcolor);
+        baseLayout.showCenterEditText();
         baseLayout.setRightText("搜索");
 
         initFlowLayout();
@@ -51,6 +48,7 @@ public class ShoppingSearchActivity extends BaseActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ToastUtils.showShortToast(str);
                 }
             });
             mFlowLayout.addView(tv);

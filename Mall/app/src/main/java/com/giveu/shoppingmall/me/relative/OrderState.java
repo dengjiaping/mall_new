@@ -11,6 +11,11 @@ package com.giveu.shoppingmall.me.relative;
  */
 public interface OrderState {
 
+    String ORDER_TYPE = "orderState";
+
+    //渠道名称：商城
+    String CHANNEL = "sc";
+
     //全部
     String ALL_RESPONSE = "0";
 

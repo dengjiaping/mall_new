@@ -28,6 +28,12 @@ public class CustomListDialog extends CustomDialog {
         this.onItemClickListener = onItemClickListener;
     }
 
+    public CustomListDialog(Activity context, AdapterView.OnItemClickListener onItemClickListener,
+                            int style, int windowGravity, boolean isFullScreen) {
+        super(context, R.layout.custom_list_dialog, style, windowGravity, isFullScreen);
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     protected void initView(View contentView) {
         ListView lv = (ListView) contentView.findViewById(R.id.lv);
@@ -39,17 +45,18 @@ public class CustomListDialog extends CustomDialog {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dismiss();
 
-                if (onItemClickListener != null){
+                if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(parent, view, position, id);
                 }
             }
         });
     }
 
-    public void setData(List<CharSequence> stringList){
+    public void setData(List<CharSequence> stringList) {
         itemAdapter.setItemList(stringList);
     }
-    public List<CharSequence> getData(){
+
+    public List<CharSequence> getData() {
         return itemAdapter.getItemList();
     }
 
@@ -61,7 +68,7 @@ public class CustomListDialog extends CustomDialog {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
+            if (convertView == null) {
                 convertView = View.inflate(mContext, R.layout.custom_list_dialog_item, null);
             }
             TextView tv = getViewFromViewHolder(convertView, R.id.tv);
