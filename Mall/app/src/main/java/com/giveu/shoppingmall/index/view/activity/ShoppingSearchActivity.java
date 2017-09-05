@@ -19,7 +19,7 @@ import butterknife.BindView;
 
 public class ShoppingSearchActivity extends BaseActivity {
 
-    private String[] labels = {"手机", "电脑", "电视", "家电", "路由", "智能", "电源", "耳机", "音响", "礼品", "生活", "其他", "其他", "其他", "其他"};
+    private String[] labels = {"iphone 7 plus", "vivo", "华为", "oppo r9", "笔记本电脑", "智能", "电源", "耳机", "华为荣耀", "红米note4", "生活", "小米6", "其他", "其他", "其他"};
     @BindView(R.id.shopping_search_flowlayout)
     LabelsFlowLayout mFlowLayout;
 

@@ -27,7 +27,7 @@ public class ShopListItemAdapter extends RvCommonAdapter {
         holder.setOnClickListener(R.id.item_layout, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommodityDetailActivity.startIt(mContext);
+                CommodityDetailActivity.startIt(mContext,true);
             }
         });
     }

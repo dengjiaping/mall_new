@@ -57,7 +57,7 @@ public class GodsAdapter extends RecyclerView.Adapter {
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CommodityDetailActivity.startIt(mContext);
+                    CommodityDetailActivity.startIt(mContext, false);
                 }
             });
         }
