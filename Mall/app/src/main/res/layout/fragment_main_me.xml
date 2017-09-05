@@ -98,6 +98,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="我的账单"
+                android:textColor="@color/black"
                 android:textSize="@dimen/ts_15" />
 
             <TextView
@@ -211,7 +212,189 @@
             android:layout_height="4dp" />
 
         <LinearLayout
-            android:id="@+id/ll_account_manage"
+            android:id="@+id/ll_order_module"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_my_order"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:paddingLeft="@dimen/default_layout_screen_gap"
+                android:paddingRight="@dimen/default_layout_screen_gap">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="我的订单"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text="查看全部订单"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_12"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_detail_grey" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/ll_waiting_pay"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|bottom"
+                            android:src="@drawable/ic_waiting_pay" />
+
+                        <TextView
+                            android:id="@+id/tv_waiting_pay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/shape_red_circle"
+                            android:gravity="center"
+                            android:text="11"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/ts_11" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:text="待付款"
+                        android:textColor="@color/color_9b9b9b"
+                        android:textSize="@dimen/ts_12" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_down_payment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|bottom"
+                            android:src="@drawable/ic_down_payment" />
+
+                        <TextView
+                            android:id="@+id/tv_down_payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/shape_red_circle"
+                            android:gravity="center"
+                            android:text="11"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/ts_11" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:text="待首付"
+                        android:textColor="@color/color_9b9b9b"
+                        android:textSize="@dimen/ts_12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_waiting_receive"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|bottom"
+                            android:src="@drawable/ic_waiting_receive" />
+
+                        <TextView
+                            android:id="@+id/tv_waiting_receive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/shape_red_circle"
+                            android:gravity="center"
+                            android:text="11"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/ts_11" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:text="待收货"
+                        android:textColor="@color/color_9b9b9b"
+                        android:textSize="@dimen/ts_12" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_my_coupon"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="1dp"
@@ -224,7 +407,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="账号管理"
+                android:text="我的优惠"
+                android:textColor="@color/black"
                 android:textSize="@dimen/ts_15" />
 
             <ImageView
@@ -251,6 +435,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="我的收藏"
+                android:textColor="@color/black"
                 android:textSize="@dimen/ts_15" />
 
             <ImageView
@@ -262,7 +447,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_my_coupon"
+            android:id="@+id/ll_account_manage"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="1dp"
@@ -275,7 +460,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="我的优惠"
+                android:text="账号管理"
+                android:textColor="@color/black"
                 android:textSize="@dimen/ts_15" />
 
             <ImageView
@@ -285,6 +471,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_detail_grey" />
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/ll_help"
@@ -301,6 +488,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="帮助反馈"
+                android:textColor="@color/black"
                 android:textSize="@dimen/ts_15" />
 
             <ImageView
@@ -310,6 +498,10 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_detail_grey" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
     </LinearLayout>
 
 

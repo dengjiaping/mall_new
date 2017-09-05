@@ -1,29 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingLeft="20dp"
+    android:paddingRight="@dimen/default_layout_screen_gap">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
+
+        <View
+            android:id="@+id/view_up_line"
+            android:layout_width="2dp"
+            android:layout_height="16dp"
+            android:background="@drawable/shape_line_grey" />
+
+        <ImageView
+            android:id="@+id/iv_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_circle_blue" />
+
+        <View
+            android:id="@+id/view_down_line"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_line_grey" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical"
+        android:paddingTop="15dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="您的订单开始处理，审核中"/>
+            android:text="您的订单开始处理，审核中"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/ts_14" />
 
         <TextView
+            android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017-5-5 11:11:11"/>
+            android:layout_marginTop="5dp"
+            android:text="2017-5-5 11:11:11"
+            android:textColor="@color/color_9c9c9c"
+            android:textSize="@dimen/ts_12" />
 
     </LinearLayout>
 

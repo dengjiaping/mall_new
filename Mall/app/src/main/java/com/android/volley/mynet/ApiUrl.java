@@ -141,5 +141,7 @@ public interface ApiUrl {
     String act_receiveCourtesyCard = WECHAT_BASE_URL + "activity-biz/act/receiveCourtesyCard";
     //获取活动信息
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
+    //获取我的订单列表
+    String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
 }
 

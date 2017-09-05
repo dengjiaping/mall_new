@@ -2,59 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:paddingRight="@dimen/default_layout_screen_gap">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_small_lottery" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:gravity="center|left"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/ts_16"
+                    android:textColor="@color/color_4a4a4a"
+                    android:text="订单状态：" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已签收"
+                    android:textSize="@dimen/ts_16"
+                    android:textColor="@color/color_00bbc0"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/color_adadad"
+                android:textSize="@dimen/ts_16"
+                android:text="订单编号：213465613465165" />
 
-                android:text="主题主题主题主题主题主题" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3999元" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="*1" />
-
-            </RelativeLayout>
         </LinearLayout>
 
 
     </LinearLayout>
 
     <ListView
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
