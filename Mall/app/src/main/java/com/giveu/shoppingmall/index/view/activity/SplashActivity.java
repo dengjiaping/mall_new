@@ -19,11 +19,17 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.HardWareUtil;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -41,22 +47,30 @@ public class SplashActivity extends BasePermissionActivity {
     private PermissionDialog permissionDialog;
     private long lastTimeMillis;
     private boolean hasEnterOtherActivity;
-    //是否被用户禁止不再询问，设此标志位是因为onPermissionReallyDeclined
-    //回调后会执行onResume方法，导致setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
-    //重复调用导致闪屏
-    private boolean isPermissionReallyDeclined;
     Handler handler = new Handler();
+    Map<String, String> permissionMap = new HashMap<>();
 
     @Override
     public void initView(Bundle savedInstanceState) {
-
         setContentView(R.layout.layout_splash);
+
         ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
         baseLayout.setTitleBarAndStatusBar(false, false);
         tvSkip.setVisibility(View.GONE);
+        tvVersion.setText("V" + CommonUtils.getVersionName());
         needTurn = getIntent().getBooleanExtra(NEED_TURN_KEY, false);
+
+        permissionMap.put(Manifest.permission.READ_EXTERNAL_STORAGE, "存储权限");
+        permissionMap.put(Manifest.permission.READ_PHONE_STATE, "电话权限");
+        //6.0系统动态获取权限
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            startCountTime();
+        }
+    }
+
+    private void initPermissionDialog(String tips) {
         permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr(getResources().getString(R.string.app_name) + "需要存储权限才可正常使用");
+        permissionDialog.setPermissionStr(tips);
         lastTimeMillis = System.currentTimeMillis();
         permissionDialog.setConfirmStr("去开启");
         permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
@@ -66,8 +80,6 @@ public class SplashActivity extends BasePermissionActivity {
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
                 startActivity(intent);
-                //进入设置了，下次onResume时继续判断申请权限
-                isPermissionReallyDeclined = false;
                 permissionDialog.dismiss();
             }
 
@@ -77,11 +89,6 @@ public class SplashActivity extends BasePermissionActivity {
                 finish();
             }
         });
-        //6.0系统动态获取权限
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            startCountTime();
-        }
-        tvVersion.setText("V" + CommonUtils.getVersionName());
     }
 
 
@@ -94,9 +101,26 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     public void onPermissionReallyDeclined(@NonNull String permissionName) {
         super.onPermissionReallyDeclined(permissionName);
+
+
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull List<String> permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
         //禁止不再询问会直接回调这方法
-        isPermissionReallyDeclined = true;
-        permissionDialog.show();
+        if (!permissionName.isEmpty()){
+            String appName = getResources().getString(R.string.app_name);
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(appName).append("需要开启");
+            for (String name : permissionName){
+                stringBuffer.append(permissionMap.get(name));
+                stringBuffer.append("，");
+            }
+            String substring = stringBuffer.substring(0, stringBuffer.length() - 1);
+            initPermissionDialog( substring + "才可正常使用");
+            permissionDialog.show();
+        }
     }
 
     @Override
@@ -142,23 +166,30 @@ public class SplashActivity extends BasePermissionActivity {
         finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //6.0申请权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] a = new String[permissionMap.keySet().size()];
+            permissionMap.keySet().toArray(a);
+            setPermissionHelper(true, a);
+        }
+
+        LogUtil.e(HardWareUtil.getIMEI());
+    }
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
-//        JPushInterface.onResume(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!isPermissionReallyDeclined) {
-                setPermissionHelper(true, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
-            }
-        }
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        JPushInterface.onPause(this);
     }
 
     @Override
