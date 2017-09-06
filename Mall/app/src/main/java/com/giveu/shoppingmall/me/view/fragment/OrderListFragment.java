@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
@@ -123,7 +124,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, "qq", "10056737", pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, "10056737", pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);
@@ -166,8 +167,30 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         });
     }
 
+    //不需要做处理
     @Override
     public void showOrderDetail(BaseBean response) {
 
+    }
+
+    //订单删除成功
+    @Override
+    public void deleteOrderSuccess(String orderNo) {
+        for (OrderListResponse.SkuInfoBean data : mDatas) {
+            if (orderNo.equals(data.orderNo)) {
+                OrderListResponse.SkuInfoBean skuInfoBean = data;
+                mDatas.remove(skuInfoBean);
+                ToastUtils.showLongToast("订单删除成功");
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    //取消订单成功
+    @Override
+    public void cancelOrderSuccess(String orderNo) {
+        ToastUtils.showLongToast("订单取消成功");
+        onRefresh();
     }
 }

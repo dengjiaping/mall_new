@@ -48,17 +48,16 @@ public class CountDownTextView extends TextView {
         this.restTime = restTime;
     }
 
-    long count = restTime;
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (this != null) {
-                if (count == 0) {
+                if (restTime == 0) {
                     stopCount();
                 } else {
-                    count = count - 1000;
-                    CountDownTextView.this.setText("剩" + StringUtils.formatRestTime(count) + "自动关闭");
+                    restTime = restTime - 1000;
+                    CountDownTextView.this.setText("剩" + StringUtils.formatRestTime(restTime) + "自动关闭");
                     Message msg2 = Message.obtain();
                     sendMessageDelayed(msg2, 1000);
                 }

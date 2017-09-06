@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
@@ -17,10 +18,10 @@ import com.giveu.shoppingmall.me.adapter.CollectionAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
@@ -135,7 +136,20 @@ public class CollectionActivity extends BaseActivity {
                 return false;
             }
         });
+        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                setData();
+                ptrlv.setPullLoadEnable(false);
 
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                setData();
+                ptrlv.setPullRefreshEnable(false);
+            }
+        });
         tvDeleteText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +253,7 @@ public class CollectionActivity extends BaseActivity {
      * @param removeList
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(mBaseContext,LoginHelper.getInstance().getIdPerson(), skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext,"123456", skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {

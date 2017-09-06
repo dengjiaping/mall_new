@@ -4,12 +4,12 @@ package com.giveu.shoppingmall.me.presenter;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import java.util.ArrayList;
 
 /**
  * Created by 101912 on 2017/8/30.
@@ -22,9 +22,8 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
         super(view);
     }
 
-
+    //获取订单详情
     public void getOrderDetail(String orderNo) {
-        //获取订单详情
         ApiImpl.getOrderDetail(getView().getAct(), "qq", "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
@@ -69,13 +68,33 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     }
 
     //取消订单
-    public void onCancelOrder(String orderNo) {
+    public void onCancelOrder(final String orderNo) {
+        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                getView().cancelOrderSuccess(orderNo);
+            }
 
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     //删除订单
-    public void onDeleteOrder(String orderNo) {
+    public void onDeleteOrder(final String orderNo) {
+        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                getView().deleteOrderSuccess(orderNo);
+            }
 
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
 }
