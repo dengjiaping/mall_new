@@ -141,18 +141,20 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 if (StringUtils.isNotNull(response.channelName)) {
                     channelName = response.channelName;
                 }
-                if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
-                    if (pageNum == 1)
-                        mDatas.clear();
-                    //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
-                    if (response.data.skuInfo.size() >= pageSize) {
-                        ptrlv.setPullLoadEnable(true);
-                    } else {
-                        ptrlv.showEnd("没有更多数据了");
+                if (response.data != null) {
+                    if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
+                        if (pageNum == 1)
+                            mDatas.clear();
+                        //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
+                        if (response.data.skuInfo.size() >= pageSize) {
+                            ptrlv.setPullLoadEnable(true);
+                        } else {
+                            ptrlv.showEnd("没有更多数据了");
+                        }
+                        pageNum++;
+                        mDatas.addAll(response.data.skuInfo);
+                        adapter.notifyDataSetChanged();
                     }
-                    pageNum++;
-                    mDatas.addAll(response.data.skuInfo);
-                    adapter.notifyDataSetChanged();
                 }
             }
 
