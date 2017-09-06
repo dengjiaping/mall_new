@@ -1,10 +1,14 @@
 package com.giveu.shoppingmall.base;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.fastaccess.permission.base.PermissionHelper;
 import com.fastaccess.permission.base.callback.OnPermissionCallback;
 import com.lidroid.xutils.util.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *  android6.0之后的申请权限helper
@@ -13,9 +17,11 @@ import com.lidroid.xutils.util.LogUtils;
 public abstract class BasePermissionActivity extends BaseActivity implements OnPermissionCallback {
 	PermissionHelper permissionHelper = null;
 
+	public PermissionHelper getPermissionHelper() {
+		return permissionHelper;
+	}
 
-
-//------------ android6.0之后的申请权限helper---------------------------------------------------------
+	//------------ android6.0之后的申请权限helper---------------------------------------------------------
 	/**
 	 * @param permissionName
 	 */
@@ -45,6 +51,11 @@ public abstract class BasePermissionActivity extends BaseActivity implements OnP
 	}
 
 	@Override
+	public void onPermissionReallyDeclined(@NonNull List<String> permissionName) {
+
+	}
+
+	@Override
 	public void onNoPermissionNeeded() {
 		LogUtils.i("onNoPermissionNeeded");
 	}
@@ -57,6 +68,12 @@ public abstract class BasePermissionActivity extends BaseActivity implements OnP
 		LogUtils.i("onRequestPermissionsResult");
 		if (permissionHelper != null){
 			permissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+
+		for (int i = 0; i < permissions.length; i++) {
+			if (!TextUtils.isEmpty(permissions[i])) {
+				boolean isGranted = permissionHelper.isPermissionGranted(permissions[i]);
+			}
 		}
 
 		boolean isAllow = true;
@@ -87,9 +104,9 @@ public abstract class BasePermissionActivity extends BaseActivity implements OnP
 
 	}
 
-	public void setPermissionHelper(boolean b, String[] multiPermissions) {
+	public void setPermissionHelper(boolean isForce, @NonNull Object multiPermissions) {
 		permissionHelper = PermissionHelper.getInstance(this);
-		permissionHelper.setForceAccepting(b) // default is false. its here so you know that it exists.
+		permissionHelper.setForceAccepting(isForce) // default is false. its here so you know that it exists.
 				.request(multiPermissions);
 	}
 //----------------------------------------------------------------------------------------------------------------

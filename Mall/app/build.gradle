@@ -149,8 +149,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
-    //动态申请权限
-    compile 'com.github.k0shk0sh:PermissionHelper:1.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
     compile 'com.jakewharton:butterknife:8.4.0'
@@ -194,5 +192,6 @@ dependencies {
     compile 'com.youth.banner:banner:1.4.9'
     //leakcanary
     //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-
+    //6.0动态获取权限
+    compile project(':permission')
 }

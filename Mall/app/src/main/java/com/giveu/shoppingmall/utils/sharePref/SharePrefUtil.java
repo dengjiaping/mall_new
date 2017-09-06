@@ -1,6 +1,9 @@
 package com.giveu.shoppingmall.utils.sharePref;
 
+import android.text.TextUtils;
+
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.utils.HardWareUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 
@@ -82,7 +85,12 @@ public class SharePrefUtil extends AbsSharePref {
     public static String getUUId() {
         String deviceId = getInstance().getString(SharePrefKeys.UUID);
         if (StringUtils.isNull(deviceId)) {
-            deviceId = UUID.randomUUID().toString();
+            String imei = HardWareUtil.getIMEI();//获取imei
+            if (!TextUtils.isEmpty(imei)){
+                deviceId = imei;
+            }else{
+                deviceId = UUID.randomUUID().toString();
+            }
             getInstance().putString(SharePrefKeys.UUID, deviceId);
         }
 

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.io.BufferedReader;
@@ -194,12 +195,39 @@ public class HardWareUtil {
 	 * 代表手机类型。接�?位（FAC）是�?��装配号，代表产地。后6位（SNR）是串号，代表生产顺序号。最�?位（SP）一般为0，是�?��码，备用�?
 	 * 国际移动装备辨识码一般贴于机身背面与外包装上，同时也存在于手机记忆体中，通过输入*#06#即可查询�?
 	 *
-	 * @param context
 	 * @return
 	 */
-	public static String getIMEI(Context context) {
-		TelephonyManager ts = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		return ts.getSimSerialNumber();
+	public static String getIMEI() {
+		String imei = "";
+		try {
+			TelephonyManager ts = (TelephonyManager) BaseApplication.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
+			String deviceId = ts.getDeviceId();
+			if ( isImeiValidate(deviceId) ){
+				imei = deviceId;
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return imei;
+	}
+
+	private static Boolean isImeiValidate(String deviceId) {
+		boolean validate = false;
+		if ( !TextUtils.isEmpty(deviceId) ){
+			char firstchar = '0';
+			if (deviceId.length() > 0) {
+				firstchar = deviceId.charAt(0);
+			}
+			// 全是相同字符时，这个imei不可用
+			for (int i = 0; i < deviceId.length(); i++) {
+				char ch = deviceId.charAt(i);
+				if (firstchar != ch) {
+					validate = true;
+					break;
+				}
+			}
+		}
+		return validate;
 	}
 
 	/** 判断手机是否root，不弹出root请求框<br/> */

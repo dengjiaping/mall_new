@@ -11,20 +11,20 @@
         android:layout_height="48dp"
         android:background="@color/color_00bbc0"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_hint" />
 
-        <TextView
+        <com.giveu.shoppingmall.widget.CountDownTextView
             android:id="@+id/tv_time_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:text="剩余09分35秒自动关闭"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_15" />
     </LinearLayout>
@@ -161,6 +161,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
+                            android:maxLines="2"
+                            android:ellipsize="end"
                             android:text="主题主题主题主题主题主题"
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_15" />
@@ -324,7 +326,7 @@
                         android:layout_alignParentRight="true"
                         android:text="¥110.00"
                         android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_13" />
+                        android:textSize="@dimen/ts_15" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -612,6 +614,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rl_footer"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/white"
@@ -668,7 +671,7 @@
                 android:textSize="@dimen/ts_13" />
 
             <TextView
-                android:id="@+id/tv_comfirm_receive"
+                android:id="@+id/tv_confirm_receive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
