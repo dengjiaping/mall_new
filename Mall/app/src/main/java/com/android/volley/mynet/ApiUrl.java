@@ -143,10 +143,17 @@ public interface ApiUrl {
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
     //获取我的订单列表
     //String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
-    String orderApp_myListOrder = BASE_URL + "http://10.10.11.140:9090/v1/orderApp/myListOrder";
+    String orderApp_myListOrder = "http://10.10.11.140:9000/v1/order/myListOrder";
     //获取我的订单数量
-    String orderApp_myOrderNumByStatus = BASE_URL + "orderApp/myOrderNumByStatus";
+    String orderApp_myOrderNumByStatus = BASE_URL + "order/myOrderNumByStatus";
     //获取订单详情
-    String order_orderDetail = BASE_URL + "order/orderDetail";
+//    String order_orderDetail = BASE_URL + "order/orderDetail";
+    String order_orderDetail = "http://10.10.11.140:9000/v1/order/orderDetail";
+    //删除订单
+//    String order_deleteOrder = BASE_URL + "order/deleteOrder";
+    String order_deleteOrder = "http://10.10.11.140:9000/v1/order/deleteOrder";
+    //取消订单
+//    String order_cancelOrder = BASE_URL + "order/cancelOrder";
+    String order_cancelOrder = "http://10.10.11.140:9000/v1/order/cancelOrder";
 }
 

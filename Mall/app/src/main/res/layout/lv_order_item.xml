@@ -3,23 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/default_layoutxml_bg"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/white"
         android:gravity="center"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_channel_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
             android:text="即有商城"
             android:textColor="@color/color_4c5b5d"
             android:textSize="@dimen/ts_14" />
@@ -29,9 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:paddingBottom="5dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
             android:text="订单待付款"
             android:textColor="@color/color_00bbc0"
             android:textSize="@dimen/ts_13" />
@@ -58,7 +53,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="20dp"
             android:orientation="vertical">
 
@@ -90,63 +85,104 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_payment"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/white"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:paddingRight="20dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:gravity="end"
             android:orientation="horizontal"
-            android:layout_marginRight="40dp">
+            android:paddingRight="15dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="首付："
-                android:textColor="@color/color_4c5b5d"
-                android:textSize="@dimen/ts_13" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_down_payment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text=" ¥4900.00"
-                android:textColor="@color/color_00bbc0"
-                android:textSize="@dimen/ts_13" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="商品合计："
+                    android:textColor="@color/color_4c5b5d"
+                    android:textSize="@dimen/ts_13" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=" ¥4900.00"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_13" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:id="@+id/ll_payment"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingRight="15dp">
 
-            <TextView
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="月供："
-                android:textColor="@color/color_4c5b5d"
-                android:textSize="@dimen/ts_13" />
+                android:layout_marginRight="40dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_month_payment"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="首付："
+                    android:textColor="@color/color_4c5b5d"
+                    android:textSize="@dimen/ts_13" />
+
+                <TextView
+                    android:id="@+id/tv_down_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=" ¥4900.00"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_13" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text=" ¥4900.00"
-                android:textColor="@color/color_00bbc0"
-                android:textSize="@dimen/ts_13" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="月供："
+                    android:textColor="@color/color_4c5b5d"
+                    android:textSize="@dimen/ts_13" />
+
+                <TextView
+                    android:id="@+id/tv_month_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=" ¥4900.00"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_13" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -155,7 +191,7 @@
         android:background="@color/white"
         android:gravity="center_vertical|end"
         android:orientation="horizontal"
-        android:paddingRight="20dp">
+        android:paddingRight="15dp">
 
         <TextView
             android:id="@+id/tv_button_left"

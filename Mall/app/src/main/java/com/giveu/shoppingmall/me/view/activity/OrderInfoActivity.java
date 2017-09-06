@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,12 +24,17 @@ import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.CountDownTextView;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by 101912 on 2017/8/29.
@@ -36,8 +42,10 @@ import butterknife.BindView;
 
 public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<OrderDetailResponse> {
 
+    @BindView(R.id.ll_time_left)
+    LinearLayout llTimeLeft;
     @BindView(R.id.tv_time_left)
-    TextView tvTimeLeft;
+    CountDownTextView tvTimeLeft;
     @BindView(R.id.tv_orderNo)
     TextView tvOrderNo;
     @BindView(R.id.tv_status)
@@ -86,8 +94,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     LinearLayout llTraceAndReceive;
     @BindView(R.id.tv_trace)
     TextView tvTrace;
-    @BindView(R.id.tv_comfirm_receive)
-    TextView tvConfirmReceive;
     @BindView(R.id.ll_trace)
     LinearLayout llTrace;
     @BindView(R.id.tv_order_trace)
@@ -96,8 +102,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     TextView tvContract;
     @BindView(R.id.cb_contract)
     CheckBox cbContract;
+    @BindView(R.id.rl_footer)
+    RelativeLayout rlFooter;
 
-
+    private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
     private String orderNo;
 
@@ -129,13 +137,35 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
+        //倒计时footer
+        if (StringUtils.isNotNull(response.timeLeft)) {
+            llTimeLeft.setVisibility(View.VISIBLE);
+            long timeLeft = Long.parseLong(response.timeLeft);
+            //剩余时间小于10分钟，则采用倒计时
+            if (timeLeft < 10 * 60 * 1000) {
+                tvTimeLeft.setRestTime(timeLeft);
+                tvTimeLeft.startCount(new CountDownTextView.CountEndListener() {
+                    @Override
+                    public void onEnd() {
+                        tvPay.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
+                        ToastUtils.showLongToast("订单已失效，请重新下单");
+                    }
+                });
+            } else {
+                tvTimeLeft.setText("剩" + StringUtils.formatRestTimeToDay(timeLeft) + "自动确认收货");
+            }
+        } else {
+            llTimeLeft.setVisibility(View.GONE);
+        }
         //订单号
         if (StringUtils.isNotNull(response.orderNo)) {
-            tvOrderNo.setText(response.orderNo);
+            tvOrderNo.setText("订单号：" + response.orderNo);
         }
         //订单status
-
-
+        String status = OrderStatus.getOrderStatus(response.status);
+        if (StringUtils.isNotNull(status)) {
+            tvStatus.setText(status);
+        }
         //收货人
         if (StringUtils.isNotNull(response.receiverJo.receiverName)) {
             tvReceiverName.setText(response.receiverJo.receiverName);
@@ -150,6 +180,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvAddress.setText(adress);
         }
         //商品icon
+        String iconUrl = "";
+        if (StringUtils.isNotNull(response.skuInfo.srcIp))
+            if (StringUtils.isNotNull(response.skuInfo.src)) {
+                iconUrl = response.skuInfo.srcIp + response.skuInfo.src;
+                ImageUtils.loadImage(iconUrl, ivPicture);
+            }
 
         //商品标题
         if (StringUtils.isNotNull(response.skuInfo.name)) {
@@ -161,7 +197,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //商品数量
         if (StringUtils.isNotNull(response.skuInfo.quantity)) {
-            tvQuantity.setText(response.skuInfo.quantity);
+            tvQuantity.setText("×" + response.skuInfo.quantity);
         }
         //商品合计
         if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
@@ -174,7 +210,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //首付
         if (StringUtils.isNotNull(response.downPayment) && StringUtils.isNotNull(response.selDownPaymentRate)) {
-            tvDownPayment.setText(response.selDownPaymentRate + "(¥+" + response.downPayment + ")");
+            tvDownPayment.setText(response.selDownPaymentRate + "(¥" + response.downPayment + ")");
         }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
@@ -205,8 +241,103 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //支付金额
         if (StringUtils.isNotNull(response.totalPrice)) {
-            tvTotal.setText(response.totalPrice);
+            tvTotal.setText("¥" + response.totalPrice);
         }
-
+        //底部按钮
+        dealFooterView(response.status);
     }
+
+    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive})
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            //去支付
+            case R.id.tv_pay:
+                presenter.onPay();
+                break;
+
+            //消费分期合同
+            case R.id.tv_contract:
+
+                break;
+
+            //订单追踪
+            case R.id.tv_order_trace:
+                presenter.onTrace(orderNo);
+                break;
+
+            //订单追踪
+            case R.id.tv_trace:
+                presenter.onTrace(orderNo);
+                break;
+
+            //确认收货
+            case R.id.tv_confirm_receive:
+                showConfirmDialog();
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    /**
+     * 底部有三种样式，这是处理方法
+     */
+    private void dealFooterView(int status) {
+        switch (status) {
+            //待付款
+            case OrderState.WAITINGPAY:
+                rlPay.setVisibility(View.VISIBLE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                tvPay.setText("去支付");
+                break;
+            //待首付
+            case OrderState.DOWNPAYMENT:
+                rlPay.setVisibility(View.VISIBLE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                tvPay.setText("去首付");
+                break;
+            //订单已发货
+            case OrderState.WAITINGRECEIVE:
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.VISIBLE);
+                break;
+            //订单已完成
+            case OrderState.FINISHED:
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.VISIBLE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                break;
+            //订单已关闭
+            case OrderState.CLOSED:
+                rlFooter.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    //确认收货dialog
+    private void showConfirmDialog() {
+        dialog = new ConfirmDialog(mBaseContext);
+        dialog.setContent("是否确认收货？");
+        dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                presenter.onConfirmReceive(orderNo);
+            }
+
+            @Override
+            public void cancle() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
 }
+

@@ -1,16 +1,12 @@
 package com.giveu.shoppingmall.me.presenter;
 
+
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
-import com.giveu.shoppingmall.me.relative.OrderState;
-import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
-import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -21,6 +17,7 @@ import java.util.ArrayList;
 
 public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
+
     public OrderHandlePresenter(IOrderInfoView view) {
         super(view);
     }
@@ -28,7 +25,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     public void getOrderDetail(String orderNo) {
         //获取订单详情
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(getView().getAct(), "qq", "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 getView().showOrderDetail(response.data);
@@ -52,12 +49,12 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     }
 
     //订单追踪
-    public void onTrace() {
+    public void onTrace(String orderNo) {
 
     }
 
     //确认收货
-    public void onConfirmReceive() {
+    public void onConfirmReceive(String orderNo) {
 
     }
 
@@ -72,12 +69,12 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     }
 
     //取消订单
-    public void onCancelOrder() {
+    public void onCancelOrder(String orderNo) {
 
     }
 
     //删除订单
-    public void onDeleteOrder() {
+    public void onDeleteOrder(String orderNo) {
 
     }
 

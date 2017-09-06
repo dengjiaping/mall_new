@@ -1,6 +1,5 @@
 package com.giveu.shoppingmall.me.view.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
@@ -89,7 +87,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //OrderInfoActivity.startIt(mBaseContext);
+                String orderNo = mDatas.get(position).orderNo;
+                if (StringUtils.isNotNull(orderNo))
+                    OrderInfoActivity.startIt(mBaseContext, orderNo);
             }
         });
 
@@ -123,40 +123,36 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, "qq", "10056737", "1111", pageNum + "", pageSize + "", "0", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, "qq", "10056737", pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
                 ptrlv.onRefreshComplete();
+                //data为空并且第一次获取时，显示空界面
+                if (pageNum == 1 && (response == null || response.data == null)) {
+                    ll_emptyView.setVisibility(View.VISIBLE);
+                }
+                //刚好下一页没数据，显示FootView
+                if (pageNum != 1 && (response == null || response.data == null)) {
+                    ptrlv.showEnd("没有更多数据了");
+                }
                 if (StringUtils.isNotNull(response.channelName)) {
                     channelName = response.channelName;
                 }
                 if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
-                    if (pageNum == 1) {
+                    if (pageNum == 1)
                         mDatas.clear();
-                        //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
-                        if (response.data.skuInfo.size() >= pageSize) {
-                            ptrlv.setPullLoadEnable(true);
-                        } else {
-                            ptrlv.showEnd("没有更多数据了");
-                        }
+                    //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
+                    if (response.data.skuInfo.size() >= pageSize) {
+                        ptrlv.setPullLoadEnable(true);
+                    } else {
+                        ptrlv.showEnd("没有更多数据了");
                     }
                     pageNum++;
                     mDatas.addAll(response.data.skuInfo);
                     adapter.notifyDataSetChanged();
-                } else {
-                    //表示一点数据都没有，显示空icon
-                    if (pageNum == 1) {
-                        mDatas.clear();
-                        adapter.notifyDataSetChanged();
-                        ll_emptyView.setVisibility(View.VISIBLE);
-                    }
-                    //刚好下一页没数据
-                    else {
-                        ptrlv.showEnd("没有更多数据了");
-                    }
                 }
             }
 

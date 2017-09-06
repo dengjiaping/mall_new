@@ -23,8 +23,6 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
     public int pageSize;
     public List<SkuInfoBean> skuInfo;
 
-
-
     public static class SkuInfoBean {
         /**
          * downPayment : 24210
@@ -45,23 +43,21 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
          * timeLeft : 1天30分
          */
 
-        public int downPayment;
+        public String downPayment;
         public String mobile;
-        public int monthPayment;
+        public String monthPayment;
         public String name;
         public String orderNo;
         public int orderType;
-        public int payPrice;
+        public String payPrice;
         public int periods;
         public int quantity;
-        public int remainingTime;
-        public int salePrice;
+        public String remainingTime;
+        public String salePrice;
         public String skuCode;
         public String src;
         public String srcIp;
         public int status;
         public String timeLeft;
-
-
     }
 }

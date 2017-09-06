@@ -106,6 +106,8 @@ public class MyOrderActivity extends BaseActivity {
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabTextColors(getResources().getColor(R.color.black), getResources().getColor(R.color.color_00bbc0));
+        //显示特定的tab，viewpager和tablayout需同步
         mViewPager.setCurrentItem(currentTab);
         mTabLayout.getTabAt(currentTab).select();
     }
