@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
-import com.fastaccess.permission.base.PermissionHelper;
+//import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
@@ -72,7 +72,7 @@ import static java.lang.System.currentTimeMillis;
 public class MainActivity extends BasePermissionActivity {
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
-    private ShoppingFragment shoppingFragment;
+//    private ShoppingFragment shoppingFragment;
     //    public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
     @BindView(R.id.iv_recharge)
@@ -122,12 +122,12 @@ public class MainActivity extends BasePermissionActivity {
         manager = getSupportFragmentManager();
 
         fragmentList = new ArrayList<>();
-        shoppingFragment = new ShoppingFragment();
+//        shoppingFragment = new ShoppingFragment();
         rechargeFragment = new RechargeFragment();
         mainCashFragment = new MainCashFragment();
 //        mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
-        fragmentList.add(shoppingFragment);
+//        fragmentList.add(shoppingFragment);
         fragmentList.add(mainCashFragment);
 //        fragmentList.add(mainRepayFragment);
         fragmentList.add(mainMeFragment);
@@ -213,11 +213,11 @@ public class MainActivity extends BasePermissionActivity {
      * 6.0以上系统申请通讯录权限
      */
     public void applyContactPermission() {
-        if (PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.READ_CONTACTS)) {
-            skipToContactsContract();
-        } else {
-            setPermissionHelper(false, new String[]{Manifest.permission.READ_CONTACTS});
-        }
+//        if (PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.READ_CONTACTS)) {
+//            skipToContactsContract();
+//        } else {
+//            setPermissionHelper(false, new String[]{Manifest.permission.READ_CONTACTS});
+//        }
     }
 
 
