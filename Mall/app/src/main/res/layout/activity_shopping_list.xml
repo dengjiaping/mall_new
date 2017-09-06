@@ -5,17 +5,18 @@
     android:orientation="vertical">
 
     <RadioGroup
+        android:id="@+id/shopping_list_radiogroup"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:id="@+id/shopping_list_radiogroup">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/shopping_list_radio_all"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/white"
             android:button="@null"
             android:gravity="center"
             android:text="综合"
@@ -31,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/white"
             android:button="@null"
             android:gravity="center"
             android:text="销量"
@@ -47,6 +49,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@color/white"
             android:button="@null"
             android:drawableLeft="@drawable/sort_up"
             android:drawablePadding="5dp"
@@ -55,8 +58,8 @@
             android:textColor="@drawable/selector_radio_text_color" />
     </RadioGroup>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/shopping_list_recyclerview"
+    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
+        android:id="@+id/shopping_list_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

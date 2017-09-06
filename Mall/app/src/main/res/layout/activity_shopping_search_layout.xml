@@ -12,27 +12,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="热门搜索"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:text="热门搜索" />
 
         <TextView
+            android:id="@+id/shopping_search_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/change"
-            android:text="换一批"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/ic_refresh"
+            android:text="换一批" />
     </RelativeLayout>
 
-    <com.giveu.shoppingmall.index.widget.LabelsFlowLayout
+    <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout
         android:id="@+id/shopping_search_flowlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-    </com.giveu.shoppingmall.index.widget.LabelsFlowLayout>
+    </com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout>
 
     <LinearLayout
         android:id="@+id/search_history_ll"

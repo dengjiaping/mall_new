@@ -37,6 +37,7 @@ public class DateSelectDialog extends CustomDialog {
     private int maxDay;
     public int mYear, mMonth;
     private boolean isShowDay = true;
+    private boolean isLimitSelect = true;
     private NumericWheelAdapter numericWheelAdapterStart3;
 
     public DateSelectDialog(Activity context) {
@@ -71,32 +72,15 @@ public class DateSelectDialog extends CustomDialog {
                 currentSelectYear = wl_year.getCurrentItem() + MIN_YEAR;//年
                 currentSelectMonth = wl_month.getCurrentItem() + MIN_MONTH;//月
                 currentSelectDay = w1_day.getCurrentItem() + MIN_DAY;//日
-                selectDate = String.valueOf(currentSelectYear) + String.format("%02d", currentSelectMonth);
-                if (currentSelectYear > currentYear) {
-                    //选择的年份大于当前年份
+                selectDate = String.valueOf(currentSelectYear) + String.format("%02d", currentSelectMonth) + String.format("%02d", currentSelectDay);
+
+                long selectTimeMillis = WheelGetTimeUtil.getTimeStamp(selectDate, "yyyyMMdd");
+                if (selectTimeMillis > System.currentTimeMillis() && isLimitSelect) {
                     selectErrorDate();
-                } else if (currentSelectYear == currentYear) {
-                    //选择的年份等于当前年份
-                    if (currentSelectMonth > currentMonth) {
-                        //选择的月份大于当前月份
-                        selectErrorDate();
-                    } else if (currentSelectMonth == currentMonth) {
-                        //选择的月份等于当前月份,当显示天的时候才需要判断当前选择日是否正确
-                        if (currentSelectDay > currentDay && isShowDay) {
-                            //选择的天数大于当前天数
-                            selectErrorDate();
-                        } else {
-                            //选择的天数小于等于当前天数
-                            selectRightDate(String.valueOf(currentSelectYear), String.format("%02d", currentSelectMonth), String.format("%02d", currentSelectDay));
-                        }
-                    } else {
-                        //选择的月份小于当前月份
-                        selectRightDate(String.valueOf(currentSelectYear), String.format("%02d", currentSelectMonth), String.format("%02d", currentSelectDay));
-                    }
-                } else {
-                    //选择的年份小于当前年份
-                    selectRightDate(String.valueOf(currentSelectYear), String.format("%02d", currentSelectMonth), String.format("%02d", currentSelectDay));
+                    return;
                 }
+
+                selectRightDate(String.valueOf(currentSelectYear), String.format("%02d", currentSelectMonth), String.format("%02d", currentSelectDay));
             }
         });
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +89,15 @@ public class DateSelectDialog extends CustomDialog {
                 dismiss();
             }
         });
+    }
+
+    /**
+     * 是否做选择时间的限制
+     *
+     * @param limit
+     */
+    public void setLimitSelect(boolean limit) {
+        isLimitSelect = limit;
     }
 
     private void selectRightDate(String year, String month, String day) {

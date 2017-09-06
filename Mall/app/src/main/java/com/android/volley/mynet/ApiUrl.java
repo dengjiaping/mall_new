@@ -170,5 +170,7 @@ public interface ApiUrl {
     //取消订单
     //String order_cancelOrder = BASE_URL + "order/cancelOrder";
     String order_cancelOrder = "http://10.10.11.140:9000/v1/order/cancelOrder";
+    //搜索热词刷新
+    String search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
 }
 

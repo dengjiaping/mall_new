@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -15,6 +14,8 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.adapter.ShopListItemAdapter;
 import com.giveu.shoppingmall.utils.explosionfield.Utils;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ import butterknife.BindView;
 
 public class ShoppingListActivity extends BaseActivity {
 
-    @BindView(R.id.shopping_list_recyclerview)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.shopping_list_listview)
+    PullToRefreshListView mRefreshView;
     @BindView(R.id.shopping_list_radiogroup)
     RadioGroup mRadioGroup;
     @BindView(R.id.shopping_list_radio_all)
@@ -59,14 +60,24 @@ public class ShoppingListActivity extends BaseActivity {
                 });
 
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shoppingList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             shoppingList.add("i");
         }
 
         itemAdapter = new ShopListItemAdapter(mBaseContext, R.layout.adapter_shopping_list_item, shoppingList);
-        mRecyclerView.setAdapter(itemAdapter);
+        mRefreshView.setAdapter(itemAdapter);
+        mRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+        });
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

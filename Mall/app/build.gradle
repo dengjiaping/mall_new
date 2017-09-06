@@ -156,7 +156,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     //bugly
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
-//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     //高德地图
@@ -188,10 +188,11 @@ dependencies {
     //支付宝支付
     compile files('libs/alipaySingle-20170510.jar')
     //听云
-    compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7"
+    compile 'com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7'
     compile 'com.youth.banner:banner:1.4.9'
     //leakcanary
     //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     //6.0动态获取权限
     compile project(':permission')
+    compile 'com.alibaba:fastjson:1.2.37'
 }

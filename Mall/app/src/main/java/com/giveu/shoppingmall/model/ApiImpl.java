@@ -466,6 +466,7 @@ public class ApiImpl {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class,context, responseListener);
     }
+
     //获取我的订单列表
     public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, pageNum, pageSize, status});
@@ -479,15 +480,15 @@ public class ApiImpl {
     }
 
     //获取用户收货地址列表
-    public static void getAddressList(Activity context,String idPerson, String addressType, BaseRequestAgent.ResponseListener<AddressListResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","addressType"}, new Object[]{StringUtils.string2Long(idPerson),addressType});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_getAddress, AddressListResponse.class, context,responseListener);
+    public static void getAddressList(Activity context, String idPerson, String addressType, BaseRequestAgent.ResponseListener<AddressListResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "addressType"}, new Object[]{StringUtils.string2Long(idPerson), addressType});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_getAddress, AddressListResponse.class, context, responseListener);
     }
 
     //新增收货地址
-    public static void addAddress(Activity context,String address, String addressType,String city,String custName,String idPerson,String isDefault,String phone,String province,String region,String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_addAddress, BaseBean.class,context, responseListener);
+    public static void addAddress(Activity context, String address, String addressType, String city, String custName, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_addAddress, BaseBean.class, context, responseListener);
     }
 
     //修改收货地址
@@ -495,6 +496,7 @@ public class ApiImpl {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","id","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Long(id),StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress,BaseBean.class, context,responseListener);
     }
+
     //删除收货地址
     public static void deleteAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
@@ -506,6 +508,7 @@ public class ApiImpl {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_setDefaultAddress, BaseBean.class, context, responseListener);
     }
+
     //MainMeFragment获取订单数量
     public static void getOrderNum(String channel, String idPerson, BaseRequestAgent.ResponseListener<OrderNumResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson"}, new Object[]{channel, idPerson});
@@ -528,6 +531,11 @@ public class ApiImpl {
     public static void cancelOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_cancelOrder, BaseBean.class, context, responseListener);
+    }
+
+    //搜索热词刷新
+    public static void refreshHotWords(BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.search_hotword_refresh, BaseBean.class, responseListener);
     }
 }
 

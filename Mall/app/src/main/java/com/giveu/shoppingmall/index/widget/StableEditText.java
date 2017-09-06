@@ -16,7 +16,7 @@ import android.util.AttributeSet;
 
 public class StableEditText extends android.support.v7.widget.AppCompatEditText {
 
-    public final static int DEFAULT_STABLE_TEXT_COLOR = Color.BLACK;
+    public final static int DEFAULT_STABLE_TEXT_COLOR = Color.parseColor("#333333");
 
     private CharSequence stableText = "";
     private ForegroundColorSpan colorSpan = null;

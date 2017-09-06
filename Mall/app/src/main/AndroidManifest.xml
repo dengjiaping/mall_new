@@ -379,9 +379,9 @@
         <!--二期商城-->
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"
-            android:label="订单信息确认"
             android:configChanges="keyboardHidden|screenSize|orientation"
-            android:windowSoftInputMode="adjustPan|stateUnspecified"/>
+            android:label="订单信息确认"
+            android:windowSoftInputMode="adjustPan|stateUnspecified" />
         <activity
             android:name=".index.view.activity.ShoppingListActivity"
             android:label="商品列表" />
@@ -395,6 +395,9 @@
         <activity
             android:name=".me.view.activity.CollectionActivity"
             android:label="我的收藏" />
+        <activity
+            android:name=".index.view.activity.ConfirmHouseHoldActivity"
+            android:label="大家电配送" />
         <!--7.0文件权限-->
         <provider
             android:name="android.support.v4.content.FileProvider"

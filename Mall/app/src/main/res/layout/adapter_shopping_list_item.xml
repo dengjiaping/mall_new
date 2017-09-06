@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:layout_margin="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/selector_shopping_item_click">
 
     <ImageView
         android:id="@+id/item_left_image"
@@ -86,10 +87,5 @@
             android:layout_marginTop="10dp"
             android:text="¥6888"
             android:textColor="@color/gray" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray" />
     </LinearLayout>
 </LinearLayout>

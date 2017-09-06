@@ -7,13 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.index.widget.LabelsFlowLayout;
-import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.utils.explosionfield.Utils;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
+import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
+import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by 524202 on 2017/9/4.
@@ -21,9 +31,13 @@ import butterknife.BindView;
 
 public class ShoppingSearchActivity extends BaseActivity {
 
-    private String[] labels = {"iphone 7 plus", "vivo", "华为", "oppo r9", "笔记本电脑", "智能", "电源", "耳机", "华为荣耀", "红米note4", "生活", "小米6", "其他", "其他", "其他"};
+    private List<String> labels;
     @BindView(R.id.shopping_search_flowlayout)
-    LabelsFlowLayout mFlowLayout;
+    TagFlowLayout mFlowLayout;
+    @BindView(R.id.shopping_search_refresh)
+    TextView mRefreshView;
+
+    private TagAdapter<String> mTagAdapter;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -32,27 +46,17 @@ public class ShoppingSearchActivity extends BaseActivity {
         baseLayout.showCenterEditText();
         baseLayout.setRightText("搜索");
 
-        initFlowLayout();
-    }
+        labels = new ArrayList<>();
+        mFlowLayout.setAdapter(mTagAdapter = new TagAdapter<String>(labels) {
+            @Override
+            public View getView(FlowLayout parent, int position, String s) {
+                TextView tvTag = (TextView) LayoutInflater.from(mBaseContext).inflate(R.layout.search_label_tv, parent, false);
+                tvTag.setText(s);
+                return tvTag;
+            }
+        });
 
-    /**
-     * 将数据放入流式布局
-     */
-    private void initFlowLayout() {
-        for (int i = 0; i < labels.length; i++) {
-            TextView tv = (TextView) LayoutInflater.from(this).inflate(
-                    R.layout.search_label_tv, mFlowLayout, false);
-            tv.setText(labels[i]);
-            final String str = tv.getText().toString();
-            //点击事件
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ToastUtils.showShortToast(str);
-                }
-            });
-            mFlowLayout.addView(tv);
-        }
+        refreshHotWorlds();
     }
 
     @Override
@@ -63,5 +67,37 @@ public class ShoppingSearchActivity extends BaseActivity {
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ShoppingSearchActivity.class);
         context.startActivity(intent);
+    }
+
+    @OnClick({R.id.shopping_search_refresh})
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            case R.id.shopping_search_refresh:
+                refreshHotWorlds();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void refreshHotWorlds() {
+        ApiImpl.refreshHotWords(new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                JSONObject jsonObject = JSONObject.parseObject(response.originResultString);
+                JSONArray datas = jsonObject.getJSONArray("data");
+                if (datas != null) {
+                    labels.clear();
+                    labels.addAll(datas.toJavaList(String.class));
+                    mTagAdapter.notifyDataChanged();
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+            }
+        });
     }
 }
