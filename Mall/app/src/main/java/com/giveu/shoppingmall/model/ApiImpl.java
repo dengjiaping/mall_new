@@ -449,9 +449,9 @@ public class ApiImpl {
     }
 
     //领取优惠券
-    public static void receiveCoupon(String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void receiveCoupon(Activity context,String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class,context, responseListener);
     }
 
     //获取活动信息
@@ -463,12 +463,12 @@ public class ApiImpl {
 
     //获取商品收藏列表
     public static void getCollectionList(Activity context,String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{StringUtils.string2Long(idPerson), pageNum, pageSize});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class,context, responseListener);
     }
     //获取我的订单列表
-    public static void getOrderList(Activity context, String channel, String idPerson, String openid, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "openid", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, openid, pageNum, pageSize, status});
+    public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, pageNum, pageSize, status});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.orderApp_myListOrder, OrderListResponse.class, context, responseListener);
     }
 
@@ -507,9 +507,21 @@ public class ApiImpl {
     }
 
     //获取订单详情
-    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+    public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
+    }
+
+    //删除订单
+    public static void deleteOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_deleteOrder, BaseBean.class, context, responseListener);
+    }
+
+    //取消订单
+    public static void cancelOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_cancelOrder, BaseBean.class, context, responseListener);
     }
 }
 

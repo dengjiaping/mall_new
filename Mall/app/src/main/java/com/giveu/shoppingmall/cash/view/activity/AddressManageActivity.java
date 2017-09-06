@@ -79,8 +79,8 @@ public class AddressManageActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(Const.ADDADDRESS == requestCode && RESULT_OK == resultCode){
-            //添加成功回来刷新页面
+        if(Const.ADDRESSMANAGE == requestCode && RESULT_OK == resultCode){
+            //添加成功或修改成功回来刷新页面
             setData();
         }
     }

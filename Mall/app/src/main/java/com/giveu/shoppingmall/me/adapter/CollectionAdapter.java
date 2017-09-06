@@ -29,7 +29,7 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
     protected void convert(final ViewHolder holder, final CollectionResponse.ResultListBean item, final int position) {
         final CheckBox cbChoose = holder.getView(R.id.cb_choose);
         ImageView ivGoods = holder.getView(R.id.iv_goods);
-        ImageUtils.loadImage("http://img5.imgtn.bdimg.com/it/u=1730776793,842511342&fm=200&gp=0.jpg", R.drawable.defalut_img_88_88, ivGoods);
+        ImageUtils.loadImage(item.srcIp+"/s240x240fdfs/"+item.src, R.drawable.defalut_img_88_88, ivGoods);
         if (item.isShowCb) {
             //显示
             holder.setVisible(R.id.cb_choose, true);

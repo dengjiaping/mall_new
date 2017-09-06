@@ -55,14 +55,14 @@ public class AddAddressActivity extends BaseActivity {
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("type", ADD);
-        activity.startActivityForResult(intent, Const.ADDADDRESS);
+        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
     }
 
     public static void startIt(Activity activity, AddressListResponse item) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("type", EDIT);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AddAddressActivity extends BaseActivity {
                         switch (type) {
                             case ADD:
                                 //添加地址
-                                ApiImpl.addAddress(mBaseContext,building, "5", city, name, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                ApiImpl.addAddress(mBaseContext, building, "5", city, name, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ToastUtils.showShortToast("添加地址成功");
@@ -112,8 +112,12 @@ public class AddAddressActivity extends BaseActivity {
                                 });
                                 break;
                             case EDIT:
-                                //修改地址
-                                ApiImpl.updateAddress(mBaseContext,building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                //修改地址，如果地址选择器没有选，才使用带过来的数据
+                                city = StringUtils.isNull(city) ? item.city : city;
+                                province = StringUtils.isNull(province) ? item.province : province;
+                                region = StringUtils.isNull(region) ? item.region : region;
+                                street = StringUtils.isNull(street) ? item.street : street;
+                                ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ToastUtils.showShortToast("修改地址成功");

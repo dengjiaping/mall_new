@@ -47,6 +47,7 @@ public class CollectionActivity extends BaseActivity {
     CheckBox cbChoose;
     @BindView(R.id.tv_delete_text)
     TextView tvDeleteText;
+    List<CollectionResponse.ResultListBean> goodsList;
     private static final String DELETEONE = "1";//长按删除某一项
     private static final String DELETEMORE = "2";//全选删除多项
 
@@ -58,13 +59,14 @@ public class CollectionActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_collection);
+
         baseLayout.setTitle("我的收藏");
         baseLayout.setRightText("编辑");
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.setRightTextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(collectionAdapter == null){
+                if(collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
                     return;
                 }
                 if (rightTextClick) {
@@ -79,10 +81,30 @@ public class CollectionActivity extends BaseActivity {
                 for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
                     collectionResponse.isShowCb = rightTextClick;
                 }
-                collectionAdapter.notifyDataSetChanged();
                 rightTextClick = rightTextClick == true ? false : true;
             }
         });
+        goodsList = new ArrayList<>();
+        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
+            @Override
+            public void itemClick() {
+                int count = 0;
+                if(collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
+                    return;
+                }
+                for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
+                    if (true == collectionResponse.isCheck) {
+                        count++;
+                    }
+                }
+                deleteColorAndCanClick(count);
+            }
+        });
+        ptrlv.setAdapter(collectionAdapter);
+
+
+        deleteColorAndCanClick(0);
+        ptrlv.setPullLoadEnable(false);
     }
 
     @Override
@@ -124,25 +146,12 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getCollectionList(mBaseContext,LoginHelper.getInstance().getIdPerson(), 1, 1, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        ApiImpl.getCollectionList(mBaseContext,"123456", 1, 10, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (response != null && response.data != null) {
-                    collectionAdapter = new CollectionAdapter(mBaseContext, response.data.resultList, new CollectionAdapter.CbItemCheckListener() {
-                        @Override
-                        public void itemClick() {
-                            int count = 0;
-                            if(collectionAdapter == null){
-                                return;
-                            }
-                            for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
-                                if (true == collectionResponse.isCheck) {
-                                    count++;
-                                }
-                            }
-                            deleteColorAndCanClick(count);
-                        }
-                    });
+                    goodsList.addAll(response.data.resultList);
+                    collectionAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -151,9 +160,6 @@ public class CollectionActivity extends BaseActivity {
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
-        ptrlv.setAdapter(collectionAdapter);
-        deleteColorAndCanClick(0);
-        ptrlv.setPullLoadEnable(false);
     }
 
     /**

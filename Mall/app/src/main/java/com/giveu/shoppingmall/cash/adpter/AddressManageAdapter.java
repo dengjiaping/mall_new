@@ -27,7 +27,8 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
 
     private ConfirmDialog deleteDialog;
     List<AddressListResponse> datas;
-    String mId;
+    String mId;//删除项的id
+    int mPosition;//删除项的位置
 
     public AddressManageAdapter(Context context, List<AddressListResponse> datas) {
         super(context, R.layout.lv_add_address_item, datas);
@@ -45,7 +46,10 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
                     @Override
                     public void onSuccess(BaseBean response) {
                         ToastUtils.showShortToast("删除成功");
-                        deleteDialog.dismiss();
+                        if (datas.size() > 0) {
+                            datas.remove(mPosition);
+                            notifyDataSetChanged();
+                        }
                     }
 
                     @Override
@@ -53,6 +57,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
+                deleteDialog.dismiss();
             }
 
             @Override
@@ -77,6 +82,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
         holder.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPosition = position;
                 mId = item.id;
                 deleteDialog.show();
             }

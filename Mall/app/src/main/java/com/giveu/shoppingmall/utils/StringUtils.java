@@ -398,7 +398,21 @@ public class StringUtils {
     public static String formatRestTime(long restTime) {
         String result = "";
         if (restTime != 0) {
-            SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("mm分ss秒");
+            try {
+                result = format.format(new Date(restTime));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
+    public static String formatRestTimeToDay(long restTime) {
+        String result = "";
+        if (restTime != 0) {
+            SimpleDateFormat format = new SimpleDateFormat("dd天 HH小时");
             try {
                 result = format.format(new Date(restTime));
             } catch (Exception e) {
