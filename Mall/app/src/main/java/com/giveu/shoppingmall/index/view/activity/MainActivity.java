@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.dialog.LotteryDialog;
+import com.giveu.shoppingmall.index.view.fragment.ShoppingFragment;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;

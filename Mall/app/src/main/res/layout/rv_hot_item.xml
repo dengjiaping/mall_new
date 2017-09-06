@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_hot"
     android:layout_width="match_parent"
     android:layout_height="180dp"
+    android:background="@drawable/shape_commodity"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_commodity"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:src="@drawable/ic_default_pic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:text="智能数码"
+            android:textColor="#ff1516"
+            android:textSize="@dimen/ts_16" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="999抢笔记本"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13"
+            android:id="@+id/textView5" />
+
+        <ImageView
+            android:id="@+id/iv_commodity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/classify_default" />
+    </LinearLayout>
+
 </LinearLayout>
