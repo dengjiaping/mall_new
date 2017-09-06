@@ -52,22 +52,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="41dp"
+        android:layout_height="42dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/default_layout_screen_gap">
 
-        <CheckBox
-            android:id="@+id/cb_default"
+        <TextView
+            android:id="@+id/tv_default_check"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@null"
-            android:button="@null"
-            android:drawableLeft="@drawable/selector_checkbox_round"
-            android:drawablePadding="8dp"
-            android:paddingLeft="@dimen/default_layout_screen_gap"
-            android:paddingRight="@dimen/default_layout_screen_gap"
+            android:drawableLeft="@drawable/ic_round_checkbox_unchecked"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
             android:text="设为默认"
-            android:textColor="#3E4246" />
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13" />
 
         <View
             android:layout_width="0dp"
@@ -84,7 +83,9 @@
             android:gravity="center"
             android:paddingLeft="7.5dp"
             android:paddingRight="7.5dp"
-            android:text="编辑" />
+            android:text="编辑"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13" />
 
         <TextView
             android:id="@+id/tv_delete"
@@ -96,7 +97,9 @@
             android:gravity="center"
             android:paddingLeft="7.5dp"
             android:paddingRight="7.5dp"
-            android:text="删除" />
+            android:text="删除"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13" />
     </LinearLayout>
 
 </LinearLayout>

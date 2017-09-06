@@ -160,5 +160,7 @@ public interface ApiUrl {
     String personCenter_address_deleteAddress = BASE_URL + "personCenter/address/deleteAddress";
     //修改收货地址
     String personCenter_address_updateAddress = BASE_URL + "personCenter/address/updateAddress";
+    //设置默认收货地址
+    String personCenter_address_setDefaultAddress = BASE_URL + "personCenter/address/setDefaultAddress";
 }
 

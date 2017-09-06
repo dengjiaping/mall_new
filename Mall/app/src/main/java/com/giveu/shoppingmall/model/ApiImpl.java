@@ -474,7 +474,7 @@ public class ApiImpl {
 
     //删除商品收藏
     public static void deleteCollection(Activity context,String idPerson, List<String> skuCodes,int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","skuCodes","status"}, new Object[]{StringUtils.string2Long(idPerson),skuCodes,status});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","skuCodes","status"}, new Object[]{idPerson,skuCodes,status});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class,context, responseListener);
     }
 
@@ -492,13 +492,19 @@ public class ApiImpl {
 
     //修改收货地址
     public static void updateAddress(Activity context,String address, String addressType,String city,String custName,String id,String idPerson,String isDefault,String phone,String province,String region,String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","id","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Int(id),StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","id","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Long(id),StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress,BaseBean.class, context,responseListener);
     }
     //删除收货地址
     public static void deleteAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Int(id), StringUtils.string2Long(idPerson)});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_deleteAddress, BaseBean.class, context, responseListener);
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_setDefaultAddress, BaseBean.class, context, responseListener);
+    }
+
+    //设置默认收货地址
+    public static void setDefaultAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_setDefaultAddress, BaseBean.class, context, responseListener);
     }
     //MainMeFragment获取订单数量
     public static void getOrderNum(String channel, String idPerson, BaseRequestAgent.ResponseListener<OrderNumResponse> responseListener) {
