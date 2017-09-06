@@ -195,7 +195,7 @@ public class ActivationStatusActivity extends BaseActivity {
 
     private void receiveCoupon() {
         //这里是直接进行领取优惠券活动，不需要任何处理
-        ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.receiveCoupon(mBaseContext,LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
             }

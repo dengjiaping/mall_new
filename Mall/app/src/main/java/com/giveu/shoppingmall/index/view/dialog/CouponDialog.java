@@ -14,6 +14,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -32,7 +33,7 @@ public class CouponDialog {
     private Activity mActivity;
     private ExplosionField mExplosionField;
     ImageView ivCoupon, ivReceive, ivClose;
-
+    String type;
     public CouponDialog(final Activity mActivity) {
         this.mActivity = mActivity;
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -53,7 +54,7 @@ public class CouponDialog {
             @Override
             public void onClick(View view) {
                 //领取优惠券
-                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive, Const.CLOSE);
             }
         });
 
@@ -61,7 +62,7 @@ public class CouponDialog {
             @Override
             public void onClick(final View view) {
                 //领取优惠券
-                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                receiveCoupon(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive,Const.RECEIVE);
             }
         });
     }
@@ -75,20 +76,22 @@ public class CouponDialog {
      * @param ivCoupon
      * @param ivReceive
      */
-    public void receiveCoupon(final Activity mActivity, final CustomDialog mDialog, final View view, final ImageView ivClose, final ImageView ivCoupon, final ImageView ivReceive){
-        ApiImpl.receiveCoupon(LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void receiveCoupon(final Activity mActivity, final CustomDialog mDialog, final View view, final ImageView ivClose, final ImageView ivCoupon, final ImageView ivReceive, final String type){
+
+        ApiImpl.receiveCoupon(mActivity,LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-                ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
-                //运行爆炸动画,关闭dialog
-                startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
             }
 
             @Override
             public void onError(BaseBean errorBean) {
+                boolean status = false;
                 String originalStr = errorBean == null ? "" : errorBean.originResultString;
                 //后台返回空字符串，直接返回
                 if (StringUtils.isNull(originalStr)) {
+                    if(Const.CLOSE.equals(type)){
+                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                    }
                     if (errorBean != null) {
                         ToastUtils.showShortToast(errorBean.message);
                     }
@@ -97,14 +100,22 @@ public class CouponDialog {
                 try {
                     JSONObject jsonObject = new JSONObject(originalStr);
                     if ("success".equals(jsonObject.getString("status"))) {
+                        status = true;
                         ToastUtils.showLongToast("领取成功！可在个人中心-我的优惠里查看");
-                        //运行爆炸动画,关闭dialog
-                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
                     } else {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }finally {
+                    if(status){
+                        //运行爆炸动画,关闭dialog
+                        startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                    }else{
+                        if(Const.CLOSE.equals(type)){
+                            startExplosionField(mActivity, mDialog, view, ivClose, ivCoupon, ivReceive);
+                        }
+                    }
                 }
             }
         });

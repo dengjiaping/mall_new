@@ -449,9 +449,9 @@ public class ApiImpl {
     }
 
     //领取优惠券
-    public static void receiveCoupon(String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void receiveCoupon(Activity context,String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class,context, responseListener);
     }
 
     //获取活动信息
@@ -463,7 +463,7 @@ public class ApiImpl {
 
     //获取商品收藏列表
     public static void getCollectionList(Activity context,String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{StringUtils.string2Long(idPerson), pageNum, pageSize});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class,context, responseListener);
     }
     //获取我的订单列表
