@@ -15,6 +15,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
@@ -144,11 +145,22 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
             public void confirm(LinkedHashMap<String, String> attrHashMap) {
                 if (isCredit) {
                     CreditCommodityDialog creditDialog = new CreditCommodityDialog(mBaseContext);
+                    creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
+                        @Override
+                        public void confirm() {
+                            ConfirmOrderActivity.startIt(mBaseContext);
+                        }
+
+                        @Override
+                        public void cancle() {
+
+                        }
+                    });
                     creditDialog.show();
                 }
                 String attrStr = "";
                 for (Map.Entry<String, String> entry : attrHashMap.entrySet()) {
-                    attrStr += entry.getValue()+" ";
+                    attrStr += entry.getValue() + " ";
                 }
                 llChooseAttr.setMiddleText(attrStr);
             }

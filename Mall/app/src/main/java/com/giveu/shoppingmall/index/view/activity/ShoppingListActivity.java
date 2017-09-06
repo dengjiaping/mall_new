@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.adapter.ShopListItemAdapter;
+import com.giveu.shoppingmall.utils.explosionfield.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,17 @@ public class ShoppingListActivity extends BaseActivity {
 
         baseLayout.setTitle("搜索")
                 .setTitleTextBackground(R.drawable.shape_title_background)
-                .setTitleWidth(800)
-                .setTitleHeight(100)
+                .setTitleWidth(Utils.dp2Px(260))
+                .setTitleHeight(Utils.dp2Px(30))
                 .setTitleTextSize(15)
-                .setTitleTextColor(R.color.color_textcolor);
+                .setTitleTextColor(R.color.color_textcolor)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShoppingSearchActivity.startIt(mBaseContext);
+                    }
+                });
+
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shoppingList = new ArrayList<>();

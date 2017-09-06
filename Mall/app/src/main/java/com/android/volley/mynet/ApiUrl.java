@@ -141,12 +141,25 @@ public interface ApiUrl {
     String act_receiveCourtesyCard = WECHAT_BASE_URL + "activity-biz/act/receiveCourtesyCard";
     //获取活动信息
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
+    //获取商品收藏列表
+    String collections_goodsSkus_all = BASE_URL + "sc/users/collections/goodsSkus/all";
+    //删除商品收藏列表
+    String collections_goodsSkus_collect = BASE_URL + "sc/users/collections/goodsSkus/collect";
     //获取我的订单列表
     //String orderApp_myListOrder = BASE_URL + "orderApp/myListOrder";
     String orderApp_myListOrder = "http://10.10.11.140:9000/v1/order/myListOrder";
     //获取我的订单数量
     String orderApp_myOrderNumByStatus = BASE_URL + "order/myOrderNumByStatus";
     //获取订单详情
+    String order_orderDetail = BASE_URL + "order/orderDetail";
+    //获取用户收货地址列表
+    String personCenter_address_getAddress = BASE_URL + "personCenter/address/getAddress";
+    //新增收货地址
+    String personCenter_address_addAddress = BASE_URL + "personCenter/address/addAddress";
+    //删除收货地址
+    String personCenter_address_deleteAddress = BASE_URL + "personCenter/address/deleteAddress";
+    //修改收货地址
+    String personCenter_address_updateAddress = BASE_URL + "personCenter/address/updateAddress";
 //    String order_orderDetail = BASE_URL + "order/orderDetail";
     String order_orderDetail = "http://10.10.11.140:9000/v1/order/orderDetail";
     //删除订单

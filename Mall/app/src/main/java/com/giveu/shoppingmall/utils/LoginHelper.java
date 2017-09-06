@@ -613,9 +613,9 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasAverageUser() {
-        if (StringUtils.isNotNull(loginPersonInfo.idPerson)) {
+        if (loginPersonInfo != null) {
             String idPerson = loginPersonInfo.idPerson;
-            if (idPerson.length() > 6) {
+            if (idPerson != null && idPerson.length() > 6) {
                 String idPersonStr = idPerson.substring(idPerson.length() - 6, idPerson.length());
                 if ("999999".equals(idPersonStr)) {
                     return true;

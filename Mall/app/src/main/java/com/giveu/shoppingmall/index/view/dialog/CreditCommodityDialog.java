@@ -28,6 +28,7 @@ import java.util.Set;
 public class CreditCommodityDialog extends CustomDialog {
     private LinearLayout llContainer;
     private ImageView ivDismiss;
+    private TextView tvConfirm;
 
     public CreditCommodityDialog(Activity context) {
         super(context, R.layout.dialog_credit_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -43,12 +44,21 @@ public class CreditCommodityDialog extends CustomDialog {
                 dismiss();
             }
         });
+
+        tvConfirm = (TextView) contentView.findViewById(R.id.dialog_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.confirm();
+            }
+        });
+
         ArrayList<String> percentList = new ArrayList<>();
         percentList.add("5%");
         percentList.add("15%");
         percentList.add("25%");
         percentList.add("35%");
-        addView("首付",percentList);
+        addView("首付", percentList);
 
         ArrayList<String> monthList = new ArrayList<>();
         monthList.add("1");
@@ -57,7 +67,7 @@ public class CreditCommodityDialog extends CustomDialog {
         monthList.add("9");
         monthList.add("12");
         monthList.add("24");
-        addView("分期数",monthList);
+        addView("分期数", monthList);
     }
 
     @Override
@@ -73,7 +83,7 @@ public class CreditCommodityDialog extends CustomDialog {
         }
     }
 
-    private void addView(String paramsStr ,final ArrayList<String> paramsList) {
+    private void addView(String paramsStr, final ArrayList<String> paramsList) {
         TagAdapter<String> paramsAdapter;
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;

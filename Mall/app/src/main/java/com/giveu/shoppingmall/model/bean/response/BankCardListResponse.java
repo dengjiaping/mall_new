@@ -32,7 +32,7 @@ public class BankCardListResponse extends BaseBean<BankCardListResponse> {
         public String bankIconUrl;
         public String bankBindPhone;
         public String bankPerson;
-        public int idPerson;
+        public String idPerson;
         public int isDefault;
         public int id;
         public String payType;

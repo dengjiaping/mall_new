@@ -10,12 +10,14 @@ import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.BankCardListResponse;
 import com.giveu.shoppingmall.model.bean.response.BankListResponse;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
+import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
@@ -55,7 +57,6 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -448,9 +449,9 @@ public class ApiImpl {
     }
 
     //领取优惠券
-    public static void receiveCoupon(String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void receiveCoupon(Activity context,String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class,context, responseListener);
     }
 
     //获取活动信息
@@ -460,12 +461,45 @@ public class ApiImpl {
 
     }
 
+    //获取商品收藏列表
+    public static void getCollectionList(Activity context,String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class,context, responseListener);
+    }
     //获取我的订单列表
     public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, pageNum, pageSize, status});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.orderApp_myListOrder, OrderListResponse.class, context, responseListener);
     }
 
+    //删除商品收藏
+    public static void deleteCollection(Activity context,String idPerson, List<String> skuCodes,int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","skuCodes","status"}, new Object[]{StringUtils.string2Long(idPerson),skuCodes,status});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class,context, responseListener);
+    }
+
+    //获取用户收货地址列表
+    public static void getAddressList(Activity context,String idPerson, String addressType, BaseRequestAgent.ResponseListener<AddressListResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","addressType"}, new Object[]{StringUtils.string2Long(idPerson),addressType});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_getAddress, AddressListResponse.class, context,responseListener);
+    }
+
+    //新增收货地址
+    public static void addAddress(Activity context,String address, String addressType,String city,String custName,String idPerson,String isDefault,String phone,String province,String region,String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_addAddress, BaseBean.class,context, responseListener);
+    }
+
+    //修改收货地址
+    public static void updateAddress(Activity context,String address, String addressType,String city,String custName,String id,String idPerson,String isDefault,String phone,String province,String region,String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","id","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Int(id),StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress,BaseBean.class, context,responseListener);
+    }
+    //删除收货地址
+    public static void deleteAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Int(id), StringUtils.string2Long(idPerson)});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_deleteAddress, BaseBean.class, context, responseListener);
+    }
     //MainMeFragment获取订单数量
     public static void getOrderNum(String channel, String idPerson, BaseRequestAgent.ResponseListener<OrderNumResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson"}, new Object[]{channel, idPerson});
