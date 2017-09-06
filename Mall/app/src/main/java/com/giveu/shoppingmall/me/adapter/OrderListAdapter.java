@@ -181,6 +181,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             @Override
             public void confirm() {
                 presenter.onCancelOrder(orderNo);
+                dialog.dismiss();
             }
 
             @Override
@@ -198,6 +199,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             @Override
             public void confirm() {
                 presenter.onConfirmReceive(orderNo);
+                dialog.dismiss();
             }
 
             @Override
@@ -215,6 +217,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             @Override
             public void confirm() {
                 presenter.onDeleteOrder(orderNo);
+                dialog.dismiss();
             }
 
             @Override

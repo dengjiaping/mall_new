@@ -137,26 +137,31 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
-        //倒计时footer
-        if (StringUtils.isNotNull(response.timeLeft)) {
+        //底部按钮
+        dealFooterView(response.status);
+        //倒计时
+        long timeLeft = 0;
+        if (StringUtils.isNotNull(response.timeLeft))
+            timeLeft = Long.parseLong(response.timeLeft);
+        //status为待首付和待付款时，则采用倒计时
+        if (response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) {
             llTimeLeft.setVisibility(View.VISIBLE);
-            long timeLeft = Long.parseLong(response.timeLeft);
-            //剩余时间小于10分钟，则采用倒计时
-            if (timeLeft < 10 * 60 * 1000) {
-                tvTimeLeft.setRestTime(timeLeft);
-                tvTimeLeft.startCount(new CountDownTextView.CountEndListener() {
-                    @Override
-                    public void onEnd() {
-                        tvPay.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
-                        ToastUtils.showLongToast("订单已失效，请重新下单");
-                    }
-                });
-            } else {
-                tvTimeLeft.setText("剩" + StringUtils.formatRestTimeToDay(timeLeft) + "自动确认收货");
-            }
-        } else {
-            llTimeLeft.setVisibility(View.GONE);
+            tvTimeLeft.setRestTime(timeLeft);
+            tvTimeLeft.startCount(new CountDownTextView.CountEndListener() {
+                @Override
+                public void onEnd() {
+                    tvPay.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
+                    ToastUtils.showLongToast("订单已失效，请重新下单");
+                    tvTimeLeft.setText("订单已失效，请重新下单");
+                }
+            });
         }
+        //status为待收货时
+        else if (response.status == OrderState.WAITINGRECEIVE) {
+            llTimeLeft.setVisibility(View.VISIBLE);
+            tvTimeLeft.setText("剩" + StringUtils.formatRestTimeToDay(timeLeft) + "自动确认收货");
+        } else
+            llTimeLeft.setVisibility(View.GONE);
         //订单号
         if (StringUtils.isNotNull(response.orderNo)) {
             tvOrderNo.setText("订单号：" + response.orderNo);
@@ -243,8 +248,17 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.totalPrice)) {
             tvTotal.setText("¥" + response.totalPrice);
         }
-        //底部按钮
-        dealFooterView(response.status);
+
+    }
+
+    @Override
+    public void deleteOrderSuccess(String orderNo) {
+
+    }
+
+    @Override
+    public void cancelOrderSuccess(String orderNo) {
+
     }
 
     @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive})
@@ -329,6 +343,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             @Override
             public void confirm() {
                 presenter.onConfirmReceive(orderNo);
+                dialog.dismiss();
             }
 
             @Override
