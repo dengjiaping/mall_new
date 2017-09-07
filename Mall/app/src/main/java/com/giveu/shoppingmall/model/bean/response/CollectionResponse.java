@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.model.bean.response;
 
 import com.android.volley.mynet.BaseBean;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.List;
 
@@ -41,8 +42,37 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
         public String skuCode;
         public String src;
         public String srcIp;
+        public int status;
         public boolean isCheck = false;//单项是否选中,默认未选中
         public boolean isShowCb = false;//每一项前面是否显示框，默认不显示
+        /**
+         * 是否失效
+         *
+         * @return
+         */
+        public boolean hasInvalid(){
+            //0有效，1失效
+            if(0 == status){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        /**
+         * 是否显示月供
+         *
+         * @return
+         */
+        public boolean hasShowMonthAmount() {
+            //true不显示月供
+            if (StringUtils.isNotNull(monthAmount)) {
+                if ((0 == Double.parseDouble(monthAmount))) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
 }

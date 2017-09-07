@@ -29,8 +29,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-import static android.R.attr.type;
-
 
 /**
  * 我的收藏
@@ -48,6 +46,10 @@ public class CollectionActivity extends BaseActivity {
     CheckBox cbChoose;
     @BindView(R.id.tv_delete_text)
     TextView tvDeleteText;
+    @BindView(R.id.ll_off_the_shelf)
+    LinearLayout llOffTheShelf;
+    private int pageIndex = 1;
+    private final int pageSize = 10;
     List<CollectionResponse.ResultListBean> goodsList;
     private static final String DELETEONE = "1";//长按删除某一项
     private static final String DELETEMORE = "2";//全选删除多项
@@ -67,7 +69,7 @@ public class CollectionActivity extends BaseActivity {
         baseLayout.setRightTextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
                 if (rightTextClick) {
@@ -90,7 +92,7 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public void itemClick() {
                 int count = 0;
-                if(collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
                 for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
@@ -102,8 +104,6 @@ public class CollectionActivity extends BaseActivity {
             }
         });
         ptrlv.setAdapter(collectionAdapter);
-
-
         deleteColorAndCanClick(0);
         ptrlv.setPullLoadEnable(false);
     }
@@ -139,6 +139,7 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                pageIndex = 1;
                 setData();
                 ptrlv.setPullLoadEnable(false);
 
@@ -147,7 +148,7 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 setData();
-                ptrlv.setPullRefreshEnable(false);
+                ptrlv.setPullRefreshEnable(true);
             }
         });
         tvDeleteText.setOnClickListener(new View.OnClickListener() {
@@ -160,17 +161,48 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getCollectionList(mBaseContext,"123456", 1, 10, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        pageIndex = 1;
+        ApiImpl.getCollectionList(mBaseContext, "123459", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
+                if (pageIndex == 1) {
+                    ptrlv.onRefreshComplete();
+                    ptrlv.setPullRefreshEnable(true);
+                }
                 if (response != null && response.data != null) {
-                    goodsList.addAll(response.data.resultList);
-                    collectionAdapter.notifyDataSetChanged();
+                    CollectionResponse collectionResponse = response.data;
+                    if (CommonUtils.isNotNullOrEmpty(collectionResponse.resultList)) {
+                        if (pageIndex == 1) {
+                            goodsList.clear();
+                            if (collectionResponse.resultList.size() >= pageSize) {
+                                ptrlv.setPullLoadEnable(true);
+                            } else {
+                                ptrlv.setPullLoadEnable(false);
+                                ptrlv.showEnd("没有更多数据");
+                            }
+                            llOffTheShelf.setVisibility(View.GONE);
+                        }
+                        goodsList.addAll(collectionResponse.resultList);
+                        collectionAdapter.notifyDataSetChanged();
+                        pageIndex++;
+                    } else {
+                        if (pageIndex == 1) {
+                            llOffTheShelf.setVisibility(View.VISIBLE);
+                            ptrlv.setPullLoadEnable(false);
+                        } else {
+                            ptrlv.setPullLoadEnable(false);
+                            ptrlv.showEnd("没有更多数据");
+                        }
+                    }
                 }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
+                if (pageIndex == 1) {
+                    ptrlv.onRefreshComplete();
+                    ptrlv.setPullRefreshEnable(true);
+                }
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
@@ -180,7 +212,7 @@ public class CollectionActivity extends BaseActivity {
      * 清除全选
      */
     public void clearChoose() {
-        if(collectionAdapter == null){
+        if (collectionAdapter == null) {
             return;
         }
         for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
@@ -253,16 +285,17 @@ public class CollectionActivity extends BaseActivity {
      * @param removeList
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(mBaseContext,"123456", skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext, "123460", skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-                if (DELETEONE.equals(type)) {
-                    collectionAdapter.getData().remove(position - 1);
-                } else {
-                    //全选或选择删除
-                    collectionAdapter.getData().removeAll(removeList);
-                }
-                collectionAdapter.notifyDataSetChanged();
+//                if (DELETEONE.equals(type)) {
+//                    collectionAdapter.getData().remove(position - 1);
+//                } else {
+//                    //全选或选择删除
+//                    collectionAdapter.getData().removeAll(removeList);
+//                }
+//                collectionAdapter.notifyDataSetChanged();
+                setData();
                 ToastUtils.showShortToast("删除成功");
             }
 
@@ -272,4 +305,5 @@ public class CollectionActivity extends BaseActivity {
             }
         });
     }
+
 }
