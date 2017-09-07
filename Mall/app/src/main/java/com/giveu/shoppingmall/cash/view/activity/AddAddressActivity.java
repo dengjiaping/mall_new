@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.dialog.ChooseCityDialog;
+import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import butterknife.BindView;
@@ -51,7 +52,7 @@ public class AddAddressActivity extends BaseActivity {
     boolean canCommit = false;//默认不满足条件添加地址
     public static final String ADD = "add";
     public static final String EDIT = "edit";
-
+    private PermissionDialog permissionDialog;
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("type", ADD);
@@ -64,13 +65,21 @@ public class AddAddressActivity extends BaseActivity {
         intent.putExtra("type", EDIT);
         activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
     }
-
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
+        permissionDialog.setNeedFinish(false);
+        permissionDialog.setConfirmStr("去设置");
+        permissionDialog.setCancleStr("暂不");
+        permissionDialog.setTitle("读取通讯录权限未开启");
+    }
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_add_address);
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
         baseLayout.setTitle("订单信息确认");
         baseLayout.setRightTextColor(R.color.color_00bbc0);
+        initPermissionDialog();
         final AddressListResponse item = (AddressListResponse) getIntent().getSerializableExtra("item");
         if (item != null) {
             //修改地址带过来的参数

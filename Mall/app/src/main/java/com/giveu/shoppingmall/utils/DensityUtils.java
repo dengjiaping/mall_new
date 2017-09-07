@@ -44,7 +44,10 @@ public class DensityUtils {
         final float fontScale = BaseApplication.getInstance().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
-
+    public static int px2sp( float pxValue) {
+        final float fontScale =  BaseApplication.getInstance().getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
 
     /**
      * 获取屏幕宽度

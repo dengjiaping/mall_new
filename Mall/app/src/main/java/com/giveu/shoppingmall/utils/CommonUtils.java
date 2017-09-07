@@ -267,8 +267,12 @@ public class CommonUtils {
     public static void setTextWithSpan(final TextView tv, String str1, final String str2, int str1ColorId, final int str2ColorId) {
         tv.setText(StringUtils.getColorSpannable(str1, str2, str1ColorId, str2ColorId));
     }
-
-
+    public static void setTextWithSpanSize(final TextView tv, String str1, final String str2, int str1Dip, final int str2Dip) {
+        tv.setText(StringUtils.getSizeSpannable(str1, str2, str1Dip, str2Dip));
+    }
+    public static void setTextWithSpanSizeAndColor(final TextView tv, String str1, final String str2,final String str3,final String str4, int str1Dip, final int str2Dip,int str1ColorId, final int str2ColorId) {
+        tv.setText(StringUtils.getSizeAndColorSpannable(str1, str2,str3,str4, str1Dip, str2Dip,str1ColorId,str2ColorId));
+    }
     private static boolean isFastDoubleClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
