@@ -9,6 +9,12 @@ import android.widget.RadioGroup;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.index.presenter.CommodityDetailPresenter;
+import com.giveu.shoppingmall.index.view.agent.ICommodityDetailView;
+import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
+import com.giveu.shoppingmall.utils.DateUtil;
+import com.giveu.shoppingmall.utils.LogUtil;
 
 
 /**
@@ -16,13 +22,16 @@ import com.giveu.shoppingmall.base.BaseFragment;
  * 商品介绍
  */
 
-public class CommodityDetailFragment extends BaseFragment {
+public class CommodityDetailFragment extends BaseFragment implements ICommodityDetailView {
     private View view;
     private RadioGroup rgCommodity;
     private WebCommodityFragment introduceFragment;
     private WebCommodityFragment paramsFragment;
     private FragmentManager fragmentManager;
     private boolean fromCommodityDetail;
+    private String skuCode;
+    private CommodityDetailPresenter presenter;
+    private CommodityDetailResponse data;
 
 
     @Override
@@ -31,10 +40,18 @@ public class CommodityDetailFragment extends BaseFragment {
         baseLayout.setTitleBarAndStatusBar(false, false);
         rgCommodity = (RadioGroup) view.findViewById(R.id.rg_commodity);
         fragmentManager = getChildFragmentManager();
+            skuCode = getArguments().getString("skuCode");
+        presenter = new CommodityDetailPresenter(this);
+        LogUtil.e("initView");
+        presenter.getCommodityDetail(skuCode);
         showFragment(0);
         return view;
     }
 
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
+    }
 
     @Override
     public void initDataDelay() {
@@ -62,12 +79,16 @@ public class CommodityDetailFragment extends BaseFragment {
         });
     }
 
+    public void showCommodityIntroduce(){
+        rgCommodity.check(R.id.rb_introduce);
+    }
+
     /**
      * 显示fragment
      *
      * @param index
      */
-    private void showFragment(int index) {
+    public void showFragment(int index) {
         hideFagment();
         switch (index) {
             case 0:
@@ -75,6 +96,9 @@ public class CommodityDetailFragment extends BaseFragment {
                 if (introduceFragment == null) {
                     introduceFragment = new WebCommodityFragment();
                     introduceFragment.setFromCommodityDetail(fromCommodityDetail);
+                    if (data != null) {
+                        introduceFragment.setHtmlStr(data.intruction);
+                    }
                     if (!introduceFragment.isAdded()) {
                         fragmentManager.beginTransaction().add(R.id.mContainer, introduceFragment).commitAllowingStateLoss();
                     }
@@ -86,6 +110,10 @@ public class CommodityDetailFragment extends BaseFragment {
                 if (paramsFragment == null) {
                     paramsFragment = new WebCommodityFragment();
                     paramsFragment.setFromCommodityDetail(fromCommodityDetail);
+                    if (data != null) {
+                        paramsFragment.setHtmlStr(data.param);
+                    }
+
                     if (!paramsFragment.isAdded()) {
                         fragmentManager.beginTransaction().add(R.id.mContainer, paramsFragment).commitAllowingStateLoss();
                     }
@@ -110,5 +138,22 @@ public class CommodityDetailFragment extends BaseFragment {
 
     public void setFromCommodityDetail(boolean fromCommodityDetail) {
         this.fromCommodityDetail = fromCommodityDetail;
+    }
+
+    @Override
+    public void showCommodity(CommodityDetailResponse data) {
+        this.data = data;
+        if (introduceFragment != null) {
+            introduceFragment.setHtmlStr(data.intruction);
+            if (introduceFragment.isAdded()) {
+                introduceFragment.loadHtml(data.intruction);
+            }
+        }
+        if (paramsFragment != null) {
+            paramsFragment.setHtmlStr(data.param);
+            if (paramsFragment.isAdded()) {
+                paramsFragment.loadHtml(data.param);
+            }
+        }
     }
 }

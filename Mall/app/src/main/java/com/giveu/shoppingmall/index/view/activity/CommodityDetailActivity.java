@@ -57,10 +57,12 @@ public class CommodityDetailActivity extends BaseActivity {
     private CommodityDetailFragment commodityDetailFragment;
     private String[] tabTitles = new String[]{"商品", "详情"};
     private boolean isCredit;
+    private String skuCode;
 
-    public static void startIt(Context context, boolean isCredit) {
+    public static void startIt(Context context, boolean isCredit,String skuCode) {
         Intent intent = new Intent(context, CommodityDetailActivity.class);
         intent.putExtra("isCredit", isCredit);
+        intent.putExtra("skuCode", skuCode);
         context.startActivity(intent);
     }
 
@@ -70,11 +72,17 @@ public class CommodityDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_commodity_detail);
         baseLayout.setTitleBarAndStatusBar(false, false);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
+        skuCode = getIntent().getStringExtra("skuCode");
+
         commodityInfoFragment = new CommodityInfoFragment();
         Bundle infoBundle = new Bundle();
         infoBundle.putBoolean("isCredit", isCredit);
+        infoBundle.putString("skuCode", skuCode);
         commodityInfoFragment.setArguments(infoBundle);
         commodityDetailFragment = new CommodityDetailFragment();
+        Bundle detailBundle = new Bundle();
+        detailBundle.putString("skuCode", skuCode);
+        commodityDetailFragment.setArguments(detailBundle);
         //为了解决滑动冲突，在商品详情页时（是左右滑动的详情页而不是上下滑动产生的详情页），webview左右滑动禁止，以便让viewpager能够滑动
         commodityDetailFragment.setFromCommodityDetail(true);
         fragmentList.add(commodityInfoFragment);
@@ -151,6 +159,7 @@ public class CommodityDetailActivity extends BaseActivity {
 
     public void showCommodityDetail() {
         vpContent.setCurrentItem(1, false);
+        commodityDetailFragment.showCommodityIntroduce();
     }
 
     @Override

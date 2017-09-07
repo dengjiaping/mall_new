@@ -50,6 +50,7 @@
                         android:paddingTop="7dp">
 
                         <TextView
+                            android:id="@+id/tv_commodit_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="22dp"
@@ -60,6 +61,7 @@
                             android:textSize="@dimen/ts_15" />
 
                         <TextView
+                            android:id="@+id/tv_introduction"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="22dp"
@@ -85,6 +87,7 @@
                                 android:textSize="@dimen/ts_15" />
 
                             <TextView
+                                android:id="@+id/tv_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="3dp"
@@ -141,6 +144,7 @@
                         app:text_middle_color="@color/color_364343" />
 
                     <com.giveu.shoppingmall.widget.DetailView
+                        android:id="@+id/dv_stock"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:iv_right_visible="GONE"
