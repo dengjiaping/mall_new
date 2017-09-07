@@ -194,5 +194,4 @@ dependencies {
     //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     //6.0动态获取权限
     compile project(':permission')
-    compile 'com.alibaba:fastjson:1.2.37'
 }

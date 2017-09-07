@@ -28,12 +28,12 @@ public class WebCommodityFragment extends Fragment {
     private View view;
     private CommodityWebView wvCommodity;
     private WebSettings webSettings;
-    private String url = "http://m.okhqb.com/item/description/1000334264.html?fromApp=true";
     private boolean fromCommodityDetail;
     private ImageView fab_up_slide;
     private ScrollView mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
+    private String htmlStr;
 
     @Nullable
     @Override
@@ -63,20 +63,15 @@ public class WebCommodityFragment extends Fragment {
         }
         wvCommodity.fromCommodityDetail(fromCommodityDetail);
         wvCommodity.setFocusable(false);
-        wvCommodity.loadUrl(url);
         webSettings = wvCommodity.getSettings();
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setBuiltInZoomControls(false);
-        webSettings.setLoadsImagesAutomatically(true);
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setBlockNetworkImage(true);
         webSettings.setUseWideViewPort(true);
+        webSettings.setJavaScriptEnabled(true);//支持js
+        webSettings.setLoadWithOverviewMode(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         wvCommodity.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                webSettings.setBlockNetworkImage(false);
             }
         });
         if (fromCommodityDetail) {
@@ -106,11 +101,25 @@ public class WebCommodityFragment extends Fragment {
                 mScrollView.smoothScrollTo(0, 0);
             }
         });
+        wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
     }
+
+
 
     public void setFromCommodityDetail(boolean fromCommodityDetail) {
         this.fromCommodityDetail = fromCommodityDetail;
     }
+
+    public void loadHtml(String htmlStr) {
+        if (wvCommodity != null) {
+            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
+        }
+    }
+
+    public void setHtmlStr(String htmlStr) {
+        this.htmlStr = htmlStr;
+    }
+
 
     @Override
     public void onPause() {

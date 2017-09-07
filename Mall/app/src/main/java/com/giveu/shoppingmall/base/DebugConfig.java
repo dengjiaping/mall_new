@@ -31,7 +31,8 @@ public class DebugConfig {
         }
     }
 
-    private static String DOMAIN_DEV = "http://devdfshop.dafycredit.cn:9000/";//开发域名
+//    private static String DOMAIN_DEV = "http://devdfshop.dafycredit.cn:9000/";//开发域名
+    private static String DOMAIN_DEV = "http://10.10.11.140:9000/";//开发域名
     private static String DOMAIN_TEST = " http://dafyshop.dafysz.cn:10001/";//测试域名
     private static String DOMAIN_ONLINE = "http://dafyshop01.dafysz.cn/";//正式域名
 

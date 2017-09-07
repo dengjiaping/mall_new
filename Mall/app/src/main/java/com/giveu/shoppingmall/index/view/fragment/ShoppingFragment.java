@@ -2,29 +2,27 @@ package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
+import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
-import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -53,7 +51,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private ShoppingAdapter shoppingAdapter;
     private View headerView;
     private Banner banner;
-//    private ShoppingPresenter presenter;
+    private ShoppingPresenter presenter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,16 +88,17 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             statusView.setVisibility(View.GONE);
         }
-//        presenter = new ShoppingPresenter(this);
+        presenter = new ShoppingPresenter(this);
         return view;
     }
 
-    /*@Override
+
+    @Override
     protected BasePresenter[] initPresenters() {
         return new BasePresenter[]{presenter};
-    }*/
+    }
 
-    /**
+   /**
      * 头布局
      */
     private void initHeaderView() {
@@ -120,7 +119,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         banner.setPageTransformer(false, new FlipHorizontalTransformer());
         //设置图片加载器
         banner.setImageLoader(new BannerImageLoader());
-        banner.setPageTransformer(false,new DefaultTransformer());
+        banner.setPageTransformer(false, new DefaultTransformer());
         //设置图片集合
         final List<String> images = new ArrayList<String>();
         images.add("http://pic28.nipic.com/20130422/2547764_110759716145_2.jpg");
@@ -149,6 +148,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initHot() {
         NoScrollGridView gvHot = (NoScrollGridView) headerView.findViewById(R.id.gv_hot);
+        headerView.findViewById(R.id.shopping_hot_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingClassifyActivity.startIt(mBaseContext);
+            }
+        });
+
         ArrayList<String> hotList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             hotList.add(i + "");
@@ -199,6 +205,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         gvCategory.setAdapter(commonAdapter);
     }
 
+
+    @Override
+    protected void setListener() {
+
+    }
+
     /**
      * 更多类目
      */
@@ -223,8 +235,11 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         banner.stopAutoPlay();
     }
 
-    @Override
+
+
+/*    @Override
     protected void setListener() {
+<<<<<<< HEAD
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
             private SparseArray<ItemRecod> recordSp = new SparseArray<>(0);
             private int mCurrentfirstVisibleItem = 0;
@@ -234,10 +249,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 //滑动时停止图片加载，停止轮播，停止滑动时恢复
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     ImageLoader.getInstance().resume();
-                    banner.stopAutoPlay();
+//                    banner.stopAutoPlay();
                 } else {
                     ImageLoader.getInstance().pause();
-                    banner.stopAutoPlay();
+//                    banner.stopAutoPlay();
                 }
 
             }
@@ -304,18 +319,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void initDataDelay() {
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 }

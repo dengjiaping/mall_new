@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -17,7 +15,10 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,16 +84,20 @@ public class ShoppingSearchActivity extends BaseActivity {
     }
 
     private void refreshHotWorlds() {
-        ApiImpl.refreshHotWords(new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.refreshHotWords(mBaseContext, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-                JSONObject jsonObject = JSONObject.parseObject(response.originResultString);
-                JSONArray datas = jsonObject.getJSONArray("data");
-                if (datas != null) {
+                try {
+                    JSONObject json = new JSONObject(response.originResultString);
+                    List<String> list = new Gson().fromJson(json.getString("data"), new TypeToken<List<String>>() {
+                    }.getType());
                     labels.clear();
-                    labels.addAll(datas.toJavaList(String.class));
+                    labels.addAll(list);
                     mTagAdapter.notifyDataChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
