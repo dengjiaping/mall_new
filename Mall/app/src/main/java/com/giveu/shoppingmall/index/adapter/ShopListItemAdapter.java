@@ -26,7 +26,8 @@ public class ShopListItemAdapter extends LvCommonAdapter {
         viewHolder.setOnClickListener(R.id.item_layout, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommodityDetailActivity.startIt(mContext, true);
+                //K00002691可以分期   K00002713可以一次
+                CommodityDetailActivity.startIt(mContext, true,"K00002691");
             }
         });
     }

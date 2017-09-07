@@ -72,7 +72,7 @@ import static java.lang.System.currentTimeMillis;
 public class MainActivity extends BasePermissionActivity {
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
-//    private ShoppingFragment shoppingFragment;
+    private ShoppingFragment shoppingFragment;
     //    public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
     @BindView(R.id.iv_recharge)
@@ -122,12 +122,12 @@ public class MainActivity extends BasePermissionActivity {
         manager = getSupportFragmentManager();
 
         fragmentList = new ArrayList<>();
-//        shoppingFragment = new ShoppingFragment();
-        rechargeFragment = new RechargeFragment();
+        shoppingFragment = new ShoppingFragment();
+//        rechargeFragment = new RechargeFragment();
         mainCashFragment = new MainCashFragment();
 //        mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
-//        fragmentList.add(shoppingFragment);
+        fragmentList.add(shoppingFragment);
         fragmentList.add(mainCashFragment);
 //        fragmentList.add(mainRepayFragment);
         fragmentList.add(mainMeFragment);

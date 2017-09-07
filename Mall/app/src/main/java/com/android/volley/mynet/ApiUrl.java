@@ -169,5 +169,12 @@ public interface ApiUrl {
     String order_orderLogistics = BASE_URL + "order/orderLogistics";
     //搜索热词刷新
     String search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    //商品介绍
+    String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/intruction";
+    //商品详情
+    String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
+    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    //一级类目查询子类目(商品分类)
+    String shopping_classify_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
 }
 

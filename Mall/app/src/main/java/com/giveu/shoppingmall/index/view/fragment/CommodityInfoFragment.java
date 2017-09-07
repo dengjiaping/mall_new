@@ -1,7 +1,6 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +12,24 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
+import com.giveu.shoppingmall.index.presenter.CommodityInfoPresenter;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
+import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.PullDetailLayout;
 import com.giveu.shoppingmall.widget.dialog.ChooseCityDialog;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
-import com.youth.banner.Transformer;
-import com.youth.banner.listener.OnBannerListener;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -46,7 +45,7 @@ import static com.giveu.shoppingmall.R.id.sv_switch;
  * 商品信息
  */
 
-public class CommodityInfoFragment extends BaseFragment implements PullDetailLayout.OnSlideDetailsListener {
+public class CommodityInfoFragment extends BaseFragment implements ICommodityInfoView, PullDetailLayout.OnSlideDetailsListener {
     @BindView(R.id.iv_arrow)
     ImageView ivArrow;
     @BindView(R.id.banner)
@@ -67,23 +66,44 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
     PullDetailLayout svSwitch;
     @BindView(fab_up_slide)
     ImageView fabUpSlide;
+    @BindView(R.id.tv_commodit_name)
+    TextView tvCommoditName;
+    @BindView(R.id.tv_introduction)
+    TextView tvIntroduction;
+    @BindView(R.id.tv_price)
+    TextView tvPrice;
+    @BindView(R.id.dv_stock)
+    DetailView dvStock;
     private View view;
     private CommodityDetailFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
     private BuyCommodityDialog buyDialog;//商品属性对话框
     private ChooseCityDialog chooseCityDialog;
-    private boolean isCredit;
+    private boolean isCredit;//分期商品还是一次性商品
+    private String skuCode;
+    private CommodityInfoPresenter presenter;
 
-    @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_commodity_info, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         ButterKnife.bind(this, view);
-        initView();
-        initListener();
+
         activity = (CommodityDetailActivity) mBaseContext;
+        presenter = new CommodityInfoPresenter(this);
+        isCredit = getArguments().getBoolean("isCredit", false);
+        skuCode = getArguments().getString("skuCode");
+        buyDialog = new BuyCommodityDialog(mBaseContext);
+        chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        initListener();
+        initBanner();
         return view;
     }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
+    }
+
 
     @Override
     protected void setListener() {
@@ -91,8 +111,12 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
     }
 
 
-    private void initView() {
+    private void initBanner() {
         commodityDetailFragment = new CommodityDetailFragment();
+        Bundle detailBundle = new Bundle();
+        detailBundle.putString("skuCode", skuCode);
+        commodityDetailFragment.setArguments(detailBundle);
+        commodityDetailFragment.setFromCommodityDetail(false);
         getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
         banner = (Banner) view.findViewById(R.id.banner);
         banner.getLayoutParams().height = DensityUtils.getWidth();
@@ -100,33 +124,12 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
         //设置图片加载器
         banner.setImageLoader(new BannerImageLoader());
-        //设置图片集合
-        final List<String> images = new ArrayList<String>();
-        images.add("http://pic28.nipic.com/20130422/2547764_110759716145_2.jpg");
-        images.add("http://pic27.nipic.com/20130319/10415779_103704478000_2.jpg");
-        images.add("http://img5.imgtn.bdimg.com/it/u=2062816722,137475371&fm=26&gp=0.jpg");
-        images.add("http://img.taopic.com/uploads/allimg/120222/34250-12022209414087.jpg");
-        images.add("http://sc.jb51.net/uploads/allimg/131031/2-13103115593HY.jpg");
-        banner.setImages(images);
-        banner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                LogUtil.e(images.get(position));
-            }
-        });
-        //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
-        //设置标题集合（当banner样式有显示title时）
-        banner.setBannerTitles(images);
         //设置轮播时间
         banner.setDelayTime(2000);
         //设置指示器位置（当banner模式中有指示器时）
         banner.setIndicatorGravity(BannerConfig.CENTER);
         //banner设置方法全部调用完毕时最后调用
         banner.start();
-        isCredit = getArguments().getBoolean("isCredit", false);
-        buyDialog = new BuyCommodityDialog(mBaseContext);
-        chooseCityDialog = new ChooseCityDialog(mBaseContext);
     }
 
     private void initListener() {
@@ -199,6 +202,8 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
 
     @Override
     public void initDataDelay() {
+        //K00002691可以分期   K00002713可以一次
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "qq", "K00002713");
 
     }
 
@@ -228,47 +233,20 @@ public class CommodityInfoFragment extends BaseFragment implements PullDetailLay
     }
 
     @Override
+    public void showSkuIntroduction(SkuIntroductionResponse skuResponse) {
+        if (skuResponse.skuInfo != null) {
+            banner.update(skuResponse.skuInfo.srcs);
+            tvCommoditName.setText(skuResponse.skuInfo.name);
+            tvPrice.setText("¥" + skuResponse.skuInfo.salePrice);
+            tvIntroduction.setText(skuResponse.skuInfo.adwords);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
         return rootView;
-    }
-
-    public class ImageAdapter extends PagerAdapter {
-
-        private ArrayList<String> imageList;
-
-        public ImageAdapter(ArrayList<String> imageList) {
-            this.imageList = imageList;
-        }
-
-        @Override
-        public int getCount() {
-            if (imageList == null) {
-                return 0;
-            }
-            return imageList.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = new ImageView(container.getContext());
-            imageView.setImageResource(R.mipmap.ic_launcher);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
-            imageView.setLayoutParams(params);
-            container.addView(imageView);
-            return imageView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
     }
 }
