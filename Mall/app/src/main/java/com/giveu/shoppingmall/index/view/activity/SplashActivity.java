@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
@@ -95,6 +96,7 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
+
         startCountTime();
     }
 
@@ -129,6 +131,9 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     private void startCountTime() {
+        SharePrefUtil.getUUId();//拿到imei权限后，生成并存储唯一标识
+        BaseApplication.getInstance().initTokenDaemon();//调用第一个接口
+
         //获取权限后停留在该界面已有一段时间,为避免进入下一界面时等待时间过长，
         // 所以获取权限后，handler的delay时间应该减少
         long currentTimeMillis = System.currentTimeMillis();

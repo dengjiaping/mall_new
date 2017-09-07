@@ -65,15 +65,14 @@ public class BaseApplication extends MultiDexApplication {
             InitializeService.startIt(this);
             initPush();
             initImageLoader();
-            initTokenDaemon();
         }
     }
 
 
     /**
-     * 10分钟调一次获取token
+     * 这是第一个请求，在获取到imei权限后调用，10分钟调一次获取token
      */
-    private void initTokenDaemon() {
+    public void initTokenDaemon() {
         tokenTimer = new Timer();
         tokenTimer.schedule(new TimerTask() {
             @Override
