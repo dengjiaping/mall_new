@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 
 /**
  * Created by zlt on 2017/9/2.
+ * 左侧固定内容的EditText
+ * 用于回复/评论
  */
 
 public class StableEditText extends android.support.v7.widget.AppCompatEditText {
