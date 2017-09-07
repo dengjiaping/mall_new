@@ -56,19 +56,19 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
         public List<ServiceSafeguardsBean> serviceSafeguards;
         public List<String> srcs;
 
-        public static class ServiceSafeguardsBean {
-            /**
-             * detail : 商品供货由京东提供，保证正品货源
-             * name : 正品保证
-             * src : http://fastdfs.dafysz.cnnull
-             */
 
-            public String detail;
-            public String name;
-            public String src;
-        }
     }
+    public static class ServiceSafeguardsBean {
+        /**
+         * detail : 商品供货由京东提供，保证正品货源
+         * name : 正品保证
+         * src : http://fastdfs.dafysz.cnnull
+         */
 
+        public String detail;
+        public String name;
+        public String src;
+    }
     public static class SkuSpecsBean {
         /**
          * specValues : [{"skuCodes":["K00002719"],"skuIds":[40],"specValue":"全网通（4GB 32GB）"}]
@@ -80,16 +80,17 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
         public int specId;
         public List<SpecValuesBean> specValues;
 
-        public static class SpecValuesBean {
-            /**
-             * skuCodes : ["K00002719"]
-             * skuIds : [40]
-             * specValue : 全网通（4GB 32GB）
-             */
 
-            public String specValue;
-            public List<String> skuCodes;
-            public List<Integer> skuIds;
-        }
+    }
+    public static class SpecValuesBean {
+        /**
+         * skuCodes : ["K00002719"]
+         * skuIds : [40]
+         * specValue : 全网通（4GB 32GB）
+         */
+
+        public String specValue;
+        public List<String> skuCodes;
+        public List<Integer> skuIds;
     }
 }

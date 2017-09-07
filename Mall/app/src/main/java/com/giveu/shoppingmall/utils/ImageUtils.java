@@ -78,7 +78,7 @@ public class ImageUtils {
         Bitmap bitmap = decodeScaleImage(path, 720, 1280);
         if (bitmap == null && isNeedDefaultPic) {
             try {
-                bitmap = BitmapFactory.decodeResource(BaseApplication.getInstance().getResources(), R.drawable.bg_photobg_fang);
+                bitmap = BitmapFactory.decodeResource(BaseApplication.getInstance().getResources(), R.drawable.ic_default_pic);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -286,11 +286,11 @@ public class ImageUtils {
      * 使用默认占位图
      */
     public static void loadImage(String url, ImageView intoImageView) {
-        loadImage(url, R.drawable.bg_photobg_fang, intoImageView);
+        loadImage(url, R.drawable.ic_default_pic, intoImageView);
     }
 
     public static void loadImageWithCornerRadius(String url, ImageView intoImageView, int cornerRadius) {
-        loadImageWithCorner(url, R.drawable.bg_photobg_fang, intoImageView, cornerRadius);
+        loadImageWithCorner(url, R.drawable.ic_default_pic, intoImageView, cornerRadius);
     }
 
     /**
@@ -310,7 +310,7 @@ public class ImageUtils {
      * 加载本地图片
      */
     public static void loadImage(String imageLoaderType, final String localImagePath, ImageView imageView) {
-        loadImage(imageLoaderType + localImagePath, R.drawable.bg_photobg_fang, imageView);
+        loadImage(imageLoaderType + localImagePath, R.drawable.ic_default_pic, imageView);
     }
 
     public interface ImageLoaderType {

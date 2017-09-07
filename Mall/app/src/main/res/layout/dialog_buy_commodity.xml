@@ -50,6 +50,7 @@
             android:background="@drawable/shape_grey_line">
 
             <ImageView
+                android:id="@+id/iv_reduce"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:padding="10dp"
@@ -61,6 +62,7 @@
                 android:background="@color/color_d8d8d8" />
 
             <TextView
+                android:id="@+id/tv_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -76,6 +78,7 @@
                 android:background="@color/color_d8d8d8" />
 
             <ImageView
+                android:id="@+id/iv_plus"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:padding="10dp"

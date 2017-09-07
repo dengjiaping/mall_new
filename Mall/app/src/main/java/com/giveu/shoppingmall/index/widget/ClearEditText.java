@@ -16,6 +16,8 @@ import com.giveu.shoppingmall.R;
 
 /**
  * Created by 524202 on 2017/9/5.
+ * 带清除按钮的EditText,可用于快速清除EditText内容
+ * 用于搜索/输入等
  */
 
 public class ClearEditText extends EditText implements

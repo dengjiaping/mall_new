@@ -6,6 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
 
+/**
+ * Created by 524202 on 2017/9/7.
+ * 图片和文字居中的RadioButton,可充当TextView使用
+ * 用于价格排序切换按钮
+ */
 public class MiddleRaidoButton extends RadioButton {
 
     public MiddleRaidoButton(Context context, AttributeSet attrs, int defStyle) {

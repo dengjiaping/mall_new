@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.index.bean.ShoppingBean;
-import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
-import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
+import com.giveu.shoppingmall.model.bean.response.ShoppingBean;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
+import com.giveu.shoppingmall.utils.ImageUtils;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ import java.util.List;
  * Created by 524202 on 2017/9/4.
  */
 
-public class GodsAdapter extends RecyclerView.Adapter {
+public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassifyContentAdapter.TitleHolder> {
 
     private List<ShoppingBean> datas;
     private Context mContext;
 
-    public GodsAdapter(Context context, List<ShoppingBean> lists) {
+    public ShopClassifyContentAdapter(Context context, List<ShoppingBean> lists) {
         mContext = context;
         datas = lists;
     }
@@ -36,8 +36,8 @@ public class GodsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+    public TitleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
         if (viewType == 0) {
             view = LayoutInflater.from(mContext).inflate(R.layout.adapter_shopping_classify_title_item, null);
             return new TitleHolder(view);
@@ -49,13 +49,15 @@ public class GodsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(TitleHolder holder, final int position) {
         int type = getItemViewType(position);
-        if (type == 0) {
-            TitleHolder titleHolder = (TitleHolder) holder;
-            titleHolder.textView.setText(datas.get(position).getTitle());
-        } else if (type == 1) {
-            final ContentHolder contentHolder = (ContentHolder) holder;
+        holder.textView.setText(datas.get(position).getTypesBean().getName());
+        if (type == 1) {
+            ContentHolder contentHolder = (ContentHolder) holder;
+            String iconUrl = datas.get(position).getTypesBean().getIconSrc();
+            if (iconUrl != null) {
+                ImageUtils.loadImage(iconUrl, R.drawable.classify_default, contentHolder.image);
+            }
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -73,18 +75,20 @@ public class GodsAdapter extends RecyclerView.Adapter {
     class TitleHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
-        public TitleHolder(View itemView) {
+        TitleHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.item_text);
+            textView = (TextView) itemView.findViewById(R.id.item_content_text);
         }
     }
 
-    class ContentHolder extends RecyclerView.ViewHolder {
+    private class ContentHolder extends TitleHolder {
         LinearLayout layout;
+        ImageView image;
 
-        public ContentHolder(View itemView) {
+        ContentHolder(View itemView) {
             super(itemView);
             layout = (LinearLayout) itemView.findViewById(R.id.item_content_ll);
+            image = (ImageView) itemView.findViewById(R.id.item_content_image);
         }
     }
 }
