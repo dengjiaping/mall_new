@@ -22,7 +22,6 @@ import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.PullDetailLayout;
 import com.giveu.shoppingmall.widget.dialog.ChooseCityDialog;
@@ -74,6 +73,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     TextView tvPrice;
     @BindView(R.id.dv_stock)
     DetailView dvStock;
+    @BindView(R.id.dv_supply)
+    DetailView dvSupply;
     private View view;
     private CommodityDetailFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
@@ -203,7 +204,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     @Override
     public void initDataDelay() {
         //K00002691可以分期   K00002713可以一次
-        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "qq", "K00002713");
+        presenter.getSkuIntroduce("1234567", "SC", "K00002713");
 
     }
 
@@ -237,8 +238,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         if (skuResponse.skuInfo != null) {
             banner.update(skuResponse.skuInfo.srcs);
             tvCommoditName.setText(skuResponse.skuInfo.name);
-            tvPrice.setText("¥" + skuResponse.skuInfo.salePrice);
+            tvPrice.setText(skuResponse.skuInfo.salePrice);
             tvIntroduction.setText(skuResponse.skuInfo.adwords);
+            activity.setCollectStatus(skuResponse.collectStatus);
+            dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
+            buyDialog.setData(skuResponse.skuSpecs);
         }
     }
 

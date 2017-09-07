@@ -10,12 +10,12 @@ import android.widget.LinearLayout;
 
 /**
  * Created by 524202 on 2017/9/1.
+ * 使用该嵌套布局,左右滑动可以显示/隐藏布局内的第一个View
+ * 用于商品分类
  */
 
 public class WrapLayout extends LinearLayout {
     private View lChild;
-    private View rChild;
-    private Context context;
 
     private int lChildWidth;
     private int lChildTempW;
@@ -47,8 +47,6 @@ public class WrapLayout extends LinearLayout {
 
         setOrientation(HORIZONTAL);
         lChild = getChildAt(0);
-        rChild = getChildAt(1);
-
     }
 
     @Override

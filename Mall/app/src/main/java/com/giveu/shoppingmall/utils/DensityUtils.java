@@ -22,12 +22,11 @@ public class DensityUtils {
     /**
      * px转DIP
      *
-     * @param context
      * @param pxValue
      * @return
      */
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dip(float pxValue) {
+        final float scale = BaseApplication.getInstance().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -44,7 +43,10 @@ public class DensityUtils {
         final float fontScale = BaseApplication.getInstance().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
-
+    public static int px2sp( float pxValue) {
+        final float fontScale =  BaseApplication.getInstance().getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
 
     /**
      * 获取屏幕宽度

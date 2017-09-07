@@ -124,6 +124,7 @@
                         app:text_middle_color="@color/color_364343" />
 
                     <com.giveu.shoppingmall.widget.DetailView
+                        android:id="@+id/dv_supply"
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
                         android:layout_marginTop="1dp"

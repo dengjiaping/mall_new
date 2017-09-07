@@ -21,6 +21,7 @@
     <ImageView
         android:id="@+id/iv_goods"
         android:layout_width="120dp"
+        android:padding="12dp"
         android:layout_height="match_parent"
         android:src="@drawable/defalut_img_88_88" />
 
@@ -38,6 +39,18 @@
             android:text="vivo Y55全网通高通8核超薄5.2英寸大屏4G智能美颜自拍手机"
             android:textColor="@color/color_3e3e3e"
             android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_invalid"
+            android:layout_width="33dp"
+            android:layout_height="15dp"
+            android:background="@drawable/shape_text_invalid"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="失效"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_10" />
 
         <View
             android:layout_width="match_parent"
@@ -60,5 +73,10 @@
             android:text="￥6880.00"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_13" />
+        <View
+            android:layout_height="1px"
+            android:layout_width="match_parent"
+            android:background="@color/line_bg"/>
     </LinearLayout>
+
 </LinearLayout>

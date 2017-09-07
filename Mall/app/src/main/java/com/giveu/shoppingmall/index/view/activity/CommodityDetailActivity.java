@@ -56,10 +56,10 @@ public class CommodityDetailActivity extends BaseActivity {
     private CommodityInfoFragment commodityInfoFragment;
     private CommodityDetailFragment commodityDetailFragment;
     private String[] tabTitles = new String[]{"商品", "详情"};
-    private boolean isCredit;
+    private boolean isCredit;//是否分期产品
     private String skuCode;
 
-    public static void startIt(Context context, boolean isCredit,String skuCode) {
+    public static void startIt(Context context, boolean isCredit, String skuCode) {
         Intent intent = new Intent(context, CommodityDetailActivity.class);
         intent.putExtra("isCredit", isCredit);
         intent.putExtra("skuCode", skuCode);
@@ -73,12 +73,13 @@ public class CommodityDetailActivity extends BaseActivity {
         baseLayout.setTitleBarAndStatusBar(false, false);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
         skuCode = getIntent().getStringExtra("skuCode");
-
+        //商品介绍
         commodityInfoFragment = new CommodityInfoFragment();
         Bundle infoBundle = new Bundle();
         infoBundle.putBoolean("isCredit", isCredit);
         infoBundle.putString("skuCode", skuCode);
         commodityInfoFragment.setArguments(infoBundle);
+        //商品详情
         commodityDetailFragment = new CommodityDetailFragment();
         Bundle detailBundle = new Bundle();
         detailBundle.putString("skuCode", skuCode);
@@ -94,13 +95,13 @@ public class CommodityDetailActivity extends BaseActivity {
         ivCollect.setTag(false);
         //是否分期产品，分期产品显示月供
         if (isCredit) {
-            llCollect.getLayoutParams().width = DensityUtils.dip2px(140);
-            llCredit.setVisibility(View.GONE);
-            viewDivider.setVisibility(View.GONE);
-        } else {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
             llCredit.setVisibility(View.VISIBLE);
             viewDivider.setVisibility(View.VISIBLE);
+        } else {
+            llCollect.getLayoutParams().width = DensityUtils.dip2px(140);
+            llCredit.setVisibility(View.GONE);
+            viewDivider.setVisibility(View.GONE);
         }
     }
 
@@ -113,14 +114,26 @@ public class CommodityDetailActivity extends BaseActivity {
      * 收藏商品
      */
     private void collectCommodity() {
-        ivCollect.setImageResource(R.drawable.ic_collect_select);
-        tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+        setCollectStatus(1);
         ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleY", 1f, 1.5f, 1f);
         ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleX", 1f, 1.5f, 1f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(scaleXAnimator).with(scaleYAnimator);
         animSet.setDuration(500);
         animSet.start();
+    }
+
+    /**
+     * 0 未收藏， 1已收藏
+     * @param collectStatus
+     */
+    public void setCollectStatus(int collectStatus) {
+        if(collectStatus == 1) {
+            ivCollect.setImageResource(R.drawable.ic_collect_select);
+            tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+        }else {
+            cancelCollect();
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.utils.LogUtil;
 
 import java.util.List;
 
