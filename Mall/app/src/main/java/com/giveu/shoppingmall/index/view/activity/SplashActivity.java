@@ -97,8 +97,6 @@ public class SplashActivity extends BasePermissionActivity {
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
 
-        SharePrefUtil.getUUId();//拿到imei权限后，生成并存储唯一标识
-        BaseApplication.getInstance().initTokenDaemon();
         startCountTime();
     }
 
@@ -133,6 +131,9 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     private void startCountTime() {
+        SharePrefUtil.getUUId();//拿到imei权限后，生成并存储唯一标识
+        BaseApplication.getInstance().initTokenDaemon();//调用第一个接口
+
         //获取权限后停留在该界面已有一段时间,为避免进入下一界面时等待时间过长，
         // 所以获取权限后，handler的delay时间应该减少
         long currentTimeMillis = System.currentTimeMillis();
