@@ -1,4 +1,4 @@
-package com.giveu.shoppingmall.index.widget;
+package com.giveu.shoppingmall.utils;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,8 +45,6 @@ public class RecyclerViewScrollHelper {
             lastPosition = ((LinearLayoutManager) mManager).findLastVisibleItemPosition();
         }
 
-        Log.d("first--->", String.valueOf(firstPosition));
-        Log.d("last--->", String.valueOf(lastPosition));
         if (pos <= firstPosition || pos > lastPosition) {
             rv.scrollToPosition(pos);
         } else {
@@ -73,10 +71,8 @@ public class RecyclerViewScrollHelper {
                     firstPosition = ((LinearLayoutManager) manager).findFirstVisibleItemPosition();
                 }
                 int n = mIndex - firstPosition;
-                Log.d("n---->", String.valueOf(n));
                 if (0 <= n && n < recyclerView.getChildCount()) {
                     int top = recyclerView.getChildAt(n).getTop();
-                    Log.d("top--->", String.valueOf(top));
                     recyclerView.smoothScrollBy(0, top);
                 }
             }

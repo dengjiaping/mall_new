@@ -21,8 +21,8 @@ public class ShopTypesBean extends BaseBean<List<ShopTypesBean>> {
     private int id;
     private String name;
     private int parentId;
-    private Object iconSrc;
-    private List<ChildBean> child;
+    private String iconSrc;
+    private List<ShopTypesBean> child;
 
     public int getId() {
         return id;
@@ -48,75 +48,19 @@ public class ShopTypesBean extends BaseBean<List<ShopTypesBean>> {
         this.parentId = parentId;
     }
 
-    public Object getIconSrc() {
+    public String getIconSrc() {
         return iconSrc;
     }
 
-    public void setIconSrc(Object iconSrc) {
+    public void setIconSrc(String iconSrc) {
         this.iconSrc = iconSrc;
     }
 
-    public List<ChildBean> getChild() {
+    public List<ShopTypesBean> getChild() {
         return child;
     }
 
-    public void setChild(List<ChildBean> child) {
+    public void setChild(List<ShopTypesBean> child) {
         this.child = child;
-    }
-
-    public static class ChildBean {
-        /**
-         * id : 3
-         * name : iPhone7
-         * parentId : 2
-         * iconSrc : http://fastdfs.dafysz.cn/group1/M00/00/84/CgoLiFkpQ-aAUiEDAAAMI-eSuo4981.jpg
-         * child : null
-         */
-
-        private int id;
-        private String name;
-        private int parentId;
-        private String iconSrc;
-        private Object child;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getParentId() {
-            return parentId;
-        }
-
-        public void setParentId(int parentId) {
-            this.parentId = parentId;
-        }
-
-        public String getIconSrc() {
-            return iconSrc;
-        }
-
-        public void setIconSrc(String iconSrc) {
-            this.iconSrc = iconSrc;
-        }
-
-        public Object getChild() {
-            return child;
-        }
-
-        public void setChild(Object child) {
-            this.child = child;
-        }
     }
 }
