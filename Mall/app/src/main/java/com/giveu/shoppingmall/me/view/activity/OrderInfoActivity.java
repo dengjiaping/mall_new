@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.mynet.BaseBean;
-import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
@@ -22,16 +20,13 @@ import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
-import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -104,6 +99,16 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     CheckBox cbContract;
     @BindView(R.id.rl_footer)
     RelativeLayout rlFooter;
+    @BindView(R.id.ll_entity_goods)
+    LinearLayout llEntityGoods;
+    @BindView(R.id.ll_virtual_goods)
+    LinearLayout llVirtualGoods;
+    @BindView(R.id.ll_user_comments)
+    LinearLayout llUserComments;
+    @BindView(R.id.tv_recharge_phone)
+    TextView tvRechargePhone;
+    @BindView(R.id.tv_recharge_denomination)
+    TextView tvRechargeDenomination;
 
     private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
@@ -137,6 +142,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
+        //区分京东商品和话费流量商品
+        showUIByOrderType(response.orderType);
         //底部按钮
         dealFooterView(response.status);
         //倒计时
@@ -202,7 +209,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //商品数量
         if (StringUtils.isNotNull(response.skuInfo.quantity)) {
+            tvQuantity.setVisibility(View.VISIBLE);
             tvQuantity.setText("×" + response.skuInfo.quantity);
+        } else {
+            tvQuantity.setVisibility(View.GONE);
         }
         //商品合计
         if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
@@ -247,6 +257,16 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //支付金额
         if (StringUtils.isNotNull(response.totalPrice)) {
             tvTotal.setText("¥" + response.totalPrice);
+        }
+
+        //充值号码
+        if (StringUtils.isNotNull(response.rechargePhone)) {
+            tvRechargePhone.setText(response.rechargePhone);
+        }
+
+        //充值面额
+        if (StringUtils.isNotNull(response.rechargeDenomination)) {
+            tvRechargeDenomination.setText(response.rechargeDenomination);
         }
 
     }
@@ -296,6 +316,24 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
         }
     }
+
+    /**
+     * 订单类型:0-京东商品，1-流量，2-话费
+     * 实体商品和虚拟商品显示界面不同
+     * 这是处理方法
+     */
+    private void showUIByOrderType(int orderType) {
+        if (orderType == 0) {
+            llEntityGoods.setVisibility(View.VISIBLE);
+            llUserComments.setVisibility(View.VISIBLE);
+            llVirtualGoods.setVisibility(View.GONE);
+        } else {
+            llEntityGoods.setVisibility(View.GONE);
+            llUserComments.setVisibility(View.GONE);
+            llVirtualGoods.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * 底部有三种样式，这是处理方法

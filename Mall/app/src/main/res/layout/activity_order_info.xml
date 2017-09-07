@@ -73,13 +73,14 @@
                         android:paddingBottom="5dp"
                         android:paddingRight="15dp"
                         android:paddingTop="5dp"
-                        android:text="订单待付款"
                         android:textColor="@color/color_00bbc0"
                         android:textSize="@dimen/ts_15" />
 
                 </RelativeLayout>
 
+
                 <LinearLayout
+                    android:id="@+id/ll_consignee_info"
                     android:layout_width="match_parent"
                     android:layout_height="75dp"
                     android:layout_marginTop="5dp"
@@ -87,7 +88,8 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
+                    android:paddingRight="15dp"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -144,9 +146,9 @@
 
                     <ImageView
                         android:id="@+id/iv_picture"
+                        android:src="@drawable/ic_default_pic"
                         android:layout_width="120dp"
-                        android:layout_height="120dp"
-                         />
+                        android:layout_height="120dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -160,8 +162,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:maxLines="2"
                             android:ellipsize="end"
+                            android:maxLines="2"
                             android:text="主题主题主题主题主题主题"
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_15" />
@@ -184,7 +186,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="*1"
                                 android:textColor="@color/color_00bbc0"
                                 android:textSize="@dimen/ts_15" />
 
@@ -216,7 +217,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="¥4900.00"
                         android:textColor="@color/color_ff2a2a"
                         android:textSize="@dimen/ts_15" />
                 </LinearLayout>
@@ -242,279 +242,356 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="即有钱包"
                         android:textColor="@color/color_3d3d3d"
                         android:textSize="@dimen/ts_15" />
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_down_payment"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="首付"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-                    <TextView
-                        android:id="@+id/tv_down_payment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="10%(¥599.90)"
-                        android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_15" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_staging_num"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="分期数"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-                    <TextView
-                        android:id="@+id/tv_staging_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="24个月"
-                        android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_15" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_month_payment"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="月供金额"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-                    <TextView
-                        android:id="@+id/tv_month_payment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="¥110.00"
-                        android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_15" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="大家电："
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
+                        android:id="@+id/ll_entity_goods"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="送货：8月31日[周四]"
-                            android:textColor="@color/color_4a4a4a" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:id="@+id/rl_down_payment"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="1dp"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="首付"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
+
+                            <TextView
+                                android:id="@+id/tv_down_payment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="10%(¥599.90)"
+                                android:textColor="@color/color_00bbc0"
+                                android:textSize="@dimen/ts_15" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_staging_num"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="1dp"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="分期数"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
+
+                            <TextView
+                                android:id="@+id/tv_staging_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="24个月"
+                                android:textColor="@color/color_00bbc0"
+                                android:textSize="@dimen/ts_15" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_month_payment"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="1dp"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="月供金额"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
+
+                            <TextView
+                                android:id="@+id/tv_month_payment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="¥110.00"
+                                android:textColor="@color/color_00bbc0"
+                                android:textSize="@dimen/ts_15" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="1dp"
+                            android:background="@color/white"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="大家电："
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="送货：8月31日[周四]"
+                                    android:textColor="@color/color_4a4a4a" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="安装：9月1日[周五]"
+                                    android:textColor="@color/color_4a4a4a"
+                                    android:textSize="@dimen/ts_15" />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="安装：9月1日[周五]"
-                            android:textColor="@color/color_4a4a4a"
-                            android:textSize="@dimen/ts_15" />
+                            android:layout_marginTop="5dp"
+                            android:background="@color/white"
+                            android:orientation="vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="15dp"
+                                android:text="增值服务"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp">
+
+                                <CheckBox
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:button="@drawable/selector_checkbox"
+                                    android:checked="true"
+                                    android:gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="25dp"
+                                    android:gravity="center"
+                                    android:text="手机延保："
+                                    android:textColor="@color/color_4a4a4a"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="130dp"
+                                    android:gravity="center"
+                                    android:text="¥99/月"
+                                    android:textColor="@color/color_00bbc0"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_detail_circle" />
+                                </LinearLayout>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp">
+
+                                <CheckBox
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:button="@drawable/selector_checkbox"
+                                    android:checked="true"
+                                    android:gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="25dp"
+                                    android:gravity="center"
+                                    android:text="碎屏险："
+                                    android:textColor="@color/color_4a4a4a"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="130dp"
+                                    android:gravity="center"
+                                    android:text="¥99/月"
+                                    android:textColor="@color/color_00bbc0"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_detail_circle" />
+                                </LinearLayout>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp"
+                                android:layout_marginBottom="5dp">
+
+                                <CheckBox
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:button="@drawable/selector_checkbox"
+                                    android:checked="true"
+                                    android:gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="25dp"
+                                    android:gravity="center"
+                                    android:text="人身意外险："
+                                    android:textColor="@color/color_4a4a4a"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="130dp"
+                                    android:gravity="center"
+                                    android:text="¥99/月"
+                                    android:textColor="@color/color_00bbc0"
+                                    android:textSize="@dimen/ts_14" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_detail_circle" />
+                                </LinearLayout>
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                </RelativeLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/ll_virtual_goods"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="15dp"
-                        android:text="增值服务"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
+                        android:layout_marginTop="1dp"
+                        android:orientation="vertical"
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp">
+                        >
 
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:button="@drawable/selector_checkbox"
-                            android:checked="true"
-                            android:gravity="center" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="25dp"
-                            android:gravity="center"
-                            android:text="手机延保："
-                            android:textColor="@color/color_4a4a4a"
-                            android:textSize="@dimen/ts_14" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="130dp"
-                            android:gravity="center"
-                            android:text="¥99/月"
-                            android:textColor="@color/color_00bbc0"
-                            android:textSize="@dimen/ts_14" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@color/white"
+                            android:paddingLeft="@dimen/default_layout_screen_gap"
+                            android:paddingRight="@dimen/default_layout_screen_gap"
                             android:gravity="center">
 
-                            <ImageView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_detail_circle" />
-                        </LinearLayout>
-                    </RelativeLayout>
+                                android:text="充值号码"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp">
+                            <TextView
+                                android:id="@+id/tv_recharge_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:textColor="@color/color_3d3d3d"
+                                android:textSize="@dimen/ts_15" />
+                        </RelativeLayout>
 
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:button="@drawable/selector_checkbox"
-                            android:checked="true"
-                            android:gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="25dp"
-                            android:gravity="center"
-                            android:text="碎屏险："
-                            android:textColor="@color/color_4a4a4a"
-                            android:textSize="@dimen/ts_14" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="130dp"
-                            android:gravity="center"
-                            android:text="¥99/月"
-                            android:textColor="@color/color_00bbc0"
-                            android:textSize="@dimen/ts_14" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="1dp"
+                            android:background="@color/white"
+                            android:paddingLeft="@dimen/default_layout_screen_gap"
+                            android:paddingRight="@dimen/default_layout_screen_gap"
                             android:gravity="center">
 
-                            <ImageView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_detail_circle" />
-                        </LinearLayout>
-                    </RelativeLayout>
+                                android:text="充值面额"
+                                android:textColor="@color/color_4a4a4a"
+                                android:textSize="@dimen/ts_15" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:layout_marginBottom="5dp">
-
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:button="@drawable/selector_checkbox"
-                            android:checked="true"
-                            android:gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="25dp"
-                            android:gravity="center"
-                            android:text="人身意外险："
-                            android:textColor="@color/color_4a4a4a"
-                            android:textSize="@dimen/ts_14" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="130dp"
-                            android:gravity="center"
-                            android:text="¥99/月"
-                            android:textColor="@color/color_00bbc0"
-                            android:textSize="@dimen/ts_14" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center">
-
-                            <ImageView
+                            <TextView
+                                android:id="@+id/tv_recharge_denomination"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_detail_circle" />
-                        </LinearLayout>
-                    </RelativeLayout>
+                                android:layout_alignParentRight="true"
+                                android:textColor="@color/color_3d3d3d"
+                                android:textSize="@dimen/ts_15" />
+                        </RelativeLayout>
 
-                </LinearLayout>
+                    </LinearLayout>
+
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -538,7 +615,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="17dp"
-                        android:text="满699减30全品类"
                         android:textColor="@color/color_00bbc0"
                         android:textSize="@dimen/ts_15" />
 
@@ -549,58 +625,66 @@
                         android:src="@drawable/ic_right" />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:id="@+id/tv_user_comments"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:text="买家留言："
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-
-                </RelativeLayout>
-
                 <LinearLayout
+                    android:id="@+id/ll_user_comments"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="1dp"
+                        android:background="@color/white"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_user_comments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="15dp"
+                            android:text="买家留言："
+                            android:textColor="@color/color_4a4a4a"
+                            android:textSize="@dimen/ts_15" />
 
 
-                    <CheckBox
-                        android:id="@+id/cb_contract"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@drawable/selector_checkbox"
-                        android:checked="true" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="已阅读并同意"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_14" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
 
-                    <TextView
-                        android:id="@+id/tv_contract"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="消费分期合同"
-                        android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_14" />
+
+                        <CheckBox
+                            android:id="@+id/cb_contract"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@drawable/selector_checkbox"
+                            android:checked="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="已阅读并同意"
+                            android:textColor="@color/color_4a4a4a"
+                            android:textSize="@dimen/ts_14" />
+
+                        <TextView
+                            android:id="@+id/tv_contract"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="消费分期合同"
+                            android:textColor="@color/color_00bbc0"
+                            android:textSize="@dimen/ts_14" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View
@@ -701,8 +785,7 @@
                     android:gravity="center"
                     android:text="¥3999.00"
                     android:textColor="@color/color_00bbc0"
-                    android:textSize="@dimen/ts_16"
-                     />
+                    android:textSize="@dimen/ts_16" />
             </LinearLayout>
 
             <TextView

@@ -15,17 +15,17 @@ public class OrderStatus {
      */
     public static String getOrderStatus(int orderStatus) {
         switch (orderStatus) {
-            case 1:
+            case OrderState.WAITINGPAY:
                 return "订单待付款";
-            case 2:
+            case OrderState.DOWNPAYMENT:
                 return "订单待首付";
-            case 3:
+            case OrderState.WAITINGDELIVERY:
                 return "订单待发货";
-            case 4:
+            case OrderState.WAITINGRECEIVE:
                 return "订单待收货";
-            case 5:
+            case OrderState.FINISHED:
                 return "订单已完成";
-            case 6:
+            case OrderState.CLOSED:
                 return "订单已关闭";
             default:
                 return "";
@@ -49,4 +49,20 @@ public class OrderStatus {
                 return "";
         }
     }
+
+    /**
+     *订单状态             可用按钮功能
+     * 待付款              取消订单、去支付
+     * 待首付              订单跟踪、去首付
+     * 待收货              订单跟踪、确认收货
+     * 一完成              订单跟踪
+     * 已关闭              订单跟踪、删除订单
+     */
+    public static String getButtonType(int type) {
+        /*switch (type) {
+            case
+        }*/
+        return "";
+    }
+
 }
