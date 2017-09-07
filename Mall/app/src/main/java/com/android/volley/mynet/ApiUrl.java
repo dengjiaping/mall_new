@@ -155,26 +155,24 @@ public interface ApiUrl {
     String personCenter_address_updateAddress = BASE_URL + "personCenter/address/updateAddress";
     //设置默认收货地址
     String personCenter_address_setDefaultAddress = BASE_URL + "personCenter/address/setDefaultAddress";
-    //String order_orderDetail = BASE_URL + "order/orderDetail";
     //获取我的订单列表
     String orderApp_myListOrder = BASE_URL + "order/myListOrder";
-//    String orderApp_myListOrder = "http://10.10.11.140:9000/v1/order/myListOrder";
     //获取我的订单数量
     String orderApp_myOrderNumByStatus = BASE_URL + "order/myOrderNumByStatus";
     //获取订单详情
     String order_orderDetail = BASE_URL + "order/orderDetail";
-//    String order_orderDetail = "http://10.10.11.140:9000/v1/order/orderDetail";
     //删除订单
-    //String order_deleteOrder = BASE_URL + "order/deleteOrder";
-    String order_deleteOrder = "http://10.10.11.140:9000/v1/order/deleteOrder";
+    String order_deleteOrder = BASE_URL + "order/deleteOrder";
     //取消订单
-    //String order_cancelOrder = BASE_URL + "order/cancelOrder";
-    String order_cancelOrder = "http://10.10.11.140:9000/v1/order/cancelOrder";
+    String order_cancelOrder = BASE_URL + "order/cancelOrder";
     //搜索热词刷新
     String search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //商品介绍
     String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/intruction";
     //商品详情
     String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
+    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    //一级类目查询子类目(商品分类)
+    String shopping_classify_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
 }
 

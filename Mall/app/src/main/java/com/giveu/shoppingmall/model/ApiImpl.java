@@ -46,6 +46,7 @@ import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
+import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
@@ -536,8 +537,14 @@ public class ApiImpl {
     }
 
     //搜索热词刷新
-    public static void refreshHotWords(BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.search_hotword_refresh, BaseBean.class, responseListener);
+    public static void refreshHotWords(Activity context, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.shopping_search_hotWordsRefresh, BaseBean.class, context, responseListener);
+    }
+
+    //一级类目查询子类目(商品分类)
+    public static void getChildrenShopTypes(Activity context, int shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"shopTypeId"}, new Object[]{shopTypeId});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.shopping_classify_childrenShopTypes, ShopTypesBean.class, context, resonseListener);
     }
 
     //商品介绍

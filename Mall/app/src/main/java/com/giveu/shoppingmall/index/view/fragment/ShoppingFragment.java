@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
 import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.utils.DensityUtils;
@@ -118,7 +119,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         banner.setPageTransformer(false, new FlipHorizontalTransformer());
         //设置图片加载器
         banner.setImageLoader(new BannerImageLoader());
-        banner.setPageTransformer(false,new DefaultTransformer());
+        banner.setPageTransformer(false, new DefaultTransformer());
         //设置图片集合
         final List<String> images = new ArrayList<String>();
         images.add("http://pic28.nipic.com/20130422/2547764_110759716145_2.jpg");
@@ -147,6 +148,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initHot() {
         NoScrollGridView gvHot = (NoScrollGridView) headerView.findViewById(R.id.gv_hot);
+        headerView.findViewById(R.id.shopping_hot_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingClassifyActivity.startIt(mBaseContext);
+            }
+        });
+
         ArrayList<String> hotList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             hotList.add(i + "");
@@ -231,6 +239,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
 /*    @Override
     protected void setListener() {
+<<<<<<< HEAD
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
             private SparseArray<ItemRecod> recordSp = new SparseArray<>(0);
             private int mCurrentfirstVisibleItem = 0;

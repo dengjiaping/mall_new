@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.rvadapter.RvCommonAdapter;
@@ -17,6 +19,9 @@ import com.giveu.shoppingmall.index.adapter.GodsAdapter;
 import com.giveu.shoppingmall.index.bean.ShoppingBean;
 import com.giveu.shoppingmall.index.widget.ItemHeaderDecoration;
 import com.giveu.shoppingmall.index.widget.RecyclerViewScrollHelper;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.explosionfield.Utils;
 
 import java.util.ArrayList;
@@ -135,7 +140,17 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
 
     @Override
     public void setData() {
+        ApiImpl.getChildrenShopTypes(mBaseContext, 1, new BaseRequestAgent.ResponseListener<ShopTypesBean>() {
+            @Override
+            public void onSuccess(ShopTypesBean response) {
+                LogUtil.d("Success response = " + response);
+            }
 
+            @Override
+            public void onError(BaseBean errorBean) {
+                LogUtil.d("Error response = " + errorBean);
+            }
+        });
     }
 
 
