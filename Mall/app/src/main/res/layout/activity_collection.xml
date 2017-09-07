@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="@color/line_bg"
-        android:dividerHeight="1px" />
+        android:divider="@null" />
     <LinearLayout
         android:id="@+id/ll_bottom_delete"
         android:layout_width="wrap_content"

@@ -22,12 +22,11 @@ public class DensityUtils {
     /**
      * px转DIP
      *
-     * @param context
      * @param pxValue
      * @return
      */
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dip(float pxValue) {
+        final float scale = BaseApplication.getInstance().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
