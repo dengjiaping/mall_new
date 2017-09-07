@@ -45,6 +45,7 @@ import com.giveu.shoppingmall.model.bean.response.RepaymentActionResponse;
 import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
+import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
 import com.giveu.shoppingmall.model.bean.response.TransactionDetailResponse;
@@ -449,9 +450,9 @@ public class ApiImpl {
     }
 
     //领取优惠券
-    public static void receiveCoupon(Activity context,String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void receiveCoupon(Activity context, String personId, String userId, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"personId", "userId"}, new Object[]{personId, userId});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class,context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.act_receiveCourtesyCard, BaseBean.class, context, responseListener);
     }
 
     //获取活动信息
@@ -462,9 +463,9 @@ public class ApiImpl {
     }
 
     //获取商品收藏列表
-    public static void getCollectionList(Activity context,String idPerson, int pageNum,int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
+    public static void getCollectionList(Activity context, String idPerson, int pageNum, int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class,context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class, context, responseListener);
     }
 
     //获取我的订单列表
@@ -474,9 +475,9 @@ public class ApiImpl {
     }
 
     //删除商品收藏
-    public static void deleteCollection(Activity context,String idPerson, List<String> skuCodes,int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","skuCodes","status"}, new Object[]{idPerson,skuCodes,status});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class,context, responseListener);
+    public static void deleteCollection(Activity context, String idPerson, List<String> skuCodes, int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "skuCodes", "status"}, new Object[]{idPerson, skuCodes, status});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class, context, responseListener);
     }
 
     //获取用户收货地址列表
@@ -492,19 +493,19 @@ public class ApiImpl {
     }
 
     //修改收货地址
-    public static void updateAddress(Activity context,String address, String addressType,String city,String custName,String id,String idPerson,String isDefault,String phone,String province,String region,String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address","addressType","city","custName","id","idPerson","isDefault","phone","province","region","street"}, new Object[]{address,addressType,city,custName,StringUtils.string2Long(id),StringUtils.string2Long(idPerson),isDefault,phone,province,region,street});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress,BaseBean.class, context,responseListener);
+    public static void updateAddress(Activity context, String address, String addressType, String city, String custName, String id, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "id", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(id), StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress, BaseBean.class, context, responseListener);
     }
 
     //删除收货地址
-    public static void deleteAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void deleteAddress(Activity context, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_deleteAddress, BaseBean.class, context, responseListener);
     }
 
     //设置默认收货地址
-    public static void setDefaultAddress(Activity context,String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+    public static void setDefaultAddress(Activity context, String id, String idPerson, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"id", "idPerson"}, new Object[]{StringUtils.string2Long(id), StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_setDefaultAddress, BaseBean.class, context, responseListener);
     }
@@ -534,8 +535,14 @@ public class ApiImpl {
     }
 
     //搜索热词刷新
-    public static void refreshHotWords(BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.search_hotword_refresh, BaseBean.class, responseListener);
+    public static void refreshHotWords(Activity context, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.shopping_search_hotWordsRefresh, BaseBean.class, context, responseListener);
+    }
+
+    //一级类目查询子类目(商品分类)
+    public static void getChildrenShopTypes(Activity context, int shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"shopTypeId"}, new Object[]{shopTypeId});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.shopping_classify_childrenShopTypes, ShopTypesBean.class, context, resonseListener);
     }
 }
 

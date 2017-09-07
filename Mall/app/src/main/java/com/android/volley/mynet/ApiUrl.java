@@ -166,6 +166,8 @@ public interface ApiUrl {
     //取消订单
     String order_cancelOrder = BASE_URL + "order/cancelOrder";
     //搜索热词刷新
-    String search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    //一级类目查询子类目(商品分类)
+    String shopping_classify_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
 }
 

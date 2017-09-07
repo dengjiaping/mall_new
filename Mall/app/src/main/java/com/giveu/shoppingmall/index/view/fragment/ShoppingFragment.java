@@ -17,6 +17,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.utils.DensityUtils;
@@ -120,7 +121,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         banner.setPageTransformer(false, new FlipHorizontalTransformer());
         //设置图片加载器
         banner.setImageLoader(new BannerImageLoader());
-        banner.setPageTransformer(false,new DefaultTransformer());
+        banner.setPageTransformer(false, new DefaultTransformer());
         //设置图片集合
         final List<String> images = new ArrayList<String>();
         images.add("http://pic28.nipic.com/20130422/2547764_110759716145_2.jpg");
@@ -149,6 +150,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initHot() {
         NoScrollGridView gvHot = (NoScrollGridView) headerView.findViewById(R.id.gv_hot);
+        headerView.findViewById(R.id.shopping_hot_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingClassifyActivity.startIt(mBaseContext);
+            }
+        });
+
         ArrayList<String> hotList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             hotList.add(i + "");
@@ -225,85 +233,85 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     protected void setListener() {
-        ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            private SparseArray<ItemRecod> recordSp = new SparseArray<>(0);
-            private int mCurrentfirstVisibleItem = 0;
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //滑动时停止图片加载，停止轮播，停止滑动时恢复
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    ImageLoader.getInstance().resume();
-                    banner.stopAutoPlay();
-                } else {
-                    ImageLoader.getInstance().pause();
-                    banner.stopAutoPlay();
-                }
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-                mCurrentfirstVisibleItem = firstVisibleItem;
-                View firstView = view.getChildAt(0);
-                if (firstView != null) {
-                    ItemRecod itemRecord = recordSp.get(firstVisibleItem);
-                    if (itemRecord == null) {
-                        itemRecord = new ItemRecod();
-                    }
-                    itemRecord.height = firstView.getHeight();//获取最顶部Item的高度
-                    itemRecord.top = firstView.getTop();//获取距离顶部的距离
-                    recordSp.append(firstVisibleItem, itemRecord);//设置值
-                }
-                int scrollY = getScrollY();
-                if (scrollY >= 0 && scrollY <= DensityUtils.dip2px(150)) {
-                    //设置标题栏透明度0~255
-                    float rate = (float) (scrollY * 1.0 / DensityUtils.dip2px(150));
-                    llSearch.getBackground().setAlpha((int) (rate * 255));
-                    if (rate > 0.5) {
-                        ivMessage.setImageResource(R.drawable.classify_msg);
-                    } else {
-                        ivMessage.setImageResource(R.drawable.ic_message);
-                    }
-                } else if (scrollY > DensityUtils.dip2px(150)) {
-                    //滑动距离大于255就设置为不透明
-                    llSearch.getBackground().setAlpha(255);
-                    ivMessage.setImageResource(R.drawable.classify_msg);
-                }
-            }
-
-            private int getScrollY() {
-                int height = 0;
-                for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
-                    ItemRecod itemRecod = recordSp.get(i);
-                    //快速滑动会为空，判断一下，发现的bug
-                    if (itemRecod != null) {
-                        height += itemRecod.height;
-                    }
-                }
-                ItemRecod itemRecod = recordSp.get(mCurrentfirstVisibleItem);
-                if (null == itemRecod) {
-                    itemRecod = new ItemRecod();
-                }
-                return height - itemRecod.top;
-            }
-
-            class ItemRecod {
-                int height = 0;
-                int top = 0;
-            }
-        });
-        ptrlv.setOnPullEventListener(new PullToRefreshBase.OnPullEventListener<ListView>() {
-            @Override
-            public void onPullEvent(PullToRefreshBase<ListView> refreshView, PullToRefreshBase.State state, PullToRefreshBase.Mode direction) {
-                if (state == PullToRefreshBase.State.PULL_TO_REFRESH || state == PullToRefreshBase.State.RELEASE_TO_REFRESH) {
-                    llSearch.setVisibility(View.GONE);
-                } else {
-                    llSearch.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
+//            private SparseArray<ItemRecod> recordSp = new SparseArray<>(0);
+//            private int mCurrentfirstVisibleItem = 0;
+//
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                //滑动时停止图片加载，停止轮播，停止滑动时恢复
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    ImageLoader.getInstance().resume();
+//                    banner.stopAutoPlay();
+//                } else {
+//                    ImageLoader.getInstance().pause();
+//                    banner.stopAutoPlay();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem,
+//                                 int visibleItemCount, int totalItemCount) {
+//                mCurrentfirstVisibleItem = firstVisibleItem;
+//                View firstView = view.getChildAt(0);
+//                if (firstView != null) {
+//                    ItemRecod itemRecord = recordSp.get(firstVisibleItem);
+//                    if (itemRecord == null) {
+//                        itemRecord = new ItemRecod();
+//                    }
+//                    itemRecord.height = firstView.getHeight();//获取最顶部Item的高度
+//                    itemRecord.top = firstView.getTop();//获取距离顶部的距离
+//                    recordSp.append(firstVisibleItem, itemRecord);//设置值
+//                }
+//                int scrollY = getScrollY();
+//                if (scrollY >= 0 && scrollY <= DensityUtils.dip2px(150)) {
+//                    //设置标题栏透明度0~255
+//                    float rate = (float) (scrollY * 1.0 / DensityUtils.dip2px(150));
+//                    llSearch.getBackground().setAlpha((int) (rate * 255));
+//                    if (rate > 0.5) {
+//                        ivMessage.setImageResource(R.drawable.classify_msg);
+//                    } else {
+//                        ivMessage.setImageResource(R.drawable.ic_message);
+//                    }
+//                } else if (scrollY > DensityUtils.dip2px(150)) {
+//                    //滑动距离大于255就设置为不透明
+//                    llSearch.getBackground().setAlpha(255);
+//                    ivMessage.setImageResource(R.drawable.classify_msg);
+//                }
+//            }
+//
+//            private int getScrollY() {
+//                int height = 0;
+//                for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
+//                    ItemRecod itemRecod = recordSp.get(i);
+//                    //快速滑动会为空，判断一下，发现的bug
+//                    if (itemRecod != null) {
+//                        height += itemRecod.height;
+//                    }
+//                }
+//                ItemRecod itemRecod = recordSp.get(mCurrentfirstVisibleItem);
+//                if (null == itemRecod) {
+//                    itemRecod = new ItemRecod();
+//                }
+//                return height - itemRecod.top;
+//            }
+//
+//            class ItemRecod {
+//                int height = 0;
+//                int top = 0;
+//            }
+//        });
+//        ptrlv.setOnPullEventListener(new PullToRefreshBase.OnPullEventListener<ListView>() {
+//            @Override
+//            public void onPullEvent(PullToRefreshBase<ListView> refreshView, PullToRefreshBase.State state, PullToRefreshBase.Mode direction) {
+//                if (state == PullToRefreshBase.State.PULL_TO_REFRESH || state == PullToRefreshBase.State.RELEASE_TO_REFRESH) {
+//                    llSearch.setVisibility(View.GONE);
+//                } else {
+//                    llSearch.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
     }
 
     @Override
