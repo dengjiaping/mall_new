@@ -13,13 +13,17 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 
 
@@ -33,9 +37,13 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private LinearLayout llContainer;
     private ImageView ivDismiss;
     private TextView tvConfirm;
+    private TextView tvAmounts;
+    private ImageView ivReduce;
+    private ImageView ivPlus;
     private LinearLayout llCredit;
     private LinearLayout llChooseCredit;
-    private LinkedHashMap<String ,String > attrHashMap;
+    private LinkedHashMap<String, String> attrHashMap;//存储选中的属性
+    private LinkedHashMap<String, List<SkuIntroductionResponse.SpecValuesBean>> filterMap;
 
     public BuyCommodityDialog(Activity context) {
         super(context, R.layout.dialog_buy_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -55,6 +63,10 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         tvConfirm = (TextView) contentView.findViewById(R.id.tv_confirm);
         llChooseCredit = (LinearLayout) contentView.findViewById(R.id.ll_choose_credit);
         llCredit = (LinearLayout) contentView.findViewById(R.id.ll_credit);
+        ivReduce = (ImageView) contentView.findViewById(R.id.iv_reduce);
+        tvAmounts = (TextView) contentView.findViewById(R.id.tv_amounts);
+        ivPlus = (ImageView) contentView.findViewById(R.id.iv_plus);
+        llCredit = (LinearLayout) contentView.findViewById(R.id.ll_credit);
         llContainer = (LinearLayout) contentView.findViewById(R.id.ll_container);
         ivDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,32 +76,24 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         });
         llChooseCredit.setOnClickListener(this);
         tvConfirm.setOnClickListener(this);
+        ivPlus.setOnClickListener(this);
+        ivReduce.setOnClickListener(this);
         attrHashMap = new LinkedHashMap<>();
-        ArrayList<String> colorList = new ArrayList<>();
-        colorList.add("黑色");
-        colorList.add("金色");
-        colorList.add("银色");
-        colorList.add("玫瑰色");
-        colorList.add("亮黑色");
-        colorList.add("亮黑色");
-        colorList.add("亮黑色");
-        addView("颜色", colorList);
-        attrHashMap.put("颜色","黑色");
 
-        ArrayList<String> memoryList = new ArrayList<>();
-        memoryList.add("32G");
-        memoryList.add("128G");
-        memoryList.add("256G");
-        addView("内存", memoryList);
-        attrHashMap.put("内存","32G");
+    }
 
+    public void setData(List<SkuIntroductionResponse.SkuSpecsBean> skuSpecs) {
+        if (CommonUtils.isNullOrEmpty(skuSpecs)) {
+            return;
+        }
+        filterMap = new LinkedHashMap<>();
+        for (SkuIntroductionResponse.SkuSpecsBean skuSpec : skuSpecs) {
+            ArrayList<SkuIntroductionResponse.SpecValuesBean> attrList = new ArrayList<>();
+            attrList.addAll(skuSpec.specValues);
+            filterMap.put(skuSpec.name, attrList);
+            addView(skuSpec.name, attrList);
+        }
 
-        ArrayList<String> operatorList = new ArrayList<>();
-        operatorList.add("中国移动");
-        operatorList.add("中国电信");
-        operatorList.add("中国联通");
-        addView("运营商", operatorList);
-        attrHashMap.put("运营商","中国移动");
 
     }
 
@@ -106,21 +110,31 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         }
     }
 
-    private void addView(final String paramsStr, final ArrayList<String> paramsList) {
-        TagAdapter<String> paramsAdapter;
+    private void addView(final String paramsStr, final ArrayList<SkuIntroductionResponse.SpecValuesBean> paramsList) {
+        TagAdapter<SkuIntroductionResponse.SpecValuesBean> paramsAdapter;
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;
         final TagFlowLayout tfParam = (TagFlowLayout) speView.findViewById(R.id.tf_specification);
         tvParam = (TextView) speView.findViewById(R.id.tv_param);
         tvParam.setText(paramsStr);
-        paramsAdapter = new TagAdapter<String>(paramsList) {
+        paramsAdapter = new TagAdapter<SkuIntroductionResponse.SpecValuesBean>(paramsList) {
             @Override
-            public View getView(FlowLayout parent, int position, String s) {
+            public View getView(FlowLayout parent, int position, SkuIntroductionResponse.SpecValuesBean specValuesBean) {
                 TextView tvTag = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.flowlayout_params_item, tfParam, false);
-                tvTag.setText(s);
+                tvTag.setText(specValuesBean.specValue);
+                if (position == 1) {
+                    //虚线框，不能点击
+                    tvTag.setBackgroundResource(R.drawable.shape_dash_rect);
+                } else {
+                    //可点击状态
+                    tvTag.setBackgroundResource(R.drawable.selector_params);
+                }
                 return tvTag;
             }
         };
+        //设置默认选中位置
+        paramsAdapter.setSelectedList(0);
+        tfParam.setAdapter(paramsAdapter);
         tfParam.setAdapter(paramsAdapter);
         tfParam.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
@@ -133,7 +147,6 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
                     Log.e("TAG", "选择了" + paramsList.get(integer));
-                    attrHashMap.put(paramsStr,paramsList.get(integer));
                 }
             }
         });
@@ -147,9 +160,11 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
      */
     public void showDialog(boolean isCredit) {
         if (isCredit) {
+            //分期购买应显示的内容
             llCredit.setVisibility(View.VISIBLE);
             tvConfirm.setVisibility(View.GONE);
         } else {
+            //一次性购买应显示的内容
             llCredit.setVisibility(View.GONE);
             tvConfirm.setVisibility(View.VISIBLE);
         }
@@ -172,11 +187,25 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                     dismiss();
                 }
                 break;
+
+            case R.id.iv_reduce:
+                String amountsStr = tvAmounts.getText().toString();
+                int amounts = StringUtils.string2Int(amountsStr);
+                if (amounts > 1) {
+                    tvAmounts.setText((amounts - 1)+"");
+                }
+                break;
+
+            case R.id.iv_plus:
+                amountsStr = tvAmounts.getText().toString();
+                amounts = StringUtils.string2Int(amountsStr);
+                tvAmounts.setText((amounts + 1)+"");
+                break;
         }
     }
 
     public interface OnConfirmListener {
-        void confirm(LinkedHashMap<String ,String> attrHashMap);
+        void confirm(LinkedHashMap<String, String> attrHashMap);
 
         void cancle();
     }

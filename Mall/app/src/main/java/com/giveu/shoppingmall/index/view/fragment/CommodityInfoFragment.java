@@ -73,6 +73,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     TextView tvPrice;
     @BindView(R.id.dv_stock)
     DetailView dvStock;
+    @BindView(R.id.dv_supply)
+    DetailView dvSupply;
     private View view;
     private CommodityDetailFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
@@ -238,6 +240,9 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             tvCommoditName.setText(skuResponse.skuInfo.name);
             tvPrice.setText(skuResponse.skuInfo.salePrice);
             tvIntroduction.setText(skuResponse.skuInfo.adwords);
+            activity.setCollectStatus(skuResponse.collectStatus);
+            dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
+            buyDialog.setData(skuResponse.skuSpecs);
         }
     }
 
