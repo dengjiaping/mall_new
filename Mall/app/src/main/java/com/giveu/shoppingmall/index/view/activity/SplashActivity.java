@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
@@ -95,6 +96,9 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
+
+        SharePrefUtil.getUUId();//拿到imei权限后，生成并存储唯一标识
+        BaseApplication.getInstance().initTokenDaemon();
         startCountTime();
     }
 
