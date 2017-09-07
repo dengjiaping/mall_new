@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="60dp"
     android:background="@color/white"
     android:orientation="horizontal"
     android:paddingLeft="20dp"
     android:paddingRight="@dimen/default_layout_screen_gap">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="20dp"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <View
             android:id="@+id/view_up_line"
-            android:layout_width="2dp"
-            android:layout_height="17dp"
+            android:layout_width="1dp"
+            android:layout_height="23dp"
             android:background="@drawable/shape_line_grey" />
 
         <ImageView
@@ -27,7 +27,7 @@
 
         <View
             android:id="@+id/view_down_line"
-            android:layout_width="2dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@drawable/shape_line_grey" />
 
@@ -36,7 +36,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="bottom"
         android:orientation="vertical"
         android:paddingTop="15dp">
 

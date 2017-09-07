@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -174,6 +175,13 @@ public class ViewHolder
             alpha.setFillAfter(true);
             getView(viewId).startAnimation(alpha);
         }
+        return this;
+    }
+
+    public ViewHolder setInvisible(int viewId)
+    {
+        View view = getView(viewId);
+        view.setVisibility(View.INVISIBLE);
         return this;
     }
 
