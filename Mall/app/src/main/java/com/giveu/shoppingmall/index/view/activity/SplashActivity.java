@@ -63,6 +63,7 @@ public class SplashActivity extends BasePermissionActivity {
 
         permissionMap.put(Manifest.permission.READ_EXTERNAL_STORAGE, "存储权限");
         permissionMap.put(Manifest.permission.READ_PHONE_STATE, "电话权限");
+        lastTimeMillis = System.currentTimeMillis();
         //6.0系统动态获取权限
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             startCountTime();
@@ -72,7 +73,6 @@ public class SplashActivity extends BasePermissionActivity {
     private void initPermissionDialog(String tips) {
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr(tips);
-        lastTimeMillis = System.currentTimeMillis();
         permissionDialog.setConfirmStr("去开启");
         permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
@@ -98,13 +98,6 @@ public class SplashActivity extends BasePermissionActivity {
         super.onPermissionGranted(permissionName);
 
         startCountTime();
-    }
-
-    @Override
-    public void onPermissionReallyDeclined(@NonNull String permissionName) {
-        super.onPermissionReallyDeclined(permissionName);
-
-
     }
 
     @Override
@@ -181,7 +174,6 @@ public class SplashActivity extends BasePermissionActivity {
             setPermissionHelper(true, a);
         }
 
-        LogUtil.e(HardWareUtil.getIMEI());
     }
 
 
