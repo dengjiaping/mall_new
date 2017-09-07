@@ -171,6 +171,17 @@ public class StringUtils {
         return msp;
     }
 
+    public static SpannableString getSizeAndColorSpannable(CharSequence str1, final String str2, final String str3, final String str4, int str1Dip, final int str2Dip, int str1ColorId, final int str2ColorId) {
+        String str5 = str1 + str2 + str3 + str4;
+        SpannableString msp = new SpannableString(str5);
+        msp.setSpan(new AbsoluteSizeSpan(str2Dip, true), 0, str1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new AbsoluteSizeSpan(str1Dip, true), str1.length(), (str1 + str2).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new AbsoluteSizeSpan(str2Dip, true), (str1 + str2).length(), (str1 + str2 + str3 + str4).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str1ColorId)), 0, (str1 + str2 + str3).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str2ColorId)), (str1 + str2 + str3).length(), str5.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return msp;
+    }
+
     /**
      * 保留小数
      *

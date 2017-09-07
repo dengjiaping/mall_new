@@ -123,7 +123,6 @@ public class MainMeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //getOrderNumByState();
         updateUserUi();
     }
 
@@ -177,8 +176,7 @@ public class MainMeFragment extends BaseFragment {
                             if (response.num != 0) {
                                 tvWaitingPay.setVisibility(View.GONE);
                                 tvWaitingPay.setText(response.num);
-                            }
-                            else
+                            } else
                                 tvWaitingPay.setVisibility(View.GONE);
                             break;
                         //待首付
@@ -186,8 +184,7 @@ public class MainMeFragment extends BaseFragment {
                             if (response.num != 0) {
                                 tvDownPayment.setVisibility(View.GONE);
                                 tvDownPayment.setText(response.num);
-                            }
-                            else
+                            } else
                                 tvDownPayment.setVisibility(View.GONE);
                             break;
                         //待收货
@@ -195,8 +192,7 @@ public class MainMeFragment extends BaseFragment {
                             if (response.num != 0) {
                                 tvWaitingReceive.setVisibility(View.GONE);
                                 tvWaitingReceive.setText(response.num);
-                            }
-                            else
+                            } else
                                 tvWaitingReceive.setVisibility(View.GONE);
                             break;
                         default:
@@ -244,28 +240,10 @@ public class MainMeFragment extends BaseFragment {
 
     }
 
-    /**
-     * 获取待付款、待首付、待收货的订单数量
-     */
-    private void getOrderNumByState() {
-        ApiImpl.getOrderNum(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<OrderNumResponse>() {
-            @Override
-            public void onSuccess(OrderNumResponse response) {
-                orderNumList.clear();
-                if (CommonUtils.isNotNullOrEmpty(response.data.myOrder)) {
-                    orderNumList.addAll(response.data.myOrder);
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
-    }
 
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota,R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
+
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
     @Override
     public void onClick(View v) {
         super.onClick(v);

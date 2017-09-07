@@ -34,7 +34,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (StringUtils.isNotNull(channelName))
             this.channelName = channelName;
         this.presenter = presenter;
-        dialog = new ConfirmDialog((Activity) mContext);
     }
 
     @Override
@@ -47,13 +46,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             viewHolder.setText(R.id.tv_name, item.name);
         if (StringUtils.isNotNull(item.salePrice))
             viewHolder.setText(R.id.tv_sale_price, "¥" + item.salePrice);
-        if (item.orderType == 0) {
-            viewHolder.setText(R.id.tv_down_payment, "¥" + item.downPayment);
-            viewHolder.setText(R.id.tv_month_payment, "¥" + item.monthPayment);
-            viewHolder.setVisible(R.id.ll_payment, true);
-        } else {
-            viewHolder.setVisible(R.id.ll_payment, false);
-        }
+
         String iconUrl = "";
         if (StringUtils.isNotNull(item.srcIp))
             if (StringUtils.isNotNull(item.src)) {
@@ -61,6 +54,28 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
                 ImageUtils.loadImage(iconUrl, imageView);
             }
+
+        /**
+         * 分期产品显示月供和首付
+         * 一次性产品和借记卡消费不显示
+         */
+        if (item.orderType == 0) {
+            viewHolder.setText(R.id.tv_down_payment, "¥" + item.downPayment);
+            viewHolder.setText(R.id.tv_month_payment, "¥" + item.monthPayment);
+            viewHolder.setVisible(R.id.ll_payment, true);
+        } else {
+            viewHolder.setVisible(R.id.ll_payment, false);
+        }
+
+
+        /**
+         * 根据不同订单status显示不同按钮
+         * 待付款           取消订单、去支付
+         * 待首付           订单跟踪、去首付
+         * 待收货           订单跟踪、确认收货
+         * 已完成           订单跟踪
+         * 已关闭           订单跟踪、删除订单
+         */
         String status = OrderStatus.getOrderStatus(item.status);
         switch (item.status) {
 
@@ -90,7 +105,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
                 viewHolder.setText(R.id.tv_status, status);
-                viewHolder.setText(R.id.tv_button_left, "订单跟踪");
+                viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "去首付");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
@@ -118,7 +133,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
                 viewHolder.setText(R.id.tv_status, status + "，待签收");
-                viewHolder.setText(R.id.tv_button_left, "订单跟踪");
+                viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "确认收货");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
@@ -139,7 +154,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setVisible(R.id.tv_button_left, false);
                 viewHolder.setVisible(R.id.tv_button_right, true);
                 viewHolder.setText(R.id.tv_status, status);
-                viewHolder.setText(R.id.tv_button_right, "订单跟踪");
+                viewHolder.setText(R.id.tv_button_right, "订单追踪");
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -153,7 +168,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
                 viewHolder.setText(R.id.tv_status, status);
-                viewHolder.setText(R.id.tv_button_left, "订单跟踪");
+                viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "删除订单");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
@@ -176,6 +191,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
     //取消订单dialog
     private void showCancelDialog() {
+        dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("确认取消订单？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
@@ -194,6 +210,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
     //确认收货dialog
     private void showReceiveDialog() {
+        dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("是否确认收货？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
@@ -212,6 +229,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
     //删除订单diaolog
     private void showDeleteDialog() {
+        dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("是否删除订单？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override

@@ -35,6 +35,7 @@ import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
+import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
@@ -534,6 +535,12 @@ public class ApiImpl {
     public static void cancelOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_cancelOrder, BaseBean.class, context, responseListener);
+    }
+
+    //订单跟踪
+    public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
     }
 
     //搜索热词刷新

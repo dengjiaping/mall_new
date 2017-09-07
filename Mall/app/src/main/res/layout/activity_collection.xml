@@ -58,5 +58,31 @@
                 android:textSize="@dimen/ts_18" />
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_off_the_shelf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/ic_off_the_shelf"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:textSize="@dimen/ts_21"
+            android:textColor="@color/color_767876"
+            android:text="商品已下架"/>
+        <TextView
+            android:id="@+id/tv_back"
+            style="@style/me_bt"
+            android:layout_marginTop="112dp"
+            android:background="@drawable/selector_btn_change_blue"
+            android:text="去看看其他商品" />
+    </LinearLayout>
 
 </LinearLayout>

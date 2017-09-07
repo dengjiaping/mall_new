@@ -5,9 +5,11 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
+import com.giveu.shoppingmall.me.view.activity.OrderTraceActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 
@@ -49,7 +51,9 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //订单追踪
     public void onTrace(String orderNo) {
-
+        if (StringUtils.isNotNull(orderNo)) {
+            OrderTraceActivity.startIt(getView().getAct(), orderNo);
+        }
     }
 
     //确认收货

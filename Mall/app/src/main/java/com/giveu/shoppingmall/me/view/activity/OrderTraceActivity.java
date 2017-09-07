@@ -3,14 +3,29 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.me.relative.OrderState;
+import com.giveu.shoppingmall.me.relative.OrderStatus;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by 101912 on 2017/8/29.
@@ -18,11 +33,22 @@ import java.util.ArrayList;
 
 public class OrderTraceActivity extends BaseActivity {
 
+    @BindView(R.id.iv_icon)
+    ImageView ivIcon;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    @BindView(R.id.tv_orderNo)
+    TextView tvOrderNo;
+    @BindView(R.id.lv_trace)
+    ListView lvTrace;
+
     private ArrayList<OrderTraceResponse.LogisticsInfoBean> traceDatas;
     private LvCommonAdapter<OrderTraceResponse.LogisticsInfoBean> adapter;
+    private String orderNo = "";
 
-    public static void startIt(Activity activity) {
+    public static void startIt(Activity activity, String orderNo) {
         Intent intent = new Intent(activity, OrderTraceActivity.class);
+        intent.putExtra("orderNo", orderNo);
         activity.startActivity(intent);
     }
 
@@ -36,11 +62,8 @@ public class OrderTraceActivity extends BaseActivity {
             protected void convert(ViewHolder viewHolder, OrderTraceResponse.LogisticsInfoBean item, int position) {
                 viewHolder.setText(R.id.tv_content, item.content);
                 viewHolder.setText(R.id.tv_time, item.msgTime);
-                if (position == traceDatas.size() - 1) {
-                    viewHolder.setVisible(R.id.view_up_line, false);
-                    if (traceDatas.size() == 1) {
-                        viewHolder.setVisible(R.id.view_up_line, true);
-                    }
+                if (position == 0) {
+                    viewHolder.setInvisible(R.id.view_up_line);
                     viewHolder.setTextColor(R.id.tv_content, getResources().getColor(R.color.color_00bbc0));
                     viewHolder.setTextColor(R.id.tv_time, getResources().getColor(R.color.color_00bbc0));
                     viewHolder.setImageResource(R.id.iv_circle, R.drawable.ic_circle_blue);
@@ -52,10 +75,45 @@ public class OrderTraceActivity extends BaseActivity {
                 }
             }
         };
+        lvTrace.setAdapter(adapter);
     }
 
     @Override
     public void setData() {
+        orderNo = getIntent().getStringExtra("orderNo");
+        ApiImpl.getOrderTrace(mBaseContext, OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+            @Override
+            public void onSuccess(OrderTraceResponse response) {
+                if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {
+                    traceDatas.addAll(onTurnByTime(response.data.logisticsInfo));
+                    adapter.notifyDataSetChanged();
+                }
+                if (StringUtils.isNotNull(response.data.src)) {
+                    ImageUtils.loadImage(response.src, ivIcon);
+                }
+                tvStatus.setText(OrderStatus.getOrderStatus(response.data.status));
+                if (StringUtils.isNotNull(response.data.orderNo)) {
+                    tvOrderNo.setText("订单编号：" + response.data.orderNo);
+                }
+            }
 
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
+
+
+    /**
+     * 默认返回的物流信息是以时间为正序的
+     * 此方法取反序
+     */
+    private ArrayList<OrderTraceResponse.LogisticsInfoBean> onTurnByTime(List<OrderTraceResponse.LogisticsInfoBean> datas) {
+        ArrayList<OrderTraceResponse.LogisticsInfoBean> mDatas = new ArrayList<>();
+        for (int i = datas.size() - 1; i >= 0; i--) {
+            mDatas.add(datas.get(i));
+        }
+        return mDatas;
     }
 }
