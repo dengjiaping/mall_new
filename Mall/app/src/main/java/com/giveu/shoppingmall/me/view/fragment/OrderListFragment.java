@@ -88,7 +88,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String orderNo = mDatas.get(position).orderNo;
+                //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
+                String orderNo = mDatas.get(position - 1).orderNo;
                 if (StringUtils.isNotNull(orderNo))
                     OrderInfoActivity.startIt(mBaseContext, orderNo);
             }
@@ -130,7 +131,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
-                ptrlv.onRefreshComplete();
                 //data为空并且第一次获取时，显示空界面
                 if (pageNum == 1 && (response == null || response.data == null)) {
                     ll_emptyView.setVisibility(View.VISIBLE);
@@ -157,6 +157,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                         adapter.notifyDataSetChanged();
                     }
                 }
+                ptrlv.onRefreshComplete();
             }
 
             @Override
@@ -191,6 +192,13 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     @Override
     public void cancelOrderSuccess(String orderNo) {
         ToastUtils.showLongToast("订单取消成功");
+        onRefresh();
+    }
+
+    //确认收货成功
+    @Override
+    public void confirmReceiveSuccess(String orderNo) {
+        ToastUtils.showLongToast("确认收货成功");
         onRefresh();
     }
 }
