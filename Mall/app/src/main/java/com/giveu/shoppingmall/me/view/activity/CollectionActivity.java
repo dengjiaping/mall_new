@@ -29,6 +29,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static android.R.attr.type;
+
 
 /**
  * 我的收藏
@@ -162,7 +164,7 @@ public class CollectionActivity extends BaseActivity {
     @Override
     public void setData() {
         pageIndex = 1;
-        ApiImpl.getCollectionList(mBaseContext, "123459", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        ApiImpl.getCollectionList(mBaseContext, "123457", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (pageIndex == 1) {
@@ -283,19 +285,20 @@ public class CollectionActivity extends BaseActivity {
      * @param skuCodes
      * @param position
      * @param removeList
+     *
+     *  1 为删除
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(mBaseContext, "123460", skuCodes, 0, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext, "123457", skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
-//                if (DELETEONE.equals(type)) {
-//                    collectionAdapter.getData().remove(position - 1);
-//                } else {
-//                    //全选或选择删除
-//                    collectionAdapter.getData().removeAll(removeList);
-//                }
-//                collectionAdapter.notifyDataSetChanged();
-                setData();
+                if (DELETEONE.equals(type)) {
+                    collectionAdapter.getData().remove(position - 1);
+                } else {
+                    //全选或选择删除
+                    collectionAdapter.getData().removeAll(removeList);
+                }
+                collectionAdapter.notifyDataSetChanged();
                 ToastUtils.showShortToast("删除成功");
             }
 
