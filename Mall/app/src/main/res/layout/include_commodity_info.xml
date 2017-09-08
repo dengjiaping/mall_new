@@ -43,8 +43,10 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/iv_dismiss"
             android:layout_marginRight="12dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:layout_marginTop="12dp"
             android:gravity="center_vertical"
+            android:maxLines="2"
             android:text="iphone 7 苹果新品全网通4G手机"
             android:textColor="@color/color_4a4a4a"
             android:textSize="@dimen/ts_14" />
@@ -57,6 +59,7 @@
             android:layout_marginTop="19dp">
 
             <TextView
+                android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="12dp"
@@ -67,11 +70,12 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_commodity_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="12dp"
                 android:gravity="center_vertical"
-                android:text="x 1 "
+                android:text="x 1"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_16" />
         </LinearLayout>

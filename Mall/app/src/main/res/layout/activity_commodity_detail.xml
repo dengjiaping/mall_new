@@ -32,6 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            app:tabIndicatorColor="@color/color_00bbc0"
+            app:tabTextColor="@color/color_4a4a4a"
+            app:tabSelectedTextColor="@color/color_00bbc0"
             app:tabGravity="center"
             app:tabMode="fixed" />
 
