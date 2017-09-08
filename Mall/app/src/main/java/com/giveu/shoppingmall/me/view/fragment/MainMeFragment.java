@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.mynet.BaseBean;
-import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
@@ -27,7 +25,6 @@ import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
-import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -35,7 +32,6 @@ import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -285,10 +281,9 @@ public class MainMeFragment extends BaseFragment {
                 break;
             case R.id.ll_my_collection:
                 //我的收藏
-//                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-//                    CollectionActivity.startIt(mBaseContext);
-//                }
-                CollectionActivity.startIt(mBaseContext);
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    CollectionActivity.startIt(mBaseContext);
+                }
                 break;
             case R.id.ll_my_coupon:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {

@@ -16,11 +16,13 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.me.adapter.CollectionAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -51,6 +53,8 @@ public class CollectionActivity extends BaseActivity {
     TextView tvDeleteText;
     @BindView(R.id.ll_off_the_shelf)
     LinearLayout llOffTheShelf;
+    @BindView(R.id.tv_back)
+    TextView tvBack;
     private int pageIndex = 1;
     private final int pageSize = 10;
     String type;//DELETEMORE 全选删除多项; DELETEONE 长按删除某一项
@@ -171,11 +175,18 @@ public class CollectionActivity extends BaseActivity {
                 showDeleteGoodsDialog(collectionAdapter, -1, DELETEMORE);
             }
         });
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.startActivity(mBaseContext, ShoppingClassifyActivity.class);
+                finish();
+            }
+        });
     }
 
     @Override
     public void setData() {
-        ApiImpl.getCollectionList(mBaseContext, "123456", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        ApiImpl.getCollectionList(mBaseContext, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (pageIndex == 1) {
@@ -317,7 +328,7 @@ public class CollectionActivity extends BaseActivity {
      * @param removeList 1 为删除
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(mBaseContext, "123456", skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext, LoginHelper.getInstance().getIdPerson(), skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {
@@ -330,10 +341,10 @@ public class CollectionActivity extends BaseActivity {
                     collectionAdapter.getData().removeAll(removeList);
                 }
                 collectionAdapter.notifyDataSetChanged();
-                if(CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
+                if (CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     llOffTheShelf.setVisibility(View.VISIBLE);
                     ptrlv.setVisibility(View.GONE);
-                }else{
+                } else {
                     llOffTheShelf.setVisibility(View.GONE);
                     ptrlv.setVisibility(View.VISIBLE);
                 }
