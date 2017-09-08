@@ -175,7 +175,7 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getCollectionList(mBaseContext, "123457", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
+        ApiImpl.getCollectionList(mBaseContext, "123456", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (pageIndex == 1) {
@@ -231,6 +231,7 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public void onError(BaseBean errorBean) {
                 if (pageIndex == 1) {
+                    llOffTheShelf.setVisibility(View.VISIBLE);
                     ptrlv.onRefreshComplete();
                 }
                 CommonLoadingView.showErrorToast(errorBean);
@@ -316,7 +317,7 @@ public class CollectionActivity extends BaseActivity {
      * @param removeList 1 为删除
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
-        ApiImpl.deleteCollection(mBaseContext, "123457", skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteCollection(mBaseContext, "123456", skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {
@@ -329,6 +330,13 @@ public class CollectionActivity extends BaseActivity {
                     collectionAdapter.getData().removeAll(removeList);
                 }
                 collectionAdapter.notifyDataSetChanged();
+                if(CommonUtils.isNullOrEmpty(collectionAdapter.getData())){
+                    llOffTheShelf.setVisibility(View.VISIBLE);
+                    ptrlv.setVisibility(View.GONE);
+                }else{
+                    llOffTheShelf.setVisibility(View.GONE);
+                    ptrlv.setVisibility(View.VISIBLE);
+                }
                 ToastUtils.showShortToast("删除成功");
                 deleteReset(collectionAdapter.getData());
             }
