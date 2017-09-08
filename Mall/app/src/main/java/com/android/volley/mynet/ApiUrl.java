@@ -167,6 +167,8 @@ public interface ApiUrl {
     String order_cancelOrder = BASE_URL + "order/cancelOrder";
     //订单追踪
     String order_orderLogistics = BASE_URL + "order/orderLogistics";
+    //确认收货
+    String order_confirmReceipt = BASE_URL + "order/confirmReceipt";
     //搜索热词刷新
     String search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //商品介绍

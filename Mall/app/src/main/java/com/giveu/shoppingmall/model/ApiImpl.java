@@ -514,9 +514,9 @@ public class ApiImpl {
     }
 
     //获取订单详情
-    public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
     }
 
     //删除订单
@@ -532,15 +532,15 @@ public class ApiImpl {
     }
 
     //订单跟踪
-    public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+    public static void getOrderTrace(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
     }
 
     //确认收货
     public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, BaseBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_confirmReceipt, BaseBean.class, context, responseListener);
     }
 
     //搜索热词刷新

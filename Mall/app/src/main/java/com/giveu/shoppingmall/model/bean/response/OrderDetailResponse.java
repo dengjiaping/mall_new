@@ -39,7 +39,7 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
     public ReceiverJoBean receiverJo;
     public String rechargeDenomination;
     public String rechargePhone;
-    public int remainingTime;
+    public String remainingTime;
     public String selDownPaymentRate;
     public String selStagingNumberRate;
     public SkuInfoBean skuInfo;

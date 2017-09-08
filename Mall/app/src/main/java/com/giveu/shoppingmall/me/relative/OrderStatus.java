@@ -22,7 +22,7 @@ public class OrderStatus {
             case OrderState.WAITINGDELIVERY:
                 return "订单待发货";
             case OrderState.WAITINGRECEIVE:
-                return "订单待收货";
+                return "订单已发货，待签收";
             case OrderState.FINISHED:
                 return "订单已完成";
             case OrderState.CLOSED:
