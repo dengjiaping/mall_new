@@ -115,7 +115,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     private void onRefresh() {
         //刷新时pageNum重新设置为1
         pageNum = 1;
-        mDatas.clear();
         initDataDelay();
     }
 
@@ -134,6 +133,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 ptrlv.setPullLoadEnable(false);
                 //onRefresh时数据为空，显示空界面
                 if (pageNum == 1 && (response.data == null || CommonUtils.isNullOrEmpty(response.data.skuInfo))) {
+                    mDatas.clear();
                     ll_emptyView.setVisibility(View.VISIBLE);
                 }
                 //加载下一页刚好没数据，显示FootView
@@ -165,6 +165,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             @Override
             public void onError(BaseBean errorBean) {
                 ptrlv.onRefreshComplete();
+                ptrlv.setPullRefreshEnable(false);
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });

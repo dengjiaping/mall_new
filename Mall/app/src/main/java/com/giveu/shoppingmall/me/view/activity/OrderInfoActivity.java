@@ -161,11 +161,13 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //status为待首付和待付款时，则采用倒计时
         if (response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) {
             llTimeLeft.setVisibility(View.VISIBLE);
+            llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_00bbc0));
             tvTimeLeft.setRestTime(timeLeft);
             tvTimeLeft.startCount(new CountDownTextView.CountEndListener() {
                 @Override
                 public void onEnd() {
                     tvPay.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
+                    llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     ToastUtils.showLongToast("订单已失效，请重新下单");
                     tvTimeLeft.setText("订单已失效，请重新下单");
                 }
