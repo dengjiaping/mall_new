@@ -12,11 +12,13 @@
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:maxEms="5"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:text="张超"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_16" />
 
@@ -24,10 +26,8 @@
             android:id="@+id/tv_phone"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="27dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="18118746525"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_16" />
     </LinearLayout>
@@ -38,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginRight="@dimen/default_layout_screen_gap"
-        android:text="广东省深圳市福田区彩田一中地铁大厦17楼"
         android:textColor="#686868"
         android:textSize="@dimen/ts_13" />
 

@@ -34,7 +34,7 @@ import butterknife.BindView;
 
 
 public class SplashActivity extends BasePermissionActivity {
-    final int SPLASH_TIME = 1500;
+    final int SPLASH_TIME = 1000;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
     @BindView(R.id.tv_skip)
@@ -142,7 +142,7 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     protected void startViewPagerOrActivity() {
-        getAdSplashImage();
+        //getAdSplashImage();
         if (hasEnterOtherActivity) {
             return;
         }
@@ -194,12 +194,6 @@ public class SplashActivity extends BasePermissionActivity {
     }
 
     private void getAdSplashImage() {
-        AdSplashResponse response = new AdSplashResponse("https://www.baidu.com/","https://www.baidu.com/",6);
-        SharePrefUtil.setAdSplashImage(response);
-        String url = response.imgUrl;
-        if (StringUtils.isNotNull(url)) {
-            ImageUtils.loadImage(url, new ImageView(mBaseContext));
-        }
         ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
             @Override
             public void onSuccess(AdSplashResponse response) {

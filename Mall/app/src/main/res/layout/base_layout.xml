@@ -57,6 +57,20 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/ts_base_layout_title" />
 
+                <com.giveu.shoppingmall.index.widget.ClearEditText
+                    android:id="@+id/top_tab_center_editext"
+                    android:layout_width="240dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_title_background"
+                    android:hint="搜索商品"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:singleLine="true"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
             <!-- right -->
 

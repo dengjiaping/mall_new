@@ -115,6 +115,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     private void onRefresh() {
         //刷新时pageNum重新设置为1
         pageNum = 1;
+        mDatas.clear();
         initDataDelay();
     }
 
@@ -131,12 +132,12 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
-                //data为空并且第一次获取时，显示空界面
-                if (pageNum == 1 && (response == null || response.data == null)) {
+                //onRefresh时数据为空，显示空界面
+                if (pageNum == 1 && (response.data == null || CommonUtils.isNullOrEmpty(response.data.skuInfo))) {
                     ll_emptyView.setVisibility(View.VISIBLE);
                 }
-                //刚好下一页没数据，显示FootView
-                if (pageNum != 1 && (response == null || response.data == null)) {
+                //加载下一页刚好没数据，显示FootView
+                if (pageNum != 1 && (response.data == null || CommonUtils.isNullOrEmpty(response.data.skuInfo))) {
                     ptrlv.showEnd("没有更多数据了");
                 }
                 if (StringUtils.isNotNull(response.channelName)) {
@@ -144,8 +145,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 }
                 if (response.data != null) {
                     if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
-                        if (pageNum == 1)
+                        if (pageNum == 1) {
                             mDatas.clear();
+                        }
                         //当订单列表个数大于或等于pageSize时，则显示加载更多，否则显示没有更多数据了
                         if (response.data.skuInfo.size() >= pageSize) {
                             ptrlv.setPullLoadEnable(true);
@@ -154,9 +156,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                         }
                         pageNum++;
                         mDatas.addAll(response.data.skuInfo);
-                        adapter.notifyDataSetChanged();
                     }
                 }
+                adapter.notifyDataSetChanged();
                 ptrlv.onRefreshComplete();
             }
 
@@ -177,28 +179,38 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     //订单删除成功
     @Override
     public void deleteOrderSuccess(String orderNo) {
-        for (OrderListResponse.SkuInfoBean data : mDatas) {
-            if (orderNo.equals(data.orderNo)) {
-                OrderListResponse.SkuInfoBean skuInfoBean = data;
-                mDatas.remove(skuInfoBean);
-                ToastUtils.showLongToast("订单删除成功");
-                break;
-            }
-        }
-        adapter.notifyDataSetChanged();
+        removeData(orderNo);
+        ToastUtils.showLongToast("订单删除成功");
     }
 
     //取消订单成功
     @Override
     public void cancelOrderSuccess(String orderNo) {
+        removeData(orderNo);
         ToastUtils.showLongToast("订单取消成功");
-        onRefresh();
     }
 
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
+        removeData(orderNo);
         ToastUtils.showLongToast("确认收货成功");
-        onRefresh();
+    }
+
+    //在mDatas中移除订单号为orderNo的订单
+    private void removeData(String orderNo) {
+        for (OrderListResponse.SkuInfoBean data : mDatas) {
+            if (orderNo.equals(data.orderNo)) {
+                OrderListResponse.SkuInfoBean skuInfoBean = data;
+                mDatas.remove(skuInfoBean);
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
+        //当数据为空时，显示空界面
+        if (mDatas.size() == 0) {
+            ptrlv.setPullLoadEnable(false);
+            ll_emptyView.setVisibility(View.VISIBLE);
+        }
     }
 }

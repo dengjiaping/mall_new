@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.CountDownTextView;
+import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 
@@ -75,8 +76,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     RelativeLayout rlMonthPayment;
     @BindView(R.id.tv_month_payment)
     TextView tvMonthPayment;
-    @BindView(R.id.tv_coupon_name)
-    TextView tvCouponName;
+    @BindView(R.id.dv_coupon_name)
+    DetailView dvCouponName;
     @BindView(R.id.tv_user_comments)
     TextView tvUserComments;
     @BindView(R.id.tv_total)
@@ -124,6 +125,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_order_info);
         baseLayout.setTitle("订单详情");
+        baseLayout.showLoading();
+        baseLayout.ll_baselayout_content.setVisibility(View.GONE);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");
         //调用接口获取订单详情
@@ -140,6 +143,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     }
 
+
+    /**
+     * 支付方式、首付、分期数、月供金额、增值服务、优惠券按照订单实际信息显示，有则显示，无则隐藏
+     * 如果用户购买的是大家电，展示家电配送和安装时间
+     */
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
         //区分京东商品和话费流量商品
@@ -148,8 +156,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         dealFooterView(response.status);
         //倒计时
         long timeLeft = 0;
-        if (StringUtils.isNotNull(response.timeLeft))
-            timeLeft = Long.parseLong(response.timeLeft);
+        if (StringUtils.isNotNull(response.remainingTime))
+            timeLeft = Long.parseLong(response.remainingTime);
         //status为待首付和待付款时，则采用倒计时
         if (response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) {
             llTimeLeft.setVisibility(View.VISIBLE);
@@ -166,9 +174,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //status为待收货时
         else if (response.status == OrderState.WAITINGRECEIVE) {
             llTimeLeft.setVisibility(View.VISIBLE);
-            tvTimeLeft.setText("剩" + StringUtils.formatRestTimeToDay(timeLeft) + "自动确认收货");
-        } else
+            tvTimeLeft.setText("剩" + response.timeLeft + "自动确认收货");
+        } else {
             llTimeLeft.setVisibility(View.GONE);
+        }
         //订单号
         if (StringUtils.isNotNull(response.orderNo)) {
             tvOrderNo.setText("订单号：" + response.orderNo);
@@ -225,15 +234,24 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //首付
         if (StringUtils.isNotNull(response.downPayment) && StringUtils.isNotNull(response.selDownPaymentRate)) {
-            tvDownPayment.setText(response.selDownPaymentRate + "(¥" + response.downPayment + ")");
+            rlDownPayment.setVisibility(View.VISIBLE);
+            tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + response.downPayment + ")");
+        } else {
+            rlDownPayment.setVisibility(View.GONE);
         }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
+            rlStagingNum.setVisibility(View.VISIBLE);
             tvStagingNum.setText(response.selStagingNumberRate + "个月");
+        } else {
+            rlStagingNum.setVisibility(View.GONE);
         }
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
+            rlMonthPayment.setVisibility(View.VISIBLE);
             tvMonthPayment.setText("¥" + response.monthPayment);
+        } else {
+            rlMonthPayment.setVisibility(View.GONE);
         }
         //大家电
 
@@ -242,7 +260,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
 
         //优惠券
-
+        if (response.courtesyCardJo != null) {
+            //是否选中：0-是；1-否
+            if (response.courtesyCardJo.isSelected == 0) {
+                dvCouponName.setVisibility(View.VISIBLE);
+                dvCouponName.setRightText(response.courtesyCardJo.courtesyCardName);
+            } else
+                dvCouponName.setVisibility(View.GONE);
+        } else
+            dvCouponName.setVisibility(View.GONE);
 
         //买家留言（文字前景色不一样）
         if (StringUtils.isNotNull(response.userComments)) {
@@ -268,7 +294,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.rechargeDenomination)) {
             tvRechargeDenomination.setText(response.rechargeDenomination);
         }
-
+        baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
+        baseLayout.disLoading();
     }
 
     //确认收货成功
@@ -278,7 +305,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //再次调取接口更新数据
         presenter.getOrderDetail(orderNo);
     }
-
 
 
     @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive})
@@ -368,7 +394,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 break;
             //订单已关闭
             case OrderState.CLOSED:
-                rlFooter.setVisibility(View.GONE);
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.VISIBLE);
+                llTraceAndReceive.setVisibility(View.GONE);
                 break;
         }
     }

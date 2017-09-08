@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
@@ -35,7 +36,6 @@ import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
-import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
@@ -516,9 +516,9 @@ public class ApiImpl {
     }
 
     //获取订单详情
-    public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
     }
 
     //删除订单
@@ -534,15 +534,15 @@ public class ApiImpl {
     }
 
     //订单跟踪
-    public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+    public static void getOrderTrace(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
     }
 
     //确认收货
     public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, BaseBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_confirmReceipt, BaseBean.class, context, responseListener);
     }
 
     //搜索热词刷新
@@ -568,6 +568,17 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
     }
 
+    //商品库存检查
+    public static void queryCommodityStock(Activity context, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "skuCode"}, new Object[]{province, city, region, skuCode});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_stock, BaseBean.class, context, responseListener);
+    }
+
+    //商品库存检查
+    public static void queryCommodityInfo(Activity context,String channel,String idPerson, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<CommodityInfoResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "province", "city", "region", "skuCode"}, new Object[]{channel, StringUtils.string2Long(idPerson), province, city, region, skuCode});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_choose, CommodityInfoResponse.class, context, responseListener);
+    }
     //商品SKU搜索
     public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, BaseRequestAgent.ResponseListener responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNumber", "pageSize"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize});

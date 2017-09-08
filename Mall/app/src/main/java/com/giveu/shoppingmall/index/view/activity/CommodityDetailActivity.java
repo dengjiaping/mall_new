@@ -15,10 +15,14 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
+import com.giveu.shoppingmall.index.presenter.CommodityPresenter;
+import com.giveu.shoppingmall.index.view.agent.ICommodityView;
 import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ import static com.giveu.shoppingmall.R.id.vp_content;
  * 商品详情
  */
 
-public class CommodityDetailActivity extends BaseActivity {
+public class CommodityDetailActivity extends BaseActivity implements ICommodityView {
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(vp_content)
@@ -58,6 +62,7 @@ public class CommodityDetailActivity extends BaseActivity {
     private String[] tabTitles = new String[]{"商品", "详情"};
     private boolean isCredit;//是否分期产品
     private String skuCode;
+    private CommodityPresenter presenter;
 
     public static void startIt(Context context, boolean isCredit, String skuCode) {
         Intent intent = new Intent(context, CommodityDetailActivity.class);
@@ -103,6 +108,12 @@ public class CommodityDetailActivity extends BaseActivity {
             llCredit.setVisibility(View.GONE);
             viewDivider.setVisibility(View.GONE);
         }
+        presenter = new CommodityPresenter(this);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
     }
 
     @Override
@@ -125,13 +136,14 @@ public class CommodityDetailActivity extends BaseActivity {
 
     /**
      * 0 未收藏， 1已收藏
+     *
      * @param collectStatus
      */
     public void setCollectStatus(int collectStatus) {
-        if(collectStatus == 1) {
+        if (collectStatus == 1) {
             ivCollect.setImageResource(R.drawable.ic_collect_select);
             tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
-        }else {
+        } else {
             cancelCollect();
         }
     }
@@ -161,11 +173,11 @@ public class CommodityDetailActivity extends BaseActivity {
                 boolean isCheck = (boolean) ivCollect.getTag();
                 //已收藏则取消收藏
                 if (isCheck) {
-                    cancelCollect();
+                    presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), skuCode, 1);
                 } else {
-                    collectCommodity();
+                    presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), skuCode, 0);
                 }
-                ivCollect.setTag(!isCheck);
+
                 break;
         }
     }
@@ -180,5 +192,17 @@ public class CommodityDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public void collectOperator() {
+        boolean isCheck = (boolean) ivCollect.getTag();
+        //已收藏则取消收藏
+        if (isCheck) {
+            cancelCollect();
+        } else {
+            collectCommodity();
+        }
+        ivCollect.setTag(!isCheck);
     }
 }

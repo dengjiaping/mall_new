@@ -52,7 +52,7 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
          */
         public boolean hasInvalid(){
             //0有效，1失效
-            if(0 == status){
+            if(1 == status){
                 return true;
             }else{
                 return false;
