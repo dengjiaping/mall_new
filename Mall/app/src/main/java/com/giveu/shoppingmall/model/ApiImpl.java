@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
@@ -34,7 +35,6 @@ import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
-import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
@@ -564,6 +564,18 @@ public class ApiImpl {
     public static void getCommodityDetail(Activity context, String skuCode, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode"}, new Object[]{skuCode});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
+    }
+
+    //商品库存检查
+    public static void queryCommodityStock(Activity context, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "skuCode"}, new Object[]{province, city, region, skuCode});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_stock, BaseBean.class, context, responseListener);
+    }
+
+    //商品库存检查
+    public static void queryCommodityInfo(Activity context,String channel,String idPerson, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<CommodityInfoResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel","idPerson","province", "city", "region", "skuCode"}, new Object[]{channel,StringUtils.string2Long(idPerson),province, city, region, skuCode});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_choose, CommodityInfoResponse.class, context, responseListener);
     }
 }
 

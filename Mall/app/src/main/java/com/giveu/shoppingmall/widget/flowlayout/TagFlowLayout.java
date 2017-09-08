@@ -190,20 +190,46 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
                     child.setChecked(true);
                     mSelectedView.remove(preIndex);
                     mSelectedView.add(position);
+                    if (!mTagAdapter.getPreCheckedList().contains(position)) {
+                        mTagAdapter.setSelectedList(position);
+                    }
                 } else {
                     if (mSelectedMax > 0 && mSelectedView.size() >= mSelectedMax)
                         return;
                     child.setChecked(true);
                     mSelectedView.add(position);
+                    if (!mTagAdapter.getPreCheckedList().contains(position)) {
+                        mTagAdapter.setSelectedList(position);
+                    }
                 }
             } else {
                 child.setChecked(false);
                 mSelectedView.remove(position);
+                if (mTagAdapter.getPreCheckedList().contains(position)) {
+                    mTagAdapter.getPreCheckedList().remove(position);
+                }
             }
             if (mOnSelectListener != null) {
                 mOnSelectListener.onSelected(new HashSet<Integer>(mSelectedView));
             }
         }
+    }
+
+    /**
+     * 清空所有选择
+     */
+    public void resetView() {
+        mTagAdapter.getPreCheckedList().clear();
+        mSelectedView.clear();
+        changeAdapter();
+    }
+
+    /**
+     * 重新绘制
+     */
+    public void notifyDataSetChange() {
+        mSelectedView.clear();
+        changeAdapter();
     }
 
     public TagAdapter getAdapter() {
