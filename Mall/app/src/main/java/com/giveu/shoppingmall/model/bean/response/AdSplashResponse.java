@@ -7,7 +7,23 @@ import com.android.volley.mynet.BaseBean;
  */
 
 public class AdSplashResponse extends BaseBean<AdSplashResponse> {
-    public String id;
-    public String imageUrl;
-    public String respondUrl;
+    /**
+     * adId : 12
+     * enable : true
+     * imgUrl : http://img.dfshop.cn/vivi.png
+     * imgUrlLink : 测试内容35fa
+     * second : 3
+     */
+
+    public int adId;
+    public boolean enable;
+    public String imgUrl;
+    public String imgUrlLink;
+    public int second;
+
+    public AdSplashResponse(String imgUrl, String imgUrlLink,int second) {
+        this.imgUrl = imgUrl;
+        this.imgUrlLink = imgUrlLink;
+        this.second = second;
+    }
 }

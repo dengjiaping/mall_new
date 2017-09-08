@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/fragment_left_image"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/back_press" />
+
+    <com.giveu.shoppingmall.index.widget.MiddleRadioButton
+        android:id="@+id/fragment_center_text"
+        android:layout_width="268dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_title_background"
+        android:button="@null"
+        android:drawableLeft="@drawable/shopping_search"
+        android:text="搜索"
+        android:textColor="#9b9b9b"
+        android:visibility="visible" />
+
+    <com.giveu.shoppingmall.index.widget.ClearEditText
+        android:id="@+id/fragment_center_edit"
+        android:layout_width="268dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_title_background"
+        android:hint="搜索商品"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/fragment_right_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="搜索"
+        android:textColor="#4a4a4a"
+        android:textSize="15dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/fragment_right_image"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/classify_msg"
+        android:visibility="gone" />
+</RelativeLayout>

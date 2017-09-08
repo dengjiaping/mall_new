@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:orientation="horizontal"
         android:background="@color/white"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/default_layout_screen_gap"
         android:paddingRight="@dimen/default_layout_screen_gap">
 
@@ -35,16 +35,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/ts_16"
+                    android:text="订单状态："
                     android:textColor="@color/color_4a4a4a"
-                    android:text="订单状态：" />
+                    android:textSize="@dimen/ts_16" />
 
                 <TextView
                     android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/ts_16"
-                    android:textColor="@color/color_00bbc0"/>
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_16" />
             </LinearLayout>
 
             <TextView
@@ -53,8 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/color_adadad"
-                android:textSize="@dimen/ts_16"
-                 />
+                android:textSize="@dimen/ts_16" />
 
 
         </LinearLayout>
@@ -62,18 +61,37 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lv_trace"
-        android:layout_marginTop="5dp"
-        android:background="@color/white"
-        android:divider="@color/white"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        />
+        <LinearLayout
+            android:id="@+id/ll_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <ListView
+                android:id="@+id/lv_trace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:divider="@color/white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white" />
+        </LinearLayout>
+
+        <com.giveu.shoppingmall.widget.emptyview.CommonLoadingView
+            android:id="@+id/clv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

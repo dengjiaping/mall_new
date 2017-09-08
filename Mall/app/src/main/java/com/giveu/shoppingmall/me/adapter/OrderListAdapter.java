@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
@@ -60,11 +61,21 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
          * 一次性产品和借记卡消费不显示
          */
         if (item.orderType == 0) {
-            viewHolder.setText(R.id.tv_down_payment, "¥" + item.downPayment);
-            viewHolder.setText(R.id.tv_month_payment, "¥" + item.monthPayment);
-            viewHolder.setVisible(R.id.ll_payment, true);
+            viewHolder.setVisible(R.id.rl_payment, true);
+            if (StringUtils.isNotNull(item.monthPayment)) {
+                viewHolder.setVisible(R.id.ll_payment, true);
+                viewHolder.setVisible(R.id.ll_total, false);
+                viewHolder.setText(R.id.tv_down_payment, "¥" + item.downPayment);
+                viewHolder.setText(R.id.tv_month_payment, "¥" + item.monthPayment);
+            }
+            else {
+                viewHolder.setVisible(R.id.ll_payment, false);
+                viewHolder.setVisible(R.id.ll_total, true);
+                viewHolder.setText(R.id.tv_total, "¥" + item.payPrice);
+            }
+
         } else {
-            viewHolder.setVisible(R.id.ll_payment, false);
+            viewHolder.setVisible(R.id.rl_payment, false);
         }
 
 
@@ -77,13 +88,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
          * 已关闭           订单跟踪、删除订单
          */
         String status = OrderStatus.getOrderStatus(item.status);
+        viewHolder.setText(R.id.tv_status, status);
         switch (item.status) {
 
             //待支付
             case OrderState.WAITINGPAY:
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_status, status);
                 viewHolder.setText(R.id.tv_button_left, "订单取消");
                 viewHolder.setText(R.id.tv_button_right, "去支付");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
@@ -104,7 +115,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             case OrderState.DOWNPAYMENT:
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_status, status);
                 viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "去首付");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
@@ -132,7 +142,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             case OrderState.WAITINGRECEIVE:
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_status, status + "，待签收");
                 viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "确认收货");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
@@ -153,7 +162,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             case OrderState.FINISHED:
                 viewHolder.setVisible(R.id.tv_button_left, false);
                 viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_status, status);
                 viewHolder.setText(R.id.tv_button_right, "订单追踪");
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
@@ -167,7 +175,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             case OrderState.CLOSED:
                 viewHolder.setVisible(R.id.tv_button_left, true);
                 viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_status, status);
                 viewHolder.setText(R.id.tv_button_left, "订单追踪");
                 viewHolder.setText(R.id.tv_button_right, "删除订单");
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {

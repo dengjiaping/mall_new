@@ -20,9 +20,7 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.HardWareUtil;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
@@ -36,7 +34,7 @@ import butterknife.BindView;
 
 
 public class SplashActivity extends BasePermissionActivity {
-    final int SPLASH_TIME = 1500;
+    final int SPLASH_TIME = 1000;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
     @BindView(R.id.tv_skip)
@@ -144,7 +142,7 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     protected void startViewPagerOrActivity() {
-//        getAdSplashImage();
+        getAdSplashImage();
         if (hasEnterOtherActivity) {
             return;
         }
@@ -152,7 +150,7 @@ public class SplashActivity extends BasePermissionActivity {
             WelcomeActivity.startIt(mBaseContext);
         } else {
             AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
-            if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imageUrl)) {
+            if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
                 //有广告
                 AdSplashActivity.startIt(mBaseContext);
             } else {
@@ -196,12 +194,18 @@ public class SplashActivity extends BasePermissionActivity {
     }
 
     private void getAdSplashImage() {
-        ApiImpl.AdSplashImage(null, new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
+        AdSplashResponse response = new AdSplashResponse("https://www.baidu.com/","https://www.baidu.com/",6);
+        SharePrefUtil.setAdSplashImage(response);
+        String url = response.imgUrl;
+        if (StringUtils.isNotNull(url)) {
+            ImageUtils.loadImage(url, new ImageView(mBaseContext));
+        }
+        ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
             @Override
             public void onSuccess(AdSplashResponse response) {
                 if (response.data != null) {
                     SharePrefUtil.setAdSplashImage(response.data);
-                    String url = response.data.imageUrl;
+                    String url = response.data.imgUrl;
                     if (StringUtils.isNotNull(url)) {
                         ImageUtils.loadImage(url, new ImageView(mBaseContext));
                     }

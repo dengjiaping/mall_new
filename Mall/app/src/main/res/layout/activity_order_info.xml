@@ -147,9 +147,9 @@
 
                     <ImageView
                         android:id="@+id/iv_picture"
-                        android:src="@drawable/ic_default_pic"
                         android:layout_width="120dp"
-                        android:layout_height="120dp" />
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_default_pic" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -186,6 +186,7 @@
                                 android:id="@+id/tv_quantity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"
                                 android:textColor="@color/color_00bbc0"
                                 android:textSize="@dimen/ts_15" />
@@ -308,7 +309,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="24个月"
                                 android:textColor="@color/color_00bbc0"
                                 android:textSize="@dimen/ts_15" />
                         </RelativeLayout>
@@ -360,14 +360,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
-                                android:gravity="center"
+                                android:gravity="center|end"
                                 android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="送货：8月31日[周四]"
-                                    android:textColor="@color/color_4a4a4a" />
+                                    android:textColor="@color/color_4a4a4a"
+                                    android:textSize="@dimen/ts_15"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -544,9 +545,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:background="@color/white"
+                            android:gravity="center"
                             android:paddingLeft="@dimen/default_layout_screen_gap"
-                            android:paddingRight="@dimen/default_layout_screen_gap"
-                            android:gravity="center">
+                            android:paddingRight="@dimen/default_layout_screen_gap">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -569,9 +570,9 @@
                             android:layout_height="48dp"
                             android:layout_marginTop="1dp"
                             android:background="@color/white"
+                            android:gravity="center"
                             android:paddingLeft="@dimen/default_layout_screen_gap"
-                            android:paddingRight="@dimen/default_layout_screen_gap"
-                            android:gravity="center">
+                            android:paddingRight="@dimen/default_layout_screen_gap">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -595,47 +596,14 @@
                 </RelativeLayout>
 
 
-               <!-- <com.giveu.shoppingmall.widget.DetailView
+                <com.giveu.shoppingmall.widget.DetailView
                     android:id="@+id/dv_coupon_name"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="1dp"
                     app:text_left="优惠券"
-                    app:text_right_color="@color/color_00bbc0"
-                    />-->
+                    app:text_right_color="@color/color_00bbc0" />
 
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="优惠券"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-                    <TextView
-                        android:id="@+id/tv_coupon_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="17dp"
-                        android:textColor="@color/color_00bbc0"
-                        android:textSize="@dimen/ts_15" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_right" />
-                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_user_comments"

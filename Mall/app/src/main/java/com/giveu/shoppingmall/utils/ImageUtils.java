@@ -324,6 +324,10 @@ public class ImageUtils {
         String content = "content://";
         String assets = "assets://";
         String drawable = "drawable://";
+
+    }
+    public interface ImageSize{
+        String img_size_240_240 = "/s240x240fdfs/";
     }
 
     public static Bitmap getViewBitmap(View view, int width, int height) {

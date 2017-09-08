@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
@@ -18,6 +20,7 @@ import com.giveu.shoppingmall.me.adapter.CollectionAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -28,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
-import static android.R.attr.type;
 
 
 /**
@@ -52,9 +53,11 @@ public class CollectionActivity extends BaseActivity {
     LinearLayout llOffTheShelf;
     private int pageIndex = 1;
     private final int pageSize = 10;
+    String type;//DELETEMORE 全选删除多项; DELETEONE 长按删除某一项
     List<CollectionResponse.ResultListBean> goodsList;
     private static final String DELETEONE = "1";//长按删除某一项
     private static final String DELETEMORE = "2";//全选删除多项
+    List<Integer> itemNotClickList;//单选未中项
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CollectionActivity.class);
@@ -64,10 +67,10 @@ public class CollectionActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_collection);
-
         baseLayout.setTitle("我的收藏");
         baseLayout.setRightText("编辑");
         baseLayout.setRightTextColor(R.color.title_color);
+
         baseLayout.setRightTextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,14 +79,15 @@ public class CollectionActivity extends BaseActivity {
                 }
                 if (rightTextClick) {
                     baseLayout.setRightText("取消");
-//                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                    layoutParams.setMargins(0,0,0,57);
-//                    ptrlv.setLayoutParams(layoutParams);
                     llBottomDelete.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT - DensityUtils.dip2px(57));
+                    ptrlv.setLayoutParams(layoutParams);
                     clearChoose();
                     cbChoose.setChecked(false);
                 } else {
                     baseLayout.setRightText("编辑");
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ptrlv.setLayoutParams(layoutParams);
                     llBottomDelete.setVisibility(View.GONE);
                 }
                 for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
@@ -97,13 +101,20 @@ public class CollectionActivity extends BaseActivity {
         collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
             @Override
             public void itemClick() {
+                itemNotClickList = new ArrayList<>();
                 int count = 0;
                 if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
-                for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
-                    if (true == collectionResponse.isCheck) {
+                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
+                    if (collectionAdapter.getData().get(i) == null) {
+                        return;
+                    }
+                    if (true == collectionAdapter.getData().get(i).isCheck) {
+                        //记录选中项
                         count++;
+                    } else {
+                        itemNotClickList.add(i);
                     }
                 }
                 deleteColorAndCanClick(count);
@@ -138,8 +149,8 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.getRefreshableView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //从1开始
-                showDeleteGoodsDialog(collectionAdapter, position, DELETEONE);
+                //PullToRefreshListView从1开始
+                showDeleteGoodsDialog(collectionAdapter, position - 1, DELETEONE);
                 return false;
             }
         });
@@ -185,10 +196,23 @@ public class CollectionActivity extends BaseActivity {
                             llOffTheShelf.setVisibility(View.GONE);
                         }
                         goodsList.addAll(collectionResponse.resultList);
-                        if(llBottomDelete.getVisibility() == View.VISIBLE){
-                            for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
-                                collectionResponse1.isShowCb = true;
+                        if (llBottomDelete.getVisibility() == View.VISIBLE) {
+                            if (cbChoose.isChecked()) {
+                                for (int i = 0; i < goodsList.size(); i++) {
+                                    goodsList.get(i).isShowCb = true;
+                                    if (itemNotClickList.contains(i)) {
+                                        goodsList.get(i).isCheck = false;
+                                    } else {
+                                        goodsList.get(i).isCheck = true;
+                                    }
+                                }
+                            } else {
+                                for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
+                                    collectionResponse1.isShowCb = true;
+                                    collectionResponse1.isCheck = false;
+                                }
                             }
+
                         }
                         collectionAdapter.notifyDataSetChanged();
                         pageIndex++;
@@ -224,6 +248,7 @@ public class CollectionActivity extends BaseActivity {
         for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
             collectionResponse.isCheck = false;
         }
+        collectionAdapter.notifyDataSetChanged();
         deleteColorAndCanClick(0);
     }
 
@@ -260,9 +285,9 @@ public class CollectionActivity extends BaseActivity {
                     //满足条件
                     List<String> skuCodes = new ArrayList<>();
                     if (DELETEONE.equals(type)) {
-                        if (position > 0 && (collectionAdapter.getItem(position - 1) != null)) {
+                        if (position > 0 && (collectionAdapter.getItem(position) != null)) {
                             //长按删除
-                            skuCodes.add(collectionAdapter.getItem(position - 1).skuCode);
+                            skuCodes.add(collectionAdapter.getItem(position).skuCode);
                             deleteGoods(skuCodes, position, null);
                         }
                     } else {
@@ -288,22 +313,24 @@ public class CollectionActivity extends BaseActivity {
      *
      * @param skuCodes
      * @param position
-     * @param removeList
-     *
-     *  1 为删除
+     * @param removeList 1 为删除
      */
     public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
         ApiImpl.deleteCollection(mBaseContext, "123457", skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {
-                    collectionAdapter.getData().remove(position - 1);
+                    collectionAdapter.getData().remove(position);
                 } else {
                     //全选或选择删除
+                    if (CommonUtils.isNullOrEmpty(removeList)) {
+                        return;
+                    }
                     collectionAdapter.getData().removeAll(removeList);
                 }
                 collectionAdapter.notifyDataSetChanged();
                 ToastUtils.showShortToast("删除成功");
+                deleteReset(collectionAdapter.getData());
             }
 
             @Override
@@ -313,4 +340,21 @@ public class CollectionActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 删除后还原状态，隐藏下部删除控件，全选清除
+     *
+     * @param list
+     */
+    public void deleteReset(List<CollectionResponse.ResultListBean> list) {
+        clearChoose();
+        if (CommonUtils.isNullOrEmpty(list)) {
+            //全部都已经删除
+            baseLayout.setRightText("");
+        } else {
+            baseLayout.setRightText("编辑");
+        }
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ptrlv.setLayoutParams(layoutParams);
+        llBottomDelete.setVisibility(View.GONE);
+    }
 }
