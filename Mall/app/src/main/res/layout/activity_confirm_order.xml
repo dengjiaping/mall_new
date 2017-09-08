@@ -64,7 +64,7 @@
 
                 </RelativeLayout>
 
-                <com.giveu.shoppingmall.index.widget.MiddleRaidoButton
+                <com.giveu.shoppingmall.index.widget.MiddleRadioButton
                     android:id="@+id/confirm_order_add_address"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

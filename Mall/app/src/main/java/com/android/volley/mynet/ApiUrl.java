@@ -173,8 +173,11 @@ public interface ApiUrl {
     String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/instruction";
     //商品详情
     String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
-    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    String sc_goods_search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //一级类目查询子类目(商品分类)
-    String shopping_classify_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
+    String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
+    //商品SKU搜索
+    String sc_goods_search_goodsSearch = "http://10.11.31.111:8084/mockjs/1/v1/sc/goods/search/goodsSearch";
+//    String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
 }
 
