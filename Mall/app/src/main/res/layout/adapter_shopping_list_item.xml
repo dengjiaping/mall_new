@@ -30,10 +30,10 @@
 
         <TextView
             android:id="@+id/item_right_desc"
-            android:layout_width="33dp"
+            android:layout_width="match_parent"
             android:layout_height="15dp"
             android:layout_marginTop="4dp"
-            android:gravity="center"
+            android:gravity="center_vertical|left"
             android:text="手势自拍，闪速证明指纹"
             android:textColor="@color/color_999999"
             android:textSize="@dimen/ts_10" />
