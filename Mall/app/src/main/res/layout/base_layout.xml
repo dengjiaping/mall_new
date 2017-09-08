@@ -69,7 +69,7 @@
                     android:paddingTop="5dp"
                     android:singleLine="true"
                     android:textSize="15sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
             </RelativeLayout>
             <!-- right -->

@@ -11,17 +11,17 @@ import android.widget.RadioButton;
  * 图片和文字居中的RadioButton,可充当TextView使用
  * 用于价格排序切换按钮
  */
-public class MiddleRaidoButton extends RadioButton {
+public class MiddleRadioButton extends RadioButton {
 
-    public MiddleRaidoButton(Context context, AttributeSet attrs, int defStyle) {
+    public MiddleRadioButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public MiddleRaidoButton(Context context, AttributeSet attrs) {
+    public MiddleRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MiddleRaidoButton(Context context) {
+    public MiddleRadioButton(Context context) {
         super(context);
     }
 

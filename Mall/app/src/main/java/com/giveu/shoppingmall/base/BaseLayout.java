@@ -73,7 +73,6 @@ public class BaseLayout extends LinearLayout {
     public TextView tv_left;
     public RelativeLayout rl_click_right;
     public ImageView iv_close;
-    public EditText top_tab_center_edittext;
     /**
      * title bar
      */
@@ -96,7 +95,6 @@ public class BaseLayout extends LinearLayout {
         iv_statusbar = (ImageView) base_layout.findViewById(R.id.iv_statusbar);
         top_tab_right_text = (TextView) base_layout.findViewById(R.id.top_tab_right_text);
         titlebar = (RelativeLayout) base_layout.findViewById(R.id.titlebar);
-        top_tab_center_edittext = (EditText) base_layout.findViewById(R.id.top_tab_center_editext);
 
         ll_baselayout_content = (LinearLayout) base_layout.findViewById(R.id.ll_baselayout_content);
         clv = (CommonLoadingView) base_layout.findViewById(R.id.clv);
@@ -165,57 +163,8 @@ public class BaseLayout extends LinearLayout {
      *
      * @param pageTitle
      */
-    public BaseLayout setTitle(CharSequence pageTitle) {
+    public void setTitle(CharSequence pageTitle) {
         top_tab_center_title.setText(pageTitle);
-        return this;
-    }
-
-    public BaseLayout setTitleListener(OnClickListener clickListener) {
-        top_tab_center_title.setOnClickListener(clickListener);
-        return this;
-    }
-
-    public BaseLayout setTitleWidth(int width) {
-        top_tab_center_title.getLayoutParams().width = width;
-        top_tab_center_title.requestLayout();
-        return this;
-    }
-
-    public BaseLayout setTitleHeight(int height) {
-        top_tab_center_title.getLayoutParams().height = height;
-        top_tab_center_title.requestLayout();
-        return this;
-    }
-
-    public void showCenterEditText() {
-        top_tab_center_edittext.setVisibility(View.VISIBLE);
-        top_tab_center_title.setVisibility(View.GONE);
-    }
-
-    /**
-     * 设置标题字体颜色
-     *
-     * @param color
-     */
-    public BaseLayout setTitleTextColor(int color) {
-        top_tab_center_title.setTextColor(ContextCompat.getColor(mContext, color));
-        return this;
-    }
-
-    /**
-     * 设置标题背景样式
-     */
-    public BaseLayout setTitleTextBackground(int res) {
-        top_tab_center_title.setBackgroundResource(res);
-        return this;
-    }
-
-    /**
-     * 设置标题字体大小
-     */
-    public BaseLayout setTitleTextSize(int size) {
-        top_tab_center_title.setTextSize(size);
-        return this;
     }
 
 
@@ -288,6 +237,15 @@ public class BaseLayout extends LinearLayout {
      */
     public void setRightTextListener(View.OnClickListener onClickListener) {
         top_tab_right_text.setOnClickListener(onClickListener);
+    }
+
+    /**
+     * 设置标题字体颜色
+     *
+     * @param color
+     */
+    public void setTitleTextColor(int color) {
+        top_tab_center_title.setTextColor(ContextCompat.getColor(mContext, color));
     }
 
     public void setRightImageAndListener(int resid, View.OnClickListener onClickListener) {

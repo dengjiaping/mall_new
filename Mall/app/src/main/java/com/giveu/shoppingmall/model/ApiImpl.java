@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
@@ -515,9 +516,9 @@ public class ApiImpl {
     }
 
     //获取订单详情
-    public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
     }
 
     //删除订单
@@ -533,26 +534,26 @@ public class ApiImpl {
     }
 
     //订单跟踪
-    public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+    public static void getOrderTrace(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
     }
 
     //确认收货
     public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, BaseBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_confirmReceipt, BaseBean.class, context, responseListener);
     }
 
     //搜索热词刷新
     public static void refreshHotWords(Activity context, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.shopping_search_hotWordsRefresh, BaseBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.sc_goods_search_hotword_refresh, BaseBean.class, context, responseListener);
     }
 
     //一级类目查询子类目(商品分类)
     public static void getChildrenShopTypes(Activity context, int shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"shopTypeId"}, new Object[]{shopTypeId});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.shopping_classify_childrenShopTypes, ShopTypesBean.class, context, resonseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_shopTypes_childrenShopTypes, ShopTypesBean.class, context, resonseListener);
     }
 
     //商品介绍
@@ -565,6 +566,12 @@ public class ApiImpl {
     public static void getCommodityDetail(Activity context, String skuCode, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode"}, new Object[]{skuCode});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
+    }
+
+    //商品SKU搜索
+    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, BaseRequestAgent.ResponseListener responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNumber", "pageSize"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
     }
 }
 

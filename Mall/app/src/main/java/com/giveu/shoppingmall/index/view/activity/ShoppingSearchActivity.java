@@ -11,7 +11,10 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.index.view.fragment.ShoppingListFragment;
+import com.giveu.shoppingmall.index.view.fragment.TitleBarFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
@@ -39,20 +42,35 @@ public class ShoppingSearchActivity extends BaseActivity {
     TextView mRefreshView;
 
     private TagAdapter<String> mTagAdapter;
+    private TitleBarFragment titleFragment;
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shopping_search_layout);
 
-        baseLayout.showCenterEditText();
-        baseLayout.setRightText("搜索");
+        baseLayout.setTitleBarAndStatusBar(false, true);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("showCenterEdit", true);
+        bundle.putBoolean("showRightText", true);
+        titleFragment = TitleBarFragment.newInstance(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.shopping_search_title, titleFragment)
+                .commit();
 
         labels = new ArrayList<>();
         mFlowLayout.setAdapter(mTagAdapter = new TagAdapter<String>(labels) {
             @Override
-            public View getView(FlowLayout parent, int position, String s) {
+            public View getView(FlowLayout parent, int position, final String s) {
                 TextView tvTag = (TextView) LayoutInflater.from(mBaseContext).inflate(R.layout.search_label_tv, parent, false);
                 tvTag.setText(s);
+                tvTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        titleFragment.setSearchText(s);
+                    }
+                });
                 return tvTag;
             }
         });
@@ -63,6 +81,18 @@ public class ShoppingSearchActivity extends BaseActivity {
     @Override
     public void setData() {
 
+    }
+
+    @Override
+    public void setListener() {
+        titleFragment.setOnSearchListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.getTag() != null) {
+                    ToastUtils.showShortToast(v.getTag().toString());
+                }
+            }
+        });
     }
 
     public static void startIt(Context context) {
