@@ -31,7 +31,7 @@ public interface ApiUrl {
     //补充其他联系人
     String personCenter_account_addOtherContact = BASE_URL + "personCenter/account/addOtherContact";
     //广告页
-    String activity_getImageInfo = BASE_URL + "activity/getImageInfo";
+    String adviertisement_getad = BASE_URL + "adviertisement/getad";
     String token_getToken = BASE_URL + "personCenter/token/applyToken";
     //验证密码
     String sales_account_checkPwd = BASE_URL + "sales/account/checkPwd";

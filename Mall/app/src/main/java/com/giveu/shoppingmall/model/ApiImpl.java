@@ -72,8 +72,9 @@ public class ApiImpl {
 
 
     //广告页
-    public static void AdSplashImage(Activity context, BaseRequestAgent.ResponseListener<AdSplashResponse> responseListener) {
-        RequestAgent.getInstance().sendPostRequest(null, ApiUrl.activity_getImageInfo, AdSplashResponse.class, null, responseListener);
+    public static void AdSplashImage(String type, BaseRequestAgent.ResponseListener<AdSplashResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"platform", "type"}, new String[]{"Android",type});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.adviertisement_getad, AdSplashResponse.class, responseListener);
     }
 
     public static void getAppToken(Activity context, final BaseRequestAgent.ResponseListener<TokenBean> responseListener) {
@@ -467,7 +468,7 @@ public class ApiImpl {
 
     //获取商品收藏列表
     public static void getCollectionList(Activity context, String idPerson, int pageNum, int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "pageNum", "pageSize"}, new Object[]{idPerson, pageNum, pageSize});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel","idPerson", "pageNum", "pageSize"}, new Object[]{"SC",idPerson, pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class, context, responseListener);
     }
 
@@ -479,7 +480,7 @@ public class ApiImpl {
 
     //删除商品收藏
     public static void deleteCollection(Activity context, String idPerson, List<String> skuCodes, int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "skuCodes", "status"}, new Object[]{idPerson, skuCodes, status});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel","idPerson", "skuCodes", "status"}, new Object[]{"SC",idPerson, skuCodes, status});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class, context, responseListener);
     }
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -70,15 +71,16 @@ public class AdSplashActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.layout_splash);
         baseLayout.setTitleBarAndStatusBar(false, false);
-
+        AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
+        count = adSplashImage.second;
         startCount();
     }
 
     @Override
     public void setData() {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
-        if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imageUrl)) {
-            ImageUtils.loadImage(adSplashImage.imageUrl, ivSplash);
+        if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
+            ImageUtils.loadImage(adSplashImage.imgUrl, ivSplash);
         }
     }
 
@@ -90,14 +92,27 @@ public class AdSplashActivity extends BaseActivity {
     @OnClick(R.id.iv_splash)
     public void onClickAd() {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
-        if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.respondUrl)) {
-
+        if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrlLink)) {
+            CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink, "广告");
+            stopCount();
         }
     }
 
     public static void startIt(Activity activity){
         Intent intent = new Intent(activity, AdSplashActivity.class);
         activity.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopCount();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        startCount();
     }
 
 
