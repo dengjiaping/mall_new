@@ -12,7 +12,6 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
@@ -59,11 +58,7 @@ public class AdSplashActivity extends BaseActivity {
 
     private void turnToMainActivity() {
         stopCount();
-        if (LoginHelper.getInstance().hasLogin()) {
-            MainActivity.startIt(mBaseContext);
-        } else {
-//            CommonUtils.startActivity(mBaseContext, LoginActivity.class);
-        }
+        MainActivity.startIt(mBaseContext);
         finish();
     }
 
