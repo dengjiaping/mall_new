@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="154dp"
-        android:background="@color/white">
+        android:background="@drawable/bg_white_corners">
 
         <ImageView
             android:id="@+id/iv_commodity"
@@ -42,12 +42,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/iv_dismiss"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:layout_marginTop="12dp"
             android:gravity="center_vertical"
+            android:ellipsize="end"
             android:maxLines="2"
-            android:text="iphone 7 苹果新品全网通4G手机"
             android:textColor="@color/color_4a4a4a"
             android:textSize="@dimen/ts_14" />
 
@@ -67,7 +67,7 @@
                 android:text="￥4799.00"
                 android:textColor="@color/color_ff2a2a"
                 android:textSize="@dimen/ts_19"
-                android:textStyle="bold" />
+                />
 
             <TextView
                 android:id="@+id/tv_commodity_amount"

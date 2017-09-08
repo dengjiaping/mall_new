@@ -143,7 +143,7 @@ public interface ApiUrl {
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
     //获取商品收藏列表
     String collections_goodsSkus_all = BASE_URL + "sc/users/collections/goodsSkus/all";
-    //删除商品收藏列表
+    //商品收藏
     String collections_goodsSkus_collect = BASE_URL + "sc/users/collections/goodsSkus/collect";
     //获取用户收货地址列表
     String personCenter_address_getAddress = BASE_URL + "personCenter/address/getAddress";

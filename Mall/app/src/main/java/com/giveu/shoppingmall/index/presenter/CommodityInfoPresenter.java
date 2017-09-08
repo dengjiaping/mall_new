@@ -73,4 +73,5 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
         });
     }
 
+
 }

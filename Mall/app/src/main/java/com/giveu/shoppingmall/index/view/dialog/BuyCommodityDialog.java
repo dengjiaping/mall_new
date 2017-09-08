@@ -113,7 +113,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             return;
         }
         tvCommodityName.setText(response.skuInfo.name);
-        tvPrice.setText(StringUtils.format2(response.skuInfo.salePrice));
+        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(response.skuInfo.salePrice), "", 19, 17, R.color.color_ff2a2a, R.color.color_999999);
         loadImage(response.skuInfo.srcIp+"/"+response.skuInfo.src);
         filterList = new ArrayList<>();
         allAttrMap = new ArrayList<>();
