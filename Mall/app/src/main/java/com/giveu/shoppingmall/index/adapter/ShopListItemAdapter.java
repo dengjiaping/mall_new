@@ -12,7 +12,6 @@ import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.List;
 
@@ -45,10 +44,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
         //true就不显示月供,实际上隐藏售价view，月供view变成售价
-        String text = StringUtils.format2(item.getMonthAmount() + "");
-        String startStr = text.substring(0, text.indexOf("."));
-        String endStr = text.substring(text.indexOf("."), text.length());
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供：¥", startStr, endStr, "", 14, 11, R.color.red, R.color.color_999999);
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.getMonthAmount() + "", "", 14, 11, R.color.red, R.color.color_999999);
 
         holder.setText(R.id.item_right_price, "¥" + item.getSalePrice());
     }

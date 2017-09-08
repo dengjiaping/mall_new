@@ -81,6 +81,7 @@ public class AccountManagementActivity extends BaseActivity {
         //如果是假数据激活用户，隐藏
         if (LoginHelper.getInstance().hasAverageUser()) {
             llBankCard.setVisibility(View.GONE);
+            llDeliveryAddress.setVisibility(View.GONE);
             tvPerfectInfo.setVisibility(View.GONE);
             ivRight.setVisibility(View.GONE);
         } else {
