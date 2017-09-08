@@ -26,4 +26,6 @@ public interface SharePrefKeys {
     String PERSON_INFO_RESPONSE = "PERSON_INFO_RESPONSE";
     String SHOW_LOTTERY = "SHOW_LOTTERY";
 
+    String SEARCH_HISTORY = "SEARCH_HISTORY";
+
 }

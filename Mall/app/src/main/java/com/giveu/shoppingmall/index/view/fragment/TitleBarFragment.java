@@ -10,9 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.event.ClearEvent;
+import com.giveu.shoppingmall.event.SearchEvent;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.widget.ClearEditText;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
+import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +26,7 @@ import butterknife.OnClick;
  * Created by 524202 on 2017/9/8.
  */
 
-public class TitleBarFragment extends Fragment implements View.OnClickListener {
+public class TitleBarFragment extends Fragment implements View.OnClickListener, ClearEditText.OnClearListener {
 
     @BindView(R.id.fragment_left_image)
     ImageView leftImage;
@@ -48,16 +52,6 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener {
      */
     private boolean showRightText = false;
 
-    private View.OnClickListener searchListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (centerEdit.getText() != null) {
-                v.setTag(centerEdit.getText().toString());
-                searchListener.onClick(v);
-            }
-        }
-    };
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,6 +70,7 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener {
     private void initViews() {
         if (showCenterEdit) {
             centerEdit.setVisibility(View.VISIBLE);
+            centerEdit.setOnClearListener(this);
             centerText.setVisibility(View.GONE);
         }
 
@@ -87,19 +82,14 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener {
             rightText.setVisibility(View.VISIBLE);
         }
 
-        rightText.setOnClickListener(searchListener);
     }
 
     public void setSearchText(String text) {
         centerEdit.setText(text);
     }
 
-    public void setOnSearchListener(View.OnClickListener listener) {
-        searchListener = listener;
-    }
-
     @OnClick({R.id.fragment_left_image, R.id.fragment_center_text,
-            R.id.fragment_right_image})
+            R.id.fragment_right_image, R.id.fragment_right_text})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -110,6 +100,14 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener {
                 ShoppingSearchActivity.startIt(getActivity());
                 break;
             case R.id.fragment_right_image:
+                break;
+            case R.id.fragment_right_text:
+                if (centerEdit.getText() != null) {
+                    String keyword = centerEdit.getText().toString();
+                    if (StringUtils.isNotNull(keyword)) {
+                        EventBusUtils.poseEvent(new SearchEvent(keyword));
+                    }
+                }
                 break;
             default:
                 break;
@@ -125,6 +123,11 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener {
         TitleBarFragment fragment = new TitleBarFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onClear() {
+        EventBusUtils.poseEvent(new ClearEvent());
     }
 }
 

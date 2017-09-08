@@ -31,6 +31,8 @@ public class ClearEditText extends EditText implements
      */
     private boolean hasFoucs;
 
+    private OnClearListener listener;
+
     public ClearEditText(Context context) {
         this(context, null);
     }
@@ -79,6 +81,9 @@ public class ClearEditText extends EditText implements
 
                 if (touchable) {
                     this.setText("");
+                    if (listener != null) {
+                        listener.onClear();
+                    }
                 }
             }
         }
@@ -156,5 +161,12 @@ public class ClearEditText extends EditText implements
         return translateAnimation;
     }
 
+    public interface OnClearListener {
+        void onClear();
+    }
+
+    public void setOnClearListener(OnClearListener listener) {
+        this.listener = listener;
+    }
 
 }
