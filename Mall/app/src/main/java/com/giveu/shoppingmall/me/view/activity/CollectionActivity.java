@@ -76,6 +76,9 @@ public class CollectionActivity extends BaseActivity {
                 }
                 if (rightTextClick) {
                     baseLayout.setRightText("取消");
+//                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                    layoutParams.setMargins(0,0,0,57);
+//                    ptrlv.setLayoutParams(layoutParams);
                     llBottomDelete.setVisibility(View.VISIBLE);
                     clearChoose();
                     cbChoose.setChecked(false);
@@ -86,6 +89,7 @@ public class CollectionActivity extends BaseActivity {
                 for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
                     collectionResponse.isShowCb = rightTextClick;
                 }
+                collectionAdapter.notifyDataSetChanged();
                 rightTextClick = rightTextClick == true ? false : true;
             }
         });
@@ -108,6 +112,7 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setAdapter(collectionAdapter);
         deleteColorAndCanClick(0);
         ptrlv.setPullLoadEnable(false);
+        ptrlv.setPullRefreshEnable(false);
     }
 
     @Override
@@ -141,16 +146,12 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                pageIndex = 1;
-                setData();
-                ptrlv.setPullLoadEnable(false);
 
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 setData();
-                ptrlv.setPullRefreshEnable(true);
             }
         });
         tvDeleteText.setOnClickListener(new View.OnClickListener() {
@@ -163,16 +164,15 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        pageIndex = 1;
         ApiImpl.getCollectionList(mBaseContext, "123457", pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
                 if (pageIndex == 1) {
                     ptrlv.onRefreshComplete();
-                    ptrlv.setPullRefreshEnable(true);
                 }
                 if (response != null && response.data != null) {
                     CollectionResponse collectionResponse = response.data;
+
                     if (CommonUtils.isNotNullOrEmpty(collectionResponse.resultList)) {
                         if (pageIndex == 1) {
                             goodsList.clear();
@@ -185,6 +185,11 @@ public class CollectionActivity extends BaseActivity {
                             llOffTheShelf.setVisibility(View.GONE);
                         }
                         goodsList.addAll(collectionResponse.resultList);
+                        if(llBottomDelete.getVisibility() == View.VISIBLE){
+                            for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
+                                collectionResponse1.isShowCb = true;
+                            }
+                        }
                         collectionAdapter.notifyDataSetChanged();
                         pageIndex++;
                     } else {
@@ -203,7 +208,6 @@ public class CollectionActivity extends BaseActivity {
             public void onError(BaseBean errorBean) {
                 if (pageIndex == 1) {
                     ptrlv.onRefreshComplete();
-                    ptrlv.setPullRefreshEnable(true);
                 }
                 CommonLoadingView.showErrorToast(errorBean);
             }

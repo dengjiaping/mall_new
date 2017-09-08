@@ -21,6 +21,7 @@
     <ImageView
         android:id="@+id/iv_goods"
         android:layout_width="120dp"
+        android:padding="12dp"
         android:layout_height="match_parent"
         android:src="@drawable/defalut_img_88_88" />
 
@@ -72,5 +73,10 @@
             android:text="￥6880.00"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_13" />
+        <View
+            android:layout_height="1px"
+            android:layout_width="match_parent"
+            android:background="@color/line_bg"/>
     </LinearLayout>
+
 </LinearLayout>

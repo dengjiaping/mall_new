@@ -65,13 +65,13 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
             String startStr = text.substring(0,text.indexOf("."));
             String endStr = text.substring(text.indexOf("."),text.length());
 
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"售价：¥",startStr,endStr,"",14,11,R.color.red,R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"售价：¥",startStr,endStr,"",16,13,R.color.red,R.color.color_999999);
         }else{
             holder.setVisible(R.id.tv_price,true);
             String text = StringUtils.format2(item.monthAmount);
             String startStr = text.substring(0,text.indexOf("."));
             String endStr = text.substring(text.indexOf("."),text.length());
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"月供：¥",startStr,endStr,"起",14,11,R.color.red,R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"月供：¥",startStr,endStr,"起",16,13,R.color.red,R.color.color_999999);
             holder.setText(R.id.tv_price,"¥"+item.salePrice);
         }
 

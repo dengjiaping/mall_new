@@ -18,4 +18,6 @@ public interface IOrderInfoView<T extends BaseBean> extends IView {
 
     void cancelOrderSuccess(String orderNo);
 
+    void confirmReceiveSuccess(String orderNo);
+
 }
