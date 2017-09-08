@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.rvadapter.RvCommonAdapter;
 import com.giveu.shoppingmall.base.rvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.ShopClassifyContentAdapter;
+import com.giveu.shoppingmall.index.view.fragment.TitleBarFragment;
 import com.giveu.shoppingmall.model.bean.response.ShoppingBean;
 import com.giveu.shoppingmall.utils.ItemHeaderDecoration;
 import com.giveu.shoppingmall.utils.RecyclerViewScrollHelper;
@@ -50,23 +51,21 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
     private int selectPos = 0;
 
     private RecyclerViewScrollHelper.RecyclerViewListener listener;
+    private TitleBarFragment titleBarFragment;
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shopping_classify_layout);
-        baseLayout.setTitle("搜索")
-                .setTitleTextBackground(R.drawable.shape_title_background)
-                .setTitleWidth(Utils.dp2Px(260))
-                .setTitleHeight(Utils.dp2Px(30))
-                .setTitleTextSize(15)
-                .setTitleTextColor(R.color.color_textcolor)
-                .setTitleListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ShoppingSearchActivity.startIt(mBaseContext);
-                    }
-                });
-        baseLayout.setRightImage(R.drawable.classify_msg);
+
+        baseLayout.setTitleBarAndStatusBar(false, true);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("showRightImage", true);
+        titleBarFragment = TitleBarFragment.newInstance(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.shopping_classify_title, titleBarFragment)
+                .commit();
 
         list1 = new ArrayList<>();
         list2 = new ArrayList<>();
@@ -186,8 +185,10 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
             selectPos = position;
             titleAdapter.notifyDataSetChanged();
         }
-        RecyclerViewScrollHelper.moveToCenter(lRecyclerView, position);
-        mDecoration.setCurrentTag(selectPos);
+        if (rRecyclerView.canScrollVertically(1) || rRecyclerView.canScrollVertically(-1)) {
+            RecyclerViewScrollHelper.moveToCenter(lRecyclerView, position);
+            mDecoration.setCurrentTag(selectPos);
+        }
     }
 
     public static void startIt(Context context) {

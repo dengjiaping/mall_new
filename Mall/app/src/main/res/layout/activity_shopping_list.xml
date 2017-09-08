@@ -4,63 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/shopping_list_radiogroup"
+    <FrameLayout
+        android:id="@+id/activity_shopping_list_title"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="56dp" />
 
-        <RadioButton
-            android:id="@+id/shopping_list_radio_all"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:button="@null"
-            android:gravity="center"
-            android:text="综合"
-            android:textColor="@drawable/selector_radio_text_color" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:background="@color/gray" />
-
-        <RadioButton
-            android:id="@+id/shopping_list_radio_sale"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:button="@null"
-            android:gravity="center"
-            android:text="销量"
-            android:textColor="@drawable/selector_radio_text_color" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:background="@color/gray" />
-
-        <com.giveu.shoppingmall.index.widget.MiddleRaidoButton
-            android:id="@+id/shopping_list_radio_price"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:button="@null"
-            android:drawableLeft="@drawable/sort_up"
-            android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:text="价格"
-            android:textColor="@drawable/selector_radio_text_color" />
-    </RadioGroup>
-
-    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
-        android:id="@+id/shopping_list_listview"
+    <FrameLayout
+        android:id="@+id/activity_shopping_list_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

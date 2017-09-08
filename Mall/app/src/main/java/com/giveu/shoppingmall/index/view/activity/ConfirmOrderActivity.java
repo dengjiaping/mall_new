@@ -13,7 +13,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddAddressActivity;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCouponDialog;
-import com.giveu.shoppingmall.index.widget.MiddleRaidoButton;
+import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
 import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -55,7 +55,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvInstallTimeView;
     //添加收货地址
     @BindView(R.id.confirm_order_add_address)
-    MiddleRaidoButton mAddressBtn;
+    MiddleRadioButton mAddressBtn;
     @BindView(R.id.confirm_order_address_layout)
     RelativeLayout rvAddressLayout;
 
