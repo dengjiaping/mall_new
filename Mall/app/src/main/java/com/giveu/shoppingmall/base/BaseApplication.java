@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.giveu.shoppingmall.EventBusIndex;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -25,6 +26,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,6 +66,7 @@ public class BaseApplication extends MultiDexApplication {
         String processName = getProcessName(android.os.Process.myPid());
         if (processName == null || processName.equals("com.giveu.shoppingmall")) {
             InitializeService.startIt(this);
+            EventBus.builder().addIndex(new EventBusIndex()).installDefaultEventBus();
             initPush();
             initImageLoader();
         }

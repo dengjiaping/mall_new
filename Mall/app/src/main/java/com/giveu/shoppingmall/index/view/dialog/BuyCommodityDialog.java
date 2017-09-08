@@ -1,7 +1,6 @@
 package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,8 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private LinearLayout llCredit;
     private LinearLayout llChooseCredit;
     private LinkedHashMap<String, String> attrHashMap;//存储选中的属性
-    private LinkedHashMap<String, List<SkuIntroductionResponse.SpecValuesBean>> filterMap;
+    private ArrayList<ArrayList<String>> filterList;
+    private ArrayList<ArrayList<SkuIntroductionResponse.SpecValuesBean>> allAttrMap;
 
     public BuyCommodityDialog(Activity context) {
         super(context, R.layout.dialog_buy_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -86,12 +86,14 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         if (CommonUtils.isNullOrEmpty(skuSpecs)) {
             return;
         }
-        filterMap = new LinkedHashMap<>();
-        for (SkuIntroductionResponse.SkuSpecsBean skuSpec : skuSpecs) {
+        filterList = new ArrayList<>();
+        allAttrMap = new ArrayList<>();
+        for (int i = 0; i < skuSpecs.size(); i++) {
+            SkuIntroductionResponse.SkuSpecsBean skuSpec = skuSpecs.get(i);
             ArrayList<SkuIntroductionResponse.SpecValuesBean> attrList = new ArrayList<>();
             attrList.addAll(skuSpec.specValues);
-            filterMap.put(skuSpec.name, attrList);
-            addView(skuSpec.name, attrList);
+            allAttrMap.add(attrList);
+            addView(i, skuSpec.name, attrList);
         }
 
 
@@ -110,7 +112,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         }
     }
 
-    private void addView(final String paramsStr, final ArrayList<SkuIntroductionResponse.SpecValuesBean> paramsList) {
+    private void addView(final int layoutPos, final String paramsStr, final ArrayList<SkuIntroductionResponse.SpecValuesBean> paramsList) {
         TagAdapter<SkuIntroductionResponse.SpecValuesBean> paramsAdapter;
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;
@@ -146,7 +148,19 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
-                    Log.e("TAG", "选择了" + paramsList.get(integer));
+                    List<String> skuCodes = paramsList.get(integer).skuCodes;
+                    for (String skuCode : skuCodes) {
+                        for (int i = 0; i < allAttrMap.size(); i++) {
+                            ArrayList<SkuIntroductionResponse.SpecValuesBean> specValuesBean = allAttrMap.get(i);
+                            ArrayList<String> arrayList = filterList.get(i);
+                            arrayList.clear();
+                            for (SkuIntroductionResponse.SpecValuesBean valuesBean : specValuesBean) {
+                                if (valuesBean.skuCodes.contains(skuCode)) {
+                                    arrayList.add(valuesBean.specValue);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -192,14 +206,14 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                 String amountsStr = tvAmounts.getText().toString();
                 int amounts = StringUtils.string2Int(amountsStr);
                 if (amounts > 1) {
-                    tvAmounts.setText((amounts - 1)+"");
+                    tvAmounts.setText((amounts - 1) + "");
                 }
                 break;
 
             case R.id.iv_plus:
                 amountsStr = tvAmounts.getText().toString();
                 amounts = StringUtils.string2Int(amountsStr);
-                tvAmounts.setText((amounts + 1)+"");
+                tvAmounts.setText((amounts + 1) + "");
                 break;
         }
     }
