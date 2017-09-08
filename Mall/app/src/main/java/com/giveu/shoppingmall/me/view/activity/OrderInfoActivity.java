@@ -250,7 +250,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             SpannableString userComments = new SpannableString("买家留言：" + response.userComments);
             ForegroundColorSpan blueSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_00bbc0));
             ForegroundColorSpan blackSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a));
-            userComments.setSpan(blackSpan, 0, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);//从起始下标到终了下标，包括起始下标
+            userComments.setSpan(blackSpan, 0, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);//从起始下标到终了下标，包括起始下标
             userComments.setSpan(blueSpan, 5, userComments.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             tvUserComments.setText(userComments);
         }
@@ -271,15 +271,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     }
 
+    //确认收货成功
     @Override
-    public void deleteOrderSuccess(String orderNo) {
-
+    public void confirmReceiveSuccess(String orderNo) {
+        ToastUtils.showLongToast("成功确认收货");
+        //再次调取接口更新数据
+        presenter.getOrderDetail(orderNo);
     }
 
-    @Override
-    public void cancelOrderSuccess(String orderNo) {
 
-    }
 
     @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive})
     @Override
@@ -390,6 +390,17 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
         });
         dialog.show();
+    }
+
+
+    //不用做处理
+    @Override
+    public void deleteOrderSuccess(String orderNo) {
+    }
+
+    //不用做处理
+    @Override
+    public void cancelOrderSuccess(String orderNo) {
     }
 
 }

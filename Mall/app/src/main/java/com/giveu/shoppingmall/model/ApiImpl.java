@@ -514,12 +514,6 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_setDefaultAddress, BaseBean.class, context, responseListener);
     }
 
-    //MainMeFragment获取订单数量
-    public static void getOrderNum(String channel, String idPerson, BaseRequestAgent.ResponseListener<OrderNumResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson"}, new Object[]{channel, idPerson});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.orderApp_myOrderNumByStatus, OrderNumResponse.class, responseListener);
-    }
-
     //获取订单详情
     public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
@@ -542,6 +536,12 @@ public class ApiImpl {
     public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
+    }
+
+    //确认收货
+    public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, BaseBean.class, context, responseListener);
     }
 
     //搜索热词刷新

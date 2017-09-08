@@ -26,7 +26,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        ApiImpl.getOrderDetail(getView().getAct(), "qq", "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 getView().showOrderDetail(response.data);
@@ -57,8 +57,18 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     }
 
     //确认收货
-    public void onConfirmReceive(String orderNo) {
+    public void onConfirmReceive(final String orderNo) {
+        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                getView().confirmReceiveSuccess(orderNo);
+            }
 
+            @Override
+            public void onError(BaseBean errorBean) {
+
+            }
+        });
     }
 
     //申请退款
