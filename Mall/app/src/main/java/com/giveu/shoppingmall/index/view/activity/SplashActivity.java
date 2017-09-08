@@ -34,7 +34,7 @@ import butterknife.BindView;
 
 
 public class SplashActivity extends BasePermissionActivity {
-    final int SPLASH_TIME = 1500;
+    final int SPLASH_TIME = 1000;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
     @BindView(R.id.tv_skip)

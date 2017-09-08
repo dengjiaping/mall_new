@@ -55,7 +55,6 @@ public class AdSplashActivity extends BaseActivity {
             handler.removeCallbacksAndMessages(null);
     }
 
-
     private void turnToMainActivity() {
         stopCount();
         MainActivity.startIt(mBaseContext);
@@ -88,8 +87,8 @@ public class AdSplashActivity extends BaseActivity {
     public void onClickAd() {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
         if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrlLink)) {
+            turnToMainActivity();
             CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink, "广告");
-            stopCount();
         }
     }
 
@@ -103,12 +102,4 @@ public class AdSplashActivity extends BaseActivity {
         super.onDestroy();
         stopCount();
     }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        startCount();
-    }
-
-
 }

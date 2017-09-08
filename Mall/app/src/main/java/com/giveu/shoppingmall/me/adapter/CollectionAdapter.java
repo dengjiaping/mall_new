@@ -33,7 +33,8 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
         final CheckBox cbChoose = holder.getView(R.id.cb_choose);
         ImageView ivGoods = holder.getView(R.id.iv_goods);
         TextView tvMonthAmount = holder.getView(R.id.tv_month_amount);
-        ImageUtils.loadImage(item.srcIp+"/s240x240fdfs/"+item.src, R.drawable.defalut_img_88_88, ivGoods);
+        TextView tvPrice = holder.getView(R.id.tv_price);
+        ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_240_240 + item.src, R.drawable.defalut_img_88_88, ivGoods);
         if (item.isShowCb) {
             //显示
             holder.setVisible(R.id.cb_choose, true);
@@ -57,25 +58,19 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
                 }
             }
         });
-        holder.setText(R.id.tv_name,item.name);
-        if(item.hasShowMonthAmount()){
+        holder.setText(R.id.tv_name, item.name);
+        if (item.hasShowMonthAmount()) {
             //true就不显示月供,实际上隐藏售价view，月供view变成售价
-            holder.setVisible(R.id.tv_price,false);
-            String text = StringUtils.format2(item.salePrice);
-            String startStr = text.substring(0,text.indexOf("."));
-            String endStr = text.substring(text.indexOf("."),text.length());
-
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"售价：¥",startStr,endStr,"",16,13,R.color.red,R.color.color_999999);
-        }else{
-            holder.setVisible(R.id.tv_price,true);
-            String text = StringUtils.format2(item.monthAmount);
-            String startStr = text.substring(0,text.indexOf("."));
-            String endStr = text.substring(text.indexOf("."),text.length());
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount,"月供：¥",startStr,endStr,"起",16,13,R.color.red,R.color.color_999999);
-            holder.setText(R.id.tv_price,"¥"+item.salePrice);
+            holder.setVisible(R.id.tv_price, false);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价：¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_999999);
+        } else {
+            holder.setVisible(R.id.tv_price, true);
+            //textView,str1,str2,str3,tvSize1,tvSize2,tvColor1,tvColor2
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供：¥", item.monthAmount, "起", 16, 13, R.color.red, R.color.color_999999);
+            tvPrice.setText("¥" + StringUtils.format2(item.salePrice));
         }
 
-        holder.setVisible(R.id.tv_invalid,item.hasInvalid());
+        holder.setVisible(R.id.tv_invalid, item.hasInvalid());
     }
 
     public interface CbItemCheckListener {
