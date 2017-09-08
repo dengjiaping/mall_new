@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.index.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
+import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 
 /**
@@ -9,4 +10,6 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 
 public interface ICommodityInfoView extends IView{
     void showSkuIntroduction(SkuIntroductionResponse skuResponse);
+    void showStockState(int state);
+    void showCommodityInfo(CommodityInfoResponse data);
 }

@@ -9,7 +9,6 @@ import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
-import com.giveu.shoppingmall.utils.LogUtil;
 
 import java.util.List;
 
@@ -41,8 +40,8 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //K00002691可以分期   K00002713可以一次
-                        CommodityDetailActivity.startIt(mContext,false,"K00002713");
+                        //K00002691可以分期   K00002713 K00002912可以一次
+                        CommodityDetailActivity.startIt(mContext,true,"K00002912");
                     }
                 });
             }

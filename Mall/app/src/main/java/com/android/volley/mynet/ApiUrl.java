@@ -143,7 +143,7 @@ public interface ApiUrl {
     String anniversary_getActivityInfo = WECHAT_BASE_URL + "wechat-web/anniversary/getActivityInfo";
     //获取商品收藏列表
     String collections_goodsSkus_all = BASE_URL + "sc/users/collections/goodsSkus/all";
-    //删除商品收藏列表
+    //商品收藏
     String collections_goodsSkus_collect = BASE_URL + "sc/users/collections/goodsSkus/collect";
     //获取用户收货地址列表
     String personCenter_address_getAddress = BASE_URL + "personCenter/address/getAddress";
@@ -175,6 +175,11 @@ public interface ApiUrl {
     String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/instruction";
     //商品详情
     String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
+    //商品库存检查
+    String sc_goods_sku_stock = BASE_URL + "sc/goods/sku/stock";
+    //商品选配
+    String sc_goods_sku_choose = BASE_URL + "sc/goods/sku/choose";
+    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     String sc_goods_search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //一级类目查询子类目(商品分类)
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";

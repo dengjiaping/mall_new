@@ -86,9 +86,9 @@ public class SharePrefUtil extends AbsSharePref {
         String deviceId = getInstance().getString(SharePrefKeys.UUID);
         if (StringUtils.isNull(deviceId)) {
             String imei = HardWareUtil.getIMEI();//获取imei
-            if (!TextUtils.isEmpty(imei)){
+            if (!TextUtils.isEmpty(imei)) {
                 deviceId = imei;
-            }else{
+            } else {
                 deviceId = UUID.randomUUID().toString();
             }
             getInstance().putString(SharePrefKeys.UUID, deviceId);
@@ -158,5 +158,20 @@ public class SharePrefUtil extends AbsSharePref {
     public static String getPatternPwd() {
         return getInstance().getString(SharePrefKeys.LOCK_PATTERN_PWD + LoginHelper.getInstance().getUserId());
     }
+
+    /**
+     * 保存商品搜索历史
+     *
+     * @param searchHistory
+     * @return
+     */
+    public static void saveSearchHistory(String searchHistory) {
+        getInstance().putString(SharePrefKeys.SEARCH_HISTORY, searchHistory);
+    }
+
+    public static String getSearchHistory() {
+        return getInstance().getString(SharePrefKeys.SEARCH_HISTORY);
+    }
+
 
 }

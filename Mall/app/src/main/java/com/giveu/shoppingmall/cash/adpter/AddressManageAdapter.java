@@ -74,7 +74,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
         TextView tvDefaultCheck = holder.getView(R.id.tv_default_check);
         holder.setText(R.id.tv_name, item.custName);
         holder.setText(R.id.tv_phone, item.phone);
-        holder.setText(R.id.tv_address, item.address);
+        holder.setText(R.id.tv_address, item.province + item.city + item.region + item.street + item.address);
         //holder.setChecked(R.id.cb_default, 1 == item.isDefault ? true : false);
         holder.setOnClickListener(R.id.tv_edit, new View.OnClickListener() {
             @Override

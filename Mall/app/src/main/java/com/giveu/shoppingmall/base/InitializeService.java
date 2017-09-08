@@ -58,7 +58,6 @@ public class InitializeService extends IntentService {
         initBuglyUpdateApp();
         initCrashReport();
         initShareSDK();
-        EventBus.builder().addIndex(new EventBusIndex()).installDefaultEventBus();
     }
 
     /**
