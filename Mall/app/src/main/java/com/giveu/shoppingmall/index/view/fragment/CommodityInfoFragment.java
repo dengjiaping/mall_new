@@ -40,8 +40,6 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +87,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     DetailView dvSupply;
     @BindView(R.id.fl_server)
     TagFlowLayout flServer;
+    @BindView(R.id.ll_server)
+    LinearLayout llServer;
     private View view;
     private CommodityDetailFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
@@ -97,12 +97,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private boolean isCredit;//分期商品还是一次性商品
     private String skuCode;
     private CommodityInfoPresenter presenter;
-    private LocationUtils locationUtils;
-    private TagAdapter<String> serverAdapter;
+    private LocationUtils locationUtils;//定位
+    private TagAdapter<String> serverAdapter;//商品服务对应的流式布局
     private String provinceStr;
     private String cityStr;
     private String regionStr;
-    private String selectedSkuCode;
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_commodity_info, null);
@@ -113,19 +112,31 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         presenter = new CommodityInfoPresenter(this);
         isCredit = getArguments().getBoolean("isCredit", false);
         skuCode = getArguments().getString("skuCode");
+        //购买对话框
         buyDialog = new BuyCommodityDialog(mBaseContext);
+        //地址选择对话框
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
-        initListener();
+        //不用选择街道，只选择省市区即可
+        chooseCityDialog.setNeedStreet(false);
         initBanner();
         locationUtils = new LocationUtils(BaseApplication.getInstance());
+        //服务的流式布局对应的adapter
         serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
                 TextView tvTag = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.flowlayout_server_item, flServer, false);
+                tvTag.setText(s);
                 return tvTag;
             }
         };
         flServer.setAdapter(serverAdapter);
+        //上拉对应的view
+        commodityDetailFragment = new CommodityDetailFragment();
+        Bundle detailBundle = new Bundle();
+        detailBundle.putString("skuCode", skuCode);
+        commodityDetailFragment.setArguments(detailBundle);
+        commodityDetailFragment.setFromCommodityDetail(false);
+        getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
         return view;
     }
 
@@ -144,26 +155,31 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 cityStr = location.getCity();
                 regionStr = location.getDistrict();
                 llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-
+                //GPS获取省市区后查询该商品是否有货
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
                 locationUtils.stopLocation();
             }
 
             @Override
             public void onFail(Object o) {
+                //GPS定位失败，直接设置为北京市
                 llChooseAddress.setMiddleText("北京市");
+                provinceStr = "北京市";
+                cityStr = "";
+                regionStr = "";
+                //GPS获取省市区后查询该商品是否有货
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
                 locationUtils.stopLocation();
             }
         });
+        initListener();
     }
 
 
+    /**
+     * 初始化商品轮播图
+     */
     private void initBanner() {
-        commodityDetailFragment = new CommodityDetailFragment();
-        Bundle detailBundle = new Bundle();
-        detailBundle.putString("skuCode", skuCode);
-        commodityDetailFragment.setArguments(detailBundle);
-        commodityDetailFragment.setFromCommodityDetail(false);
-        getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
         banner = (Banner) view.findViewById(R.id.banner);
         banner.getLayoutParams().height = DensityUtils.getWidth();
         //设置banner样式
@@ -190,18 +206,23 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 cityStr = city;
                 regionStr = region;
                 llChooseAddress.setMiddleText(province + " " + city + " " + region + " " + street);
+                //选择完地址后查询该商品在该地区是否有货
                 presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
             }
         });
         buyDialog.setOnChooseCompleteListener(new BuyCommodityDialog.OnChooseCompleteListener() {
             @Override
             public void onComplete(String skuCode) {
-                presenter.queryCommodityInfo("SC", LoginHelper.getInstance().getIdPerson(), provinceStr, cityStr, regionStr, skuCode);
+                CommodityInfoFragment.this.skuCode = skuCode;
+                //选完属性后再次查询商品的相关信息，并检查库存
+                getCommodityInfo();
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
             }
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm(LinkedHashMap<String, String> attrHashMap) {
+            public void confirm() {
+                //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
                     CreditCommodityDialog creditDialog = new CreditCommodityDialog(mBaseContext);
                     creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
@@ -217,11 +238,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                     });
                     creditDialog.show();
                 }
-                String attrStr = "";
-                for (Map.Entry<String, String> entry : attrHashMap.entrySet()) {
-                    attrStr += entry.getValue() + " ";
-                }
-                llChooseAttr.setMiddleText(attrStr);
             }
 
             @Override
@@ -230,6 +246,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
         });
 
+    }
+
+    public void showChooseCityDialog() {
+        if (chooseCityDialog != null) {
+            chooseCityDialog.show();
+        }
     }
 
     @OnClick({R.id.ll_pull_up, R.id.fab_up_slide, R.id.ll_choose_address, R.id.ll_choose_attr})
@@ -259,20 +281,35 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void initDataDelay() {
-        //K00002691可以分期   K00002713可以一次
-        presenter.getSkuIntroduce("1234567", "SC", skuCode);
+        getCommodityInfo();
+        //获取默认的地址，没有的话获取定位的位置
+        if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
+            provinceStr = LoginHelper.getInstance().getReceiveProvince();
+            cityStr = LoginHelper.getInstance().getReceiveCity();
+            regionStr = LoginHelper.getInstance().getReceiveRegion();
+            llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
+            //检查库存
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+        } else {
+            locationUtils.startLocation();
+        }
+    }
 
+    /**
+     * 获取商品信息
+     */
+    public void getCommodityInfo(){
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "SC", skuCode);
     }
 
     @Override
     public void onStatucChanged(PullDetailLayout.Status status) {
         if (status == PullDetailLayout.Status.OPEN) {
-            svSwitch.smoothClose(true);
-            activity.showCommodityDetail();
             //当前为图文详情页
             fabUpSlide.setVisibility(View.VISIBLE);
             activity.vpContent.setScrollDisabled(true);
             tvPull.setText("下拉收起商品详情");
+            activity.hideTabLayout();
             ivArrow.setImageResource(R.drawable.ic_arrow_down);
         } else {
             //当前为商品详情页
@@ -280,46 +317,49 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             activity.vpContent.setScrollDisabled(false);
             ivArrow.setImageResource(R.drawable.ic_arrow_up);
             tvPull.setText("上拉查看商品详情");
+            activity.showTabLayout();
         }
     }
 
     public void showBuyDialog() {
         if (buyDialog != null) {
-            buyDialog.show();
+            buyDialog.showDialog(isCredit);
         }
     }
 
     @Override
     public void showSkuIntroduction(SkuIntroductionResponse skuResponse) {
         if (skuResponse.skuInfo != null) {
+            //更新轮播图
             banner.update(skuResponse.skuInfo.srcs);
             tvCommoditName.setText(skuResponse.skuInfo.name);
             CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(skuResponse.skuInfo.salePrice),
                     "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
 
             tvIntroduction.setText(skuResponse.skuInfo.adwords);
-            activity.setCollectStatus(skuResponse.collectStatus);
             dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
-            buyDialog.setData(skuResponse);
-            if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
-                provinceStr = LoginHelper.getInstance().getReceiveProvince();
-                cityStr = LoginHelper.getInstance().getReceiveCity();
-                regionStr = LoginHelper.getInstance().getReceiveRegion();
-                llChooseAddress.setMiddleText(provinceStr + cityStr + regionStr);
-            } else {
-                locationUtils.startLocation();
-            }
+            //给购买对话框初始化数据
+            buyDialog.setData(isCredit, skuCode, skuResponse);
+            //服务承诺对应的数据
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuInfo.serviceSafeguards)) {
                 ArrayList<String> serverList = new ArrayList<>();
                 for (SkuIntroductionResponse.ServiceSafeguardsBean safeguard : skuResponse.skuInfo.serviceSafeguards) {
                     serverList.add(safeguard.name);
                 }
                 serverAdapter.setDatas(serverList);
+                llServer.setVisibility(View.VISIBLE);
+            }else {
+                llServer.setVisibility(View.GONE);
             }
-            selectedSkuCode = buyDialog.getSkuCode();
+            //获取购买对话框选择属性对应的skuCode，更新skuCode
+            skuCode = buyDialog.getSkuCode();
             llChooseAttr.setMiddleText(buyDialog.getAttrStr());
+            commodityDetailFragment.refreshCommodityDetail(skuCode);
+            //刷新商品详情activity的数据
+            activity.initData(skuCode, skuResponse.collectStatus, skuResponse.skuInfo.monthAmount);
         }
     }
+
 
     @Override
     public void showStockState(int state) {
@@ -335,12 +375,32 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             case 2:
                 break;
         }
+        activity.refreshStock(state);
     }
 
     @Override
     public void showCommodityInfo(CommodityInfoResponse data) {
-        buyDialog.loadImage(data.srcIp + "/" + data.src);
         showStockState(data.stockStatus);
+        tvCommoditName.setText(data.name);
+        buyDialog.updateInfo(data.srcIp + "/" + data.src, data.name, data.salePrice);
+        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(data.salePrice),
+                "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
+        if (CommonUtils.isNotNullOrEmpty(data.serviceSafeguards)) {
+            ArrayList<String> serverList = new ArrayList<>();
+            for (SkuIntroductionResponse.ServiceSafeguardsBean safeguard : data.serviceSafeguards) {
+                serverList.add(safeguard.name);
+            }
+            serverAdapter.setDatas(serverList);
+            llServer.setVisibility(View.VISIBLE);
+        } else {
+            serverAdapter.setDatas(new ArrayList<String>());
+            llServer.setVisibility(View.GONE);
+        }
+        llChooseAttr.setMiddleText(buyDialog.getAttrStr());
+    }
+
+    public String getSkuCode() {
+        return skuCode;
     }
 
     @Override

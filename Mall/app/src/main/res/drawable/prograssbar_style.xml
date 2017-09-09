@@ -5,8 +5,8 @@
     <item android:id="@android:id/background">
         <shape>
             <gradient
-                android:endColor="#dddddd"
-                android:startColor="#dddddd" />
+                android:endColor="@color/color_dddddd"
+                android:startColor="@color/color_dddddd" />
         </shape>
     </item>
     <!-- 进度条前景 -->
@@ -14,8 +14,8 @@
         <clip>
             <shape>
                 <gradient
-                    android:endColor="#EFA204"
-                    android:startColor="#EFA204" />
+                    android:endColor="@color/color_00bbc0"
+                    android:startColor="@color/color_00bbc0" />
             </shape>
         </clip>
     </item>

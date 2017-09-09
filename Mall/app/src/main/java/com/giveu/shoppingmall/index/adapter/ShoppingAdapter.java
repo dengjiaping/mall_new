@@ -41,7 +41,7 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                     @Override
                     public void onClick(View v) {
                         //K00002691可以分期   K00002713 K00002912可以一次
-                        CommodityDetailActivity.startIt(mContext,true,"K00002912");
+                        CommodityDetailActivity.startIt(mContext,false,"K00002713");
                     }
                 });
             }

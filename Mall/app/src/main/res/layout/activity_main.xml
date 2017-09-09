@@ -23,17 +23,17 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/iv_recharge"
+                android:id="@+id/iv_shopping"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/ic_recharge" />
+                android:src="@drawable/ic_shopping" />
 
             <TextView
                 android:id="@+id/tv_recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text="充值"
+                android:text="购物"
                 android:textSize="@dimen/ts_12" />
 
         </LinearLayout>
@@ -112,72 +112,6 @@
 
     </LinearLayout>
 
-
-    <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/white_soild_top_gray_line"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:visibility="gone">
-
-        <RadioButton
-            android:id="@+id/rb0"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:button="@null"
-            android:checked="true"
-            android:drawableTop="@drawable/selector_main_tab_01"
-            android:gravity="center"
-            android:text="购物"
-            android:textColor="@color/selector_main_activity_bottom_rb_tc"
-            android:textSize="@dimen/ts_10" />
-
-        <RadioButton
-            android:id="@+id/rb1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:button="@null"
-            android:drawableTop="@drawable/selector_main_tab_02"
-            android:gravity="center"
-            android:text="取现"
-            android:textColor="@color/selector_main_activity_bottom_rb_tc"
-            android:textSize="@dimen/ts_10" />
-
-        <RadioButton
-            android:id="@+id/rb2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:button="@null"
-            android:drawableTop="@drawable/selector_main_tab_03"
-            android:gravity="center"
-            android:text="还款"
-            android:textColor="@color/selector_main_activity_bottom_rb_tc"
-            android:textSize="@dimen/ts_10" />
-
-        <RadioButton
-            android:id="@+id/rb3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:button="@null"
-            android:drawableTop="@drawable/selector_main_tab_04"
-            android:gravity="center"
-            android:text="我的"
-            android:textColor="@color/selector_main_activity_bottom_rb_tc"
-            android:textSize="@dimen/ts_10" />
-    </RadioGroup>
 
     <com.giveu.shoppingmall.widget.NoScrollViewPager
         android:id="@+id/mainViewPager"

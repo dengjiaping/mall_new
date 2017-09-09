@@ -65,7 +65,6 @@ public class WebCommodityFragment extends Fragment {
         wvCommodity.setFocusable(false);
         webSettings = wvCommodity.getSettings();
         webSettings.setUseWideViewPort(true);
-        webSettings.setJavaScriptEnabled(true);//支持js
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         wvCommodity.setWebViewClient(new WebViewClient() {
@@ -105,19 +104,26 @@ public class WebCommodityFragment extends Fragment {
     }
 
 
-
     public void setFromCommodityDetail(boolean fromCommodityDetail) {
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
     public void loadHtml(String htmlStr) {
+        htmlStr = replaceHtmlStr(htmlStr);
         if (wvCommodity != null) {
             wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
         }
     }
 
     public void setHtmlStr(String htmlStr) {
+        htmlStr = replaceHtmlStr(htmlStr);
         this.htmlStr = htmlStr;
+
+    }
+
+    public String replaceHtmlStr(String htmlStr) {
+        htmlStr = htmlStr.replace("src=", "width=100% src=");
+        return htmlStr;
     }
 
 

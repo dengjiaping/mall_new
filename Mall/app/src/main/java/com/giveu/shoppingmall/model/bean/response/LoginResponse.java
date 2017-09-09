@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.model.bean.response;
 
 import com.android.volley.mynet.BaseBean;
 
+import java.util.List;
+
 /**
  * Created by 513419 on 2017/6/29.
  */
@@ -83,9 +85,14 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String receiveRegion;
     public String receiveStreet;
     public String receiveDetailAddress;
+    public String orderPayNum;
+    public String orderDowmpaymentNum;
+    public String orderReceiveNum;
+
 
     public AddressBean address;
     public ShoppingAddress shippingAddress;
+    public List<MyOrderBean> myOrder;
 
 
     public static class AddressBean {
@@ -116,5 +123,15 @@ public class LoginResponse extends BaseBean<LoginResponse> {
             public int regionCode;
             public String street;
             public int streetCode;
+    }
+
+    public static class MyOrderBean {
+        /**
+         * num : 38167
+         * status : 55818
+         */
+
+        public String num;
+        public int status;
     }
 }

@@ -20,12 +20,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
-//import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
@@ -69,14 +67,16 @@ import cn.jpush.android.api.JPushInterface;
 
 import static java.lang.System.currentTimeMillis;
 
+//import com.fastaccess.permission.base.PermissionHelper;
+
 public class MainActivity extends BasePermissionActivity {
     public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
     private ShoppingFragment shoppingFragment;
     //    public MainRepayFragment mainRepayFragment;
     public MainMeFragment mainMeFragment;
-    @BindView(R.id.iv_recharge)
-    ImageView ivRecharge;
+    @BindView(R.id.iv_shopping)
+    ImageView ivShopping;
     @BindView(R.id.tv_recharge)
     TextView tvRecharge;
     @BindView(R.id.iv_cash)
@@ -106,8 +106,6 @@ public class MainActivity extends BasePermissionActivity {
 
     @BindView(R.id.mainViewPager)
     ViewPager mViewPager;
-    @BindView(R.id.rb1)
-    RadioButton rb1;
     private MainActivityAdapter mainAdapter;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private LotteryResponse lotteryResponse;
@@ -253,7 +251,7 @@ public class MainActivity extends BasePermissionActivity {
     public void selectIconAndTextColor(int selectPos) {
         switch (selectPos) {
             case 0:
-                setImageView(ivRecharge, R.drawable.ic_recharge_select);
+                setImageView(ivShopping, R.drawable.ic_shopping_select);
                 setTextColor(tvRecharge, R.color.color_00bbc0);
                 break;
             case 1:
@@ -275,7 +273,7 @@ public class MainActivity extends BasePermissionActivity {
     }
 
     public void resetIconAndTextColor() {
-        setImageView(ivRecharge, R.drawable.ic_recharge);
+        setImageView(ivShopping, R.drawable.ic_shopping);
         setImageView(ivCash, R.drawable.ic_cash);
         setImageView(ivRepayment, R.drawable.ic_repayment);
         setImageView(ivMe, R.drawable.ic_me);
