@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
 import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
 import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
@@ -89,6 +90,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             statusView.setVisibility(View.GONE);
         }
         presenter = new ShoppingPresenter(this);
+        llSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingSearchActivity.startIt(mBaseContext);
+            }
+        });
         return view;
     }
 

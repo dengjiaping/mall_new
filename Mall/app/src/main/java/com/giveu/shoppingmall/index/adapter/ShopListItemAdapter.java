@@ -28,12 +28,16 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
     }
 
     @Override
-    protected void convert(ViewHolder holder, GoodsSearchResponse.GoodsBean item, int position) {
+    protected void convert(ViewHolder holder, final GoodsSearchResponse.GoodsBean item, int position) {
         holder.setOnClickListener(R.id.item_layout, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //K00002691可以分期   K00002713可以一次
-                CommodityDetailActivity.startIt(mContext, true, "K00002691");
+                if(item.getIsInstallments()==1){
+                    CommodityDetailActivity.startIt(mContext, true, item.getSkuCode());
+                }else {
+                    CommodityDetailActivity.startIt(mContext, false, item.getSkuCode());
+                }
             }
         });
 

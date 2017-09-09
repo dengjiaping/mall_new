@@ -13,8 +13,6 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.presenter.CommodityDetailPresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityDetailView;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
-import com.giveu.shoppingmall.utils.DateUtil;
-import com.giveu.shoppingmall.utils.LogUtil;
 
 
 /**
@@ -42,8 +40,7 @@ public class CommodityDetailFragment extends BaseFragment implements ICommodityD
         fragmentManager = getChildFragmentManager();
             skuCode = getArguments().getString("skuCode");
         presenter = new CommodityDetailPresenter(this);
-        LogUtil.e("initView");
-        presenter.getCommodityDetail(skuCode);
+        refreshCommodityDetail(skuCode);
         showFragment(0);
         return view;
     }
@@ -56,6 +53,9 @@ public class CommodityDetailFragment extends BaseFragment implements ICommodityD
     @Override
     public void initDataDelay() {
 
+    }
+    public void refreshCommodityDetail(String skuCode){
+        presenter.getCommodityDetail(skuCode);
     }
 
     @Override

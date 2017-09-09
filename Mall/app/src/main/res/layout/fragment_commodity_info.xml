@@ -54,9 +54,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="22dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="iphone 7 苹果新品 全网通4G手机"
                             android:textColor="@color/color_666666"
                             android:textSize="@dimen/ts_15" />
 
@@ -66,9 +63,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="22dp"
                             android:layout_marginTop="2.5dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="领劵再减100元！即有商城年货节，32G黑色及28G玫瑰金再降100元！优惠仅即有钱包用户享受，支付时请选用即有钱包"
                             android:textColor="@color/color_9b9b9b"
                             android:textSize="@dimen/ts_12" />
 
@@ -84,7 +78,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="3dp"
-                                android:text="¥4799.00"
                                 android:textColor="@color/color_ff2a2a"
                                 android:textSize="@dimen/ts_19"
                                 />
@@ -113,7 +106,6 @@
                         android:layout_marginTop="5dp"
                         app:text_left="已选"
                         app:text_left_color="@color/color_9b9b9b"
-                        app:text_middle="黑色 32G  全网通"
                         app:text_middle_color="@color/color_364343" />
 
                     <com.giveu.shoppingmall.widget.DetailView
@@ -124,7 +116,6 @@
                         app:iv_right_visible="GONE"
                         app:text_left="货源"
                         app:text_left_color="@color/color_9b9b9b"
-                        app:text_middle="JD供货"
                         app:text_middle_color="@color/color_364343" />
 
                     <com.giveu.shoppingmall.widget.DetailView
@@ -134,7 +125,6 @@
                         android:layout_marginTop="1dp"
                         app:text_left="送至"
                         app:text_left_color="@color/color_9b9b9b"
-                        app:text_middle="广东 深圳  福田区"
                         app:text_middle_color="@color/color_364343" />
 
                     <com.giveu.shoppingmall.widget.DetailView
@@ -144,7 +134,6 @@
                         app:iv_right_visible="GONE"
                         app:text_left="送至"
                         app:text_left_color="@color/color_9b9b9b"
-                        app:text_middle="有货"
                         app:text_middle_color="@color/color_00bbc0"
                         app:tv_left_visible="INVISIBLE" />
 
@@ -155,6 +144,7 @@
 
 
                     <LinearLayout
+                        android:id="@+id/ll_server"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
@@ -187,7 +177,7 @@
                     <LinearLayout
                         android:id="@+id/ll_pull_up"
                         android:layout_width="match_parent"
-                        android:layout_height="44dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:clickable="true"
@@ -205,6 +195,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="6dp"
                             android:text="上拉查看商品详情"
+                            android:background="@color/default_layoutxml_bg"
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_14" />
                     </LinearLayout>

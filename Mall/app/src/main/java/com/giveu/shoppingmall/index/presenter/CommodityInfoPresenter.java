@@ -7,8 +7,9 @@ import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+
+import org.json.JSONObject;
 
 /**
  * Created by 513419 on 2017/9/7.
@@ -40,11 +41,16 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
     }
 
     public void queryCommodityStock(String province, String city, final String region, String skuCode) {
-        ApiImpl.queryCommodityStock(getView().getAct(), province, city, region, skuCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.queryCommodityStock(null, province, city, region, skuCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
-                    getView().showStockState(StringUtils.string2Int(response.data.toString()));
+                    try {
+                        int stock = new JSONObject(response.originResultString).getInt("data");
+                        getView().showStockState(stock);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

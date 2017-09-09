@@ -48,6 +48,7 @@ public class ChooseCityDialog extends CustomDialog {
 
     private ArrayList<ArrayList<CityBean>> cityList;//这个是选择省后，<>存储的市区街道列表，cityList的size和tabList的size一致
     private int currentItem;
+    private boolean needStreet = true;
 
     public ChooseCityDialog(Activity context) {
         super(context, R.layout.dialog_choose_city, R.style.customerDialog, Gravity.CENTER, false);
@@ -150,7 +151,7 @@ public class ChooseCityDialog extends CustomDialog {
                             rPosition = position;
                             curR = address;
                             curS = "";
-                            if (CommonUtils.isNotNullOrEmpty(proviceList.get(pPosition).array.get(cPosition).array.get(rPosition).array)) {
+                            if (needStreet && CommonUtils.isNotNullOrEmpty(proviceList.get(pPosition).array.get(cPosition).array.get(rPosition).array)) {
                                 for (String streetStr : proviceList.get(pPosition).array.get(cPosition).array.get(rPosition).array) {
                                     CityBean cityBean = new CityBean();
                                     cityBean.cityName = streetStr;
@@ -239,6 +240,14 @@ public class ChooseCityDialog extends CustomDialog {
 
             }
         });
+    }
+
+    /**
+     * 是否显示街道信息
+     * @param needStreet
+     */
+    public void setNeedStreet(boolean needStreet) {
+        this.needStreet = needStreet;
     }
 
     private String initString(String str) {

@@ -105,19 +105,26 @@ public class WebCommodityFragment extends Fragment {
     }
 
 
-
     public void setFromCommodityDetail(boolean fromCommodityDetail) {
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
     public void loadHtml(String htmlStr) {
+        htmlStr = replaceHtmlStr(htmlStr);
         if (wvCommodity != null) {
             wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
         }
     }
 
     public void setHtmlStr(String htmlStr) {
+        htmlStr = replaceHtmlStr(htmlStr);
         this.htmlStr = htmlStr;
+
+    }
+
+    public String replaceHtmlStr(String htmlStr) {
+        htmlStr = htmlStr.replace("src=", "width=100% src=");
+        return htmlStr;
     }
 
 

@@ -32,8 +32,6 @@ public class CommodityInfoResponse extends BaseBean<CommodityInfoResponse> {
     public String src;
     public String srcIp;
     public int stockStatus;
-    public List<ServiceSafeguardsBean> serviceSafeguards;
+    public List<SkuIntroductionResponse.ServiceSafeguardsBean> serviceSafeguards;
 
-    public static class ServiceSafeguardsBean {
-    }
 }

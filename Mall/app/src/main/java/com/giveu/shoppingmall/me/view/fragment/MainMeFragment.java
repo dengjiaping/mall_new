@@ -282,7 +282,11 @@ public class MainMeFragment extends BaseFragment {
             case R.id.ll_my_collection:
                 //我的收藏
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    CollectionActivity.startIt(mBaseContext);
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        CollectionActivity.startIt(mBaseContext);
+                    }else {
+                        notActiveDialog.showDialog();
+                    }
                 }
                 break;
             case R.id.ll_my_coupon:
