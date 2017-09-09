@@ -27,17 +27,19 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
-            @Override
-            public void onSuccess(OrderDetailResponse response) {
-                getView().showOrderDetail(response.data);
-            }
+        if (getView() != null) {
+            ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+                @Override
+                public void onSuccess(OrderDetailResponse response) {
+                    getView().showOrderDetail(response.data);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 
     //去支付
@@ -52,24 +54,28 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //订单追踪
     public void onTrace(String orderNo, String src) {
-        if (StringUtils.isNotNull(orderNo)) {
-            OrderTraceActivity.startIt(getView().getAct(), orderNo, src);
+        if (getView() != null) {
+            if (StringUtils.isNotNull(orderNo)) {
+                OrderTraceActivity.startIt(getView().getAct(), orderNo, src);
+            }
         }
     }
 
     //确认收货
     public void onConfirmReceive(final String orderNo) {
-        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-            @Override
-            public void onSuccess(BaseBean response) {
-                getView().confirmReceiveSuccess(orderNo);
-            }
+        if (getView() != null) {
+            ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                @Override
+                public void onSuccess(BaseBean response) {
+                    getView().confirmReceiveSuccess(orderNo);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
+                @Override
+                public void onError(BaseBean errorBean) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     //申请退款
@@ -84,32 +90,35 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //取消订单
     public void onCancelOrder(final String orderNo) {
-        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-            @Override
-            public void onSuccess(BaseBean response) {
-                getView().cancelOrderSuccess(orderNo);
-            }
+        if (getView() != null) {
+            ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                @Override
+                public void onSuccess(BaseBean response) {
+                    getView().cancelOrderSuccess(orderNo);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 
     //删除订单
     public void onDeleteOrder(final String orderNo) {
-        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-            @Override
-            public void onSuccess(BaseBean response) {
-                getView().deleteOrderSuccess(orderNo);
-            }
+        if (getView() != null) {
+            ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                @Override
+                public void onSuccess(BaseBean response) {
+                    getView().deleteOrderSuccess(orderNo);
+                }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-            }
-        });
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
-
 }
