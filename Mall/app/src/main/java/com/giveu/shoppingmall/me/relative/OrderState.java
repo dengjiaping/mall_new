@@ -15,7 +15,7 @@ public interface OrderState {
     String ORDER_TYPE = "orderState";
 
     //渠道名称：商城
-    String CHANNEL = "sc";
+    String CHANNEL = "qq";
 
     //全部
     String ALL_RESPONSE = "0";
@@ -43,4 +43,16 @@ public interface OrderState {
     //已关闭
     String CLOSED_RESPONSE = "6";
     int CLOSED = 6;
+
+    //充值中
+    String ON_RECHARGE = "20";
+    int ONREGHARGE = 20;
+
+    //充值成功
+    String RECHARGE_SUCCESS = "21";
+    int RECHARGESUCCESS = 21;
+
+    //充值失败
+    String RECHARGE_FAIL = "22";
+    int RECHARGEFAIL = 22;
 }

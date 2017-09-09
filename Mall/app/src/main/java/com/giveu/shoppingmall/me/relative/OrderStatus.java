@@ -27,6 +27,12 @@ public class OrderStatus {
                 return "订单已完成";
             case OrderState.CLOSED:
                 return "订单已关闭";
+            case OrderState.ONREGHARGE:
+                return "订单充值中";
+            case OrderState.RECHARGEFAIL:
+                return "充值失败";
+            case OrderState.RECHARGESUCCESS:
+                return "充值成功";
             default:
                 return "";
         }

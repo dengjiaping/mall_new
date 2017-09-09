@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.model.bean.response;
 
 import com.android.volley.mynet.BaseBean;
 
+import java.util.List;
+
 /**
  * Created by 101912 on 2017/9/5.
  */
@@ -47,6 +49,10 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
     public String timeLeft;
     public String totalPrice;
     public String userComments;
+    public String deliverGoods;
+    public String installGoods;
+    public List<ValueServiceBean> addValueService;
+    public String courtesyCardName;
 
     public static class CourtesyCardJoBean {
         /**
@@ -58,6 +64,13 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
         public int courtesyCardId;
         public String courtesyCardName;
         public int isSelected;
+    }
+
+    public static class ValueServiceBean {
+        public int isSelected;
+        public String serviceName;
+        public String servicePrice;
+        public String serviceUrl;
     }
 
     public static class ReceiverJoBean {

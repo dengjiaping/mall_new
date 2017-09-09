@@ -29,6 +29,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     private String channelName;//渠道名称
     private ConfirmDialog dialog;//确认弹框
     private String orderNo;
+    private String src;
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, String channelName, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
@@ -48,12 +49,12 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (StringUtils.isNotNull(item.salePrice))
             viewHolder.setText(R.id.tv_sale_price, "¥" + item.salePrice);
 
-        String iconUrl = "";
+        //图片icon
         if (StringUtils.isNotNull(item.srcIp))
             if (StringUtils.isNotNull(item.src)) {
-                iconUrl = item.srcIp + item.src;
+                src = item.srcIp + item.src;
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
-                ImageUtils.loadImage(iconUrl, imageView);
+                ImageUtils.loadImage(src, imageView);
             }
 
         /**
@@ -120,7 +121,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo);
+                        presenter.onTrace(orderNo, src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -147,7 +148,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo);
+                        presenter.onTrace(orderNo, src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -166,7 +167,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo);
+                        presenter.onTrace(orderNo, src);
                     }
                 });
                 break;
@@ -180,7 +181,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo);
+                        presenter.onTrace(orderNo, src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -191,6 +192,30 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 });
                 break;
 
+            //充值中
+            case OrderState.ONREGHARGE:
+                viewHolder.setVisible(R.id.tv_button_left, false);
+                viewHolder.setVisible(R.id.tv_button_right, false);
+                break;
+
+            //充值成功
+            case OrderState.RECHARGESUCCESS:
+                viewHolder.setVisible(R.id.tv_button_left, false);
+                viewHolder.setVisible(R.id.tv_button_right, false);
+                break;
+
+            //充值失败
+            case OrderState.RECHARGEFAIL:
+                viewHolder.setVisible(R.id.tv_button_left, false);
+                viewHolder.setVisible(R.id.tv_button_right, true);
+                viewHolder.setText(R.id.tv_button_right, "申请退款");
+                viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                break;
             default:
                 break;
         }

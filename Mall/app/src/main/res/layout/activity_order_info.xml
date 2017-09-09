@@ -341,6 +341,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_deliver_and_install"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:layout_marginTop="1dp"
@@ -364,6 +365,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tv_deliver"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="送货：8月31日[周四]"
@@ -371,6 +373,7 @@
                                     android:textSize="@dimen/ts_15"/>
 
                                 <TextView
+                                    android:id="@+id/tv_install"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
@@ -383,6 +386,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/ll_service"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -405,13 +409,16 @@
                                 android:layout_height="38dp">
 
                                 <CheckBox
+                                    android:id="@+id/cb_service0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:button="@drawable/selector_checkbox"
-                                    android:checked="true"
+                                    android:clickable="false"
+                                    android:checked="false"
                                     android:gravity="center" />
 
                                 <TextView
+                                    android:id="@+id/tv_service0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="25dp"
@@ -421,6 +428,7 @@
                                     android:textSize="@dimen/ts_14" />
 
                                 <TextView
+                                    android:id="@+id/tv_service0_cost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="130dp"
@@ -442,18 +450,21 @@
                                 </LinearLayout>
                             </RelativeLayout>
 
-                            <RelativeLayout
+                            <!--<RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="38dp">
 
                                 <CheckBox
+                                    android:id="@+id/cb_service1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:button="@drawable/selector_checkbox"
-                                    android:checked="true"
+                                    android:checked="false"
+                                    android:clickable="false"
                                     android:gravity="center" />
 
                                 <TextView
+                                    android:id="@+id/tv_service1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="25dp"
@@ -463,6 +474,7 @@
                                     android:textSize="@dimen/ts_14" />
 
                                 <TextView
+                                    android:id="@+id/tv_service1_cost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="130dp"
@@ -490,13 +502,16 @@
                                 android:layout_marginBottom="5dp">
 
                                 <CheckBox
+                                    android:id="@+id/cb_service2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
+                                    android:clickable="false"
                                     android:button="@drawable/selector_checkbox"
-                                    android:checked="true"
+                                    android:checked="false"
                                     android:gravity="center" />
 
                                 <TextView
+                                    android:id="@+id/tv_service2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="25dp"
@@ -506,6 +521,7 @@
                                     android:textSize="@dimen/ts_14" />
 
                                 <TextView
+                                    android:id="@+id/tv_service2_cost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="130dp"
@@ -525,7 +541,7 @@
                                         android:layout_height="wrap_content"
                                         android:src="@drawable/ic_detail_circle" />
                                 </LinearLayout>
-                            </RelativeLayout>
+                            </RelativeLayout>-->
 
                         </LinearLayout>
 
@@ -682,6 +698,27 @@
         android:layout_height="48dp"
         android:background="@color/white"
         android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/ll_apply_refund"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="end"
+            android:paddingRight="15dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_apply_refund"
+                android:layout_width="85dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/shape_grey_line"
+                android:gravity="center"
+                android:text="申请退款"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_13" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_trace"

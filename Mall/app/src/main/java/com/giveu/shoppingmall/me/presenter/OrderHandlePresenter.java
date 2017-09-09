@@ -27,7 +27,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 getView().showOrderDetail(response.data);
@@ -51,9 +51,9 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     }
 
     //订单追踪
-    public void onTrace(String orderNo) {
+    public void onTrace(String orderNo, String src) {
         if (StringUtils.isNotNull(orderNo)) {
-            OrderTraceActivity.startIt(getView().getAct(), orderNo);
+            OrderTraceActivity.startIt(getView().getAct(), orderNo, src);
         }
     }
 

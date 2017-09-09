@@ -53,10 +53,12 @@ public class OrderTraceActivity extends BaseActivity {
     private ArrayList<OrderTraceResponse.LogisticsInfoBean> traceDatas;
     private LvCommonAdapter<OrderTraceResponse.LogisticsInfoBean> adapter;
     private String orderNo = "";
+    private String src = "";
 
-    public static void startIt(Activity activity, String orderNo) {
+    public static void startIt(Activity activity, String orderNo, String src) {
         Intent intent = new Intent(activity, OrderTraceActivity.class);
         intent.putExtra("orderNo", orderNo);
+        intent.putExtra("src", src);
         activity.startActivity(intent);
     }
 
@@ -91,7 +93,8 @@ public class OrderTraceActivity extends BaseActivity {
     @Override
     public void setData() {
         orderNo = getIntent().getStringExtra("orderNo");
-        ApiImpl.getOrderTrace(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+        src = getIntent().getStringExtra("src");
+        ApiImpl.getOrderTrace(OrderState.CHANNEL, "10056737", orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
             @Override
             public void onSuccess(OrderTraceResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {
@@ -104,9 +107,7 @@ public class OrderTraceActivity extends BaseActivity {
                     llListView.setVisibility(View.GONE);
                     clvEmpty.showEmpty("抱歉，没有任何物流信息", "");
                 }
-                if (StringUtils.isNotNull(response.data.src)) {
-                    ImageUtils.loadImage(response.src, ivIcon);
-                }
+                ImageUtils.loadImage(src, ivIcon);
                 tvStatus.setText(OrderStatus.getOrderStatus(response.data.status));
                 if (StringUtils.isNotNull(response.data.orderNo)) {
                     tvOrderNo.setText("订单编号：" + response.data.orderNo);

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="165dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="剩余支付时间"
+                android:textColor="@color/color_2b3138"
+                android:textSize="@dimen/ts_12" />
+
+            <com.giveu.shoppingmall.widget.CountDownTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="34:34"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_30" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/bg_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="首付金额"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_12" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            android:text="请选择支付方式" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="65dp"
+                android:gravity="center|left"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="支付宝支付"
+                    android:textColor="@color/color_1a1a1a"
+                    android:textSize="@dimen/ts_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="支付宝安全支付"
+                    android:textColor="@color/color_ababab"
+                    android:textSize="@dimen/ts_11" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_choose" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/selector_login"
+            android:text="确认支付" />
+
+        <TextView
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_blue_without_solid"
+            android:text="查看订单"
+            android:textColor="@color/color_00bbc0"
+            android:textSize="@dimen/ts_18" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_pay_fail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_off_the_shelf" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:gravity="center"
+            android:text="支付超时，订单已取消"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_21" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="如需要，请重新购买"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_18" />
+
+
+        <TextView
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/selector_login"
+            android:text="返回" />
+
+    </LinearLayout>
+
+</RelativeLayout>

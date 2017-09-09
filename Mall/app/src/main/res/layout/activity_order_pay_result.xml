@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/ll_pay_success"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_activation_success" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:gravity="center"
+            android:text="支付成功"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_21" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/default_layout_screen_gap"
+            android:paddingRight="@dimen/default_layout_screen_gap"
+            android:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="14dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/line_bg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_date_name_top"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="订单金额："
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:id="@+id/tv_date_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_date_mid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/tv_date_name_mid"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="首付金额："
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:id="@+id/tv_date_mid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="分期期数："
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="最迟还款日："
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_16" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_date_name_bottom"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+
+                <TextView
+                    android:id="@+id/tv_date_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_16" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                android:background="@color/line_bg" />
+
+            <TextView
+                android:id="@+id/tv_hint_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="*每月最迟还款日，我们将从您绑定银行卡代扣本期应还费用,请保证绑定银行卡有足够余额"
+                android:textColor="@color/color_9b9b9b"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_btn_top"
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/selector_login"
+            android:text="查看订单" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_pay_fail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_activation_fail" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:gravity="center"
+            android:text="支付失败"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_21" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="很抱歉，本次支付未成功， 请重新支付"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_18" />
+
+
+        <TextView
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/selector_login"
+            android:text="重新支付" />
+
+    </LinearLayout>
+
+</RelativeLayout>

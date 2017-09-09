@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white_corners"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        >
+
+        <ImageView
+            android:id="@+id/iv_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_dismiss" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="请输入交易密码"
+            android:textColor="@color/color_030303"
+            android:textSize="@dimen/ts_18" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/shape_line_grey"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="下单金额"
+        android:textSize="@dimen/ts_16"
+        android:textColor="@color/color_090909"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp"
+        android:text="4999"
+        android:gravity="center"
+        android:textSize="@dimen/ts_28"
+        android:textColor="@color/color_00adb2"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/shape_line_grey"/>
+
+    <com.giveu.shoppingmall.widget.PassWordInputView
+        android:id="@+id/inputview_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="22dp" />
+
+    <TextView
+        android:id="@+id/tv_forget_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:text="忘记密码？"
+        android:textColor="@color/color_9b9b9b"
+        android:textSize="@dimen/ts_14" />
+
+</LinearLayout>

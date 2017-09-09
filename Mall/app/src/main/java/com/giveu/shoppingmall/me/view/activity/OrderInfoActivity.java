@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -28,6 +29,9 @@ import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -110,14 +114,33 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     TextView tvRechargePhone;
     @BindView(R.id.tv_recharge_denomination)
     TextView tvRechargeDenomination;
+    @BindView(R.id.rl_deliver_and_install)
+    RelativeLayout rlDeliverAndInstall;
+    @BindView(R.id.tv_deliver)
+    TextView tvDeliver;
+    @BindView(R.id.tv_install)
+    TextView tvInstall;
+    @BindView(R.id.ll_service)
+    LinearLayout llService;
+    @BindView(R.id.cb_service0)
+    CheckBox cbService0;
+    @BindView(R.id.tv_service0)
+    TextView tvService0;
+    @BindView(R.id.tv_service0_cost)
+    TextView tvService0Cost;
+    @BindView(R.id.ll_apply_refund)
+    LinearLayout llApplyRefund;
+
 
     private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
     private String orderNo;
+    private String src;
 
-    public static void startIt(Activity activity, String orderNo) {
+    public static void startIt(Activity activity, String orderNo, String src) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
         intent.putExtra("orderNo", orderNo);
+        intent.putExtra("src", src);
         activity.startActivity(intent);
     }
 
@@ -129,6 +152,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");
+        src = getIntent().getStringExtra("src");
         //调用接口获取订单详情
         presenter.getOrderDetail(orderNo);
     }
@@ -203,12 +227,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvAddress.setText(adress);
         }
         //商品icon
-        String iconUrl = "";
-        if (StringUtils.isNotNull(response.skuInfo.srcIp))
-            if (StringUtils.isNotNull(response.skuInfo.src)) {
-                iconUrl = response.skuInfo.srcIp + response.skuInfo.src;
-                ImageUtils.loadImage(iconUrl, ivPicture);
-            }
+        ImageUtils.loadImage(src, ivPicture);
 
         //商品标题
         if (StringUtils.isNotNull(response.skuInfo.name)) {
@@ -256,19 +275,31 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             rlMonthPayment.setVisibility(View.GONE);
         }
         //大家电
-
-
+        if (StringUtils.isNotNull(response.deliverGoods) && StringUtils.isNotNull(response.installGoods)) {
+            rlDeliverAndInstall.setVisibility(View.VISIBLE);
+            tvDeliver.setText("送货：" + response.deliverGoods);
+            tvInstall.setText("安装：" + response.installGoods);
+        } else {
+            rlDeliverAndInstall.setVisibility(View.GONE);
+        }
         //增值服务
-
+        if (CommonUtils.isNotNullOrEmpty(response.addValueService)) {
+            llService.setVisibility(View.VISIBLE);
+            tvService0.setText(response.addValueService.get(0).serviceName);
+            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice +"/月");
+            if (response.addValueService.get(0).isSelected == 0) {
+                cbService0.setChecked(true);
+            } else {
+                cbService0.setChecked(false);
+            }
+        } else {
+            llService.setVisibility(View.GONE);
+        }
 
         //优惠券
-        if (response.courtesyCardJo != null) {
-            //是否选中：0-是；1-否
-            if (response.courtesyCardJo.isSelected == 0) {
-                dvCouponName.setVisibility(View.VISIBLE);
-                dvCouponName.setRightText(response.courtesyCardJo.courtesyCardName);
-            } else
-                dvCouponName.setVisibility(View.GONE);
+        if (StringUtils.isNotNull(response.courtesyCardName)) {
+            dvCouponName.setVisibility(View.VISIBLE);
+            dvCouponName.setRightText(response.courtesyCardName);
         } else
             dvCouponName.setVisibility(View.GONE);
 
@@ -309,7 +340,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     }
 
 
-    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive})
+    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -326,17 +357,21 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //订单追踪
             case R.id.tv_order_trace:
-                presenter.onTrace(orderNo);
+                presenter.onTrace(orderNo, src);
                 break;
 
             //订单追踪
             case R.id.tv_trace:
-                presenter.onTrace(orderNo);
+                presenter.onTrace(orderNo, src);
                 break;
 
             //确认收货
             case R.id.tv_confirm_receive:
                 showConfirmDialog();
+                break;
+
+            //申请退款
+            case R.id.tv_apply_refund:
                 break;
 
             default:
@@ -364,7 +399,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
 
     /**
-     * 底部有三种样式，这是处理方法
+     * 底部有四种样式，这是处理方法
      */
     private void dealFooterView(int status) {
         switch (status) {
@@ -373,6 +408,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 rlPay.setVisibility(View.VISIBLE);
                 llTrace.setVisibility(View.GONE);
                 llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
                 tvPay.setText("去支付");
                 break;
             //待首付
@@ -380,6 +416,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 rlPay.setVisibility(View.VISIBLE);
                 llTrace.setVisibility(View.GONE);
                 llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
                 tvPay.setText("去首付");
                 break;
             //订单已发货
@@ -387,18 +424,42 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 rlPay.setVisibility(View.GONE);
                 llTrace.setVisibility(View.GONE);
                 llTraceAndReceive.setVisibility(View.VISIBLE);
+                llApplyRefund.setVisibility(View.GONE);
                 break;
             //订单已完成
             case OrderState.FINISHED:
                 rlPay.setVisibility(View.GONE);
                 llTrace.setVisibility(View.VISIBLE);
                 llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
                 break;
             //订单已关闭
             case OrderState.CLOSED:
                 rlPay.setVisibility(View.GONE);
                 llTrace.setVisibility(View.VISIBLE);
                 llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
+                break;
+            //充值中
+            case OrderState.ONREGHARGE:
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
+                break;
+            //充值成功
+            case OrderState.RECHARGESUCCESS:
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.GONE);
+                break;
+            //充值失败
+            case OrderState.RECHARGEFAIL:
+                rlPay.setVisibility(View.GONE);
+                llTrace.setVisibility(View.GONE);
+                llTraceAndReceive.setVisibility(View.GONE);
+                llApplyRefund.setVisibility(View.VISIBLE);
                 break;
         }
     }

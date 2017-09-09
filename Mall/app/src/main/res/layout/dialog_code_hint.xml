@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_corners"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="收不到验证码"
+            android:textColor="@color/color_767876"
+            android:textSize="@dimen/ts_18" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_dismiss" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/color_767876"
+            android:text="验证码已发送至您的银行预留手机号" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/color_767876"
+            android:text="1.请确认当前是否使用银行预留的手机号码" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/color_767876"
+            android:text="2.请检查短信是否被手机安全软件拦截" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/color_767876"
+            android:text="3.若预留号码已停用，请联系银行客服咨询" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/ts_14"
+            android:textColor="@color/color_767876"
+            android:text="4.获取更多帮助，请拨打客服电话：400-186-8888" />
+
+    </LinearLayout>
+
+</LinearLayout>

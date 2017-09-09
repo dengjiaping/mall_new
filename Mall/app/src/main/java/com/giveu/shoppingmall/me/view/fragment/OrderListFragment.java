@@ -91,8 +91,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
                 String orderNo = mDatas.get(position - 1).orderNo;
-                if (StringUtils.isNotNull(orderNo))
-                    OrderInfoActivity.startIt(mBaseContext, orderNo);
+                String src = mDatas.get(position - 1).srcIp + mDatas.get(position - 1).src;
+                if (StringUtils.isNotNull(orderNo) && StringUtils.isNotNull(src))
+                    OrderInfoActivity.startIt(mBaseContext, orderNo, src);
             }
         });
 
@@ -126,7 +127,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, "10056737", pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);

@@ -534,8 +534,8 @@ public class ApiImpl {
     }
 
     //订单跟踪
-    public static void getOrderTrace(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
-        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+    public static void getOrderTrace(String channel, String idPerson, String orderNo, String src, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "src"}, new Object[]{channel, idPerson, orderNo, src});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
     }
 
