@@ -55,6 +55,9 @@ public class LoginHelper extends AbsSharePref {
     public static final String RECEIVE_REGION = "receiveRegion";
     public static final String RECEIVE_STREET = "receiveStreet";
     public static final String RECEIVE_DETAIL_ADDRESS = "receiveDetailAddress";
+    public static final String ORDER_PAY_NUM = "orderPayNum";
+    public static final String ORDER_DOWNPAYMENT_NUM = "orderDownpaymentNum";
+    public static final String ORDER_RECEIVE_NUM = "orderReceiceNum";
 
     public static LoginHelper getInstance() {
         if (instance == null) {
@@ -102,6 +105,9 @@ public class LoginHelper extends AbsSharePref {
         personInfo.receiveRegion = getString(RECEIVE_REGION, "");
         personInfo.receiveStreet = getString(RECEIVE_STREET, "");
         personInfo.receiveDetailAddress = getString(RECEIVE_DETAIL_ADDRESS, "");
+        personInfo.orderPayNum = getString(ORDER_PAY_NUM, "");
+        personInfo.orderDowmpaymentNum = getString(ORDER_DOWNPAYMENT_NUM, "");
+        personInfo.orderReceiveNum = getString(ORDER_RECEIVE_NUM, "");
 
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -156,6 +162,22 @@ public class LoginHelper extends AbsSharePref {
             putString(RECEIVE_STREET, personInfo.shippingAddress.street);
             putString(RECEIVE_DETAIL_ADDRESS, personInfo.shippingAddress.address);
         }
+
+        if (CommonUtils.isNotNullOrEmpty(personInfo.myOrder)) {
+            for (LoginResponse.MyOrderBean myOrderBean : personInfo.myOrder) {
+                switch (myOrderBean.status) {
+                    case 1:
+                        putString(ORDER_PAY_NUM, myOrderBean.num);
+                        break;
+                    case 2:
+                        putString(ORDER_DOWNPAYMENT_NUM, myOrderBean.num);
+                        break;
+                    case 4:
+                        putString(ORDER_RECEIVE_NUM, myOrderBean.num);
+                        break;
+                }
+            }
+        }
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
         //如果没存过该值，那么是刚登陆时保存的数据，有两次提醒设置手势或指纹的机会
@@ -192,6 +214,18 @@ public class LoginHelper extends AbsSharePref {
             LoginActivity.startIt(activity);
             return false;
         }
+    }
+
+    public String getOrderPayNum() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.orderPayNum;
+    }
+
+    public String getOrderDownpaymentNum() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.orderDowmpaymentNum;
+    }
+
+    public String getOrderReceiveNum() {
+        return loginPersonInfo == null ? "" : loginPersonInfo.orderReceiveNum;
     }
 
     /**
