@@ -27,7 +27,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 getView().showOrderDetail(response.data);

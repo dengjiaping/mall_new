@@ -94,7 +94,6 @@ public class MainMeFragment extends BaseFragment {
     @BindView(R.id.tv_waiting_receive)
     TextView tvWaitingReceive;
 
-    private List<OrderNumResponse.MyOrderBean> orderNumList;//订单各个种类的数量
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,7 +111,6 @@ public class MainMeFragment extends BaseFragment {
         });
         registerEventBus();
         ButterKnife.bind(this, view);
-        orderNumList = new ArrayList<>();
         return view;
     }
 
@@ -164,40 +162,22 @@ public class MainMeFragment extends BaseFragment {
             viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.VISIBLE);
             //订单数量显示个数处理逻辑
-            if (CommonUtils.isNotNullOrEmpty(orderNumList)) {
-                for (OrderNumResponse.MyOrderBean response : orderNumList) {
-                    switch (response.status) {
-                        //待付款
-                        case OrderState.WAITINGPAY:
-                            if (response.num != 0) {
-                                tvWaitingPay.setVisibility(View.GONE);
-                                tvWaitingPay.setText(response.num);
-                            } else
-                                tvWaitingPay.setVisibility(View.GONE);
-                            break;
-                        //待首付
-                        case OrderState.DOWNPAYMENT:
-                            if (response.num != 0) {
-                                tvDownPayment.setVisibility(View.GONE);
-                                tvDownPayment.setText(response.num);
-                            } else
-                                tvDownPayment.setVisibility(View.GONE);
-                            break;
-                        //待收货
-                        case OrderState.WAITINGRECEIVE:
-                            if (response.num != 0) {
-                                tvWaitingReceive.setVisibility(View.GONE);
-                                tvWaitingReceive.setText(response.num);
-                            } else
-                                tvWaitingReceive.setVisibility(View.GONE);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            if (LoginHelper.getInstance().getOrderDownpaymentNum() > 0) {
+                tvDownPayment.setVisibility(View.VISIBLE);
+                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownpaymentNum());
+            } else {
+                tvDownPayment.setVisibility(View.GONE);
+            }
+            if (LoginHelper.getInstance().getOrderPayNum() > 0) {
+                tvWaitingPay.setVisibility(View.VISIBLE);
+                tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum());
             } else {
                 tvWaitingPay.setVisibility(View.GONE);
-                tvDownPayment.setVisibility(View.GONE);
+            }
+            if (LoginHelper.getInstance().getOrderReceiveNum() > 0) {
+                tvWaitingReceive.setVisibility(View.VISIBLE);
+                tvWaitingReceive.setText(LoginHelper.getInstance().getOrderReceiveNum());
+            } else {
                 tvWaitingReceive.setVisibility(View.GONE);
             }
         } else {
@@ -235,8 +215,6 @@ public class MainMeFragment extends BaseFragment {
     public void initDataDelay() {
 
     }
-
-
 
 
     @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
@@ -284,7 +262,7 @@ public class MainMeFragment extends BaseFragment {
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         CollectionActivity.startIt(mBaseContext);
-                    }else {
+                    } else {
                         notActiveDialog.showDialog();
                     }
                 }

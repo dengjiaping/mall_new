@@ -105,9 +105,9 @@ public class LoginHelper extends AbsSharePref {
         personInfo.receiveRegion = getString(RECEIVE_REGION, "");
         personInfo.receiveStreet = getString(RECEIVE_STREET, "");
         personInfo.receiveDetailAddress = getString(RECEIVE_DETAIL_ADDRESS, "");
-        personInfo.orderPayNum = getString(ORDER_PAY_NUM, "");
-        personInfo.orderDowmpaymentNum = getString(ORDER_DOWNPAYMENT_NUM, "");
-        personInfo.orderReceiveNum = getString(ORDER_RECEIVE_NUM, "");
+        personInfo.orderPayNum = getInt(ORDER_PAY_NUM, 0);
+        personInfo.orderDowmpaymentNum = getInt(ORDER_DOWNPAYMENT_NUM, 0);
+        personInfo.orderReceiveNum = getInt(ORDER_RECEIVE_NUM, 0);
 
         if (StringUtils.isNotNull(getString(USER_ID))) {
             this.loginPersonInfo = personInfo;
@@ -167,13 +167,13 @@ public class LoginHelper extends AbsSharePref {
             for (LoginResponse.MyOrderBean myOrderBean : personInfo.myOrder) {
                 switch (myOrderBean.status) {
                     case 1:
-                        putString(ORDER_PAY_NUM, myOrderBean.num);
+                        putInt(ORDER_PAY_NUM, myOrderBean.num);
                         break;
                     case 2:
-                        putString(ORDER_DOWNPAYMENT_NUM, myOrderBean.num);
+                        putInt(ORDER_DOWNPAYMENT_NUM, myOrderBean.num);
                         break;
                     case 4:
-                        putString(ORDER_RECEIVE_NUM, myOrderBean.num);
+                        putInt(ORDER_RECEIVE_NUM, myOrderBean.num);
                         break;
                 }
             }
@@ -216,16 +216,16 @@ public class LoginHelper extends AbsSharePref {
         }
     }
 
-    public String getOrderPayNum() {
-        return loginPersonInfo == null ? "" : loginPersonInfo.orderPayNum;
+    public int getOrderPayNum() {
+        return loginPersonInfo == null ? 0 : loginPersonInfo.orderPayNum;
     }
 
-    public String getOrderDownpaymentNum() {
-        return loginPersonInfo == null ? "" : loginPersonInfo.orderDowmpaymentNum;
+    public int getOrderDownpaymentNum() {
+        return loginPersonInfo == null ? 0 : loginPersonInfo.orderDowmpaymentNum;
     }
 
-    public String getOrderReceiveNum() {
-        return loginPersonInfo == null ? "" : loginPersonInfo.orderReceiveNum;
+    public int getOrderReceiveNum() {
+        return loginPersonInfo == null ? 0 : loginPersonInfo.orderReceiveNum;
     }
 
     /**

@@ -85,9 +85,9 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String receiveRegion;
     public String receiveStreet;
     public String receiveDetailAddress;
-    public String orderPayNum;
-    public String orderDowmpaymentNum;
-    public String orderReceiveNum;
+    public int orderPayNum;
+    public int orderDowmpaymentNum;
+    public int orderReceiveNum;
 
 
     public AddressBean address;
@@ -131,7 +131,7 @@ public class LoginResponse extends BaseBean<LoginResponse> {
          * status : 55818
          */
 
-        public String num;
+        public int num;
         public int status;
     }
 }
