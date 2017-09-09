@@ -15,7 +15,7 @@ public interface OrderState {
     String ORDER_TYPE = "orderState";
 
     //渠道名称：商城
-    String CHANNEL = "qq";
+    String CHANNEL = "sc";
 
     //全部
     String ALL_RESPONSE = "0";

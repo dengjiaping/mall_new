@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -90,7 +91,7 @@ public class OrderTraceActivity extends BaseActivity {
     @Override
     public void setData() {
         orderNo = getIntent().getStringExtra("orderNo");
-        ApiImpl.getOrderTrace(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+        ApiImpl.getOrderTrace(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
             @Override
             public void onSuccess(OrderTraceResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {
