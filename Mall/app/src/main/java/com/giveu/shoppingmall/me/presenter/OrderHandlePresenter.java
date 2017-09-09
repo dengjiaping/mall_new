@@ -9,6 +9,7 @@ import com.giveu.shoppingmall.me.view.activity.OrderTraceActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -26,7 +27,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 getView().showOrderDetail(response.data);
@@ -58,7 +59,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //确认收货
     public void onConfirmReceive(final String orderNo) {
-        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 getView().confirmReceiveSuccess(orderNo);
@@ -83,7 +84,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //取消订单
     public void onCancelOrder(final String orderNo) {
-        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 getView().cancelOrderSuccess(orderNo);
@@ -98,7 +99,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //删除订单
     public void onDeleteOrder(final String orderNo) {
-        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 getView().deleteOrderSuccess(orderNo);
