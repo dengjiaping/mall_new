@@ -65,7 +65,6 @@ public class WebCommodityFragment extends Fragment {
         wvCommodity.setFocusable(false);
         webSettings = wvCommodity.getSettings();
         webSettings.setUseWideViewPort(true);
-        webSettings.setJavaScriptEnabled(true);//支持js
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         wvCommodity.setWebViewClient(new WebViewClient() {

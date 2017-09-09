@@ -1,6 +1,5 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,17 +172,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 locationUtils.stopLocation();
             }
         });
-
-        buyDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (StringUtils.isNotNull(buyDialog.getSkuCode())) {
-                    skuCode = buyDialog.getSkuCode();
-                    llChooseAttr.setMiddleText(buyDialog.getAttrStr());
-                }
-                presenter.getSkuIntroduce("1234567", "SC", skuCode);
-            }
-        });
         initListener();
     }
 
@@ -226,8 +214,9 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             @Override
             public void onComplete(String skuCode) {
                 CommodityInfoFragment.this.skuCode = skuCode;
-                //选完属性后再次查询商品的相关属性
-                presenter.queryCommodityInfo("SC", LoginHelper.getInstance().getIdPerson(), provinceStr, cityStr, regionStr, skuCode);
+                //选完属性后再次查询商品的相关信息，并检查库存
+                getCommodityInfo();
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
             }
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
@@ -292,8 +281,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void initDataDelay() {
-        //K00002691可以分期   K00002713可以一次
-        presenter.getSkuIntroduce("1234567", "SC", skuCode);
+        getCommodityInfo();
         //获取默认的地址，没有的话获取定位的位置
         if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
             provinceStr = LoginHelper.getInstance().getReceiveProvince();
@@ -305,7 +293,13 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         } else {
             locationUtils.startLocation();
         }
+    }
 
+    /**
+     * 获取商品信息
+     */
+    public void getCommodityInfo(){
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "SC", skuCode);
     }
 
     @Override
