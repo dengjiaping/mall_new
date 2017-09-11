@@ -64,6 +64,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     TextView tvSyncAddress;
     @BindView(R.id.tv_addressTag)
     TextView tvAddressTag;
+    @BindView(R.id.et_email)
+    EditView etEmail;
     private String province;
     private String city;
     private String region;
@@ -95,6 +97,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             tvSyncAddress.setVisibility(View.GONE);
             setEditDisabled(etPhone);
             setEditDisabled(etName);
+            setEditDisabled(etEmail);
             setEditDisabled(etDetailAddress);
             //获取居住地址信息
             presenter.getLiveAddress(LoginHelper.getInstance().getIdPerson());
@@ -104,7 +107,6 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             }
         }
     }
-
 
 
     private void setEditDisabled(EditText editText) {
@@ -191,13 +193,19 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         });
         etName.checkFormat(EditView.Style.NAME);
         etPhone.checkFormat(EditView.Style.PHONE);
+        etEmail.checkFormat(EditView.Style.EMAIL);
         etName.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 canClick(false);
             }
         });
-
+        etEmail.addTextChangedListener(new TextChangeListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                canClick(false);
+            }
+        });
         etPhone.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -223,7 +231,12 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             }
             return false;
         }
-
+        if (StringUtils.isNull(etEmail.getText().toString()) || !StringUtils.isEmail(etEmail.getText().toString())) {
+            if (showToast) {
+                ToastUtils.showShortToast("请输入正确的电子邮箱");
+            }
+            return false;
+        }
         if ("请选择".equals(tvAddress.getText().toString())) {
             if (showToast) {
                 ToastUtils.showShortToast("请选择所在地区");
@@ -252,8 +265,9 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             String building = etDetailAddress.getText().toString();
             String phone = etPhone.getText().toString();
             String name = etName.getText().toString();
+            String email = etEmail.getText().toString();
             //添加居住地址
-            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name, province, city, region, street, building);
+            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name,email, province, city, region, street, building);
         }
     }
 
@@ -282,6 +296,11 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             etName.setHint("");
         } else {
             etName.setText(data.name);
+        }
+        if (StringUtils.isNull(data.email)) {
+            etEmail.setHint("");
+        } else {
+            etEmail.setText(data.email);
         }
         String address = "";
         if (StringUtils.isNotNull(data.province)) {
@@ -318,5 +337,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         etDetailAddress.setText(LoginHelper.getInstance().getReceiveDetailAddress());
         etName.requestFocus();
         etName.setSelection(etName.getText().toString().length());
+
     }
+
+
 }

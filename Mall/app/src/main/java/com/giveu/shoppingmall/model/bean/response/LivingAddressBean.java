@@ -9,6 +9,7 @@ import com.android.volley.mynet.BaseBean;
 public class LivingAddressBean extends BaseBean<LivingAddressBean> {
     public String city;
     public String name;
+    public String email;
     public String phone;
     public String province;
     public String region;

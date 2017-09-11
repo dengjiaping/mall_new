@@ -107,6 +107,10 @@ public class CashTypeActivity extends BaseActivity {
     ImageView ivPointer;
     @BindView(R.id.tv_agreement)
     TextView tvAgreement;
+    @BindView(R.id.tv_agreement_top)
+    TextView tvAgreementTop;
+    @BindView(R.id.cb_desc_top)
+    CheckBox cbDescTop;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000目前最大额
@@ -123,6 +127,7 @@ public class CashTypeActivity extends BaseActivity {
     String chooseBankName;//选择的银行卡名
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
     PwdDialog pwdDialog;
+
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, CashTypeActivity.class);
         mActivity.startActivity(intent);
@@ -171,6 +176,14 @@ public class CashTypeActivity extends BaseActivity {
             //分期
             url = ApiUrl.WebUrl.cashLoanStatic;
         }
+        CommonUtils.setTextWithSpan(tvAgreementTop, false, "同意参加", "《人身意外伤害保险》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //人身意外伤害保险
+                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.test, "人身意外伤害保险");
+            }
+        });
+
         final String finalUrl = url;
         CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "借款及服务相关协议", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
@@ -560,10 +573,11 @@ public class CashTypeActivity extends BaseActivity {
         //取现完成返回刷新数据（VerifyActivity）
         initDefaultBankCardLayout();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showPwdDialog(PwdDialogEvent event) {
         //填写完居住地址回来弹出密码框（LivingAddressActivity）
-       pwdDialog.showDialog();
+        pwdDialog.showDialog();
     }
 
     @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
@@ -625,7 +639,7 @@ public class CashTypeActivity extends BaseActivity {
     /**
      * 资料是否完善的判断
      */
-    public void canShowPwdDialog(){
+    public void canShowPwdDialog() {
         if (LoginHelper.getInstance().hasExistOther()) {
             //添加了联系人
             if (LoginHelper.getInstance().hasExistLive()) {
@@ -644,6 +658,7 @@ public class CashTypeActivity extends BaseActivity {
             PerfectContactsActivity.startIt(mBaseContext, Const.CASH);
         }
     }
+
     /**
      * 初始化交易密码dialog，判断是否有交易密码，有显示密码框，没有则跳转设置交易密码
      */
@@ -673,7 +688,8 @@ public class CashTypeActivity extends BaseActivity {
                                         if (StringUtils.isNull(chooseBankNo)) {
                                             chooseBankNo = LoginHelper.getInstance().getDefaultCard();
                                         }
-                                        VerifyActivity.startIt(mBaseContext, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(localIdProduct), response.data.code, chooseBankName, chooseBankNo);
+                                        String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
+                                        VerifyActivity.startIt(mBaseContext, insuranceFee, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(localIdProduct), response.data.code, chooseBankName, chooseBankNo);
                                     } else {
                                         //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
                                         PwdErrorDialog errorDialog = new PwdErrorDialog();

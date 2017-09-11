@@ -56,8 +56,9 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public static final String BANKCARD = "bankCard";
     private String salePrice;
 
-    public static void startIt(Activity activity, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
+    public static void startIt(Activity activity,String insuranceFee, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
         Intent intent = new Intent(activity, VerifyActivity.class);
+        intent.putExtra("insuranceFee", insuranceFee);
         intent.putExtra("statusType", statusType);
         intent.putExtra("creditAmount", creditAmount);
         intent.putExtra("creditType", creditType);
@@ -208,6 +209,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public void checkSMSSuccess() {
         switch (statusType) {
             case CASH:
+                String insuranceFee = getIntent().getStringExtra("insuranceFee");
                 String creditAmount = getIntent().getStringExtra("creditAmount");
                 String idProduct = getIntent().getStringExtra("idProduct");
                 final String creditType = getIntent().getStringExtra("creditType");
@@ -215,12 +217,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 String chooseBankName = getIntent().getStringExtra("chooseBankName");
                 String chooseBankNo = getIntent().getStringExtra("chooseBankNo");
 
-                ApiImpl.addEnchashmentCredit(mBaseContext, "0", chooseBankName, chooseBankNo, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
+                ApiImpl.addEnchashmentCredit(mBaseContext, insuranceFee, chooseBankName, chooseBankNo, creditAmount, creditType, LoginHelper.getInstance().getIdPerson(), idProduct, LoginHelper.getInstance().getPhone(), randcode, smsCode, new BaseRequestAgent.ResponseListener<EnchashmentCreditResponse>() {
                     @Override
                     public void onSuccess(EnchashmentCreditResponse response) {
                         if (response.data != null) {
                             EnchashmentCreditResponse ecResponse = response.data;
-                            CashFinishStatusActivity.startIt(mBaseContext, response.result, response.message, ecResponse.creditAmount, ecResponse.repayNum, ecResponse.deductDate, creditType);
+                            CashFinishStatusActivity.startIt(mBaseContext, "success", response.message, ecResponse.creditAmount, ecResponse.repayNum, ecResponse.deductDate, creditType);
                             //更新取现可用额度
                             LoginHelper.getInstance().setAvailablePoslimit(ecResponse.creditAmount);
                             BaseApplication.getInstance().finishActivity(CashTypeActivity.class);
@@ -231,7 +233,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        CashFinishStatusActivity.startIt(mBaseContext, errorBean.result, errorBean.message);
+                        CashFinishStatusActivity.startIt(mBaseContext, "fail", errorBean.message);
                     }
                 });
                 break;

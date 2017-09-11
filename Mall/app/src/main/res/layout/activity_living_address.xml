@@ -33,120 +33,153 @@
             android:textSize="@dimen/ts_15" />
 
     </LinearLayout>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="姓名"
-            android:textColor="@color/color_282828"
-            android:textSize="@dimen/ts_14" />
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:text="姓名"
+                android:textColor="@color/color_282828"
+                android:textSize="@dimen/ts_14" />
 
-        <com.giveu.shoppingmall.widget.EditView
-            android:id="@+id/et_name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:hint="请输入姓名"
-            android:singleLine="true"
-            android:textColor="@color/color_4a4a4a"
+            <com.giveu.shoppingmall.widget.EditView
+                android:id="@+id/et_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="请输入姓名"
+                android:singleLine="true"
+                android:textColor="@color/color_4a4a4a"
+                android:textColorHint="@color/color_d8d8d8"
+                android:textSize="@dimen/ts_14" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:text="联系电话"
+                android:textColor="@color/color_282828"
+                android:textSize="@dimen/ts_14" />
+
+            <com.giveu.shoppingmall.widget.EditView
+                android:id="@+id/et_phone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="请输入联系电话"
+                android:inputType="number"
+                android:maxLength="11"
+                android:singleLine="true"
+                android:textColor="@color/color_4a4a4a"
+                android:textColorHint="@color/color_d8d8d8"
+                android:textSize="@dimen/ts_14" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:text="电子邮箱"
+                android:textColor="@color/color_282828"
+                android:textSize="@dimen/ts_14" />
+
+            <com.giveu.shoppingmall.widget.EditView
+                android:id="@+id/et_email"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="请输入电子邮箱"
+                android:singleLine="true"
+                android:textColor="@color/color_4a4a4a"
+                android:textColorHint="@color/color_d8d8d8"
+                android:textSize="@dimen/ts_14" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_choose_address"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                android:text="所在地区"
+                android:textColor="@color/color_282828"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:paddingLeft="10dp"
+                android:text="请选择"
+                android:textColor="@color/color_00bbc0"
+                android:textSize="@dimen/ts_14" />
+
+            <ImageView
+                android:id="@+id/iv_detail"
+                style="@style/arrow_common_problem_style"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_detail_address"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:gravity="start"
+            android:hint="请补充详细居住地址，如街道、门牌号、楼层及房间号等"
             android:textColorHint="@color/color_d8d8d8"
-            android:textSize="@dimen/ts_14" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="联系电话"
+            android:padding="15dp"
             android:textColor="@color/color_282828"
             android:textSize="@dimen/ts_14" />
-
-        <com.giveu.shoppingmall.widget.EditView
-            android:id="@+id/et_phone"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:hint="请输入联系电话"
-            android:inputType="number"
-            android:maxLength="11"
-            android:singleLine="true"
-            android:textColor="@color/color_4a4a4a"
-            android:textColorHint="@color/color_d8d8d8"
-            android:textSize="@dimen/ts_14" />
+        <com.giveu.shoppingmall.widget.ClickEnabledTextView
+            android:id="@+id/tv_commit"
+            style="@style/click_enabled_bt"
+            android:layout_marginTop="51dp"
+            android:text="提交" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_choose_address"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:text="所在地区"
-            android:textColor="@color/color_282828"
-            android:textSize="@dimen/ts_14" />
-
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:paddingLeft="10dp"
-            android:text="请选择"
-            android:textColor="@color/color_00bbc0"
-            android:textSize="@dimen/ts_14" />
-
-        <ImageView
-            android:id="@+id/iv_detail"
-            style="@style/arrow_common_problem_style"
-            android:layout_gravity="center_vertical" />
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/et_detail_address"
-        android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/white"
-        android:gravity="start"
-        android:hint="请补充详细居住地址，如街道、门牌号、楼层及房间号等"
-        android:padding="15dp"
-        android:textColor="@color/color_282828"
-        android:textSize="@dimen/ts_14" />
-
-    <com.giveu.shoppingmall.widget.ClickEnabledTextView
-        android:id="@+id/tv_commit"
-        style="@style/click_enabled_bt"
-        android:layout_marginTop="51dp"
-        android:text="提交" />
-
-
+</ScrollView>
 </LinearLayout>
