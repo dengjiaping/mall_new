@@ -66,7 +66,6 @@ public class OrderTraceActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_order_trace);
         baseLayout.setTitle("订单跟踪");
-        baseLayout.showLoading();
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
         traceDatas = new ArrayList<>();
         adapter = new LvCommonAdapter<OrderTraceResponse.LogisticsInfoBean>(mBaseContext, R.layout.lv_trace_item, traceDatas) {
@@ -94,7 +93,7 @@ public class OrderTraceActivity extends BaseActivity {
     public void setData() {
         orderNo = getIntent().getStringExtra("orderNo");
         src = getIntent().getStringExtra("src");
-        ApiImpl.getOrderTrace(OrderState.CHANNEL, "10056737", orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+        ApiImpl.getOrderTrace(mBaseContext, OrderState.CHANNEL, "10056737", orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
             @Override
             public void onSuccess(OrderTraceResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {
@@ -112,7 +111,6 @@ public class OrderTraceActivity extends BaseActivity {
                 if (StringUtils.isNotNull(response.data.orderNo)) {
                     tvOrderNo.setText("订单编号：" + response.data.orderNo);
                 }
-                baseLayout.disLoading();
                 baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
             }
 

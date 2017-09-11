@@ -97,12 +97,20 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             tvSyncAddress.setVisibility(View.GONE);
             setEditDisabled(etPhone);
             setEditDisabled(etName);
-            setEditDisabled(etEmail);
+                setEditDisabled(etEmail);
             setEditDisabled(etDetailAddress);
             //获取居住地址信息
             presenter.getLiveAddress(LoginHelper.getInstance().getIdPerson());
         } else {
             if (StringUtils.isNull(LoginHelper.getInstance().getReceiveProvince())) {
+                tvSyncAddress.setVisibility(View.GONE);
+            }
+            if (LoginHelper.getInstance().canOnlyEditEmail()) {
+                //填写过居住地址，邮箱没填过
+                setEditDisabled(etPhone);
+                setEditDisabled(etName);
+                setEditDisabled(etDetailAddress);
+                llChooseAddress.setEnabled(false);
                 tvSyncAddress.setVisibility(View.GONE);
             }
         }
@@ -267,7 +275,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             String name = etName.getText().toString();
             String email = etEmail.getText().toString();
             //添加居住地址
-            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name,email, province, city, region, street, building);
+            presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name, email, province, city, region, street, building);
         }
     }
 

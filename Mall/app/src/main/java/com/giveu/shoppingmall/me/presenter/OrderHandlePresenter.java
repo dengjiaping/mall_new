@@ -4,6 +4,7 @@ package com.giveu.shoppingmall.me.presenter;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.OrderTraceActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
@@ -29,7 +30,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     //获取订单详情
     public void getOrderDetail(String orderNo) {
 
-        ApiImpl.getOrderDetail(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 if (getView() != null) {
@@ -45,15 +46,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
         });
     }
 
-    //去支付
-    public void onPay() {
 
-    }
-
-    //去首付
-    public void onDownPayment() {
-
-    }
 
     //验证交易密码
     public void onVerifyPayPwd(String payPwd) {

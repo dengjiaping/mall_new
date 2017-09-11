@@ -442,12 +442,12 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
-     * 是否已经设置居住地址 true 有
+     * 是否居住地址只可编辑邮箱
      *
      * @return
      */
-    public boolean hasExistLive() {
-        if (loginPersonInfo != null && !"0".equals(loginPersonInfo.existLive)) {
+    public boolean canOnlyEditEmail() {
+        if (loginPersonInfo != null && "1".equals(loginPersonInfo.existLive)) {
             return true;
         } else {
             return false;
@@ -462,7 +462,7 @@ public class LoginHelper extends AbsSharePref {
     public boolean hasFullAddress() {
         if (loginPersonInfo != null && "2".equals(loginPersonInfo.existLive)) {
             return true;
-        } else {
+        }else{
             return false;
         }
     }

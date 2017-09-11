@@ -220,11 +220,11 @@ public class ChargeOrderDialog {
      * 资料是否完善的判断
      */
     public void canShowPwdDialog() {
-        if(LoginHelper.getInstance().hasDefaultCard()){
+        if (LoginHelper.getInstance().hasDefaultCard()) {
             //有默认银行卡
             if (LoginHelper.getInstance().hasExistOther()) {
                 //添加了联系人
-                if (LoginHelper.getInstance().hasExistLive()) {
+                if (LoginHelper.getInstance().canOnlyEditEmail() || LoginHelper.getInstance().hasFullAddress()) {
                     //添加了居住地址,判断是否设置了交易密码
                     if (LoginHelper.getInstance().hasSetPwd()) {
                         if (listener != null) {
@@ -241,7 +241,7 @@ public class ChargeOrderDialog {
                 //未添加联系人
                 PerfectContactsActivity.startIt(mActivity, Const.CASH);
             }
-        }else{
+        } else {
             AddBankCardFirstActivity.startIt(mActivity);
         }
 
