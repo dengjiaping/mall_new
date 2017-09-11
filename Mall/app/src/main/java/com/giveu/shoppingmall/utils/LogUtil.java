@@ -34,7 +34,7 @@ public class LogUtil {
 		if (!allowLog) return;
 		String tag = generateTag();
 
-		Log.d(tag, content);
+		logNoLimit(Log.DEBUG, tag, content);
 	}
 
 	public static void d(String content, Throwable tr) {
@@ -48,7 +48,7 @@ public class LogUtil {
 		if (!allowLog) return;
 		String tag = generateTag();
 
-		Log.e(tag, content);
+		logNoLimit(Log.ERROR, tag, content);
 	}
 
 	public static void e(String content, Throwable tr) {
@@ -62,7 +62,7 @@ public class LogUtil {
 		if (!allowLog) return;
 		String tag = generateTag();
 
-		Log.i(tag, content);
+		logNoLimit(Log.INFO, tag, content);
 	}
 
 	public static void i(String content, Throwable tr) {
@@ -76,7 +76,7 @@ public class LogUtil {
 		if (!allowLog) return;
 		String tag = generateTag();
 
-		Log.v(tag, content);
+		logNoLimit(Log.VERBOSE, tag, content);
 	}
 
 	public static void v(String content, Throwable tr) {
@@ -90,7 +90,7 @@ public class LogUtil {
 		if (!allowLog) return;
 		String tag = generateTag();
 
-		Log.w(tag, content);
+		logNoLimit(Log.WARN, tag, content);
 	}
 
 	public static void w(String content, Throwable tr) {
@@ -110,17 +110,17 @@ public class LogUtil {
 	public static void i(String tag, String content) {
 		if (!allowLog) return;
 
-		Log.i(tag, content);
+		logNoLimit(Log.INFO, tag, content);
 	}
 	public static void w(String tag, String content) {
 		if (!allowLog) return;
 
-		Log.w(tag, content);
+		logNoLimit(Log.WARN, tag, content);
 	}
 	public static void e(String tag, String content) {
 		if (!allowLog) return;
 
-		Log.e(tag, content);
+		logNoLimit(Log.ERROR, tag, content);
 	}
 
 	/**
@@ -128,8 +128,53 @@ public class LogUtil {
 	 */
 	public static void onlineLog(String content) {
 		try{
-			Log.i(BaseApplication.getInstance().getPackageName(), content);
+			logNoLimit(Log.INFO, BaseApplication.getInstance().getPackageName(), content);
 		}catch (Exception e){}
+	}
+
+	/**
+	 * 使用Log来显示调试信息,因为log在实现上每个message有4k字符长度限制
+	  所以这里使用自己分节的方式来输出足够长度的message
+	 * @param level
+	 * @param tag
+	 * @param content
+	 */
+	public static void logNoLimit(int level, String tag, String content) {
+		if (TextUtils.isEmpty(content)){
+			return;
+		}
+		int lineContentCapacity = 3000;
+		if(content.length() > lineContentCapacity) {
+			for(int i=0;i<content.length();i+=lineContentCapacity){
+				if(i+lineContentCapacity < content.length()){
+					log(level, tag, content.substring(i, i+lineContentCapacity));
+				}else {
+					log(level, tag, content.substring(i, content.length()));
+				}
+			}
+		} else{
+			log(level, tag, content);
+		}
+	}
+
+	private static void log(int level, String tag, String content) {
+		switch (level){
+			case Log.INFO:
+				Log.i(tag, content);
+				break;
+			case Log.DEBUG:
+				Log.d(tag, content);
+				break;
+			case Log.WARN:
+				Log.w(tag, content);
+				break;
+			case Log.ERROR:
+				Log.e(tag, content);
+				break;
+			case Log.VERBOSE:
+				Log.v(tag, content);
+				break;
+		}
 	}
 
 

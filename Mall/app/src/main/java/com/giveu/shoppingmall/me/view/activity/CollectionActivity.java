@@ -204,7 +204,7 @@ public class CollectionActivity extends BaseActivity {
                                 ptrlv.setPullLoadEnable(false);
                                 ptrlv.showEnd("没有更多数据");
                             }
-                            llOffTheShelf.setVisibility(View.GONE);
+                            baseLayout.hideEmpty();
                         }
                         goodsList.addAll(collectionResponse.resultList);
                         if (llBottomDelete.getVisibility() == View.VISIBLE) {
@@ -229,7 +229,7 @@ public class CollectionActivity extends BaseActivity {
                         pageIndex++;
                     } else {
                         if (pageIndex == 1) {
-                            llOffTheShelf.setVisibility(View.VISIBLE);
+                            baseLayout.showEmpty("暂无收藏");
                             ptrlv.setPullLoadEnable(false);
                         } else {
                             ptrlv.setPullLoadEnable(false);
@@ -242,7 +242,7 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public void onError(BaseBean errorBean) {
                 if (pageIndex == 1) {
-                    llOffTheShelf.setVisibility(View.VISIBLE);
+                    baseLayout.showEmpty("暂无收藏");
                     ptrlv.onRefreshComplete();
                 }
                 CommonLoadingView.showErrorToast(errorBean);
@@ -342,10 +342,10 @@ public class CollectionActivity extends BaseActivity {
                 }
                 collectionAdapter.notifyDataSetChanged();
                 if (CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
-                    llOffTheShelf.setVisibility(View.VISIBLE);
+                    baseLayout.showEmpty("暂无收藏");
                     ptrlv.setVisibility(View.GONE);
                 } else {
-                    llOffTheShelf.setVisibility(View.GONE);
+                    baseLayout.hideEmpty();
                     ptrlv.setVisibility(View.VISIBLE);
                 }
                 ToastUtils.showShortToast("删除成功");
