@@ -22,7 +22,6 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
-import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
@@ -237,6 +236,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         }
                     });
                     creditDialog.show();
+                }else {
+                    ConfirmOrderActivity.startIt(mBaseContext);
                 }
             }
 
@@ -282,7 +283,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     @Override
     public void initDataDelay() {
         getCommodityInfo();
-        //获取默认的地址，没有的话获取定位的位置
+        //获取默认的地址，没有的话获取收货地址的第一个，或定位的位置
         if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
             provinceStr = LoginHelper.getInstance().getReceiveProvince();
             cityStr = LoginHelper.getInstance().getReceiveCity();
@@ -291,14 +292,20 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             //检查库存
             presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
         } else {
-            locationUtils.startLocation();
+            //获取收货地址，并取收货地址的第一个地址
+            if (LoginHelper.getInstance().hasQualifications()) {
+                presenter.getAddressList(LoginHelper.getInstance().getIdPerson(), "5");
+            } else {
+                //获取定位的位置
+                locationUtils.startLocation();
+            }
         }
     }
 
     /**
      * 获取商品信息
      */
-    public void getCommodityInfo(){
+    public void getCommodityInfo() {
         presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "SC", skuCode);
     }
 
@@ -348,7 +355,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 }
                 serverAdapter.setDatas(serverList);
                 llServer.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 llServer.setVisibility(View.GONE);
             }
             //获取购买对话框选择属性对应的skuCode，更新skuCode
@@ -379,24 +386,18 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     @Override
-    public void showCommodityInfo(CommodityInfoResponse data) {
-        showStockState(data.stockStatus);
-        tvCommoditName.setText(data.name);
-        buyDialog.updateInfo(data.srcIp + "/" + data.src, data.name, data.salePrice);
-        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(data.salePrice),
-                "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
-        if (CommonUtils.isNotNullOrEmpty(data.serviceSafeguards)) {
-            ArrayList<String> serverList = new ArrayList<>();
-            for (SkuIntroductionResponse.ServiceSafeguardsBean safeguard : data.serviceSafeguards) {
-                serverList.add(safeguard.name);
-            }
-            serverAdapter.setDatas(serverList);
-            llServer.setVisibility(View.VISIBLE);
+    public void getAddressList(boolean hasAddress, String province, String city, String region) {
+        //有收货地址
+        if (hasAddress) {
+            this.provinceStr = province;
+            this.cityStr = city;
+            this.regionStr = region;
+            llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
         } else {
-            serverAdapter.setDatas(new ArrayList<String>());
-            llServer.setVisibility(View.GONE);
+            //没有收货地址直接获取定位位置
+            locationUtils.startLocation();
         }
-        llChooseAttr.setMiddleText(buyDialog.getAttrStr());
     }
 
     public String getSkuCode() {

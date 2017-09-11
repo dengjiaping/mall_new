@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,16 +104,16 @@ public class SplashActivity extends BasePermissionActivity {
     public void onPermissionReallyDeclined(@NonNull List<String> permissionName) {
         super.onPermissionReallyDeclined(permissionName);
         //禁止不再询问会直接回调这方法
-        if (!permissionName.isEmpty()){
+        if (!permissionName.isEmpty()) {
             String appName = getResources().getString(R.string.app_name);
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(appName).append("需要开启");
-            for (String name : permissionName){
+            for (String name : permissionName) {
                 stringBuffer.append(permissionMap.get(name));
                 stringBuffer.append("，");
             }
             String substring = stringBuffer.substring(0, stringBuffer.length() - 1);
-            initPermissionDialog( substring + "才可正常使用");
+            initPermissionDialog(substring + "才可正常使用");
             permissionDialog.show();
         }
     }
@@ -148,6 +150,17 @@ public class SplashActivity extends BasePermissionActivity {
         }
         if (SharePrefUtil.getNeedWelcome()) {
             WelcomeActivity.startIt(mBaseContext);
+            //删除apk文件
+            try {
+                String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName();
+                File file = new File(dirPath, "jiyouqianbao.apk");
+                if (file.exists()) {
+                    file.delete();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
             AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
             if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
@@ -173,7 +186,6 @@ public class SplashActivity extends BasePermissionActivity {
         }
 
     }
-
 
 
     @Override

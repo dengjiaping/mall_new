@@ -29,10 +29,6 @@ import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -148,7 +144,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_order_info);
         baseLayout.setTitle("订单详情");
-        baseLayout.showLoading();
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");

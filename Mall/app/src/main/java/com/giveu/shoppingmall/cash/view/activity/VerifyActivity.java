@@ -3,8 +3,11 @@ package com.giveu.shoppingmall.cash.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
@@ -12,6 +15,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
@@ -28,6 +32,7 @@ import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -42,6 +47,10 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     PassWordInputView inputViewPwd;
     @BindView(R.id.tv_phone)
     TextView tvPhone;
+    @BindView(R.id.tv_divider)
+    TextView tvDivider;
+    @BindView(R.id.tv_unreceived)
+    TextView tvUnreceived;
     private VerifyPresenter presenter;
     private String statusType;
     private String codeType = "";
@@ -50,10 +59,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     private long productId;
     private String orderNo;
     private int paymentType;
+    private boolean isForShopping;//是否从商城过来的
 
     public static final String CASH = "cash";
     public static final String RECHARGE = "recharge";
     public static final String BANKCARD = "bankCard";
+    public static final String SHOPPING = "shopping";
     private String salePrice;
 
     public static void startIt(Activity activity, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
@@ -65,6 +76,15 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         intent.putExtra("randCode", randCode);
         intent.putExtra("chooseBankName", chooseBankName);
         intent.putExtra("chooseBankNo", chooseBankNo);
+        activity.startActivity(intent);
+    }
+
+    public static void startItForShopping(Activity activity, String mobile) {
+        Intent intent = new Intent(activity, VerifyActivity.class);
+        intent.putExtra("isForShopping", true);
+        intent.putExtra("mobile", mobile);
+        intent.putExtra("statusType", "shopping");
+
         activity.startActivity(intent);
     }
 
@@ -97,6 +117,17 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         tvSendCode.setSendTextColor(false);
         presenter = new VerifyPresenter(this);
         statusType = getIntent().getStringExtra("statusType");
+        //是否从商城过来的
+        isForShopping = getIntent().getBooleanExtra("isForShopping", false);
+        if (isForShopping) {
+            tvDivider.setVisibility(View.VISIBLE);
+            tvUnreceived.setVisibility(View.VISIBLE);
+            tvSendCode.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_767876));
+        } else {
+            tvDivider.setVisibility(View.GONE);
+            tvUnreceived.setVisibility(View.GONE);
+            tvSendCode.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00bbc0));
+        }
         //充值所需参数
         mobile = getIntent().getStringExtra("mobile");
         productId = getIntent().getLongExtra("productId", 0);
@@ -114,6 +145,9 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
 
             case RECHARGE:
                 codeType = "recharge";
+                break;
+            case SHOPPING:
+                codeType = "shopping";
                 break;
         }
         baseLayout.setBackClickListener(new View.OnClickListener() {
@@ -169,13 +203,26 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         });
     }
 
-    @OnClick({R.id.tv_send_code})
+    @OnClick({R.id.tv_send_code, R.id.tv_unreceived})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_send_code:
                 presenter.sendSMSCode(LoginHelper.getInstance().getPhone(), codeType);
+                break;
+
+            case R.id.tv_unreceived:
+                View contentView = View.inflate(mBaseContext, R.layout.dialog_code_hint, null);
+                ImageView ivDiss = (ImageView) contentView.findViewById(R.id.iv_dismiss);
+                final CustomDialog unReceivedDialog = new CustomDialog(mBaseContext, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
+                ivDiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        unReceivedDialog.dismiss();
+                    }
+                });
+                unReceivedDialog.show();
                 break;
         }
     }
@@ -268,5 +315,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

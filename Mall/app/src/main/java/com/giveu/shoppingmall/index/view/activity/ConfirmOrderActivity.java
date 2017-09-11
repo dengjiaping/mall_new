@@ -9,16 +9,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddAddressActivity;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCouponDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
+import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,6 +71,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private PaymentTypeDialog paymentTypeDialog;
     private CustomListDialog firstPayDialog;
     private CustomListDialog monthDialog;
+    private DealPwdDialog pwdDialog;
 
     private int payType = 0;
     private int couponType = 0;
@@ -114,6 +123,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
         monthDialog.setData(monthList = Arrays.asList(new CharSequence[]{"3个月", "6个月", "9个月", "12个月", "18个月", "24个月",}));
+        pwdDialog = new DealPwdDialog(mBaseContext);
 
     }
 
@@ -129,7 +139,8 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_coupon,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
-            R.id.confirm_order_household,R.id.confirm_order_add_address})
+            R.id.confirm_order_household, R.id.confirm_order_add_address,
+            R.id.tv_ok})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -154,10 +165,46 @@ public class ConfirmOrderActivity extends BaseActivity {
                 rvAddressLayout.setVisibility(View.VISIBLE);
                 AddAddressActivity.startIt(this);
                 break;
-            default:break;
+            case R.id.tv_ok:
+//                pwdDialog.showDialog();
+                PayChannelActivity.startIt(mBaseContext);
+                break;
+
+            default:
+                break;
         }
     }
 
+    @Override
+    public void setListener() {
+        super.setListener();
+        //校验交易密码
+        pwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+            @Override
+            public void checkPwd(String payPwd) {
+                ApiImpl.verifyPayPwd(mBaseContext, LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+                    @Override
+                    public void onSuccess(PayPwdResponse response) {
+                        //密码校验成功
+                        if (response.data.status) {
+                            pwdDialog.dissmissDialog();
+                            //校验手机验证码
+                            VerifyActivity.startItForShopping(mBaseContext, LoginHelper.getInstance().getPhone());
+                        } else {
+                            //密码错误提示
+                            pwdDialog.showPwdError(response.data.remainTimes);
+                        }
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+                        CommonLoadingView.showErrorToast(errorBean);
+                    }
+                });
+            }
+
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

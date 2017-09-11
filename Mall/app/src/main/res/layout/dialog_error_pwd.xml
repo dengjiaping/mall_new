@@ -14,9 +14,8 @@
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
         android:gravity="center"
-        android:text="交易密码错误交易密码错误交易密码错误交易密码错误"
-        android:textColor="@color/color_030303"
-        android:textSize="@dimen/ts_16" />
+        android:textColor="@color/color_767876"
+        android:textSize="@dimen/ts_15" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -2,17 +2,12 @@ package com.giveu.shoppingmall.me.view.dialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 
@@ -50,16 +45,12 @@ public class ErrorPwdDialog {
             //错误达到3次
             tv_left_errorpwd.setVisibility(View.GONE);
             tv_right_errorpwd.setText("忘记密码");
-            tv_error_text.setTextSize(R.dimen.ts_15);
-            tv_error_text.setTextColor(BaseApplication.getInstance().getResources().getColor(R.color.color_767876));
             tv_error_text.setText("支付密码多次输入错误，账号已被冻结");
         } else {
             tv_left_errorpwd.setVisibility(View.VISIBLE);
             tv_right_errorpwd.setText("重新输入");
             String startStr = "支付密码不正确，你还可以再输入";
             String endStr = "次";
-            tv_error_text.setTextSize(R.dimen.ts_15);
-            tv_error_text.setTextColor(BaseApplication.getInstance().getResources().getColor(R.color.color_767876));
             tv_error_text.setText(startStr + times + endStr);
         }
         setListener();
