@@ -26,8 +26,6 @@ import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
-import com.giveu.shoppingmall.model.bean.response.OrderNumResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -35,9 +33,6 @@ import com.giveu.shoppingmall.utils.StringUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,19 +159,19 @@ public class MainMeFragment extends BaseFragment {
             //订单数量显示个数处理逻辑
             if (LoginHelper.getInstance().getOrderDownpaymentNum() > 0) {
                 tvDownPayment.setVisibility(View.VISIBLE);
-                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownpaymentNum());
+                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownpaymentNum()+"");
             } else {
                 tvDownPayment.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderPayNum() > 0) {
                 tvWaitingPay.setVisibility(View.VISIBLE);
-                tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum());
+                tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum()+"");
             } else {
                 tvWaitingPay.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderReceiveNum() > 0) {
                 tvWaitingReceive.setVisibility(View.VISIBLE);
-                tvWaitingReceive.setText(LoginHelper.getInstance().getOrderReceiveNum());
+                tvWaitingReceive.setText(LoginHelper.getInstance().getOrderReceiveNum()+"");
             } else {
                 tvWaitingReceive.setVisibility(View.GONE);
             }
