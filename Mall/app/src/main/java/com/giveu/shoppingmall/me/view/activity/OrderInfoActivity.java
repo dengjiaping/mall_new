@@ -229,18 +229,20 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(status)) {
             tvStatus.setText(status);
         }
-        //收货人
-        if (StringUtils.isNotNull(response.receiverJo.receiverName)) {
-            tvReceiverName.setText(response.receiverJo.receiverName);
-        }
-        //手机号
-        if (StringUtils.isNotNull(response.receiverJo.mobile)) {
-            tvMobile.setText(response.receiverJo.mobile);
-        }
-        //收货地址
-        String adress = response.receiverJo.province + response.receiverJo.city + response.receiverJo.county + response.receiverJo.address;
-        if (StringUtils.isNotNull(adress)) {
-            tvAddress.setText(adress);
+        if (response.receiverJo != null) {
+            //收货人
+            if (StringUtils.isNotNull(response.receiverJo.receiverName)) {
+                tvReceiverName.setText(response.receiverJo.receiverName);
+            }
+            //手机号
+            if (StringUtils.isNotNull(response.receiverJo.mobile)) {
+                tvMobile.setText(response.receiverJo.mobile);
+            }
+            //收货地址
+            String adress = response.receiverJo.province + response.receiverJo.city + response.receiverJo.county + response.receiverJo.address;
+            if (StringUtils.isNotNull(adress)) {
+                tvAddress.setText(adress);
+            }
         }
         //商品icon
         ImageUtils.loadImage(src, ivPicture);
@@ -320,8 +322,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
 
         //服务详情
-        if (StringUtils.isNotNull(response.addValueService.get(0).serviceUrl)) {
-            serviceUrl = response.addValueService.get(0).serviceUrl;
+        if (response.addValueService != null) {
+            if (StringUtils.isNotNull(response.addValueService.get(0).serviceUrl)) {
+                serviceUrl = response.addValueService.get(0).serviceUrl;
+            }
         }
         //优惠券
         if (StringUtils.isNotNull(response.courtesyCardName)) {
