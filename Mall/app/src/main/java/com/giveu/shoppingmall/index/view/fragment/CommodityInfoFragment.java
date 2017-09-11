@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,7 +119,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
         initBanner();
-        locationUtils = new LocationUtils(BaseApplication.getInstance());
         //服务的流式布局对应的adapter
         serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
             @Override
@@ -147,30 +147,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     protected void setListener() {
-        locationUtils.setOnLocationListener(new LocationListener() {
-            @Override
-            public void onSuccess(AMapLocation location) {
-                provinceStr = location.getProvince();
-                cityStr = location.getCity();
-                regionStr = location.getDistrict();
-                llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-                //GPS获取省市区后查询该商品是否有货
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
-                locationUtils.stopLocation();
-            }
-
-            @Override
-            public void onFail(Object o) {
-                //GPS定位失败，直接设置为北京市
-                llChooseAddress.setMiddleText("北京市");
-                provinceStr = "北京市";
-                cityStr = "";
-                regionStr = "";
-                //GPS获取省市区后查询该商品是否有货
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
-                locationUtils.stopLocation();
-            }
-        });
         initListener();
     }
 
@@ -236,7 +212,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         }
                     });
                     creditDialog.show();
-                }else {
+                } else {
                     ConfirmOrderActivity.startIt(mBaseContext);
                 }
             }
@@ -297,7 +273,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 presenter.getAddressList(LoginHelper.getInstance().getIdPerson(), "5");
             } else {
                 //获取定位的位置
-                locationUtils.startLocation();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    activity.applyGpsPermission();
+                } else {
+                    startLocation();
+                }
             }
         }
     }
@@ -396,8 +376,55 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
         } else {
             //没有收货地址直接获取定位位置
-            locationUtils.startLocation();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                activity.applyGpsPermission();
+            } else {
+                startLocation();
+            }
         }
+    }
+
+    public void rejectGpsPermission() {
+        if (llChooseAddress != null) {
+            //GPS定位失败，直接设置为北京市
+            llChooseAddress.setMiddleText("北京市");
+            provinceStr = "北京市";
+            cityStr = "";
+            regionStr = "";
+            //GPS获取省市区后查询该商品是否有货
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+        }
+    }
+
+    public void startLocation() {
+        if (locationUtils == null) {
+            locationUtils = new LocationUtils(BaseApplication.getInstance());
+            locationUtils.setOnLocationListener(new LocationListener() {
+                @Override
+                public void onSuccess(AMapLocation location) {
+                    provinceStr = location.getProvince();
+                    cityStr = location.getCity();
+                    regionStr = location.getDistrict();
+                    llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
+                    //GPS获取省市区后查询该商品是否有货
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+                    locationUtils.stopLocation();
+                }
+
+                @Override
+                public void onFail(Object o) {
+                    //GPS定位失败，直接设置为北京市
+                    llChooseAddress.setMiddleText("北京市");
+                    provinceStr = "北京市";
+                    cityStr = "";
+                    regionStr = "";
+                    //GPS获取省市区后查询该商品是否有货
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+                    locationUtils.stopLocation();
+                }
+            });
+        }
+        locationUtils.startLocation();
     }
 
     public String getSkuCode() {
