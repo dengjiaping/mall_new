@@ -26,6 +26,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
+            app:beforeTime="剩"
+            app:afterTime="自动关闭"
+            app:minuteDivider="分"
+            app:countDownStyle="MINUTE"
+            app:secondDivider="秒"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_15" />
     </LinearLayout>

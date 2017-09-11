@@ -16,6 +16,7 @@ import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -36,7 +37,10 @@ public class PayChannelActivity extends BaseActivity {
     LinearLayout llPayFail;
     @BindView(R.id.tv_back)
     TextView tvBack;
+    @BindView(R.id.ll_pay_status)
+    LinearLayout llPayStatus;
     private ConfirmDialog cancelDialog;
+    private boolean isOrderValid = true;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, PayChannelActivity.class);
@@ -56,7 +60,11 @@ public class PayChannelActivity extends BaseActivity {
         baseLayout.setBackClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelDialog.show();
+                if(isOrderValid) {
+                    cancelDialog.show();
+                }else {
+                    finish();
+                }
             }
         });
     }
@@ -89,9 +97,22 @@ public class PayChannelActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_back:
-                cancelDialog.show();
+                if(isOrderValid) {
+                    cancelDialog.show();
+                }else {
+                    finish();
+                }
                 break;
             case R.id.tv_confirm:
+                tvRemainTime.setRestTime(10 * 1000);
+                tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
+                    @Override
+                    public void onEnd() {
+                        isOrderValid= false;
+                        llPayStatus.setVisibility(View.GONE);
+                        llPayFail.setVisibility(View.VISIBLE);
+                    }
+                });
                 break;
             case R.id.tv_order:
                 OrderInfoActivity.startIt(mBaseContext, "", "");
@@ -101,6 +122,17 @@ public class PayChannelActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        cancelDialog.show();
+        if(isOrderValid) {
+            cancelDialog.show();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
