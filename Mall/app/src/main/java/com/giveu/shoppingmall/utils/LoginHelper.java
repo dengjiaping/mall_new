@@ -455,6 +455,18 @@ public class LoginHelper extends AbsSharePref {
     }
 
     /**
+     * 居住地址是否完整(包含邮箱)
+     *
+     * @return
+     */
+    public boolean hasFullAddress() {
+        if (loginPersonInfo != null && "2".equals(loginPersonInfo.existLive)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
      * 设置是否有居住地址
      *
      * @return

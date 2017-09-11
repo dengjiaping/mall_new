@@ -231,6 +231,7 @@ public class CollectionActivity extends BaseActivity {
                         if (pageIndex == 1) {
                             baseLayout.showEmpty("暂无收藏");
                             ptrlv.setPullLoadEnable(false);
+                            baseLayout.setRightText("");
                         } else {
                             ptrlv.setPullLoadEnable(false);
                             ptrlv.showEnd("没有更多数据");
@@ -372,6 +373,10 @@ public class CollectionActivity extends BaseActivity {
         } else {
             baseLayout.setRightText("编辑");
         }
+        for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
+            collectionResponse.isShowCb = false;
+        }
+        collectionAdapter.notifyDataSetChanged();
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ptrlv.setLayoutParams(layoutParams);
         llBottomDelete.setVisibility(View.GONE);
