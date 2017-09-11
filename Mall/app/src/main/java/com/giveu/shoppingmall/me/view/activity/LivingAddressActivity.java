@@ -87,7 +87,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
         presenter = new LivingAddressPresenter(this);
         //已经有居住地址，那么只展示，否则进行填写
-        if (LoginHelper.getInstance().hasExistLive()) {
+        if (LoginHelper.getInstance().hasFullAddress()) {
             llChooseAddress.setEnabled(false);
             ivDetail.setVisibility(View.GONE);
             tvAddressTag.setText("我的居住地址");
@@ -123,7 +123,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     @Override
     public void setData() {
         //只是展示的话不需要获取地址列表
-        if (!LoginHelper.getInstance().hasExistLive()) {
+        if (!LoginHelper.getInstance().hasFullAddress()) {
 
             String cacheTime = SharePrefUtil.getInstance().getString(Const.ADDRESS_TIME, "");
             //当本地缓存还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
@@ -273,7 +273,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
     @Override
     public void addSuccess() {
-        LoginHelper.getInstance().setHasExistLive("1");
+        LoginHelper.getInstance().setHasExistLive("2");
         ToastUtils.showShortToast("居住地址添加成功");
         EventBusUtils.poseEvent(new PwdDialogEvent());
         finish();
