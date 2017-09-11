@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/search_item_text"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_marginLeft="16dp"
-    android:gravity="center_vertical|left"
-    android:text="即有商城"
-    android:textSize="14sp" />
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_shopping_item_click">
+
+    <TextView
+        android:id="@+id/search_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:gravity="center_vertical|left"
+        android:text="即有商城"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#eeeeee" />
+</RelativeLayout>

@@ -184,7 +184,6 @@ public interface ApiUrl {
     //一级类目查询子类目(商品分类)
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
     //商品SKU搜索
-    String sc_goods_search_goodsSearch = "http://10.11.31.111:8084/mockjs/1/v1/sc/goods/search/goodsSearch";
-//    String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
+    String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
 }
 
