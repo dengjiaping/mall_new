@@ -88,7 +88,7 @@ public class AccountManagementActivity extends BaseActivity {
             llBankCard.setVisibility(View.VISIBLE);
             ivRight.setVisibility(View.VISIBLE);
             //正常用户根据字段来看是否显示完善资料
-            if (LoginHelper.getInstance().hasExistLive() && LoginHelper.getInstance().hasExistOther()) {
+            if (LoginHelper.getInstance().hasFullAddress() && LoginHelper.getInstance().hasExistOther()) {
                 tvPerfectInfo.setVisibility(View.GONE);
             } else {
                 tvPerfectInfo.setVisibility(View.VISIBLE);

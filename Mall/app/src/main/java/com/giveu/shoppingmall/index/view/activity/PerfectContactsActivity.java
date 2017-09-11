@@ -207,7 +207,7 @@ public class PerfectContactsActivity extends BaseActivity implements IContactsVi
                 //取现跳转过来,还需添加
             case Const.RECHARGE:
                 //充值跳转过来
-                if (LoginHelper.getInstance().hasExistLive()) {
+                if (LoginHelper.getInstance().hasFullAddress()) {
                     //设置了地址
                     EventBusUtils.poseEvent(new PwdDialogEvent());
                 } else {

@@ -1,11 +1,13 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,8 +16,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
 import com.giveu.shoppingmall.index.presenter.CommodityPresenter;
@@ -24,6 +27,7 @@ import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -43,7 +47,7 @@ import static com.giveu.shoppingmall.R.id.vp_content;
  * 商品详情
  */
 
-public class CommodityDetailActivity extends BaseActivity implements ICommodityView {
+public class CommodityDetailActivity extends BasePermissionActivity implements ICommodityView {
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(vp_content)
@@ -216,6 +220,38 @@ public class CommodityDetailActivity extends BaseActivity implements ICommodityV
                 commodityInfoFragment.showChooseCityDialog();
                 break;
         }
+    }
+
+    /**
+     * 6.0以上系统申请通讯录权限
+     */
+    public void applyGpsPermission() {
+        if (!PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            setPermissionHelper(false, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+        } else {
+            commodityInfoFragment.startLocation();
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(@NonNull String[] permissionName) {
+        super.onPermissionGranted(permissionName);
+        commodityInfoFragment.startLocation();
+        LogUtil.e("onPermissionGranted");
+    }
+
+    @Override
+    public void onPermissionDeclined(@NonNull String[] permissionName) {
+        super.onPermissionDeclined(permissionName);
+        commodityInfoFragment.rejectGpsPermission();
+        LogUtil.e("onPermissionDeclined");
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull String permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
+        commodityInfoFragment.rejectGpsPermission();
+        LogUtil.e("onPermissionReallyDeclined");
     }
 
     public void refreshStock(int state) {

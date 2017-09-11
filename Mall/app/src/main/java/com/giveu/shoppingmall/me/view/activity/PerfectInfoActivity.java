@@ -53,14 +53,6 @@ public class PerfectInfoActivity extends BaseActivity {
                 break;
 
             case R.id.ll_live_address:
-                if (LoginHelper.getInstance().hasExistLive()) {
-                    //添加过,查看居住地址
-                  //  ShowContactsActivity.startIt(mBaseContext);
-                } else {
-                    //没有添加过，添加居住地址
-                 //   PerfectContactsActivity.startIt(mBaseContext, Const.PERSONCENTER);
-                }
-
                 LivingAddressActivity.startIt(mBaseContext);
                 break;
         }

@@ -336,6 +336,7 @@
 
         <activity
             android:name=".me.view.activity.LivingAddressActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:label="我的居住地址" />
         <activity
             android:name=".me.view.activity.SecurityCenterActivity"
