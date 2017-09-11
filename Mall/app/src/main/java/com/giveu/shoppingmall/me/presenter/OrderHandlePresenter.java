@@ -72,15 +72,27 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
                 @Override
                 public void onError(BaseBean errorBean) {
-
+                    CommonLoadingView.showErrorToast(errorBean);
                 }
             });
         }
     }
 
     //申请退款
-    public void onApplyToRefund() {
+    public void onApplyToRefund(String orderNo) {
+        if (getView() != null) {
+            ApiImpl.applyToRefundForRecharge(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                @Override
+                public void onSuccess(BaseBean response) {
+                    getView().applyToRefundSuccess();
+                }
 
+                @Override
+                public void onError(BaseBean errorBean) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            });
+        }
     }
 
     //上传手机串码

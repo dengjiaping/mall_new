@@ -50,7 +50,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
     private int pageNum = 1;//当前页数
     private final int pageSize = 10;//每页的item数
-    private String orderState;
+    private int orderState;
 
     private OrderHandlePresenter presenter;
     private OrderListAdapter adapter;
@@ -65,7 +65,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            orderState = bundle.getString(OrderState.ORDER_TYPE, "");
+            orderState = bundle.getInt(OrderState.ORDER_TYPE);
         }
         baseLayout.setTitleBarAndStatusBar(false, false);
         fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
@@ -74,7 +74,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
         presenter = new OrderHandlePresenter(this);
 
-        adapter = new OrderListAdapter(mBaseContext, mDatas, channelName, presenter);
+        adapter = new OrderListAdapter(mBaseContext, mDatas, presenter);
         ptrlv.setAdapter(adapter);
         ptrlv.setPullRefreshEnable(true);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
@@ -127,7 +127,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState, new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);
@@ -142,10 +142,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
                 if (pageNum != 1 && (response.data == null || CommonUtils.isNullOrEmpty(response.data.skuInfo))) {
                     ptrlv.showEnd("没有更多数据了");
                 }
-                if (StringUtils.isNotNull(response.channelName)) {
-                    channelName = response.channelName;
-                }
                 if (response.data != null) {
+                    if (StringUtils.isNotNull(response.data.channelName)) {
+                        channelName = response.data.channelName;
+                        adapter.setChannelName(channelName);
+                    }
                     if (CommonUtils.isNotNullOrEmpty(response.data.skuInfo)) {
                         if (pageNum == 1) {
                             mDatas.clear();
@@ -198,6 +199,12 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     public void confirmReceiveSuccess(String orderNo) {
         removeData(orderNo);
         ToastUtils.showLongToast("确认收货成功");
+    }
+
+    //申请退款成功
+    @Override
+    public void applyToRefundSuccess() {
+        ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
     //在mDatas中移除订单号为orderNo的订单

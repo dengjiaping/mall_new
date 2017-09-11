@@ -126,6 +126,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     TextView tvService0Cost;
     @BindView(R.id.ll_apply_refund)
     LinearLayout llApplyRefund;
+    @BindView(R.id.ll_contract)
+    LinearLayout llContract;
 
 
     private ConfirmDialog dialog;
@@ -277,11 +279,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         } else {
             rlDeliverAndInstall.setVisibility(View.GONE);
         }
-        //增值服务
+        //增值服务（目前只有一种）
         if (CommonUtils.isNotNullOrEmpty(response.addValueService)) {
             llService.setVisibility(View.VISIBLE);
             tvService0.setText(response.addValueService.get(0).serviceName);
-            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice +"/月");
+            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
             if (response.addValueService.get(0).isSelected == 0) {
                 cbService0.setChecked(true);
             } else {
@@ -295,8 +297,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.courtesyCardName)) {
             dvCouponName.setVisibility(View.VISIBLE);
             dvCouponName.setRightText(response.courtesyCardName);
-        } else
+        } else {
             dvCouponName.setVisibility(View.GONE);
+        }
 
         //买家留言（文字前景色不一样）
         if (StringUtils.isNotNull(response.userComments)) {
@@ -322,6 +325,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.rechargeDenomination)) {
             tvRechargeDenomination.setText(response.rechargeDenomination);
         }
+        //消费分期合同
+        if (response.orderType == 0) {
+            llContract.setVisibility(View.VISIBLE);
+        } else {
+            llContract.setVisibility(View.GONE);
+        }
         baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
         baseLayout.disLoading();
     }
@@ -329,11 +338,16 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        ToastUtils.showLongToast("成功确认收货");
+        ToastUtils.showLongToast("确认收货成功");
         //再次调取接口更新数据
         presenter.getOrderDetail(orderNo);
     }
 
+    //申请退款成功
+    @Override
+    public void applyToRefundSuccess() {
+        ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
+    }
 
     @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund})
     @Override
@@ -367,6 +381,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //申请退款
             case R.id.tv_apply_refund:
+                presenter.onApplyToRefund(orderNo);
                 break;
 
             default:

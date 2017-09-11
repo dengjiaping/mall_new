@@ -56,34 +56,37 @@
             <LinearLayout
                 android:id="@+id/search_history_ll"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/shopping_search_history_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="4dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="4dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp"
                     android:text="搜索记录"
-                    android:textSize="12sp" />
+                    android:textSize="16sp"
+                    android:textColor="#333333"/>
 
                 <com.giveu.shoppingmall.widget.NoScrollListView
                     android:id="@+id/shopping_search_history_list"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:divider="@color/gray"
-                    android:dividerHeight="0.5dp" />
+                    android:layout_height="wrap_content"
+                    android:divider="@null" />
 
-                <Button
+                <TextView
                     android:id="@+id/shopping_search_history_clear"
-                    android:layout_width="210dp"
+                    android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:text="清除历史搜索记录"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:background="@drawable/selector_shopping_item_click"/>
             </LinearLayout>
         </LinearLayout>
 
