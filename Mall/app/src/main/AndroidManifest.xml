@@ -113,6 +113,7 @@
 
         <!--商城-->
         <activity android:name=".index.view.activity.CommodityDetailActivity" />
+        <activity android:name=".index.view.activity.PayChannelActivity" android:label="支付方式"/>
 
         <!--个人中心-->
         <activity

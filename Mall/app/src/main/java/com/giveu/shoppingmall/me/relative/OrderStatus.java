@@ -56,19 +56,5 @@ public class OrderStatus {
         }
     }
 
-    /**
-     *订单状态             可用按钮功能
-     * 待付款              取消订单、去支付
-     * 待首付              订单跟踪、去首付
-     * 待收货              订单跟踪、确认收货
-     * 一完成              订单跟踪
-     * 已关闭              订单跟踪、删除订单
-     */
-    public static String getButtonType(int type) {
-        /*switch (type) {
-            case
-        }*/
-        return "";
-    }
 
 }

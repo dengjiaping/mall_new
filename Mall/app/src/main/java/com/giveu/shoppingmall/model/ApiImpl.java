@@ -539,6 +539,12 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
     }
 
+    //充值申请退款
+    public static void applyToRefundForRecharge(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_rechargeApplyForRefund, BaseBean.class, context, responseListener);
+    }
+
     //确认收货
     public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
@@ -559,7 +565,7 @@ public class ApiImpl {
     //商品介绍
     public static void getSkuIntroduction(Activity context, String idPerson, String channel, String skuCode, BaseRequestAgent.ResponseListener<SkuIntroductionResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "channel", "skuCode"}, new Object[]{StringUtils.string2Long(idPerson), channel, skuCode});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_intruction, SkuIntroductionResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_instruction, SkuIntroductionResponse.class, context, responseListener);
     }
 
     //商品介绍

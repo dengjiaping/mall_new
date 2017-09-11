@@ -19,6 +19,7 @@ import com.giveu.shoppingmall.index.adapter.ShopListItemAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -33,6 +34,14 @@ import butterknife.ButterKnife;
  */
 
 public class ShoppingListFragment extends BaseFragment {
+    //综合搜索
+    private final static String SORT_BY_SIZE = "synthesize";
+    //销量搜索
+    private final static String SORT_BY_VOLUME = "salesVolume";
+    //价格降序搜索
+    private final static String SORT_PRICE_DESC = "salePriceDesc";
+    //价格升序搜索
+    private final static String SORT_PRICE_ASC = "salePriceAsc";
 
     @BindView(R.id.shopping_list_listview)
     PullToRefreshListView mRefreshView;
@@ -50,9 +59,9 @@ public class ShoppingListFragment extends BaseFragment {
     private List<GoodsSearchResponse.GoodsBean> shoppingList;
     private ShopListItemAdapter mAdapter;
     private String channel = "SC";
-    private String idPerson = "1234567";
+    private String idPerson = LoginHelper.getInstance().getIdPerson();
     private String keyword = "iphone";
-    private String orderSort = "synthesize";
+    private String orderSort = SORT_BY_SIZE;
     private int pageNum = 0;
     private int pageSize = 10;
     private int shopTypeId = 1;
@@ -98,8 +107,12 @@ public class ShoppingListFragment extends BaseFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.shopping_list_radio_all:
+                        orderSort = SORT_BY_SIZE;
+                        initDataForFragment();
                         break;
                     case R.id.shopping_list_radio_sale:
+                        orderSort = SORT_BY_VOLUME;
+                        initDataForFragment();
                         break;
                     case R.id.shopping_list_radio_price:
                         break;
@@ -116,14 +129,17 @@ public class ShoppingListFragment extends BaseFragment {
                     boolean isUp = (boolean) rbPrice.getTag();
                     Drawable drawable;
                     if (isUp) {
+                        orderSort = SORT_PRICE_DESC;
                         drawable = getResources().getDrawable(R.drawable.sort_down);
                     } else {
+                        orderSort = SORT_PRICE_ASC;
                         drawable = getResources().getDrawable(R.drawable.sort_up);
                     }
                     Rect bounds = rbPrice.getCompoundDrawables()[0].getBounds();
                     drawable.setBounds(bounds);
                     rbPrice.setCompoundDrawables(drawable, null, null, null);
                     rbPrice.setTag(!isUp);
+                    initDataForFragment();
                 }
             }
         });

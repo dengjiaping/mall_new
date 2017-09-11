@@ -32,15 +32,50 @@
         app:pwd_style="line"
         app:text_visible="true" />
 
-    <com.giveu.shoppingmall.widget.SendCodeTextView
-        android:id="@+id/tv_send_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="重新发送"
-        android:textColor="@color/color_00bbc0"
-        android:textSize="@dimen/ts_14" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <com.giveu.shoppingmall.widget.SendCodeTextView
+                android:id="@+id/tv_send_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:text="重新发送"
+                android:paddingLeft="10dp"
+                android:textColor="@color/color_00bbc0"
+                android:textSize="@dimen/ts_14" />
+
+            <TextView
+                android:id="@+id/tv_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:text="，"
+                android:textColor="@color/color_767876"
+                android:textSize="@dimen/ts_14"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_unreceived"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:paddingRight="10dp"
+                android:text="收不到验证码"
+                android:textColor="@color/color_00bbc0"
+                android:textSize="@dimen/ts_14"
+                android:visibility="gone" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

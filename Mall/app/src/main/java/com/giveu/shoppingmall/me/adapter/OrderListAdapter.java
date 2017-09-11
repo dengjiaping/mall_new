@@ -26,16 +26,18 @@ import java.util.List;
 public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoBean> {
 
     private OrderHandlePresenter presenter;
-    private String channelName;//渠道名称
+    private String channelName = "";//渠道名称
     private ConfirmDialog dialog;//确认弹框
     private String orderNo;
     private String src;
 
-    public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, String channelName, OrderHandlePresenter presenter) {
+    public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
-        if (StringUtils.isNotNull(channelName))
-            this.channelName = channelName;
         this.presenter = presenter;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
     @Override
@@ -212,7 +214,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showRefundDialog();
                     }
                 });
                 break;
@@ -277,4 +279,25 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         });
         dialog.show();
     }
+
+
+    //申请退款diaolog
+    private void showRefundDialog() {
+        dialog = new ConfirmDialog((Activity) mContext);
+        dialog.setContent("确认申请退款？");
+        dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                presenter.onApplyToRefund(orderNo);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
 }
