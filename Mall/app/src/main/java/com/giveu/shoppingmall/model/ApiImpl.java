@@ -74,7 +74,7 @@ public class ApiImpl {
 
     //广告页
     public static void AdSplashImage(String type, BaseRequestAgent.ResponseListener<AdSplashResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"platform", "type"}, new String[]{"Android",type});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"platform", "type"}, new String[]{"Android", type});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.adviertisement_getad, AdSplashResponse.class, responseListener);
     }
 
@@ -469,7 +469,7 @@ public class ApiImpl {
 
     //获取商品收藏列表
     public static void getCollectionList(Activity context, String idPerson, int pageNum, int pageSize, BaseRequestAgent.ResponseListener<CollectionResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel","idPerson", "pageNum", "pageSize"}, new Object[]{"SC",idPerson, pageNum, pageSize});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize"}, new Object[]{"SC", idPerson, pageNum, pageSize});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_all, CollectionResponse.class, context, responseListener);
     }
 
@@ -481,7 +481,7 @@ public class ApiImpl {
 
     //删除商品收藏
     public static void deleteCollection(Activity context, String idPerson, List<String> skuCodes, int status, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel","idPerson", "skuCodes", "status"}, new Object[]{"SC",idPerson, skuCodes, status});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "skuCodes", "status"}, new Object[]{"SC", idPerson, skuCodes, status});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.collections_goodsSkus_collect, BaseBean.class, context, responseListener);
     }
 
@@ -516,9 +516,9 @@ public class ApiImpl {
     }
 
     //获取订单详情
-    public static void getOrderDetail(String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
+    public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
     }
 
     //删除订单
@@ -534,9 +534,9 @@ public class ApiImpl {
     }
 
     //订单跟踪
-    public static void getOrderTrace(String channel, String idPerson, String orderNo, String src, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
+    public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, String src, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "src"}, new Object[]{channel, idPerson, orderNo, src});
-        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
     }
 
     //充值申请退款
@@ -581,10 +581,11 @@ public class ApiImpl {
     }
 
     //商品库存检查
-    public static void queryCommodityInfo(Activity context,String channel,String idPerson, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<CommodityInfoResponse> responseListener) {
+    public static void queryCommodityInfo(Activity context, String channel, String idPerson, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<CommodityInfoResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "province", "city", "region", "skuCode"}, new Object[]{channel, StringUtils.string2Long(idPerson), province, city, region, skuCode});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_choose, CommodityInfoResponse.class, context, responseListener);
     }
+
     //商品SKU搜索
     public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, BaseRequestAgent.ResponseListener responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNumber", "pageSize"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize});

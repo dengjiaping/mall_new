@@ -444,6 +444,8 @@
                                     android:gravity="center">
 
                                     <ImageView
+                                        android:id="@+id/iv_service_detail"
+                                        android:clickable="true"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:src="@drawable/ic_detail_circle" />

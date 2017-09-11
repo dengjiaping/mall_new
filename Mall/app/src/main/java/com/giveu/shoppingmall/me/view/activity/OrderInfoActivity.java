@@ -13,21 +13,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.mynet.BaseBean;
-import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
-import com.giveu.shoppingmall.me.view.dialog.BalancyDeficientDialog;
+import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
-import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
-import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -144,9 +142,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     private String src;
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
     private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
-    private BalancyDeficientDialog balancyDeficientDialog;//钱包余额不足的弹框
-    String orderPayType;
-    int totalPrice;
+    private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
+    int orderPayType;
+    double downPayment;//首付金额
+    boolean isHaveDownPayment;//是否有首付金额
+    String serviceUrl;//服务详情
+    String serviceName;
 
     public static void startIt(Activity activity, String orderNo, String src) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
@@ -162,7 +163,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
         notActiveDialog = new NotActiveDialog(mBaseContext);
         dealPwdDialog = new DealPwdDialog(mBaseContext);
-        balancyDeficientDialog = new BalancyDeficientDialog(mBaseContext);
+        balanceDeficientDialog = new BalanceDeficientDialog(mBaseContext);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");
         src = getIntent().getStringExtra("src");
@@ -197,6 +198,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             timeLeft = Long.parseLong(response.remainingTime);
         //status为待首付和待付款时，则采用倒计时
         if (response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) {
+            tvPay.setClickable(true);
             llTimeLeft.setVisibility(View.VISIBLE);
             llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_00bbc0));
             tvTimeLeft.setRestTime(timeLeft);
@@ -207,6 +209,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                     llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     ToastUtils.showLongToast("订单已失效，请重新下单");
                     tvTimeLeft.setText("订单已失效，请重新下单");
+                    tvPay.setClickable(false);
                 }
             });
         }
@@ -248,7 +251,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //商品单价
         if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
-            tvSalePrice.setText("¥" + response.skuInfo.salePrice);
+            tvSalePrice.setText("¥" + StringUtils.format2(response.skuInfo.salePrice));
         }
         //商品数量
         if (StringUtils.isNotNull(response.skuInfo.quantity)) {
@@ -259,19 +262,25 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //商品合计
         if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-            tvTotalPrice.setText("¥" + response.skuInfo.totalPrice);
+            tvTotalPrice.setText("¥" + StringUtils.format2(response.skuInfo.totalPrice));
         }
         //支付方式
-        orderPayType = OrderStatus.getOrderPayType(response.payType);
-        if (StringUtils.isNotNull(orderPayType)) {
-            tvPayType.setText(orderPayType);
+        orderPayType = response.payType;
+        if (StringUtils.isNotNull(OrderStatus.getOrderPayType(response.payType))) {
+            tvPayType.setText(OrderStatus.getOrderPayType(response.payType));
         }
         //首付
-        if (StringUtils.isNotNull(response.downPayment) && StringUtils.isNotNull(response.selDownPaymentRate)) {
-            rlDownPayment.setVisibility(View.VISIBLE);
-            tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + response.downPayment + ")");
+        if (StringUtils.isNotNull(response.downPayment)) {
+            isHaveDownPayment = true;
+            downPayment = Double.parseDouble(response.downPayment);
+            if (StringUtils.isNotNull(response.selDownPaymentRate)) {
+                rlDownPayment.setVisibility(View.VISIBLE);
+                tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
+            } else {
+                rlDownPayment.setVisibility(View.GONE);
+            }
         } else {
-            rlDownPayment.setVisibility(View.GONE);
+            isHaveDownPayment = false;
         }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
@@ -283,7 +292,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
             rlMonthPayment.setVisibility(View.VISIBLE);
-            tvMonthPayment.setText("¥" + response.monthPayment);
+            tvMonthPayment.setText("¥" + StringUtils.format2(response.monthPayment));
         } else {
             rlMonthPayment.setVisibility(View.GONE);
         }
@@ -299,6 +308,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (CommonUtils.isNotNullOrEmpty(response.addValueService)) {
             llService.setVisibility(View.VISIBLE);
             tvService0.setText(response.addValueService.get(0).serviceName);
+            serviceName = response.addValueService.get(0).serviceName;
             tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
             if (response.addValueService.get(0).isSelected == 0) {
                 cbService0.setChecked(true);
@@ -309,6 +319,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             llService.setVisibility(View.GONE);
         }
 
+        //服务详情
+        if (StringUtils.isNotNull(response.addValueService.get(0).serviceUrl)) {
+            serviceUrl = response.addValueService.get(0).serviceUrl;
+        }
         //优惠券
         if (StringUtils.isNotNull(response.courtesyCardName)) {
             dvCouponName.setVisibility(View.VISIBLE);
@@ -329,8 +343,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //支付金额
         if (StringUtils.isNotNull(response.totalPrice)) {
-            totalPrice = Integer.parseInt(response.totalPrice);
-            tvTotal.setText("¥" + response.totalPrice);
+//            tvTotal.setText("¥" + StringUtils.format2(response.totalPrice));
         }
 
         //充值号码
@@ -349,7 +362,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             llContract.setVisibility(View.GONE);
         }
         baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
-        baseLayout.disLoading();
     }
 
     //确认收货成功
@@ -370,7 +382,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     @Override
     public void verifyPayPwdSuccess() {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
-        presenter.onPay();
     }
 
     //验证交易密码失败
@@ -380,36 +391,36 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         dealPwdDialog.showPwdError(remainTimes);
     }
 
-    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund})
+    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund, R.id.iv_service_detail})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
             //去支付、去首付
             case R.id.tv_pay:
-                //使用钱包支付
-                if ("0".equals(orderPayType)) {
-                    //是否激活钱包
-                    if (LoginHelper.getInstance().hasQualifications()) {
+                //是否开通钱包
+                if (LoginHelper.getInstance().hasQualifications()) {
+                    //是否设置了交易密码
+                    if (LoginHelper.getInstance().hasSetPwd()) {
                         //钱包可消费余额是否足够
-                        if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) >= totalPrice) {
-                            dealPwdDialog.setPrice(totalPrice + "");
-                            dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
-                                @Override
-                                public void checkPwd(String payPwd) {
-                                    presenter.onVerifyPayPwd(payPwd);
-                                }
-                            });
-                            dealPwdDialog.showDialog();
-                        } else {
-                            balancyDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
-                            balancyDeficientDialog.show();
+                        if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < downPayment && "0".equals(orderPayType)) {
+                            balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
+                            balanceDeficientDialog.show();
+                            return;
                         }
+                        dealPwdDialog.setPrice("¥" + StringUtils.format2(downPayment + ""));
+                        dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+                            @Override
+                            public void checkPwd(String payPwd) {
+                                presenter.onVerifyPayPwd(payPwd);
+                            }
+                        });
+                        dealPwdDialog.showDialog();
                     } else {
-                        notActiveDialog.showDialog();
+                        TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                     }
                 } else {
-
+                    notActiveDialog.showDialog();
                 }
                 break;
 
@@ -438,6 +449,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 presenter.onApplyToRefund(orderNo);
                 break;
 
+            case R.id.iv_service_detail:
+                CustomWebViewActivity.startIt(mBaseContext, serviceUrl, serviceName);
             default:
                 break;
 

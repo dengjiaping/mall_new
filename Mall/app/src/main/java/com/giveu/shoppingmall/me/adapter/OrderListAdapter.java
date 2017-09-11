@@ -8,13 +8,18 @@ import android.widget.ImageView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
+import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
+import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
+import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
@@ -30,10 +35,19 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     private ConfirmDialog dialog;//确认弹框
     private String orderNo;
     private String src;
+    private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
+    private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
+    private String payType;
+    private double downPayment;
+    private double totalPrice;
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
         this.presenter = presenter;
+        notActiveDialog = new NotActiveDialog((Activity) mContext);
+        dealPwdDialog = new DealPwdDialog((Activity) mContext);
+        balanceDeficientDialog = new BalanceDeficientDialog((Activity) mContext);
     }
 
     public void setChannelName(String channelName) {
@@ -46,35 +60,41 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (StringUtils.isNotNull(item.orderNo)) {
             orderNo = item.orderNo;
         }
+        if (StringUtils.isNotNull(item.payType)) {
+            payType = item.payType;
+        }
+        if (StringUtils.isNotNull(item.payPrice)) {
+            totalPrice = Double.parseDouble(item.payPrice);
+        }
         if (StringUtils.isNotNull(item.name))
             viewHolder.setText(R.id.tv_name, item.name);
         if (StringUtils.isNotNull(item.salePrice))
-            viewHolder.setText(R.id.tv_sale_price, "¥" + item.salePrice);
+            viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice));
 
         //图片icon
-        if (StringUtils.isNotNull(item.srcIp))
+        if (StringUtils.isNotNull(item.srcIp)) {
             if (StringUtils.isNotNull(item.src)) {
                 src = item.srcIp + item.src;
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
                 ImageUtils.loadImage(src, imageView);
             }
-
+        }
         /**
          * 分期产品显示月供和首付
          * 一次性产品和借记卡消费不显示
          */
         if (item.orderType == 0) {
             viewHolder.setVisible(R.id.rl_payment, true);
-            if (StringUtils.isNotNull(item.monthPayment)) {
+            if (StringUtils.isNotNull(item.monthPayment) && StringUtils.isNotNull(item.periods)) {
+                downPayment = Double.parseDouble(item.downPayment);
                 viewHolder.setVisible(R.id.ll_payment, true);
                 viewHolder.setVisible(R.id.ll_total, false);
-                viewHolder.setText(R.id.tv_down_payment, "¥" + item.downPayment);
-                viewHolder.setText(R.id.tv_month_payment, "¥" + item.monthPayment);
-            }
-            else {
+                viewHolder.setText(R.id.tv_down_payment, "¥" + StringUtils.format2(item.downPayment));
+                viewHolder.setText(R.id.tv_month_payment, "¥" + StringUtils.format2(item.monthPayment) + " * " + item.periods);
+            } else {
                 viewHolder.setVisible(R.id.ll_payment, false);
                 viewHolder.setVisible(R.id.ll_total, true);
-                viewHolder.setText(R.id.tv_total, "¥" + item.payPrice);
+                viewHolder.setText(R.id.tv_total, "¥" + StringUtils.format2(item.payPrice));
             }
 
         } else {
@@ -89,6 +109,9 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
          * 待收货           订单跟踪、确认收货
          * 已完成           订单跟踪
          * 已关闭           订单跟踪、删除订单
+         * 充值中		    ——
+         * 充值成功	        ——
+         * 充值失败	        申请退款
          */
         String status = OrderStatus.getOrderStatus(item.status);
         viewHolder.setText(R.id.tv_status, status);
@@ -109,7 +132,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onPay();
+                        onPay();
                     }
                 });
                 break;
@@ -129,7 +152,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onDownPayment();
+                        onPay();
                     }
                 });
                 break;
@@ -222,6 +245,37 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 break;
         }
     }
+
+    //点击去支付、去首付后的流程处理
+    private void onPay() {
+        //是否有开通钱包
+        if (LoginHelper.getInstance().hasQualifications()) {
+            //是否设置了交易密码
+            if (LoginHelper.getInstance().hasSetPwd()) {
+                //钱包可消费余额是否足够
+                if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < downPayment && "0".equals(payType)) {
+                    balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
+                    balanceDeficientDialog.show();
+                    return;
+                }
+                dealPwdDialog.setPrice("¥" + StringUtils.format2(downPayment + ""));
+                dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+                    @Override
+                    public void checkPwd(String payPwd) {
+                        presenter.onVerifyPayPwd(payPwd);
+                    }
+                });
+                dealPwdDialog.showDialog();
+            } else {
+                TransactionPwdActivity.startIt((Activity) mContext, LoginHelper.getInstance().getIdPerson());
+            }
+        } else {
+            notActiveDialog.showDialog();
+        }
+    }
+
+
+
 
     //取消订单dialog
     private void showCancelDialog() {

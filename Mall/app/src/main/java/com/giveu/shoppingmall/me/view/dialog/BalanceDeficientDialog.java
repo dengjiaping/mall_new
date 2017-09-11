@@ -20,13 +20,13 @@ import com.giveu.shoppingmall.base.CustomDialog;
  * 钱包余额不足的弹框
  */
 
-public class BalancyDeficientDialog {
+public class BalanceDeficientDialog {
 
     private CustomDialog mDialog;
     Activity mActivity;
     TextView tvContent, tvConfirm;
 
-    public BalancyDeficientDialog(Activity mActivity) {
+    public BalanceDeficientDialog(Activity mActivity) {
         this.mActivity = mActivity;
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.dialog_balance_deficiency, null);

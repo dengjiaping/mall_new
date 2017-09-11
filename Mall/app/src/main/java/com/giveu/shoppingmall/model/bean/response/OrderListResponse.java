@@ -50,7 +50,7 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
         public String orderNo;
         public int orderType;
         public String payPrice;
-        public int periods;
+        public String periods;
         public int quantity;
         public String remainingTime;
         public String salePrice;
@@ -59,5 +59,6 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
         public String srcIp;
         public int status;
         public String timeLeft;
+        public String payType;
     }
 }

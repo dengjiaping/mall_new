@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
+import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -55,6 +56,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     private OrderHandlePresenter presenter;
     private OrderListAdapter adapter;
     private List<OrderListResponse.SkuInfoBean> mDatas;
+    private DealPwdDialog dealPwdDialog;
 
     @Override
     protected BasePresenter[] initPresenters() {
@@ -70,6 +72,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         baseLayout.setTitleBarAndStatusBar(false, false);
         fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
         ButterKnife.bind(this, fragmentView);
+        dealPwdDialog = new DealPwdDialog(mBaseContext);
         mDatas = new ArrayList<>();
 
         presenter = new OrderHandlePresenter(this);
@@ -207,15 +210,18 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
-
+    //验证交易密码成功
     @Override
     public void verifyPayPwdSuccess() {
+        CommonUtils.closeSoftKeyBoard(mBaseContext);
 
     }
 
+    //验证交易密码失败
     @Override
     public void verifyPayPwdFailure(int remainTimes) {
-
+        CommonUtils.closeSoftKeyBoard(mBaseContext);
+        dealPwdDialog.showPwdError(remainTimes);
     }
 
     //在mDatas中移除订单号为orderNo的订单
