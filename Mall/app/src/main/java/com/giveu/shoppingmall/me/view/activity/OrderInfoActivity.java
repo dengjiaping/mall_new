@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
@@ -20,18 +22,20 @@ import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
+import com.giveu.shoppingmall.me.view.dialog.BalancyDeficientDialog;
+import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -130,12 +134,19 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     TextView tvService0Cost;
     @BindView(R.id.ll_apply_refund)
     LinearLayout llApplyRefund;
+    @BindView(R.id.ll_contract)
+    LinearLayout llContract;
 
 
     private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
     private String orderNo;
     private String src;
+    private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
+    private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
+    private BalancyDeficientDialog balancyDeficientDialog;//钱包余额不足的弹框
+    String orderPayType;
+    int totalPrice;
 
     public static void startIt(Activity activity, String orderNo, String src) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
@@ -148,8 +159,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_order_info);
         baseLayout.setTitle("订单详情");
-        baseLayout.showLoading();
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
+        dealPwdDialog = new DealPwdDialog(mBaseContext);
+        balancyDeficientDialog = new BalancyDeficientDialog(mBaseContext);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");
         src = getIntent().getStringExtra("src");
@@ -249,7 +262,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvTotalPrice.setText("¥" + response.skuInfo.totalPrice);
         }
         //支付方式
-        String orderPayType = OrderStatus.getOrderPayType(response.payType);
+        orderPayType = OrderStatus.getOrderPayType(response.payType);
         if (StringUtils.isNotNull(orderPayType)) {
             tvPayType.setText(orderPayType);
         }
@@ -282,11 +295,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         } else {
             rlDeliverAndInstall.setVisibility(View.GONE);
         }
-        //增值服务
+        //增值服务（目前只有一种）
         if (CommonUtils.isNotNullOrEmpty(response.addValueService)) {
             llService.setVisibility(View.VISIBLE);
             tvService0.setText(response.addValueService.get(0).serviceName);
-            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice +"/月");
+            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
             if (response.addValueService.get(0).isSelected == 0) {
                 cbService0.setChecked(true);
             } else {
@@ -300,8 +313,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.courtesyCardName)) {
             dvCouponName.setVisibility(View.VISIBLE);
             dvCouponName.setRightText(response.courtesyCardName);
-        } else
+        } else {
             dvCouponName.setVisibility(View.GONE);
+        }
 
         //买家留言（文字前景色不一样）
         if (StringUtils.isNotNull(response.userComments)) {
@@ -315,6 +329,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //支付金额
         if (StringUtils.isNotNull(response.totalPrice)) {
+            totalPrice = Integer.parseInt(response.totalPrice);
             tvTotal.setText("¥" + response.totalPrice);
         }
 
@@ -327,6 +342,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.rechargeDenomination)) {
             tvRechargeDenomination.setText(response.rechargeDenomination);
         }
+        //消费分期合同
+        if (response.orderType == 0) {
+            llContract.setVisibility(View.VISIBLE);
+        } else {
+            llContract.setVisibility(View.GONE);
+        }
         baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
         baseLayout.disLoading();
     }
@@ -334,20 +355,62 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        ToastUtils.showLongToast("成功确认收货");
+        ToastUtils.showLongToast("确认收货成功");
         //再次调取接口更新数据
         presenter.getOrderDetail(orderNo);
     }
 
+    //申请退款成功
+    @Override
+    public void applyToRefundSuccess() {
+        ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
+    }
+
+    //验证交易密码成功
+    @Override
+    public void verifyPayPwdSuccess() {
+        CommonUtils.closeSoftKeyBoard(mBaseContext);
+        presenter.onPay();
+    }
+
+    //验证交易密码失败
+    @Override
+    public void verifyPayPwdFailure(int remainTimes) {
+        CommonUtils.closeSoftKeyBoard(mBaseContext);
+        dealPwdDialog.showPwdError(remainTimes);
+    }
 
     @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            //去支付
+            //去支付、去首付
             case R.id.tv_pay:
-                presenter.onPay();
+                //使用钱包支付
+                if ("0".equals(orderPayType)) {
+                    //是否激活钱包
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        //钱包可消费余额是否足够
+                        if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) >= totalPrice) {
+                            dealPwdDialog.setPrice(totalPrice + "");
+                            dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+                                @Override
+                                public void checkPwd(String payPwd) {
+                                    presenter.onVerifyPayPwd(payPwd);
+                                }
+                            });
+                            dealPwdDialog.showDialog();
+                        } else {
+                            balancyDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
+                            balancyDeficientDialog.show();
+                        }
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+                } else {
+
+                }
                 break;
 
             //消费分期合同
@@ -372,6 +435,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //申请退款
             case R.id.tv_apply_refund:
+                presenter.onApplyToRefund(orderNo);
                 break;
 
             default:

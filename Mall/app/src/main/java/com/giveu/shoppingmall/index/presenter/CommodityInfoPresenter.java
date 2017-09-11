@@ -5,7 +5,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
+import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -40,8 +40,31 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
         });
     }
 
+    public void getAddressList(String idPerson, String addressType) {
+        ApiImpl.getAddressList(null, idPerson, addressType, new BaseRequestAgent.ResponseListener<AddressListResponse>() {
+            @Override
+            public void onSuccess(AddressListResponse response) {
+                if (getView() != null && response != null && response.data != null) {
+                    if (response.data.size() > 0) {
+                        AddressListResponse addressBean = response.data.get(0);
+                        getView().getAddressList(true, addressBean.province, addressBean.city, addressBean.region);
+                    }else {
+                        getView().getAddressList(false, "", "", "");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    getView().getAddressList(false, "", "", "");
+                }
+            }
+        });
+    }
+
     public void queryCommodityStock(String province, String city, final String region, String skuCode) {
-        ApiImpl.queryCommodityStock(null, province, city, region, skuCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.queryCommodityStock(getView().getAct(), province, city, region, skuCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
@@ -60,24 +83,5 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             }
         });
     }
-
-    public void queryCommodityInfo(String channel, String idPerson, String province, String city, String region, String skuCode) {
-        ApiImpl.queryCommodityInfo(getView().getAct(), channel, idPerson, province, city, region, skuCode, new BaseRequestAgent.ResponseListener<CommodityInfoResponse>() {
-            @Override
-            public void onSuccess(CommodityInfoResponse response) {
-                if (getView() != null) {
-                    getView().showCommodityInfo(response.data);
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-                if (getView() != null) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            }
-        });
-    }
-
 
 }

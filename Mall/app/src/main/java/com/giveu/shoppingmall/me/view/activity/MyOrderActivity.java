@@ -63,42 +63,42 @@ public class MyOrderActivity extends BaseActivity {
         //全部订单
         allFragment = new OrderListFragment();
         Bundle allBundle = new Bundle();
-        allBundle.putString(OrderState.ORDER_TYPE, OrderState.ALL_RESPONSE);
+        allBundle.putInt(OrderState.ORDER_TYPE, OrderState.ALLRESPONSE);
         allFragment.setArguments(allBundle);
         fragments.add(allFragment);
 
         //待付款
         waitingPayFragment = new OrderListFragment();
         Bundle waitingPayBundle = new Bundle();
-        waitingPayBundle.putString(OrderState.ORDER_TYPE, OrderState.WAITING_PAY);
+        waitingPayBundle.putInt(OrderState.ORDER_TYPE, OrderState.WAITINGPAY);
         waitingPayFragment.setArguments(waitingPayBundle);
         fragments.add(waitingPayFragment);
 
         //待首付
         downPaymentFragment = new OrderListFragment();
         Bundle downPaymentBundle = new Bundle();
-        downPaymentBundle.putString(OrderState.ORDER_TYPE, OrderState.DOWN_PAYMENT);
+        downPaymentBundle.putInt(OrderState.ORDER_TYPE, OrderState.DOWNPAYMENT);
         downPaymentFragment.setArguments(downPaymentBundle);
         fragments.add(downPaymentFragment);
 
         //待收货
         waitingReceiveFragment = new OrderListFragment();
         Bundle waitingReceiveBundle = new Bundle();
-        waitingReceiveBundle.putString(OrderState.ORDER_TYPE, OrderState.WAITING_RECEIVE);
+        waitingReceiveBundle.putInt(OrderState.ORDER_TYPE, OrderState.WAITINGRECEIVE);
         waitingReceiveFragment.setArguments(waitingReceiveBundle);
         fragments.add(waitingReceiveFragment);
 
         //已完成
         finishedFragment = new OrderListFragment();
         Bundle finishedBundle = new Bundle();
-        finishedBundle.putString(OrderState.ORDER_TYPE, OrderState.Finished_RESPONSE);
+        finishedBundle.putInt(OrderState.ORDER_TYPE, OrderState.FINISHED);
         finishedFragment.setArguments(finishedBundle);
         fragments.add(finishedFragment);
 
         //已关闭
         closedFragment = new OrderListFragment();
         Bundle closedBundle = new Bundle();
-        closedBundle.putString(OrderState.ORDER_TYPE, OrderState.CLOSED_RESPONSE);
+        closedBundle.putInt(OrderState.ORDER_TYPE, OrderState.CLOSED);
         closedFragment.setArguments(closedBundle);
         fragments.add(closedFragment);
 

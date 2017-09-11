@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
-import com.giveu.shoppingmall.recharge.view.dialog.PwdErrorDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.widget.PassWordInputView;
@@ -42,7 +41,6 @@ public class DealPwdDialog {
         mDialog = new CustomDialog(mActivity, contentView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
         mDialog.setCancelable(false);
     }
-
 
 
     private void initView(View view) {
@@ -87,10 +85,17 @@ public class DealPwdDialog {
         });
     }
 
+    public void setPrice(String price) {
+        tvPrice.setText(price);
+    }
+
     //密码验证错误时显示错误弹框
     public void showPwdError(int remainTimes) {
         ErrorPwdDialog errorDialog = new ErrorPwdDialog();
         errorDialog.showDialog(mActivity, remainTimes);
+        if (remainTimes == 0) {
+            dissmissDialog();
+        }
         inputView.clearResult();
     }
 

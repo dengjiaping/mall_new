@@ -165,12 +165,14 @@ public interface ApiUrl {
     String order_deleteOrder = BASE_URL + "order/deleteOrder";
     //取消订单
     String order_cancelOrder = BASE_URL + "order/cancelOrder";
+    //充值申请退款
+    String order_rechargeApplyForRefund = BASE_URL + "order/rechargeApplyForRefund";
     //订单追踪
     String order_orderLogistics = BASE_URL + "order/orderLogistics";
     //确认收货
     String order_confirmReceipt = BASE_URL + "order/confirmReceipt";
     //商品介绍
-    String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/instruction";
+    String sc_goods_sku_instruction = BASE_URL + "sc/goods/sku/instruction";
     //商品详情
     String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
     //商品库存检查

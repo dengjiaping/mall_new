@@ -9,6 +9,7 @@ package com.giveu.shoppingmall.me.relative;
  * 2-待首付 3-待发货
  * 4-待收货 5-已完成
  * 6-已关闭
+ * 20-充值中，21-充值成功，22-充值失败
  */
 public interface OrderState {
 
@@ -19,6 +20,7 @@ public interface OrderState {
 
     //全部
     String ALL_RESPONSE = "0";
+    int ALLRESPONSE = 0;
 
     //待付款
     String WAITING_PAY = "1";

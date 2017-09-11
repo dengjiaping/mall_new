@@ -20,4 +20,10 @@ public interface IOrderInfoView<T extends BaseBean> extends IView {
 
     void confirmReceiveSuccess(String orderNo);
 
+    void applyToRefundSuccess();
+
+    void verifyPayPwdSuccess();
+
+    void verifyPayPwdFailure(int remainTimes);
+
 }

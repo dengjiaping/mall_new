@@ -1,12 +1,15 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
@@ -23,7 +26,9 @@ import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -31,6 +36,7 @@ import com.youth.banner.transformer.DefaultTransformer;
 import com.youth.banner.transformer.FlipHorizontalTransformer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,11 +59,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private View headerView;
     private Banner banner;
     private ShoppingPresenter presenter;
+    private int bannerHeight;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mBaseContext, R.layout.fragment_shopping, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
+        baseLayout.setTopBarBackgroundColor(R.color.red);
         ButterKnife.bind(this, view);
         headerView = View.inflate(mBaseContext, R.layout.lv_shopping_banner, null);
         initHeaderView();
@@ -105,7 +113,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         return new BasePresenter[]{presenter};
     }
 
-   /**
+    /**
      * 头布局
      */
     private void initHeaderView() {
@@ -120,7 +128,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initBanner() {
         banner = (Banner) headerView.findViewById(R.id.banner);
-        banner.getLayoutParams().height = (int) (DensityUtils.getWidth() / (750 / 410.f));
+        bannerHeight = (int) (DensityUtils.getWidth() / (750 / 410.f));
+        banner.getLayoutParams().height = bannerHeight;
         //设置banner样式
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
         banner.setPageTransformer(false, new FlipHorizontalTransformer());
@@ -213,11 +222,6 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
 
-    @Override
-    protected void setListener() {
-
-    }
-
     /**
      * 更多类目
      */
@@ -243,12 +247,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
 
-
-/*    @Override
+    @Override
     protected void setListener() {
-<<<<<<< HEAD
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            private SparseArray<ItemRecod> recordSp = new SparseArray<>(0);
+            private HashMap<Integer, ItemRecod> recordSp = new HashMap<>();
             private int mCurrentfirstVisibleItem = 0;
 
             @Override
@@ -256,10 +258,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 //滑动时停止图片加载，停止轮播，停止滑动时恢复
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     ImageLoader.getInstance().resume();
-//                    banner.stopAutoPlay();
+                    banner.stopAutoPlay();
                 } else {
                     ImageLoader.getInstance().pause();
-//                    banner.stopAutoPlay();
+                    banner.stopAutoPlay();
                 }
 
             }
@@ -276,23 +278,22 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                     }
                     itemRecord.height = firstView.getHeight();//获取最顶部Item的高度
                     itemRecord.top = firstView.getTop();//获取距离顶部的距离
-                    recordSp.append(firstVisibleItem, itemRecord);//设置值
+                    recordSp.put(firstVisibleItem, itemRecord);//设置值
                 }
                 int scrollY = getScrollY();
-                if (scrollY >= 0 && scrollY <= DensityUtils.dip2px(150)) {
-                    //设置标题栏透明度0~255
-                    float rate = (float) (scrollY * 1.0 / DensityUtils.dip2px(150));
-                    llSearch.getBackground().setAlpha((int) (rate * 255));
-                    if (rate > 0.5) {
-                        ivMessage.setImageResource(R.drawable.classify_msg);
-                    } else {
-                        ivMessage.setImageResource(R.drawable.ic_message);
-                    }
-                } else if (scrollY > DensityUtils.dip2px(150)) {
-                    //滑动距离大于255就设置为不透明
-                    llSearch.getBackground().setAlpha(255);
-                    ivMessage.setImageResource(R.drawable.classify_msg);
+                float rate = (float) (scrollY * 1.0 / bannerHeight);
+                if (rate > 1) {
+                    rate = 1;
                 }
+                if (rate > 0.5) {
+                    ivMessage.setImageResource(R.drawable.classify_msg);
+                } else {
+                    ivMessage.setImageResource(R.drawable.ic_message);
+                }
+                ColorDrawable drawable = new ColorDrawable(getResources().getColor(R.color.white));
+                int alpha = (int) (255 * (rate));
+                drawable.setAlpha(alpha);
+                llSearch.setBackgroundDrawable(drawable);
             }
 
             private int getScrollY() {
@@ -326,7 +327,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 }
             }
         });
-    }*/
+    }
 
     @Override
     public void initDataDelay() {
