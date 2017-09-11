@@ -179,7 +179,7 @@ public interface ApiUrl {
     String sc_goods_sku_stock = BASE_URL + "sc/goods/sku/stock";
     //商品选配
     String sc_goods_sku_choose = BASE_URL + "sc/goods/sku/choose";
-    String shopping_search_hotWordsRefresh = BASE_URL + "sc/goods/search/hotWord/refresh";
+    //商品搜索热词更新
     String sc_goods_search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //一级类目查询子类目(商品分类)
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
