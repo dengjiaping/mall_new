@@ -127,7 +127,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, "10056737", pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);
@@ -205,6 +205,17 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     @Override
     public void applyToRefundSuccess() {
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
+    }
+
+
+    @Override
+    public void verifyPayPwdSuccess() {
+
+    }
+
+    @Override
+    public void verifyPayPwdFailure(int remainTimes) {
+
     }
 
     //在mDatas中移除订单号为orderNo的订单

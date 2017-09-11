@@ -85,6 +85,10 @@ public class DealPwdDialog {
         });
     }
 
+    public void setPrice(String price) {
+        tvPrice.setText(price);
+    }
+
     //密码验证错误时显示错误弹框
     public void showPwdError(int remainTimes) {
         ErrorPwdDialog errorDialog = new ErrorPwdDialog();
