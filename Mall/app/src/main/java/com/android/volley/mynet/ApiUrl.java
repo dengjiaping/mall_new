@@ -165,6 +165,8 @@ public interface ApiUrl {
     String order_deleteOrder = BASE_URL + "order/deleteOrder";
     //取消订单
     String order_cancelOrder = BASE_URL + "order/cancelOrder";
+    //充值申请退款
+    String order_rechargeApplyForRefund = BASE_URL + "order/rechargeApplyForRefund";
     //订单追踪
     String order_orderLogistics = BASE_URL + "order/orderLogistics";
     //确认收货
