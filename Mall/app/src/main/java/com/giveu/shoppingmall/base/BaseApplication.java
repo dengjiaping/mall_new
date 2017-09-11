@@ -1,19 +1,27 @@
 package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
+import android.os.Process;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
-import com.giveu.shoppingmall.EventBusIndex;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -27,13 +35,12 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,10 +70,18 @@ public class BaseApplication extends MultiDexApplication {
         MultiDex.install(this);
         mInstance = this;
         undestroyActivities = new ArrayList<Activity>();
-        String processName = getProcessName(android.os.Process.myPid());
-        if (processName == null || processName.equals("com.giveu.shoppingmall")) {
+        String processName = BaseApplication.getProcessName(android.os.Process.myPid());
+        PackageManager packageManager = getPackageManager();
+        String mainProcess = "";
+        PackageInfo packageInfo;
+        try {
+            packageInfo = packageManager.getPackageInfo(getPackageName(), 4);
+            mainProcess = packageInfo.applicationInfo.processName;
+        } catch (Exception var14) {
+            mainProcess = "";
+        }
+        if (processName == null || processName.equals(mainProcess)) {
             InitializeService.startIt(this);
-            EventBus.builder().addIndex(new EventBusIndex()).installDefaultEventBus();
             initPush();
             initImageLoader();
         }

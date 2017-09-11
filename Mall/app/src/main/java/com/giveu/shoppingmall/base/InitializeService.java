@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Environment;
 
 import com.android.volley.mynet.ApiUrl;
-import com.giveu.shoppingmall.EventBusIndex;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -18,8 +17,6 @@ import com.networkbench.agent.impl.NBSAppAgent;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;

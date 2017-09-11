@@ -35,11 +35,6 @@ android {
                 JPUSH_PKGNAME: project.APPLICATION_ID,
                 JPUSH_CHANNEL: "GuanWang" //用户渠道统计的渠道名称 官网
         ]
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [eventBusIndex: 'com.giveu.shoppingmall.EventBusIndex']
-            }
-        }
 //        externalNativeBuild {
 //            cmake {
 //                cppFlags ""
@@ -174,8 +169,6 @@ dependencies {
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
     //eventbus
     compile 'org.greenrobot:eventbus:3.0.0'
-    //EventBus索引，性能优化
-    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.0.1'
     //图片裁剪
     compile project(':cropimage_library')
     //极光推送
