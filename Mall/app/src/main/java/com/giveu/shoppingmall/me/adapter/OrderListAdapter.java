@@ -33,8 +33,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
-        if (StringUtils.isNotNull(channelName))
-            this.channelName = channelName;
         this.presenter = presenter;
     }
 

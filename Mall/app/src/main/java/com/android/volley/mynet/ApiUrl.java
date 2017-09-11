@@ -172,7 +172,7 @@ public interface ApiUrl {
     //确认收货
     String order_confirmReceipt = BASE_URL + "order/confirmReceipt";
     //商品介绍
-    String sc_goods_sku_intruction = BASE_URL + "sc/goods/sku/instruction";
+    String sc_goods_sku_instruction = BASE_URL + "sc/goods/sku/instruction";
     //商品详情
     String sc_goods_sku_detail = BASE_URL + "sc/goods/sku/detail";
     //商品库存检查

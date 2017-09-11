@@ -9,6 +9,7 @@ import com.giveu.shoppingmall.me.view.activity.OrderTraceActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -27,19 +28,21 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //获取订单详情
     public void getOrderDetail(String orderNo) {
-        if (getView() != null) {
-            ApiImpl.getOrderDetail(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
-                @Override
-                public void onSuccess(OrderDetailResponse response) {
+
+        ApiImpl.getOrderDetail(OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+            @Override
+            public void onSuccess(OrderDetailResponse response) {
+                if (getView() != null) {
                     getView().showOrderDetail(response.data);
                 }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     //去支付
@@ -52,47 +55,69 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     }
 
+    //验证交易密码
+    public void onVerifyPayPwd(String payPwd) {
+        ApiImpl.verifyPayPwd(getView().getAct(), LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
+            @Override
+            public void onSuccess(PayPwdResponse response) {
+                if (getView() != null) {
+                    if (response.data != null) {
+                        PayPwdResponse pwdResponse = response.data;
+                        if (pwdResponse.status) {
+                            getView().verifyPayPwdSuccess();
+                        } else {
+                            getView().verifyPayPwdFailure(pwdResponse.remainTimes);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
+    }
+
     //订单追踪
     public void onTrace(String orderNo, String src) {
-        if (getView() != null) {
-            if (StringUtils.isNotNull(orderNo)) {
-                OrderTraceActivity.startIt(getView().getAct(), orderNo, src);
-            }
+        if (StringUtils.isNotNull(orderNo)) {
+            OrderTraceActivity.startIt(getView().getAct(), orderNo, src);
         }
     }
 
     //确认收货
     public void onConfirmReceive(final String orderNo) {
-        if (getView() != null) {
-            ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                @Override
-                public void onSuccess(BaseBean response) {
+        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
                     getView().confirmReceiveSuccess(orderNo);
                 }
+            }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     //申请退款
     public void onApplyToRefund(String orderNo) {
-        if (getView() != null) {
-            ApiImpl.applyToRefundForRecharge(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                @Override
-                public void onSuccess(BaseBean response) {
+        ApiImpl.applyToRefundForRecharge(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
                     getView().applyToRefundSuccess();
                 }
+            }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     //上传手机串码
@@ -102,35 +127,35 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //取消订单
     public void onCancelOrder(final String orderNo) {
-        if (getView() != null) {
-            ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                @Override
-                public void onSuccess(BaseBean response) {
+        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
                     getView().cancelOrderSuccess(orderNo);
                 }
+            }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 
     //删除订单
     public void onDeleteOrder(final String orderNo) {
-        if (getView() != null) {
-            ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                @Override
-                public void onSuccess(BaseBean response) {
+        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+            @Override
+            public void onSuccess(BaseBean response) {
+                if (getView() != null) {
                     getView().deleteOrderSuccess(orderNo);
                 }
+            }
 
-                @Override
-                public void onError(BaseBean errorBean) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-            });
-        }
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+            }
+        });
     }
 }

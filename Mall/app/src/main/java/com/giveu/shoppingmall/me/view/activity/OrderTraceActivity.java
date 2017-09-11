@@ -94,7 +94,7 @@ public class OrderTraceActivity extends BaseActivity {
     public void setData() {
         orderNo = getIntent().getStringExtra("orderNo");
         src = getIntent().getStringExtra("src");
-        ApiImpl.getOrderTrace(OrderState.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+        ApiImpl.getOrderTrace(OrderState.CHANNEL, "10056737", orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
             @Override
             public void onSuccess(OrderTraceResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {

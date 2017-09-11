@@ -22,4 +22,8 @@ public interface IOrderInfoView<T extends BaseBean> extends IView {
 
     void applyToRefundSuccess();
 
+    void verifyPayPwdSuccess();
+
+    void verifyPayPwdFailure(int remainTimes);
+
 }
