@@ -45,6 +45,7 @@
                 android:background="@color/line_bg" />
 
             <LinearLayout
+                android:id="@+id/ll_pay_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -57,7 +58,7 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
-                    android:id="@+id/tv_date_top"
+                    android:id="@+id/tv_pay_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_9b9b9b"
@@ -65,13 +66,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_date_mid"
+                android:id="@+id/ll_iniypay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
 
                 <TextView
-                    android:id="@+id/tv_date_name_mid"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="首付金额："
@@ -79,16 +79,16 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
-                    android:id="@+id/tv_date_mid"
+                    android:id="@+id/tv_iniypay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:textColor="@color/color_9b9b9b"
                     android:textSize="@dimen/ts_16" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_payment_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
@@ -101,6 +101,7 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
+                    android:id="@+id/tv_payment_num"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_9b9b9b"
@@ -109,6 +110,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_latest_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
@@ -121,6 +123,7 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
+                    android:id="@+id/tv_latest_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_9b9b9b"
@@ -157,7 +160,6 @@
                 android:background="@color/line_bg" />
 
             <TextView
-                android:id="@+id/tv_hint_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
@@ -168,7 +170,7 @@
 
 
         <TextView
-            android:id="@+id/tv_btn_top"
+            android:id="@+id/tv_check_order"
             style="@style/click_enabled_bt"
             android:layout_marginTop="56dp"
             android:background="@drawable/selector_login"
@@ -211,6 +213,7 @@
 
 
         <TextView
+            android:id="@+id/tv_repay"
             style="@style/click_enabled_bt"
             android:layout_marginTop="56dp"
             android:background="@drawable/selector_login"

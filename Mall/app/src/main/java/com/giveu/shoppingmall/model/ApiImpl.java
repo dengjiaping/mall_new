@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
@@ -425,8 +426,8 @@ public class ApiImpl {
 
     //添加现居住地址
     public static void addLiveAddress(Activity context, String idPerson, String phone, String name, String email, String province, String city, String region, String street, String building, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "name","email", "province", "city", "region", "street", "building"},
-                new Object[]{StringUtils.string2Long(idPerson), phone, name,email, province, city, region, street, building});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "phone", "name", "email", "province", "city", "region", "street", "building"},
+                new Object[]{StringUtils.string2Long(idPerson), phone, name, email, province, city, region, street, building});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addLiveAddress, BaseBean.class, context, responseListener);
     }
 
@@ -543,6 +544,12 @@ public class ApiImpl {
     public static void applyToRefundForRecharge(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_rechargeApplyForRefund, BaseBean.class, context, responseListener);
+    }
+
+    //确认支付
+    public static void confirmPay(Activity context, String channel, String idPerson, String orderNo, String randomCode, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmPayResponse> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "randomCode", "smsCode", "smsMobile"}, new Object[]{channel, idPerson, orderNo, randomCode, smsCode, smsMobile});
+        RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.orderApp_confirmPay, ConfirmPayResponse.class, context, responseListener);
     }
 
     //确认收货
