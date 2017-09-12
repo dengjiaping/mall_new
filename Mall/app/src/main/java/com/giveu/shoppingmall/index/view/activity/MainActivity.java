@@ -200,7 +200,7 @@ public class MainActivity extends BasePermissionActivity {
     public void resetLottery(LotteryEvent lotteryEvent) {
         if (lotteryEvent.skip2H5) {
             needSkip2H5 = true;
-            doLottery();
+//            doLottery();
             needRefreshLottery = false;
         } else {
             needRefreshLottery = true;
@@ -500,7 +500,7 @@ public class MainActivity extends BasePermissionActivity {
             downloadApkUtils.onActivityResume();
         }
         if (needRefreshLottery) {
-            doLottery();
+//            doLottery();
         }
 
         if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {

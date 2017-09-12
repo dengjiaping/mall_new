@@ -23,8 +23,10 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LocationUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -102,6 +104,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private String provinceStr;
     private String cityStr;
     private String regionStr;
+    private CreditCommodityDialog creditDialog;
+    private String smallIconStr;
+    private String commodityPrice;
+    private int commodityAmounts;
+    private String commodityName;
+
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_commodity_info, null);
@@ -116,6 +124,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog = new BuyCommodityDialog(mBaseContext);
         //地址选择对话框
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        creditDialog = new CreditCommodityDialog(mBaseContext);
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
         initBanner();
@@ -196,22 +205,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm() {
+            public void confirm(int amounts) {
                 //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
-                    CreditCommodityDialog creditDialog = new CreditCommodityDialog(mBaseContext);
-                    creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
-                        @Override
-                        public void confirm() {
-                            ConfirmOrderActivity.startIt(mBaseContext);
-                        }
-
-                        @Override
-                        public void cancle() {
-
-                        }
-                    });
-                    creditDialog.show();
+                    commodityAmounts= amounts;
+                    presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
                 } else {
                     ConfirmOrderActivity.startIt(mBaseContext);
                 }
@@ -222,7 +220,24 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
             }
         });
+        creditDialog.setOnDownPayChangeListener(new CreditCommodityDialog.OnDownPayChangeListener() {
+            @Override
+            public void onChange(int downPayRate) {
+                presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPayRate, skuCode);
+            }
+        });
 
+        creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
+            @Override
+            public void confirm() {
+                ConfirmOrderActivity.startIt(mBaseContext);
+            }
+
+            @Override
+            public void cancle() {
+
+            }
+        });
     }
 
     public void showChooseCityDialog() {
@@ -344,6 +359,9 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             commodityDetailFragment.refreshCommodityDetail(skuCode);
             //刷新商品详情activity的数据
             activity.initData(skuCode, skuResponse.collectStatus, skuResponse.skuInfo.monthAmount);
+            smallIconStr = skuResponse.skuInfo.srcIp + "/" + skuResponse.skuInfo.src;
+            commodityName = skuResponse.skuInfo.name;
+            commodityPrice = skuResponse.skuInfo.salePrice;
         }
     }
 
@@ -380,6 +398,16 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 activity.applyGpsPermission();
             } else {
                 startLocation();
+            }
+        }
+    }
+
+    @Override
+    public void showDownPayMonthPay(boolean success, ArrayList<DownPayMonthPayResponse> data) {
+        if (success) {
+            if (CommonUtils.isNotNullOrEmpty(data)) {
+                creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, data);
+                creditDialog.show();
             }
         }
     }
