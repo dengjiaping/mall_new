@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.index.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
+import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
 
 import java.util.ArrayList;
 
@@ -11,4 +12,5 @@ import java.util.ArrayList;
 
 public interface IShoppingView extends IView{
     void getIndexContent(ArrayList<IndexResponse> contentList);
+    void showCommodity(ShoppingResponse shoppingResponse);
 }

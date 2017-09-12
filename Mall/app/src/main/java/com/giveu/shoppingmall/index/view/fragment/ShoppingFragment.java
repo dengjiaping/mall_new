@@ -26,6 +26,7 @@ import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
+import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -73,26 +74,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         View headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
         viewHolder = new HeaderViewHolder(headerView);
         ptrlv.getRefreshableView().addHeaderView(headerView);
-        ArrayList<String> shopList = new ArrayList<>();
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shopList.add("item");
-        shoppingAdapter = new ShoppingAdapter(mBaseContext, shopList);
+        shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<ShoppingResponse.ResultListBean>());
         ptrlv.setAdapter(shoppingAdapter);
         ViewGroup.LayoutParams layoutParams = statusView.getLayoutParams();
         layoutParams.height = DensityUtils.getStatusBarHeight();
@@ -369,6 +351,15 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             }
         } else {
             LogUtil.e("is null");
+        }
+    }
+
+    @Override
+    public void showCommodity(ShoppingResponse shoppingResponse) {
+        if (shoppingResponse != null) {
+            if (CommonUtils.isNotNullOrEmpty(shoppingResponse.resultList)) {
+                shoppingAdapter.setDataAndSrcIp(shoppingResponse.resultList, shoppingResponse.srcIp);
+            }
         }
     }
 
