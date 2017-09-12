@@ -2,14 +2,10 @@ package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
-import android.os.Process;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -40,7 +36,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,32 +53,40 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-/*        if (DebugConfig.isDev) {
-            //开发环境初始化LeakCanary
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                // This process is dedicated to LeakCanary for heap analysis.
-                // You should not init your app in this process.
-                return;
-            }
-            LeakCanary.install(this);
-        }*/
-        MultiDex.install(this);
-        mInstance = this;
-        undestroyActivities = new ArrayList<Activity>();
-        String processName = BaseApplication.getProcessName(android.os.Process.myPid());
-        PackageManager packageManager = getPackageManager();
-        String mainProcess = "";
-        PackageInfo packageInfo;
         try {
-            packageInfo = packageManager.getPackageInfo(getPackageName(), 4);
-            mainProcess = packageInfo.applicationInfo.processName;
-        } catch (Exception var14) {
-            mainProcess = "";
-        }
-        if (processName == null || processName.equals(mainProcess)) {
-            InitializeService.startIt(this);
-            initPush();
-            initImageLoader();
+//            if (DebugConfig.isDev) {
+//                //开发环境初始化LeakCanary
+//                if (LeakCanary.isInAnalyzerProcess(this)) {
+//                    // This process is dedicated to LeakCanary for heap analysis.
+//                    // You should not init your app in this process.
+//                    return;
+//                }
+//                LeakCanary.install(this);
+//            }
+            MultiDex.install(this);
+            mInstance = this;
+            undestroyActivities = new ArrayList<Activity>();
+
+            int pid = android.os.Process.myPid();
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+            if (runningApps != null && !runningApps.isEmpty()) {
+                for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+                    if (procInfo.pid == pid) {
+                        if (procInfo.processName.equals("com.giveu.shoppingmall")) {
+                            //只在主进程里面初始化
+                            LogUtil.w("init pid is " + pid);
+
+                            InitializeService.startIt(this);
+                            initPush();
+                            initImageLoader();
+                            break;
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -122,6 +125,8 @@ public class BaseApplication extends MultiDexApplication {
 
                 @Override
                 public void onError(BaseBean errorBean) {
+                    //发送失败通知
+                    EventBusUtils.poseEvent(errorBean);
                 }
             });
         }

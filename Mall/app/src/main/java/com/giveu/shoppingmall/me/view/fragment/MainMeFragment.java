@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -30,6 +33,10 @@ import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -88,6 +95,8 @@ public class MainMeFragment extends BaseFragment {
     TextView tvDownPayment;
     @BindView(R.id.tv_waiting_receive)
     TextView tvWaitingReceive;
+    @BindView(R.id.ptrsv)
+    PullToRefreshScrollView ptrsv;
 
 
     @Override
@@ -106,6 +115,7 @@ public class MainMeFragment extends BaseFragment {
         });
         registerEventBus();
         ButterKnife.bind(this, view);
+        ptrsv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         return view;
     }
 
@@ -195,10 +205,24 @@ public class MainMeFragment extends BaseFragment {
     public void updateUserInfo(LoginResponse response) {
         //调用个人信息接口后，收到通知，更新个人信息的显示
         updateUserUi();
+        ptrsv.onRefreshComplete();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void stopRefresh(BaseBean response) {
+        //调用个人信息接口失败后，收到通知，完成刷新
+        ptrsv.onRefreshComplete();
+        CommonLoadingView.showErrorToast(response);
     }
 
     @Override
     protected void setListener() {
+        ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                BaseApplication.getInstance().fetchUserInfo();
+            }
+        });
     }
 
     @Override

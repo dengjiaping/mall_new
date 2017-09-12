@@ -247,24 +247,26 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //商品icon
         ImageUtils.loadImage(src, ivPicture);
 
-        //商品标题
-        if (StringUtils.isNotNull(response.skuInfo.name)) {
-            tvName.setText(response.skuInfo.name);
-        }
-        //商品单价
-        if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
-            tvSalePrice.setText("¥" + StringUtils.format2(response.skuInfo.salePrice));
-        }
-        //商品数量
-        if (StringUtils.isNotNull(response.skuInfo.quantity)) {
-            tvQuantity.setVisibility(View.VISIBLE);
-            tvQuantity.setText("×" + response.skuInfo.quantity);
-        } else {
-            tvQuantity.setVisibility(View.GONE);
-        }
-        //商品合计
-        if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-            tvTotalPrice.setText("¥" + StringUtils.format2(response.skuInfo.totalPrice));
+        if (response.skuInfo != null) {
+            //商品标题
+            if (StringUtils.isNotNull(response.skuInfo.name)) {
+                tvName.setText(response.skuInfo.name);
+            }
+            //商品单价
+            if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
+                tvSalePrice.setText("¥" + StringUtils.format2(response.skuInfo.salePrice));
+            }
+            //商品数量
+            if (StringUtils.isNotNull(response.skuInfo.quantity)) {
+                tvQuantity.setVisibility(View.VISIBLE);
+                tvQuantity.setText("×" + response.skuInfo.quantity);
+            } else {
+                tvQuantity.setVisibility(View.GONE);
+            }
+            //商品合计
+            if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
+                tvTotalPrice.setText("¥" + StringUtils.format2(response.skuInfo.totalPrice));
+            }
         }
         //支付方式
         orderPayType = response.payType;
@@ -523,17 +525,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 break;
             //充值中
             case OrderState.ONREGHARGE:
-                rlPay.setVisibility(View.GONE);
-                llTrace.setVisibility(View.GONE);
-                llTraceAndReceive.setVisibility(View.GONE);
-                llApplyRefund.setVisibility(View.GONE);
+                rlFooter.setVisibility(View.GONE);
                 break;
             //充值成功
             case OrderState.RECHARGESUCCESS:
-                rlPay.setVisibility(View.GONE);
-                llTrace.setVisibility(View.GONE);
-                llTraceAndReceive.setVisibility(View.GONE);
-                llApplyRefund.setVisibility(View.GONE);
+                rlFooter.setVisibility(View.GONE);
                 break;
             //充值失败
             case OrderState.RECHARGEFAIL:
