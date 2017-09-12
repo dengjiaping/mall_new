@@ -6,109 +6,120 @@
 
     <include layout="@layout/include_commodity_info" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_f8f8f8" />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingBottom="8dp"
-        android:paddingLeft="@dimen/default_layout_screen_gap"
-        android:paddingTop="12dp"
-        android:text="支付方式"
-        android:textSize="@dimen/ts_14" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_f8f8f8" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingLeft="@dimen/default_layout_screen_gap">
-
-        <TextView
-            android:id="@+id/tv_wallet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="即有钱包"
-            android:textColor="#595A5B"
-            android:textSize="@dimen/ts_14" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_wallet"
-            android:paddingBottom="14dp"
-            android:text="30秒极速开通，享最高20000元额度"
-            android:textColor="#595A5B"
-            android:textSize="@dimen/ts_14" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:src="@drawable/ic_detail_grey" />
-    </RelativeLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         android:layout_weight="1"
+        android:scrollbars="none"
         android:background="@color/white">
 
         <LinearLayout
-            android:id="@+id/ll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/default_layout_screen_gap">
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/default_layout_screen_gap"
+                android:paddingTop="12dp"
+                android:text="支付方式"
+                android:textSize="@dimen/ts_14" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_f8f8f8" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingLeft="@dimen/default_layout_screen_gap">
+
+                <TextView
+                    android:id="@+id/tv_wallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="即有钱包"
+                    android:textColor="#595A5B"
+                    android:textSize="@dimen/ts_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_wallet"
+                    android:paddingBottom="14dp"
+                    android:text="30秒极速开通，享最高20000元额度"
+                    android:textColor="#595A5B"
+                    android:textSize="@dimen/ts_14" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/default_layout_screen_gap"
+                    android:src="@drawable/ic_detail_grey"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/default_layout_screen_gap" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_f8f8f8" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="14dp"
+                android:paddingRight="@dimen/default_layout_screen_gap"
+                android:paddingTop="9dp">
+
+                <TextView
+                    android:id="@+id/tv_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="￥4799.00"
+                    android:textColor="@color/color_ff2a2a"
+                    android:textSize="@dimen/ts_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tv_total_price"
+                    android:text="商品合计："
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_14" />
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_f8f8f8" />
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/color_f8f8f8" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingBottom="14dp"
-        android:paddingRight="@dimen/default_layout_screen_gap"
-        android:paddingTop="9dp">
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="￥4799.00"
-            android:textColor="@color/color_ff2a2a"
-            android:textSize="@dimen/ts_14" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_price"
-            android:text="商品合计："
-            android:textColor="@color/color_9b9b9b"
-            android:textSize="@dimen/ts_14" />
-    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -129,30 +140,53 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_month_supply"
+                android:id="@+id/tv_down_payment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="首付 0元"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="@dimen/ts_15" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_month_supply"
-                android:text="月供242.10 起"
-                android:textColor="@color/color_4a4a4a"
-                android:textSize="@dimen/ts_15" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_month_supply"
+                    android:text="月供 "
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:id="@+id/tv_month_supply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_month_supply"
+                    android:text="242.10 起"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_month_supply"
+                    android:padding="5dp"
+                    android:text="(查看详情)"
+                    android:textColor="@color/color_00bbc0"
+                    android:textSize="@dimen/ts_13" />
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/dialog_confirm"
             android:layout_width="114dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:background="@color/color_00bbc0"
             android:gravity="center"
-            android:text="确定"
+            android:text="确认"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_17" />
     </LinearLayout>

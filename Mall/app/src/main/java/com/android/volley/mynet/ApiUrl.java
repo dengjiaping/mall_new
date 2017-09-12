@@ -188,5 +188,7 @@ public interface ApiUrl {
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
     //商品SKU搜索
     String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
+    //获取首付和分期数
+    String order_getAppDownPayAndMonthPay = BASE_URL + "/order/getAppDownPayAndMonthPay";
 }
 

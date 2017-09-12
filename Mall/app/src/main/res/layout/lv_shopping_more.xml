@@ -26,6 +26,7 @@
                 android:paddingLeft="@dimen/default_layout_screen_gap">
 
                 <TextView
+                    android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -34,6 +35,7 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
+                    android:id="@+id/tv_introduction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="流量下单减2元"
@@ -42,9 +44,11 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iv_commodity"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:src="@drawable/classify_default" />
         </LinearLayout>
 
@@ -54,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
             android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="15dp"
             android:background="@drawable/shape_commodity"
             android:src="@drawable/ic_more_category" />
     </LinearLayout>

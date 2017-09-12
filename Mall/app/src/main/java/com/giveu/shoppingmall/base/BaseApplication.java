@@ -1,6 +1,8 @@
 package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -50,32 +53,44 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-/*        if (DebugConfig.isDev) {
-            //开发环境初始化LeakCanary
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                // This process is dedicated to LeakCanary for heap analysis.
-                // You should not init your app in this process.
-                return;
-            }
-            LeakCanary.install(this);
-        }*/
-        MultiDex.install(this);
-        mInstance = this;
-        undestroyActivities = new ArrayList<Activity>();
-        String processName = BaseApplication.getProcessName(android.os.Process.myPid());
-        PackageManager packageManager = getPackageManager();
-        String mainProcess = "";
-        PackageInfo packageInfo;
         try {
-            packageInfo = packageManager.getPackageInfo(getPackageName(), 4);
-            mainProcess = packageInfo.applicationInfo.processName;
-        } catch (Exception var14) {
-            mainProcess = "";
-        }
-        if (processName == null || processName.equals(mainProcess)) {
-            InitializeService.startIt(this);
-            initPush();
-            initImageLoader();
+//            if (DebugConfig.isDev) {
+//                //开发环境初始化LeakCanary
+//                if (LeakCanary.isInAnalyzerProcess(this)) {
+//                    // This process is dedicated to LeakCanary for heap analysis.
+//                    // You should not init your app in this process.
+//                    return;
+//                }
+//                LeakCanary.install(this);
+//            }
+            MultiDex.install(this);
+            mInstance = this;
+            undestroyActivities = new ArrayList<Activity>();
+
+            boolean isInMainProcess = true;
+            int pid = android.os.Process.myPid();
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+            if (runningApps != null && !runningApps.isEmpty()) {
+                for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+                    if (procInfo.pid == pid) {
+                        if (procInfo.processName.equals("com.giveu.shoppingmall:pushcore")) {
+                            isInMainProcess = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (isInMainProcess){
+                //只在主进程里面初始化
+                LogUtil.w("init pid is " + pid);
+                InitializeService.startIt(this);
+                initPush();
+                initImageLoader();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

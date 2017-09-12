@@ -99,6 +99,7 @@
                 android:textSize="@dimen/ts_14" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="1dp"

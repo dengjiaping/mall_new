@@ -14,6 +14,7 @@ public interface IRechargeView extends IView {
     void showPhoneInfo(SegmentResponse data);
     void showErrorInfo(String message);
     void createOrderSuccess(String orderNo);
+    void createOrderFail();
     void pwdSuccess();
     void pwdError(int remainTimes);
     void confirmOrderSuccess(ConfirmOrderResponse data);

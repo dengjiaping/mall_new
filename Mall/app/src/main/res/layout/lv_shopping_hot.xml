@@ -4,7 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/fill_view"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        />
+
     <RelativeLayout
+        android:id="@+id/rl_hot"
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:background="@color/default_layoutxml_bg">
@@ -24,13 +32,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:drawablePadding="4dp"
-            android:textSize="@dimen/ts_12"
-            android:textColor="@color/color_9b9b9b"
             android:drawableRight="@drawable/ic_more"
             android:gravity="center"
             android:paddingLeft="@dimen/default_layout_screen_gap"
             android:paddingRight="@dimen/default_layout_screen_gap"
-            android:text="更多" />
+            android:text="更多"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_12" />
     </RelativeLayout>
 
     <View
@@ -45,7 +53,7 @@
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginRight="@dimen/default_layout_screen_gap"
         android:horizontalSpacing="@dimen/default_layout_screen_gap"
-        android:verticalSpacing="@dimen/default_layout_screen_gap"
-        android:numColumns="2" />
+        android:numColumns="2"
+        android:verticalSpacing="@dimen/default_layout_screen_gap" />
 
 </LinearLayout>

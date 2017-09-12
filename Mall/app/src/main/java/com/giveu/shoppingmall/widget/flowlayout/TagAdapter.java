@@ -85,4 +85,8 @@ public abstract class TagAdapter<T>
         this.mTagDatas = mTagDatas;
         notifyDataChanged();
     }
+
+    public List<T> getDatas() {
+        return mTagDatas;
+    }
 }
