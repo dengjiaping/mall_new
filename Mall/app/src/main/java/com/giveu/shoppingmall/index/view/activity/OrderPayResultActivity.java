@@ -11,6 +11,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
+import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.utils.StringUtils;
 
@@ -46,10 +47,12 @@ public class OrderPayResultActivity extends BaseActivity {
 
     private boolean isSuccess;//是否支付成功
     private ConfirmPayResponse response;
+    private String orderNo;
 
-    public static void startIt(Activity activity, ConfirmPayResponse response, boolean isSuccess) {
+    public static void startIt(Activity activity, ConfirmPayResponse response, String orderNo, boolean isSuccess) {
         Intent intent = new Intent(activity, OrderPayResultActivity.class);
         intent.putExtra("ConfirmPayResponse", response);
+        intent.putExtra("orderNo", orderNo);
         intent.putExtra("isSuccess", isSuccess);
         activity.startActivity(intent);
     }
@@ -58,6 +61,7 @@ public class OrderPayResultActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         baseLayout.setTitle("订单支付");
         setContentView(R.layout.activity_order_pay_result);
+        orderNo = getIntent().getStringExtra("orderNo");
         isSuccess = getIntent().getBooleanExtra("isSuccess", false);
         response = (ConfirmPayResponse) getIntent().getSerializableExtra("ConfirmPayResponse");
         if (isSuccess) {
@@ -105,7 +109,9 @@ public class OrderPayResultActivity extends BaseActivity {
                 break;
 
             case R.id.tv_repay:
-
+                OrderInfoActivity.startIt(mBaseContext, orderNo);
+                finish();
+                break;
         }
     }
 

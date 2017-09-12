@@ -49,7 +49,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
 
     //验证交易密码
-    public void onVerifyPayPwd(String payPwd) {
+    public void onVerifyPayPwd(String payPwd, final String orderNo, final boolean isWalletPay, final String payment) {
         ApiImpl.verifyPayPwd(getView().getAct(), LoginHelper.getInstance().getIdPerson(), payPwd, new BaseRequestAgent.ResponseListener<PayPwdResponse>() {
             @Override
             public void onSuccess(PayPwdResponse response) {
@@ -57,7 +57,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
                     if (response.data != null) {
                         PayPwdResponse pwdResponse = response.data;
                         if (pwdResponse.status) {
-                            getView().verifyPayPwdSuccess();
+                            getView().verifyPayPwdSuccess(orderNo, isWalletPay, payment);
                         } else {
                             getView().verifyPayPwdFailure(pwdResponse.remainTimes);
                         }

@@ -7,10 +7,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
@@ -41,9 +48,13 @@ public class PayChannelActivity extends BaseActivity {
     LinearLayout llPayStatus;
     private ConfirmDialog cancelDialog;
     private boolean isOrderValid = true;
+    private String orderNo;
+    private String timeLeft;
 
-    public static void startIt(Activity activity) {
+    public static void startIt(Activity activity, String orderNo, String payment) {
         Intent intent = new Intent(activity, PayChannelActivity.class);
+        intent.putExtra("orderNo", orderNo);
+        intent.putExtra("payment", payment);
         activity.startActivity(intent);
     }
 
@@ -51,8 +62,18 @@ public class PayChannelActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_pay_channel);
         baseLayout.setTitle("支付首付金额");
-        CommonUtils.setTextWithSpanSizeAndColor(tvMoney, "¥", StringUtils.format2(123 + ""), "",
-                15, 12, R.color.color_00bbc0, R.color.color_00bbc0);
+        orderNo = getIntent().getStringExtra("orderNo");
+        tvMoney.setText("¥" + StringUtils.format2(getIntent().getStringExtra("payment")));
+        getRestTime();
+        tvRemainTime.setRestTime(Long.parseLong(timeLeft));
+        tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
+            @Override
+            public void onEnd() {
+                isOrderValid = false;
+                llPayStatus.setVisibility(View.GONE);
+                llPayFail.setVisibility(View.VISIBLE);
+            }
+        });
         cancelDialog = new ConfirmDialog(mBaseContext);
         cancelDialog.setContent("是否放弃支付?");
         cancelDialog.setConfirmStr("取消");
@@ -60,9 +81,9 @@ public class PayChannelActivity extends BaseActivity {
         baseLayout.setBackClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isOrderValid) {
+                if (isOrderValid) {
                     cancelDialog.show();
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -97,34 +118,39 @@ public class PayChannelActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_back:
-                if(isOrderValid) {
-                    cancelDialog.show();
-                }else {
                     finish();
-                }
                 break;
+
             case R.id.tv_confirm:
-                tvRemainTime.setRestTime(10 * 1000);
-                tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
+                PayUtils.AliPay(mBaseContext, orderNo, new PayUtils.AliPayThread.OnPayListener() {
                     @Override
-                    public void onEnd() {
-                        isOrderValid= false;
-                        llPayStatus.setVisibility(View.GONE);
-                        llPayFail.setVisibility(View.VISIBLE);
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFail() {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
                     }
                 });
                 break;
+
             case R.id.tv_order:
-                OrderInfoActivity.startIt(mBaseContext, "", "");
+                OrderInfoActivity.startIt(mBaseContext, orderNo);
                 break;
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(isOrderValid) {
+        if (isOrderValid) {
             cancelDialog.show();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -135,4 +161,25 @@ public class PayChannelActivity extends BaseActivity {
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
+
+    //获取剩余时间
+    private void getRestTime() {
+        ApiImpl.getOrderDetail(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+            @Override
+            public void onSuccess(OrderDetailResponse response) {
+                if (response != null) {
+                    if (StringUtils.isNotNull(response.timeLeft)) {
+                        timeLeft = response.timeLeft;
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+
+            }
+        });
+    }
+
 }

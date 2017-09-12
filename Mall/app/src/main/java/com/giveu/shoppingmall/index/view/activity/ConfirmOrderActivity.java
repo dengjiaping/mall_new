@@ -167,7 +167,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 break;
             case R.id.tv_ok:
 //                pwdDialog.showDialog();
-                PayChannelActivity.startIt(mBaseContext);
+                PayChannelActivity.startIt(mBaseContext, "", "");
                 break;
 
             default:

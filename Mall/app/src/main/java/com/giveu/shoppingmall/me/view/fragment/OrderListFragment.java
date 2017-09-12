@@ -13,6 +13,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.me.adapter.OrderListAdapter;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -94,9 +95,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
                 String orderNo = mDatas.get(position - 1).orderNo;
-                String src = mDatas.get(position - 1).srcIp + mDatas.get(position - 1).src;
-                if (StringUtils.isNotNull(orderNo) && StringUtils.isNotNull(src))
-                    OrderInfoActivity.startIt(mBaseContext, orderNo, src);
+                if (StringUtils.isNotNull(orderNo))
+                    OrderInfoActivity.startIt(mBaseContext, orderNo);
             }
         });
 
@@ -212,9 +212,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
     //验证交易密码成功
     @Override
-    public void verifyPayPwdSuccess() {
+    public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
-
+        VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
     }
 
     //验证交易密码失败
