@@ -97,10 +97,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
             tvCommit.setVisibility(View.GONE);
             tvSyncAddress.setVisibility(View.GONE);
-            if (!LoginHelper.getInstance().canOnlyEditEmail()) {
-                //填写过居住地址，邮箱填过 else没填过，可以点击填写
-                setEditDisabled(etEmail);
-            }
+            setEditDisabled(etEmail);
             setEditDisabled(etPhone);
             setEditDisabled(etName);
             setEditDisabled(etDetailAddress);

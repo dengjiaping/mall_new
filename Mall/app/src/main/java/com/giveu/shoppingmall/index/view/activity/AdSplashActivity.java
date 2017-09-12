@@ -11,6 +11,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -37,20 +38,20 @@ public class AdSplashActivity extends BaseActivity {
         @Override
         public void run() {
             count--;
-            tvSkip.setText("跳过("+ count +")");
-            if (count == 0){
+            CommonUtils.setTextWithSpan(tvSkip, "跳过", " "+count, R.color.white, R.color.color_ff2a2a);
+            if (count == 0) {
                 turnToMainActivity();
-            }else{
+            } else {
                 handler.postDelayed(this, 1000);
             }
         }
     };
 
-    public void startCount(){
+    public void startCount() {
         handler.postDelayed(runnable, 0);
     }
 
-    public void stopCount(){
+    public void stopCount() {
         if (handler != null)
             handler.removeCallbacksAndMessages(null);
     }
@@ -92,7 +93,7 @@ public class AdSplashActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Activity activity){
+    public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, AdSplashActivity.class);
         activity.startActivity(intent);
     }
