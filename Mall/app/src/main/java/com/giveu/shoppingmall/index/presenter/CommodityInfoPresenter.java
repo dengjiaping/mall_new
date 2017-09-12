@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
+import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -48,7 +49,7 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
                     if (response.data.size() > 0) {
                         AddressListResponse addressBean = response.data.get(0);
                         getView().getAddressList(true, addressBean.province, addressBean.city, addressBean.region);
-                    }else {
+                    } else {
                         getView().getAddressList(false, "", "", "");
                     }
                 }
@@ -83,5 +84,25 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             }
         });
     }
+
+    public void getAppDownPayAndMonthPay(String channel, String idPerson, int downPaymentRate, String skuCode) {
+        ApiImpl.getAppDownPayAndMonthPay(getView().getAct(), channel, idPerson, downPaymentRate, skuCode, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
+            @Override
+            public void onSuccess(DownPayMonthPayResponse response) {
+                if (getView() != null) {
+                    getView().showDownPayMonthPay(true, response.data);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    getView().showDownPayMonthPay(true, null);
+                }
+            }
+        });
+
+    }
+
 
 }
