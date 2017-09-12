@@ -23,7 +23,7 @@
                 android:layout_height="match_parent"
                 android:fillViewport="true"
                 android:overScrollMode="never"
-                android:scrollbars="vertical">
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -34,6 +34,8 @@
                     <com.youth.banner.Banner
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
+                        app:indicator_drawable_unselected="@drawable/shape_dot_grey"
+                        app:indicator_drawable_selected="@drawable/shape_dot_blue"
                         android:layout_height="300dp" />
 
                     <View
