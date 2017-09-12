@@ -67,23 +67,27 @@ public class BaseApplication extends MultiDexApplication {
             mInstance = this;
             undestroyActivities = new ArrayList<Activity>();
 
+            boolean isInMainProcess = true;
             int pid = android.os.Process.myPid();
             ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
             if (runningApps != null && !runningApps.isEmpty()) {
                 for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
                     if (procInfo.pid == pid) {
-                        if (procInfo.processName.equals("com.giveu.shoppingmall")) {
-                            //只在主进程里面初始化
-                            LogUtil.w("init pid is " + pid);
-
-                            InitializeService.startIt(this);
-                            initPush();
-                            initImageLoader();
+                        if (procInfo.processName.equals("com.giveu.shoppingmall:pushcore")) {
+                            isInMainProcess = false;
                             break;
                         }
                     }
                 }
+            }
+
+            if (isInMainProcess){
+                //只在主进程里面初始化
+                LogUtil.w("init pid is " + pid);
+                InitializeService.startIt(this);
+                initPush();
+                initImageLoader();
             }
         }catch (Exception e){
             e.printStackTrace();
