@@ -1,6 +1,8 @@
 package com.giveu.shoppingmall.base;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
