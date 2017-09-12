@@ -66,6 +66,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     TextView tvAddressTag;
     @BindView(R.id.et_email)
     EditView etEmail;
+    @BindView(R.id.ll_email)
+    LinearLayout llEmail;
     private String province;
     private String city;
     private String region;
@@ -87,7 +89,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
         presenter = new LivingAddressPresenter(this);
         //已经有居住地址，那么只展示，否则进行填写
-        if (LoginHelper.getInstance().hasFullAddress()) {
+        if (LoginHelper.getInstance().hasExistLive()) {
             llChooseAddress.setEnabled(false);
             ivDetail.setVisibility(View.GONE);
             tvAddressTag.setText("我的居住地址");
@@ -95,22 +97,17 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
             tvCommit.setVisibility(View.GONE);
             tvSyncAddress.setVisibility(View.GONE);
+            if (!LoginHelper.getInstance().canOnlyEditEmail()) {
+                //填写过居住地址，邮箱填过 else没填过，可以点击填写
+                setEditDisabled(etEmail);
+            }
             setEditDisabled(etPhone);
             setEditDisabled(etName);
-                setEditDisabled(etEmail);
             setEditDisabled(etDetailAddress);
             //获取居住地址信息
             presenter.getLiveAddress(LoginHelper.getInstance().getIdPerson());
         } else {
             if (StringUtils.isNull(LoginHelper.getInstance().getReceiveProvince())) {
-                tvSyncAddress.setVisibility(View.GONE);
-            }
-            if (LoginHelper.getInstance().canOnlyEditEmail()) {
-                //填写过居住地址，邮箱没填过
-                setEditDisabled(etPhone);
-                setEditDisabled(etName);
-                setEditDisabled(etDetailAddress);
-                llChooseAddress.setEnabled(false);
                 tvSyncAddress.setVisibility(View.GONE);
             }
         }
@@ -131,7 +128,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     @Override
     public void setData() {
         //只是展示的话不需要获取地址列表
-        if (!LoginHelper.getInstance().hasFullAddress()) {
+        if (!LoginHelper.getInstance().hasExistLive()) {
 
             String cacheTime = SharePrefUtil.getInstance().getString(Const.ADDRESS_TIME, "");
             //当本地缓存还是当天缓存的，那么读取本地缓存，出现异常时获取服务器数据
@@ -347,6 +344,4 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         etName.setSelection(etName.getText().toString().length());
 
     }
-
-
 }

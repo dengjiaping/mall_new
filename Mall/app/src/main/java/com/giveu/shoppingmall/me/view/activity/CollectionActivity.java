@@ -333,7 +333,9 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {
-                    collectionAdapter.getData().remove(position);
+                    if (position < collectionAdapter.getCount()) {
+                        collectionAdapter.getData().remove(position);
+                    }
                 } else {
                     //全选或选择删除
                     if (CommonUtils.isNullOrEmpty(removeList)) {
