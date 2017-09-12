@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.index.view.fragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
@@ -38,7 +40,6 @@ import com.youth.banner.transformer.DefaultTransformer;
 import com.youth.banner.transformer.FlipHorizontalTransformer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -121,7 +122,9 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      * @param indexResponse
      */
     private void initBanner(IndexResponse indexResponse) {
-        if(indexResponse==null||CommonUtils.isNullOrEmpty(indexResponse.decorations)){
+        if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.banner.setVisibility(View.GONE);
+            viewHolder.fillView.setVisibility(View.VISIBLE);
             return;
         }
         bannerHeight = (int) (DensityUtils.getWidth() / (750 / 410.f));
@@ -155,10 +158,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     /**
      * 热门品类
+     *
      * @param indexResponse
      */
     private void initHot(final IndexResponse indexResponse) {
-        if(indexResponse==null||CommonUtils.isNullOrEmpty(indexResponse.decorations)){
+        if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.rlHot.setVisibility(View.GONE);
+            viewHolder.gvHot.setVisibility(View.GONE);
             return;
         }
         LvCommonAdapter<IndexResponse.DecorationsBean> commonAdapter = new LvCommonAdapter<IndexResponse.DecorationsBean>(mBaseContext, R.layout.rv_hot_item, indexResponse.decorations) {
@@ -168,8 +174,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                ImageUtils.loadImageWithCorner(indexResponse.srcIp+"/"
-                        +item.picSrc,R.drawable.ic_defalut_pic_corner,ivCommodity,DensityUtils.dip2px(4));
+                ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+                        + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -187,7 +193,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      * @param indexResponse
      */
     private void initCategory(final IndexResponse indexResponse) {
-        if(indexResponse==null||CommonUtils.isNullOrEmpty(indexResponse.decorations)){
+        if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.gvCategory.setVisibility(View.GONE);
             return;
         }
         viewHolder.gvCategory.getLayoutParams().height = DensityUtils.dip2px(200);
@@ -198,8 +205,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                ImageUtils.loadImageWithCorner(indexResponse.srcIp+"/"
-                        +item.picSrc,R.drawable.ic_defalut_pic_corner,ivCommodity,DensityUtils.dip2px(4));
+                ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+                        + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -214,10 +221,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     /**
      * 更多类目
+     *
      * @param indexResponse
      */
     private void initMore(IndexResponse indexResponse) {
-        if(indexResponse==null||CommonUtils.isNullOrEmpty(indexResponse.decorations)){
+        if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.llCategoryMore.setVisibility(View.GONE);
             return;
         }
 //        LinearLayout llCategoryMore = (LinearLayout) headerView.findViewById(R.id.ll_category_more);
@@ -230,8 +239,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
 //        viewHolder.llCategoryMore.getLayoutParams().height = viewHolder.ivCategoryMore.getLayoutParams().height + DensityUtils.dip2px(15 + 61);
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
-        ImageUtils.loadImageWithCorner(indexResponse.srcIp+"/"
-                +decorationsBean.picSrc,R.drawable.ic_defalut_pic_corner,viewHolder.ivCommodity,DensityUtils.dip2px(4));
+        ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+                + decorationsBean.picSrc, R.drawable.ic_defalut_pic_corner, viewHolder.ivCommodity, DensityUtils.dip2px(4));
     }
 
 
@@ -251,7 +260,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     @Override
     protected void setListener() {
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            private HashMap<Integer, ItemRecod> recordSp = new HashMap<>();
+            private SparseArray<ItemRecod> recordSp = new SparseArray<>();
             private int mCurrentfirstVisibleItem = 0;
 
             @Override
@@ -279,7 +288,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                     }
                     itemRecord.height = firstView.getHeight();//获取最顶部Item的高度
                     itemRecord.top = firstView.getTop();//获取距离顶部的距离
-                    recordSp.put(firstVisibleItem, itemRecord);//设置值
+                    recordSp.append(firstVisibleItem, itemRecord);//设置值
                 }
                 int scrollY = getScrollY();
                 float rate = (float) (scrollY * 1.0 / bannerHeight);
@@ -370,8 +379,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         NoScrollGridView gvCategory;
         @BindView(R.id.iv_category_more)
         ImageView ivCategoryMore;
+        @BindView(R.id.fill_view)
+        View fillView;
         @BindView(R.id.iv_commodity)
         ImageView ivCommodity;
+        @BindView(R.id.rl_hot)
+        RelativeLayout rlHot;
+        @BindView(R.id.ll_category_more)
+        LinearLayout llCategoryMore;
 
         public HeaderViewHolder(View headerView) {
             ButterKnife.bind(this, headerView);

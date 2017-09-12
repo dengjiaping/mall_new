@@ -27,7 +27,6 @@ import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -37,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.giveu.shoppingmall.R.id.vp_content;
@@ -123,6 +121,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             llCredit.setVisibility(View.GONE);
             viewDivider.setVisibility(View.GONE);
         }
+        setBuyEnable(false);
         presenter = new CommodityPresenter(this);
     }
 
@@ -189,9 +188,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         super.onClick(view);
         switch (view.getId()) {
             case R.id.ll_back:
-                if(vpContent.getCurrentItem() == 1){
+                if (vpContent.getCurrentItem() == 1) {
                     vpContent.setCurrentItem(0);
-                }else {
+                } else {
                     finish();
                 }
                 break;
@@ -237,23 +236,39 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
         commodityInfoFragment.startLocation();
-        LogUtil.e("onPermissionGranted");
     }
 
     @Override
     public void onPermissionDeclined(@NonNull String[] permissionName) {
         super.onPermissionDeclined(permissionName);
         commodityInfoFragment.rejectGpsPermission();
-        LogUtil.e("onPermissionDeclined");
     }
 
     @Override
     public void onPermissionReallyDeclined(@NonNull String permissionName) {
         super.onPermissionReallyDeclined(permissionName);
         commodityInfoFragment.rejectGpsPermission();
-        LogUtil.e("onPermissionReallyDeclined");
     }
 
+    /**
+     * 是否可点击购买
+     *
+     * @param enable
+     */
+    public void setBuyEnable(boolean enable) {
+        tvBuy.setEnabled(enable);
+        if (enable) {
+            tvBuy.setBackgroundColor(ContextCompat.getColor(mBaseContext, R.color.color_00bbc0));
+        } else {
+            tvBuy.setBackgroundColor(ContextCompat.getColor(mBaseContext, R.color.color_d8d8d8));
+        }
+    }
+
+    /**
+     * 根据状态显示是否有货，是否可点击
+     *
+     * @param state
+     */
     public void refreshStock(int state) {
         switch (state) {
             case 0:
@@ -310,21 +325,13 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
 
     public void showCommodityDetail() {
         vpContent.setCurrentItem(1, false);
-        commodityDetailFragment.showCommodityIntroduce();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     @Override
     public void onBackPressed() {
-        if(vpContent.getCurrentItem() == 1){
+        if (vpContent != null && vpContent.getCurrentItem() == 1) {
             vpContent.setCurrentItem(0);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }

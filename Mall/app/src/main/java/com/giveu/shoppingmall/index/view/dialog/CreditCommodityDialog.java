@@ -43,12 +43,12 @@ public class CreditCommodityDialog extends CustomDialog {
     private ImageView ivCommodity;
     private TagAdapter<String> downPayAdapter;
     private TagFlowLayout downPayLayout;
-    private int downPayRate = -1;
-    private int paymentNum = -1;
-    private int commodityAmounts;
+    private int downPayRate = -1;//首付比例
+    private int paymentNum = -1;//分期数
+    private int commodityAmounts;//商品数量
     private TagAdapter<DownPayMonthPayResponse> monthPayAdapter;
     private TagFlowLayout tfPayment;
-    private double totalPrice;
+    private double totalPrice;//商品总价格 = 单价 x 数量
 
     public CreditCommodityDialog(Activity context) {
         super(context, R.layout.dialog_credit_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -94,6 +94,14 @@ public class CreditCommodityDialog extends CustomDialog {
         addPaymentNumView("分期数", new ArrayList<DownPayMonthPayResponse>());
     }
 
+    /**
+     * 初始化数据
+     * @param commodityAmounts
+     * @param smallIconStr
+     * @param commodityName
+     * @param commodityPrice
+     * @param data
+     */
     public void initData(int commodityAmounts, String smallIconStr, String commodityName, String commodityPrice, ArrayList<DownPayMonthPayResponse> data) {
         if (downPayRate == -1) {
             downPayRate = 0;
@@ -101,15 +109,18 @@ public class CreditCommodityDialog extends CustomDialog {
         this.commodityAmounts = commodityAmounts;
         if (CommonUtils.isNotNullOrEmpty(data)) {
             updateInfo(smallIconStr, commodityName, commodityPrice, commodityAmounts);
+            //之前没选过期数
             if (paymentNum == -1) {
                 monthPayAdapter.setSelectedList(0);
                 DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
                 paymentNum = downPayMonthPayResponse.paymentNum;
                 initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
             } else {
+                //已选过期数和现在服务器返回的数据是否还有这个期数的标识
                 boolean hasSamePaymentNum = false;
                 for (int i = 0; i < data.size(); i++) {
                     DownPayMonthPayResponse downPayMonthPayResponse = data.get(i);
+                    //之前选的期数并且现在返回的期数还有这个期数，那么默认还是之前的期数，否则默认选择第一个期数
                     if (paymentNum == downPayMonthPayResponse.paymentNum) {
                         hasSamePaymentNum = true;
                         monthPayAdapter.setSelectedList(i);
@@ -117,6 +128,7 @@ public class CreditCommodityDialog extends CustomDialog {
                         break;
                     }
                 }
+                //之前选的期数并且现在返回的期数还有这个期数，那么默认还是之前的期数，否则默认选择第一个期数
                 if (!hasSamePaymentNum) {
                     monthPayAdapter.setSelectedList(0);
                     DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
@@ -129,6 +141,11 @@ public class CreditCommodityDialog extends CustomDialog {
         }
     }
 
+    /**
+     * 显示首付信息和月供信息
+     * @param initPay
+     * @param annuity
+     */
     private void initdownPayMonthPay(String initPay, String annuity) {
         tvDownPayment.setText("首付 " + StringUtils.format2(initPay) + "元");
         CommonUtils.setTextWithSpanSizeAndColor(tvMonthSupply, "¥", StringUtils.format2(annuity), "起",
@@ -150,6 +167,11 @@ public class CreditCommodityDialog extends CustomDialog {
         }
     }
 
+    /**
+     * 首付比例流式布局
+     * @param paramsStr
+     * @param paramsList
+     */
     private void addDownPayView(String paramsStr, final ArrayList<String> paramsList) {
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;
@@ -169,6 +191,7 @@ public class CreditCommodityDialog extends CustomDialog {
         downPayLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
+                //首付比例已更改，需要从服务器重新获取期数，这个在activity中完成
                 if (onDownPayChangeListener != null) {
                     onDownPayChangeListener.onChange(downPayRate);
                 }
@@ -179,6 +202,7 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
+                    //首付比例赋值
                     switch (integer) {
                         case 0:
                             downPayRate = 0;
@@ -200,6 +224,11 @@ public class CreditCommodityDialog extends CustomDialog {
         llContainer.addView(speView);
     }
 
+    /**
+     * 分期数流式布局
+     * @param paramsStr
+     * @param paramsList
+     */
     private void addPaymentNumView(String paramsStr, final ArrayList<DownPayMonthPayResponse> paramsList) {
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;
@@ -218,6 +247,7 @@ public class CreditCommodityDialog extends CustomDialog {
         tfPayment.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
+                //分期数赋值
                 paymentNum = monthPayAdapter.getDatas().get(position).paymentNum;
                 return false;
             }
@@ -226,6 +256,7 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
+                    //显示月供金额
                     DownPayMonthPayResponse downPayMonthPayResponse = monthPayAdapter.getDatas().get(integer);
                     initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
                 }
@@ -235,7 +266,7 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     /**
-     * 更新图片url，商品名称，价格
+     * 更新图片url，商品名称，价格, 商品数量
      *
      * @param url
      * @param commodityName

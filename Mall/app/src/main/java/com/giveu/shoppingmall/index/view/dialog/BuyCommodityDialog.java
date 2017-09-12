@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
@@ -51,7 +53,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private LinearLayout llChooseCredit;
     private TextView tvMonthAmount;
     private LinkedHashMap<String, SkuIntroductionResponse.SpecValuesBean> attrHashMap = new LinkedHashMap<>();//存储选中的属性
-    private ArrayList<ArrayList<SkuIntroductionResponse.SpecValuesBean>> allAttrMap =  new ArrayList<>();//所有属性
+    private ArrayList<ArrayList<SkuIntroductionResponse.SpecValuesBean>> allAttrMap = new ArrayList<>();//所有属性
     private HashMap<String, TagFlowLayout> tagFHashMap = new HashMap<>();
 
     public BuyCommodityDialog(Activity context) {
@@ -198,6 +200,18 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         return skuCode;
     }
 
+    public void setBuyEnable(boolean enable) {
+        tvConfirm.setEnabled(enable);
+        llChooseCredit.setEnabled(enable);
+        if(enable){
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_00bbc0));
+            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_00bbc0));
+        }else {
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_d8d8d8));
+            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_d8d8d8));
+        }
+    }
+
     @Override
     protected void createDialog() {
         super.createDialog();
@@ -303,6 +317,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
 
     /**
      * 更新图片url，商品名称，价格
+     *
      * @param url
      * @param commodityName
      * @param price
@@ -346,10 +361,14 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             case R.id.ll_choose_credit:
             case R.id.tv_confirm:
                 if (listener != null) {
-                    String amountsStr = tvAmounts.getText().toString();
-                    int amounts = StringUtils.string2Int(amountsStr);
-                    listener.confirm(amounts);
-                    dismiss();
+                    if (StringUtils.isNotNull(getSkuCode())) {
+                        String amountsStr = tvAmounts.getText().toString();
+                        int amounts = StringUtils.string2Int(amountsStr);
+                        listener.confirm(amounts);
+                        dismiss();
+                    } else {
+                        ToastUtils.showShortToast("请完成属性选择");
+                    }
                 }
                 break;
 

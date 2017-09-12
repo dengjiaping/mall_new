@@ -194,6 +194,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
             }
         });
+        buyDialog.setBuyEnable(false);
+
         buyDialog.setOnChooseCompleteListener(new BuyCommodityDialog.OnChooseCompleteListener() {
             @Override
             public void onComplete(String skuCode) {
@@ -208,7 +210,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             public void confirm(int amounts) {
                 //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
-                    commodityAmounts= amounts;
+                    commodityAmounts = amounts;
                     presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
                 } else {
                     ConfirmOrderActivity.startIt(mBaseContext);
@@ -371,13 +373,24 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         switch (state) {
             case 0:
                 dvStock.setMiddleText("有货");
+                //可点击购买
+                buyDialog.setBuyEnable(true);
+                activity.setBuyEnable(true);
                 break;
 
             case 1:
                 dvStock.setMiddleText("无货");
+                //不可点击立即购买或在购买对话框中不可点击下一步
+                buyDialog.setBuyEnable(false);
+                activity.setBuyEnable(false);
+
                 break;
 
             case 2:
+                dvStock.setMiddleText("商品售罄");
+                //不可点击立即购买或在购买对话框中不可点击下一步
+                buyDialog.setBuyEnable(false);
+                activity.setBuyEnable(false);
                 break;
         }
         activity.refreshStock(state);

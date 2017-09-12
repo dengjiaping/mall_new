@@ -9,7 +9,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         android:layout_weight="1"
+        android:scrollbars="none"
         android:background="@color/white">
 
         <LinearLayout
@@ -72,7 +74,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/default_layout_screen_gap" />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_f8f8f8" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
