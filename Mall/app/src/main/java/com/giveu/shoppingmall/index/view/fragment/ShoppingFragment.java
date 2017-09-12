@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
@@ -69,7 +70,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         baseLayout.setTitleBarAndStatusBar(false, false);
         baseLayout.setTopBarBackgroundColor(R.color.red);
         ButterKnife.bind(this, view);
-        View headerView = View.inflate(mBaseContext, R.layout.lv_shopping_banner, null);
+        View headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
         viewHolder = new HeaderViewHolder(headerView);
         ptrlv.getRefreshableView().addHeaderView(headerView);
         ArrayList<String> shopList = new ArrayList<>();
@@ -234,13 +235,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 //        ivMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
 //        ivMore.getLayoutParams().height = (int) (ivMore.getLayoutParams().width * (240 / 159f));
 //        llCategoryMore.getLayoutParams().height = ivMore.getLayoutParams().height + DensityUtils.dip2px(15 + 61);
-
         viewHolder.ivCategoryMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
 //        viewHolder.llCategoryMore.getLayoutParams().height = viewHolder.ivCategoryMore.getLayoutParams().height + DensityUtils.dip2px(15 + 61);
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
         ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
                 + decorationsBean.picSrc, R.drawable.ic_defalut_pic_corner, viewHolder.ivCommodity, DensityUtils.dip2px(4));
+        viewHolder.tvTitle.setText(decorationsBean.name);
+        viewHolder.tvIntroduction.setText(decorationsBean.title);
     }
 
 
@@ -387,6 +389,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         RelativeLayout rlHot;
         @BindView(R.id.ll_category_more)
         LinearLayout llCategoryMore;
+        @BindView(R.id.tv_title)
+        TextView tvTitle;
+        @BindView(R.id.tv_introduction)
+        TextView tvIntroduction;
 
         public HeaderViewHolder(View headerView) {
             ButterKnife.bind(this, headerView);

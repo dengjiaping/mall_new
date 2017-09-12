@@ -340,7 +340,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(skuResponse.skuInfo.salePrice),
                     "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
 
-            tvIntroduction.setText(skuResponse.skuInfo.adwords);
+            if (StringUtils.isNotNull(skuResponse.skuInfo.adwords)) {
+                tvIntroduction.setText(skuResponse.skuInfo.adwords);
+            } else {
+                tvIntroduction.setText("");
+            }
             dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
             //给购买对话框初始化数据
             buyDialog.setData(isCredit, skuCode, skuResponse);

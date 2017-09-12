@@ -26,6 +26,7 @@
                 android:paddingLeft="@dimen/default_layout_screen_gap">
 
                 <TextView
+                    android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -34,6 +35,7 @@
                     android:textSize="@dimen/ts_16" />
 
                 <TextView
+                    android:id="@+id/tv_introduction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="流量下单减2元"
