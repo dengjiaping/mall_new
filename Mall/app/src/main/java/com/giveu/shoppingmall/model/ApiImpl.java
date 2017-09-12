@@ -431,7 +431,7 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_addLiveAddress, BaseBean.class, context, responseListener);
     }
 
-    //联系人类型
+    //获取省市区
     public static void getAddListJson(Activity context, BaseRequestAgent.ResponseListener<AddressBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getAddListJson, AddressBean.class, context, responseListener);
@@ -443,7 +443,7 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getLiveAddress, LivingAddressBean.class, context, responseListener);
     }
 
-    //获取居住地址信息
+    //获取联系人信息
     public static void getOtherContact(Activity context, String idPerson, BaseRequestAgent.ResponseListener<ContactsBean> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson"}, new Object[]{StringUtils.string2Long(idPerson)});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_getOtherContact, ContactsBean.class, context, responseListener);
