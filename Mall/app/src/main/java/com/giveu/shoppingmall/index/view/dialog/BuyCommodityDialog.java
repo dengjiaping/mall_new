@@ -206,6 +206,8 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             // 设置对话框宽度
             lp.width = DensityUtils.getWidth();
+            lp.height = (int) (DensityUtils.getHeight() * (0.66));
+            dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.BOTTOM);
             dialogWindow.setWindowAnimations(R.style.dialogWindowAnim); // 添加动画
         }
@@ -344,7 +346,9 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             case R.id.ll_choose_credit:
             case R.id.tv_confirm:
                 if (listener != null) {
-                    listener.confirm();
+                    String amountsStr = tvAmounts.getText().toString();
+                    int amounts = StringUtils.string2Int(amountsStr);
+                    listener.confirm(amounts);
                     dismiss();
                 }
                 break;
@@ -368,7 +372,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     }
 
     public interface OnConfirmListener {
-        void confirm();
+        void confirm(int amounts);
 
         void cancle();
     }

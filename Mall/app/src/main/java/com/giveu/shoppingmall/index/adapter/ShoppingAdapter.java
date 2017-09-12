@@ -21,8 +21,6 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
     public ShoppingAdapter(Context context, List<String> datas) {
         super(context, datas);
 
-
-
         addItemViewDelegate(new ItemViewDelegate<String>() {
             @Override
             public int getItemViewLayoutId() {
@@ -40,8 +38,8 @@ public class ShoppingAdapter extends MultiItemTypeAdapter<String> {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //K00002691可以分期   K00002713 K00002912可以一次
-                        CommodityDetailActivity.startIt(mContext,false,"K00002713");
+                        //K00002691 K00002713可以分期    K00002912可以一次
+                        CommodityDetailActivity.startIt(mContext,true,"K00002713");
                     }
                 });
             }

@@ -224,7 +224,7 @@ public class ChargeOrderDialog {
             //有默认银行卡
             if (LoginHelper.getInstance().hasExistOther()) {
                 //添加了联系人
-                if (LoginHelper.getInstance().canOnlyEditEmail() || LoginHelper.getInstance().hasFullAddress()) {
+                if (LoginHelper.getInstance().hasExistLive()) {
                     //添加了居住地址,判断是否设置了交易密码
                     if (LoginHelper.getInstance().hasSetPwd()) {
                         if (listener != null) {
