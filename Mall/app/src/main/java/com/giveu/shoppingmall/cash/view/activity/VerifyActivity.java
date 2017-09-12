@@ -17,10 +17,12 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
+import com.giveu.shoppingmall.index.view.activity.OrderPayResultActivity;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -60,14 +62,16 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     private String orderNo;
     private int paymentType;
     private boolean isForShopping;//是否从商城过来的
+    private boolean isHaveDownPayment;//是否有首付，true：验证成功跳转到支付宝微信支付界面，false：验证成功跳转支付成功界面
 
     public static final String CASH = "cash";
     public static final String RECHARGE = "recharge";
     public static final String BANKCARD = "bankCard";
     public static final String SHOPPING = "shopping";
     private String salePrice;
+    private String randomCode;
 
-    public static void startIt(Activity activity,String insuranceFee, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
+    public static void startIt(Activity activity, String insuranceFee, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("insuranceFee", insuranceFee);
         intent.putExtra("statusType", statusType);
@@ -80,11 +84,14 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         activity.startActivity(intent);
     }
 
-    public static void startItForShopping(Activity activity, String mobile) {
+    public static void startItForShopping(Activity activity, String orderNo, String mobile, boolean isHaveDownPayment, String payment) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("isForShopping", true);
+        intent.putExtra("orderNo", orderNo);
         intent.putExtra("mobile", mobile);
         intent.putExtra("statusType", "shopping");
+        intent.putExtra("isHaveDownPayment", isHaveDownPayment);//是否有首付
+        intent.putExtra("payment", payment);//支付金额
 
         activity.startActivity(intent);
     }
@@ -148,7 +155,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 codeType = "recharge";
                 break;
             case SHOPPING:
-                codeType = "shopping";
+                codeType = "shop";
                 break;
         }
         baseLayout.setBackClickListener(new View.OnClickListener() {
@@ -286,6 +293,13 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 break;
             case RECHARGE:
                 break;
+            case SHOPPING:
+                if (isHaveDownPayment) {
+
+                } else {
+                    presenter.confirmPayForShop(orderNo, randomCode, smsCode, mobile);
+                }
+
         }
 
     }
@@ -311,6 +325,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     @Override
     public void confirmOrderFail() {
         RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
+        finish();
+    }
+
+    @Override
+    public void confirmPaySuccess(ConfirmPayResponse data) {
+        OrderPayResultActivity.startIt(mBaseContext, data, true);
         finish();
     }
 
