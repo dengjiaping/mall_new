@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.index.view.activity.OrderPayResultActivity;
+import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -62,7 +63,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     private String orderNo;
     private int paymentType;
     private boolean isForShopping;//是否从商城过来的
-    private boolean isHaveDownPayment;//是否有首付，true：验证成功跳转到支付宝微信支付界面，false：验证成功跳转支付成功界面
+    private boolean isWalletPay;//是否钱包支付，true：验证成功跳转到支付成功界面，false：验证成功跳转支付宝微信支付界面
 
     public static final String CASH = "cash";
     public static final String RECHARGE = "recharge";
@@ -70,6 +71,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public static final String SHOPPING = "shopping";
     private String salePrice;
     private String randomCode;
+    private String payment;//商城订单支付金额
 
     public static void startIt(Activity activity, String insuranceFee, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
         Intent intent = new Intent(activity, VerifyActivity.class);
@@ -84,13 +86,12 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         activity.startActivity(intent);
     }
 
-    public static void startItForShopping(Activity activity, String orderNo, String mobile, boolean isHaveDownPayment, String payment) {
+    public static void startItForShopping(Activity activity, String orderNo, boolean isWalletPay, String payment) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("isForShopping", true);
         intent.putExtra("orderNo", orderNo);
-        intent.putExtra("mobile", mobile);
         intent.putExtra("statusType", "shopping");
-        intent.putExtra("isHaveDownPayment", isHaveDownPayment);//是否有首付
+        intent.putExtra("isWalletPay", isWalletPay);//是否钱包支付
         intent.putExtra("payment", payment);//支付金额
 
         activity.startActivity(intent);
@@ -131,6 +132,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             tvDivider.setVisibility(View.VISIBLE);
             tvUnreceived.setVisibility(View.VISIBLE);
             tvSendCode.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_767876));
+            payment = getIntent().getStringExtra("payment");
+            isWalletPay = getIntent().getBooleanExtra("isWalletPay", false);
         } else {
             tvDivider.setVisibility(View.GONE);
             tvUnreceived.setVisibility(View.GONE);
@@ -204,6 +207,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                         case RECHARGE:
                             presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile, productId, orderNo,
                                     paymentType, result, LoginHelper.getInstance().getPhone());
+                            break;
+                        case SHOPPING:
                             break;
                     }
                 }
@@ -294,7 +299,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             case RECHARGE:
                 break;
             case SHOPPING:
-                if (isHaveDownPayment) {
+                if (isWalletPay) {
 
                 } else {
                     presenter.confirmPayForShop(orderNo, randomCode, smsCode, mobile);
@@ -328,9 +333,21 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         finish();
     }
 
+
+    /**
+     * 商城订单短信验证成功的回调方法
+     * 如果是钱包支付，则跳转到支付成功界面
+     * 如果是其他方式支付，则跳转支付宝或微信支付界面
+     */
     @Override
     public void confirmPaySuccess(ConfirmPayResponse data) {
-        OrderPayResultActivity.startIt(mBaseContext, data, true);
+        if (isWalletPay) {
+            if (data != null) {
+                OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
+            }
+        } else {
+            PayChannelActivity.startIt(mBaseContext, orderNo, payment);
+        }
         finish();
     }
 

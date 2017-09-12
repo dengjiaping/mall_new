@@ -38,9 +38,9 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
     private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
-    private String payType;
-    private double downPayment;
-    private double totalPrice;
+    private String payType;//支付方式
+    private double finalPayment;//最终支付金额
+    private boolean isWalletPay;//是否钱包支付
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
@@ -62,9 +62,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         }
         if (StringUtils.isNotNull(item.payType)) {
             payType = item.payType;
-        }
-        if (StringUtils.isNotNull(item.payPrice)) {
-            totalPrice = Double.parseDouble(item.payPrice);
+            if ("0".equals(payType)) {
+                isWalletPay = true;
+            } else {
+                isWalletPay = false;
+            }
         }
         if (StringUtils.isNotNull(item.name))
             viewHolder.setText(R.id.tv_name, item.name);
@@ -86,7 +88,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (item.orderType == 0) {
             viewHolder.setVisible(R.id.rl_payment, true);
             if (StringUtils.isNotNull(item.monthPayment) && StringUtils.isNotNull(item.periods)) {
-                downPayment = Double.parseDouble(item.downPayment);
                 viewHolder.setVisible(R.id.ll_payment, true);
                 viewHolder.setVisible(R.id.ll_total, false);
                 viewHolder.setText(R.id.tv_down_payment, "¥" + StringUtils.format2(item.downPayment));
@@ -253,16 +254,16 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             //是否设置了交易密码
             if (LoginHelper.getInstance().hasSetPwd()) {
                 //钱包可消费余额是否足够
-                if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < downPayment && "0".equals(payType)) {
+                if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && "0".equals(payType)) {
                     balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
                     balanceDeficientDialog.show();
                     return;
                 }
-                dealPwdDialog.setPrice("¥" + StringUtils.format2(downPayment + ""));
+                dealPwdDialog.setPrice("¥" + StringUtils.format2(finalPayment + ""));
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
-                        presenter.onVerifyPayPwd(payPwd);
+                        presenter.onVerifyPayPwd(payPwd, orderNo, isWalletPay, finalPayment + "");
                     }
                 });
                 dealPwdDialog.showDialog();
@@ -273,8 +274,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             notActiveDialog.showDialog();
         }
     }
-
-
 
 
     //取消订单dialog

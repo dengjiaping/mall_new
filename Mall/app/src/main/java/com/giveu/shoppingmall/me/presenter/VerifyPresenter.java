@@ -43,9 +43,7 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
             @Override
             public void onSuccess(ConfirmPayResponse response) {
                 if (getView() != null) {
-                    if (response != null) {
-                        getView().confirmPaySuccess(response);
-                    }
+                    getView().confirmPaySuccess(response);
                 }
             }
 
