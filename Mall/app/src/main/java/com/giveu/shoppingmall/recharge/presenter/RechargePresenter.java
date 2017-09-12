@@ -67,7 +67,10 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
 
             @Override
             public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
+                if(getView()!=null) {
+                    getView().createOrderFail();
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
             }
         });
     }

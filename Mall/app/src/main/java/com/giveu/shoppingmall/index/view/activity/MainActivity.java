@@ -363,7 +363,7 @@ public class MainActivity extends BasePermissionActivity {
 
     @Override
     public void setData() {
-        doLottery();
+//        doLottery();
         doApkUpgrade();
     }
 

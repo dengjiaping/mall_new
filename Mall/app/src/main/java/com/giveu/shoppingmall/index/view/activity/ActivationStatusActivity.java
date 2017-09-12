@@ -158,10 +158,7 @@ public class ActivationStatusActivity extends BaseActivity {
                         final LotteryResponse lotteryResponse = gson.fromJson(originalStr, LotteryResponse.class);
                         //活动有效期，可以进入抽奖，且直接进行领取优惠券活动（直接调接口）
                         if (lotteryResponse != null && lotteryResponse.data != null && lotteryResponse.data.activatyStatus == 1) {
-                            //领取优惠券
-                            if (isShow && hasShowCoupon) {
-                                receiveCoupon();
-                            }
+
                             if (lotteryResponse.data.justDo == 1) {
                                 SharePrefUtil.setNeedShowLottery(false);
                                 final SmallLotteryDialog lotteryDialog = new SmallLotteryDialog(mBaseContext);
@@ -264,8 +261,11 @@ public class ActivationStatusActivity extends BaseActivity {
 
                 tvHintBottom.setVisibility(View.VISIBLE);
                 tvHintBottom.setText(lab);
-                //判断是否可进行抽奖或者领取优惠券
-                doLottery();
+                //领取优惠券
+                if (isShow && hasShowCoupon) {
+                    receiveCoupon();
+                }
+//                doLottery();
                 break;
             case "fail":
                 // 激活失败，无额度，含中间提示语

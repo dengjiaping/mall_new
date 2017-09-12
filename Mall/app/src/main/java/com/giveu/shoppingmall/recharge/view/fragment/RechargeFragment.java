@@ -115,6 +115,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private PermissionDialog permissionDialog;
     private MainActivity mainActivity;
     private boolean pwdDismissByCancel = true;//密码框是否因为点击返回键而消失的标识
+    private boolean canShowBuyDialog = true;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -184,13 +185,16 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                     if (LoginHelper.getInstance().hasQualifications()) {
                         //判断是否设置了交易密码
                         if (LoginHelper.getInstance().hasSetPwd()) {
-                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                            mobile = etRecharge.getText().toString();
-                            productType = rechargeAdapter.getItem(checkId).productType;
-                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                            productName = rechargeAdapter.getItem(checkId).name;
-                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                    rechargeAdapter.getItem(checkId).callTrafficId);
+                            if (canShowBuyDialog) {
+                                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                                mobile = etRecharge.getText().toString();
+                                productType = rechargeAdapter.getItem(checkId).productType;
+                                productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                                productName = rechargeAdapter.getItem(checkId).name;
+                                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                        rechargeAdapter.getItem(checkId).callTrafficId);
+                                canShowBuyDialog = false;
+                            }
                         } else {
                             TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                         }
@@ -620,6 +624,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             }
         });
         orderDialog.showDialog();
+        canShowBuyDialog = true;
+    }
+
+    @Override
+    public void createOrderFail() {
+        canShowBuyDialog = true;
     }
 
 
