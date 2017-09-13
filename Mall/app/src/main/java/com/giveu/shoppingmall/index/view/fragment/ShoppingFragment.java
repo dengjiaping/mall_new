@@ -152,6 +152,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.gvHot.setVisibility(View.GONE);
             return;
         }
+        viewHolder.tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingListActivity.startIt(mBaseContext);
+            }
+        });
         LvCommonAdapter<IndexResponse.DecorationsBean> commonAdapter = new LvCommonAdapter<IndexResponse.DecorationsBean>(mBaseContext, R.layout.rv_hot_item, indexResponse.decorations) {
             @Override
             protected void convert(ViewHolder holder, IndexResponse.DecorationsBean item, int position) {
@@ -218,6 +224,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             public void onClick(View v) {
                 RechargeActivity.startIt(mBaseContext);
+            }
+        });
+        viewHolder.ivCategoryMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShoppingListActivity.startIt(mBaseContext);
             }
         });
 //        LinearLayout llCategoryMore = (LinearLayout) headerView.findViewById(R.id.ll_category_more);
@@ -394,6 +406,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         TextView tvIntroduction;
         @BindView(R.id.ll_phone_recharge)
         LinearLayout llPhoneRecharge;
+        @BindView(R.id.shopping_hot_more)
+        TextView tvMore;
 
         public HeaderViewHolder(View headerView) {
             ButterKnife.bind(this, headerView);
