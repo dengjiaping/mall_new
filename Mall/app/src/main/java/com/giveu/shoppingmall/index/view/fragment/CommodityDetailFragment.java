@@ -33,7 +33,15 @@ public class CommodityDetailFragment extends BaseFragment{
         baseLayout.setTitleBarAndStatusBar(false, false);
         rgCommodity = (RadioGroup) view.findViewById(R.id.rg_commodity);
         fragmentManager = getChildFragmentManager();
-        showFragment(0);
+        introduceFragment = new WebCommodityFragment();
+        introduceFragment.setFromCommodityDetail(fromCommodityDetail);
+        if (data != null) {
+            introduceFragment.setHtmlStr(data.intruction);
+        }
+        if (!introduceFragment.isAdded()) {
+            fragmentManager.beginTransaction().add(R.id.mContainer, introduceFragment).commitAllowingStateLoss();
+        }
+//        showFragment(0);
         return view;
     }
 
@@ -87,7 +95,7 @@ public class CommodityDetailFragment extends BaseFragment{
                 }
                 break;
             case 1:
-                if (paramsFragment == null) {
+          /*      if (paramsFragment == null) {
                     paramsFragment = new WebCommodityFragment();
                     paramsFragment.setFromCommodityDetail(fromCommodityDetail);
                     if (data != null) {
@@ -99,7 +107,7 @@ public class CommodityDetailFragment extends BaseFragment{
                     }
                 } else {
                     fragmentManager.beginTransaction().show(paramsFragment).commitAllowingStateLoss();
-                }
+                }*/
                 break;
         }
     }
@@ -123,16 +131,16 @@ public class CommodityDetailFragment extends BaseFragment{
     public void refreshCommodityDetail(CommodityDetailResponse data) {
         this.data = data;
         if (introduceFragment != null) {
-            introduceFragment.setHtmlStr(data.intruction);
+//            introduceFragment.setHtmlStr(data.intruction);
             if (introduceFragment.isAdded()) {
-                introduceFragment.loadHtml(data.intruction);
+                introduceFragment.loadHtml(data.toString());
             }
         }
-        if (paramsFragment != null) {
+     /*   if (paramsFragment != null) {
             paramsFragment.setHtmlStr(data.param);
             if (paramsFragment.isAdded()) {
                 paramsFragment.loadHtml(data.param);
             }
-        }
+        }*/
     }
 }

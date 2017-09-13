@@ -598,8 +598,8 @@ public class ApiImpl {
     }
 
     //商品SKU搜索
-    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, BaseRequestAgent.ResponseListener responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNumber", "pageSize"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize});
+    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, String code ,BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNumber", "pageSize","code"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize,code});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
     }
 
@@ -612,7 +612,7 @@ public class ApiImpl {
     //商城首页
     public static void getShoppingIndex(Activity context, BaseRequestAgent.ResponseListener<IndexResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_skus_index, IndexResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_sku_index, IndexResponse.class, context, responseListener);
     }
     //创建订单
     public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {

@@ -209,6 +209,11 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                                     paymentType, result, LoginHelper.getInstance().getPhone());
                             break;
                         case SHOPPING:
+                            if (isWalletPay) {
+
+                            } else {
+                                presenter.confirmPayForShop(orderNo, randomCode, smsCode, mobile);
+                            }
                             break;
                     }
                 }
@@ -299,11 +304,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             case RECHARGE:
                 break;
             case SHOPPING:
-                if (isWalletPay) {
-
-                } else {
-                    presenter.confirmPayForShop(orderNo, randomCode, smsCode, mobile);
-                }
+                break;
 
         }
 

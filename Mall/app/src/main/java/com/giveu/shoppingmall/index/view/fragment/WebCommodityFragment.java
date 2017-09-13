@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.CommodityWebView;
 
 
@@ -32,7 +33,7 @@ public class WebCommodityFragment extends BaseFragment {
     private ScrollView mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
-    private String htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
+    private String htmlUrl;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class WebCommodityFragment extends BaseFragment {
 
     }
 
-    @Override
+/*    @Override
     protected void onVisible() {
         super.onVisible();
         if (wvCommodity != null) {
@@ -60,12 +61,13 @@ public class WebCommodityFragment extends BaseFragment {
         if (wvCommodity != null) {
             wvCommodity.onPause();
         }
-    }
+    }*/
 
     @Override
     public void initDataDelay() {
-        wvCommodity.loadUrl(htmlUrl);
-        wvCommodity.onResume();
+        if (StringUtils.isNotNull(htmlUrl)) {
+            wvCommodity.loadUrl(htmlUrl);
+        }
     }
 
     private void initView() {
@@ -139,6 +141,10 @@ public class WebCommodityFragment extends BaseFragment {
 //        if (wvCommodity != null) {
 //            wvCommodity.loadUrl(htmlUrl);
 //        }
+        htmlUrl = "http://" + htmlStr;
+        if (wvCommodity != null) {
+            wvCommodity.loadUrl(htmlUrl);
+        }
     }
 
     public void setHtmlStr(String htmlStr) {

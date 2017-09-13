@@ -29,13 +29,14 @@ import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
+import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
-import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
@@ -76,6 +77,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private HeaderViewHolder viewHolder;
     private int pageIndex = 1;
     private final int pageSize = 20;
+    private View headerView;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,27 +85,27 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         baseLayout.setTitleBarAndStatusBar(false, false);
         baseLayout.setTopBarBackgroundColor(R.color.red);
         ButterKnife.bind(this, view);
-        View headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
+        headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
         viewHolder = new HeaderViewHolder(headerView);
-        ptrlv.getRefreshableView().addHeaderView(headerView);
-        shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<ShoppingResponse.ResultListBean>());
-        ptrlv.setAdapter(shoppingAdapter);
-        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
-        ptrlv.setPullLoadEnable(false);
+        shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<GoodsSearchResponse.GoodsBean>());
+
         ViewGroup.LayoutParams layoutParams = statusView.getLayoutParams();
         layoutParams.height = DensityUtils.getStatusBarHeight();
         statusView.setLayoutParams(layoutParams);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             statusView.setVisibility(View.GONE);
         }
+        ptrlv.setAdapter(shoppingAdapter);
+        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
+        ptrlv.setPullLoadEnable(false);
         presenter = new ShoppingPresenter(this);
         //刚开始隐藏头布局的所有内容
-        initBanner(null);
+      /*  initBanner(null);
         initHot(null);
         initMore(null);
-        initCategory(null);
+        initCategory(null);*/
 //        skipToActivity(0,null);
-        presenter.getIndexContent();
+        presenter.getHeadContent();
         return view;
     }
 
@@ -157,6 +159,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     /**
      * 0跳转至h5,1跳转搜索界面，2跳转商品详情，3跳转分类
+     *
      * @param urlTypeValue
      * @param decorationsBean
      */
@@ -218,7 +221,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 TextView tvTitle = holder.getView(R.id.tv_name);
                 holder.setText(R.id.tv_title, item.title);
                 holder.setText(R.id.tv_name, item.name);
-                switch(position){
+                switch (position) {
                     case 0:
                         tvTitle.setTextColor(Color.parseColor("#FF1516"));
                         break;
@@ -329,7 +332,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ptrlv.getRefreshableView().smoothScrollToPosition(0);
                 break;
             case R.id.ll_emptyView:
-                presenter.getIndexContent();
+                presenter.getHeadContent();
                 llEmptyView.setVisibility(View.GONE);
                 break;
         }
@@ -443,9 +446,23 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
     @Override
-    public void getIndexContent(ArrayList<IndexResponse> contentList) {
+    public void getIndexContent(List<GoodsSearchResponse.GoodsBean> contentList, String srcIp) {
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
-            for (IndexResponse indexResponse : contentList) {
+            shoppingAdapter.setDataAndSrcIp(contentList, srcIp);
+        }
+
+    }
+
+    @Override
+    public void getHeadContentFail() {
+        llEmptyView.setVisibility(View.VISIBLE);
+        pageIndex = 1;
+    }
+
+    @Override
+    public void getHeadContent(ArrayList<IndexResponse> data) {
+        if (CommonUtils.isNotNullOrEmpty(data)) {
+            for (IndexResponse indexResponse : data) {
                 switch (indexResponse.typeValue) {
                     case 0 + "":
                         initBanner(indexResponse);
@@ -460,21 +477,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         initMore(indexResponse);
                         break;
                     case 4 + "":
+                        presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.code);
                         break;
                 }
             }
+            llEmptyView.setVisibility(View.GONE);
+            ptrlv.getRefreshableView().addHeaderView(headerView);
         } else {
-            LogUtil.e("is null");
-        }
-        llEmptyView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCommodity(ShoppingResponse shoppingResponse) {
-        if (shoppingResponse != null) {
-            if (CommonUtils.isNotNullOrEmpty(shoppingResponse.resultList)) {
-                shoppingAdapter.setDataAndSrcIp(shoppingResponse.resultList, shoppingResponse.srcIp);
-            }
+            llEmptyView.setVisibility(View.VISIBLE);
         }
     }
 

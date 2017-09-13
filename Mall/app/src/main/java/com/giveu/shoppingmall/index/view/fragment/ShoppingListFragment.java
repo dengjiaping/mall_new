@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -165,7 +164,7 @@ public class ShoppingListFragment extends BaseFragment {
 
     public void initDataForFragment() {
         pageIndex = 1;
-        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, "",new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override
                     public void onSuccess(GoodsSearchResponse response) {
                         mRefreshView.setPullRefreshEnable(true);

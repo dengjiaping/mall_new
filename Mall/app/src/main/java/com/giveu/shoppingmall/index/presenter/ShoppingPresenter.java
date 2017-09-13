@@ -5,13 +5,9 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
-import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
  * Created by 513419 on 2017/9/5.
@@ -192,39 +188,48 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
         ApiImpl.getShoppingIndex(getView().getAct(), new BaseRequestAgent.ResponseListener<IndexResponse>() {
             @Override
             public void onSuccess(IndexResponse response) {
-//                getView().getHeadContent(response.data);
+                if (getView() != null) {
+                    getView().getHeadContent(response.data);
+                }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                if (getView() != null) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                    getView().getHeadContentFail();
+                }
             }
         });
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
         //解析json
         final ShoppingResponse shoppingResponse = gson.fromJson(commoidty, ShoppingResponse.class);
-        getView().showCommodity(shoppingResponse.data);
+        getView().getHeadContentFail(shoppingResponse.data);*/
     }
 
-    public void getIndexContent() {
-        ApiImpl.getGoodsSearch(getView().getAct(), "", "", "", "", 1, 20, 2, new BaseRequestAgent.ResponseListener() {
+    public void getIndexContent(String channel, String idPerson, int pageNumber, int pageSize, String code ) {
+        ApiImpl.getGoodsSearch(getView().getAct(), channel, idPerson, "", "", pageNumber, pageSize, 0, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
             @Override
-            public void onSuccess(BaseBean response) {
-
+            public void onSuccess(GoodsSearchResponse response) {
+                if (getView() != null) {
+                    getView().getIndexContent(response.data.resultList,response.srcIp);
+                }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                if (getView() != null) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
             }
         });
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
         //解析json
         final ArrayList<IndexResponse> contentList = gson.fromJson(content,
                 new TypeToken<List<IndexResponse>>() {
                 }.getType());
         getView().getIndexContent(contentList);
         final ShoppingResponse shoppingResponse = gson.fromJson(commoidty, ShoppingResponse.class);
-        getView().showCommodity(shoppingResponse.data);
+        getView().getHeadContentFail(shoppingResponse.data);*/
     }
 }

@@ -2,13 +2,14 @@ package com.giveu.shoppingmall.model.bean.response;
 
 import com.android.volley.mynet.BaseBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by 513419 on 2017/9/12.
  */
 
-public class IndexResponse extends BaseBean<IndexResponse> {
+public class IndexResponse extends BaseBean<ArrayList<IndexResponse>> {
 
     /**
      * modelName :

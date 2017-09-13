@@ -9,7 +9,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
-import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -21,15 +21,15 @@ import java.util.List;
  * Created by 513419 on 2017/8/30.
  */
 
-public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultListBean> {
+public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBean> {
     private String srcIp;
 
-    public ShoppingAdapter(Context context, List<ShoppingResponse.ResultListBean> datas) {
+    public ShoppingAdapter(Context context, List<GoodsSearchResponse.GoodsBean> datas) {
         super(context, R.layout.lv_shopping_item, datas);
     }
 
     @Override
-    protected void convert(ViewHolder holder, final ShoppingResponse.ResultListBean item, int position) {
+    protected void convert(ViewHolder holder, final GoodsSearchResponse.GoodsBean item, int position) {
         ImageView ivCommodity = holder.getView(R.id.iv_commodity);
         ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
@@ -46,7 +46,7 @@ public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultList
                 16, 11, R.color.color_ff2a2a, R.color.color_4a4a4a);
     }
 
-    public void setDataAndSrcIp(List<ShoppingResponse.ResultListBean> data, String srcIp) {
+    public void setDataAndSrcIp(List<GoodsSearchResponse.GoodsBean> data, String srcIp) {
         mDatas.clear();
         mDatas.addAll(data);
         notifyDataSetChanged();
