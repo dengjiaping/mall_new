@@ -145,7 +145,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         //设置标题集合（当banner样式有显示title时）
         viewHolder.banner.setBannerTitles(images);
         //设置轮播时间
-        viewHolder.banner.setDelayTime(2000);
+        viewHolder.banner.setDelayTime(3000);
         //设置指示器位置（当banner模式中有指示器时）
         viewHolder.banner.setIndicatorGravity(BannerConfig.CENTER);
         viewHolder.banner.start();

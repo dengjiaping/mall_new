@@ -612,6 +612,7 @@ public class ApiImpl {
     public static void getShoppingIndex(Activity context, BaseRequestAgent.ResponseListener<IndexResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_skus_index, IndexResponse.class, context, responseListener);
+    }
     //创建订单
     public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});
