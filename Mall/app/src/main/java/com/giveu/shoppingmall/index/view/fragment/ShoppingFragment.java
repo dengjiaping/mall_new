@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
+import com.giveu.shoppingmall.recharge.view.fragment.RechargeActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -213,6 +214,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.llCategoryMore.setVisibility(View.GONE);
             return;
         }
+        viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RechargeActivity.startIt(mBaseContext);
+            }
+        });
 //        LinearLayout llCategoryMore = (LinearLayout) headerView.findViewById(R.id.ll_category_more);
 //        ImageView ivMore = (ImageView) headerView.findViewById(R.id.iv_category_more);
 //        ivMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
@@ -385,6 +392,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         TextView tvTitle;
         @BindView(R.id.tv_introduction)
         TextView tvIntroduction;
+        @BindView(R.id.ll_phone_recharge)
+        LinearLayout llPhoneRecharge;
 
         public HeaderViewHolder(View headerView) {
             ButterKnife.bind(this, headerView);

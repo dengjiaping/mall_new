@@ -114,6 +114,7 @@
         <!--商城-->
         <activity android:name=".index.view.activity.CommodityDetailActivity" />
         <activity android:name=".index.view.activity.PayChannelActivity" android:label="支付方式"/>
+        <activity android:name=".recharge.view.fragment.RechargeActivity" android:label="手机充值"/>
 
         <!--个人中心-->
         <activity
