@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private ShoppingPresenter presenter;
     private int bannerHeight;
     private HeaderViewHolder viewHolder;
+    private int pageIndex = 1;
+    private final int pageSize = 20;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.getRefreshableView().addHeaderView(headerView);
         shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<ShoppingResponse.ResultListBean>());
         ptrlv.setAdapter(shoppingAdapter);
+        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ViewGroup.LayoutParams layoutParams = statusView.getLayoutParams();
         layoutParams.height = DensityUtils.getStatusBarHeight();
@@ -211,17 +215,21 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         ShoppingListActivity.startIt(mContext);
                     }
                 });
-                holder.setText(R.id.tv_category, item.title);
+                TextView tvTitle = holder.getView(R.id.tv_name);
+                holder.setText(R.id.tv_title, item.title);
                 holder.setText(R.id.tv_name, item.name);
                 switch(position){
                     case 0:
-//                        holder.setTextColor(R.id.tv_category,)
+                        tvTitle.setTextColor(Color.parseColor("#FF1516"));
                         break;
                     case 1:
+                        tvTitle.setTextColor(Color.parseColor("#01B0FF"));
                         break;
                     case 2:
+                        tvTitle.setTextColor(Color.parseColor("#FF7A45"));
                         break;
                     case 3:
+                        tvTitle.setTextColor(Color.parseColor("#FF4466"));
                         break;
                 }
             }
@@ -329,6 +337,20 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     protected void setListener() {
+
+        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                pageIndex = 1;
+                ptrlv.setPullLoadEnable(false);
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                ptrlv.setPullRefreshEnable(false);
+            }
+        });
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
             private SparseArray<ItemRecod> recordSp = new SparseArray<>();
             private int mCurrentfirstVisibleItem = 0;

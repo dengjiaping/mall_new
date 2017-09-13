@@ -47,20 +47,25 @@ public class WebCommodityFragment extends BaseFragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
+    protected void onVisible() {
+        super.onVisible();
         if (wvCommodity != null) {
-            if (isVisibleToUser) {
-                wvCommodity.onResume();
-            } else {
-                wvCommodity.onPause();
-            }
+            wvCommodity.onResume();
         }
-        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    protected void onInvisible() {
+        super.onInvisible();
+        if (wvCommodity != null) {
+            wvCommodity.onPause();
+        }
     }
 
     @Override
     public void initDataDelay() {
         wvCommodity.loadUrl(htmlUrl);
+        wvCommodity.onResume();
     }
 
     private void initView() {

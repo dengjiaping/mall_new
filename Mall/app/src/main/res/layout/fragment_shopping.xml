@@ -71,10 +71,10 @@
 
     <ImageView
         android:id="@+id/fab_up_slide"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
+        android:padding="15dp"
         android:src="@drawable/ic_top"
         android:visibility="gone" />
 
