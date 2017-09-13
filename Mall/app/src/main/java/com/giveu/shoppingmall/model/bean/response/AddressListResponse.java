@@ -36,7 +36,7 @@ public class AddressListResponse extends BaseBean<List<AddressListResponse>> imp
     public String custName;
     public String id;
     public String idPerson;
-    public int isDefault;
+    public String isDefault;
     public String phone;
     public String province;
     public String provinceCode;
@@ -44,4 +44,15 @@ public class AddressListResponse extends BaseBean<List<AddressListResponse>> imp
     public String regionCode;
     public String street;
     public String streetCode;
+
+    public AddressListResponse(String address, String city, String custName, String isDefault, String phone, String province, String region, String street) {
+        this.address = address;
+        this.city = city;
+        this.custName = custName;
+        this.isDefault = isDefault;
+        this.phone = phone;
+        this.province = province;
+        this.region = region;
+        this.street = street;
+    }
 }

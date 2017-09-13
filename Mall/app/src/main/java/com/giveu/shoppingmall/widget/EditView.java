@@ -135,13 +135,6 @@ public class EditView extends EditText {
                             setTextColor(getResources().getColor(R.color.red));
                         }
                         break;
-                    case Style.EMAIL://邮箱正确性
-                        if (StringUtils.isEmail(s.toString())) {
-                            setTextColor(getResources().getColor(R.color.black));
-                        } else {
-                            setTextColor(getResources().getColor(R.color.red));
-                        }
-                        break;
                 }
             }
         });
@@ -152,7 +145,6 @@ public class EditView extends EditText {
         String IDENT = "ident";//身份证
         String BANKNAME = "bankName";//银行卡名
         String PHONE = "phone";//手机号
-        String EMAIL = "email";//邮箱
     }
 
     /**

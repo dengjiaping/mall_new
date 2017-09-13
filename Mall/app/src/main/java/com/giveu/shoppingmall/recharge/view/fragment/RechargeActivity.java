@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.recharge.view.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -9,12 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,9 +23,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
@@ -33,7 +34,6 @@ import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.event.RechargePayEvent;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
@@ -63,7 +63,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -71,7 +70,7 @@ import butterknife.ButterKnife;
  * Created by 508632 on 2016/12/13.
  */
 
-public class RechargeFragment extends BaseFragment implements IRechargeView {
+public class RechargeActivity extends BasePermissionActivity implements IRechargeView {
 
     LvCommonAdapter<RechargeResponse.PackageBean> rechargeAdapter;
     private RechargeResponse rechargeResponse;
@@ -113,16 +112,20 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     private ChargeOrderDialog orderDialog;
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private PermissionDialog permissionDialog;
-    private MainActivity mainActivity;
     private boolean pwdDismissByCancel = true;//密码框是否因为点击返回键而消失的标识
     private boolean canShowBuyDialog = true;
 
+    public static void startIt(Activity activity) {
+        Intent intent = new Intent(activity, RechargeActivity.class);
+        activity.startActivity(intent);
+    }
+
+
     @Override
-    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = View.inflate(mBaseContext, R.layout.fragment_main_recharge, null);
+    public void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.fragment_main_recharge);
         baseLayout.setTitle("手机充值");
         baseLayout.hideBack();
-        ButterKnife.bind(this, view);
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
@@ -130,8 +133,6 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         pwdDialog = new PwdDialog(mBaseContext);
         initPermissionDialog();
         registerEventBus();
-        mainActivity = (MainActivity) mBaseContext;
-        return view;
     }
 
     @Override
@@ -139,9 +140,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         return new BasePresenter[]{presenter};
     }
 
-
     @Override
-    protected void setListener() {
+    public void setListener() {
         etRecharge.addTextChangedListener(textWatcher);
         ivClear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,13 +154,9 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (mainActivity != null) {
-                        mainActivity.applyContactPermission();
-                    }
+                    applyContactPermission();
                 } else {
-                    if (mainActivity != null) {
-                        mainActivity.skipToContactsContract();
-                    }
+                    skipToContactsContract();
                 }
             }
         });
@@ -206,31 +202,8 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateUserInfo(LoginResponse response) {
-        //更新手机号
-        initPhoneAndQuery();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void showPwdDialog(PwdDialogEvent event) {
-        //填写完居住地址回来弹出密码框（PwdDialog）
-        if (pwdDialog != null) {
-            pwdDialog.showDialog();
-        }
-    }
-
-    private void initPermissionDialog() {
-        permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
-        permissionDialog.setNeedFinish(false);
-        permissionDialog.setConfirmStr("去设置");
-        permissionDialog.setCancleStr("暂不");
-        permissionDialog.setTitle("读取通讯录权限未开启");
-    }
-
     @Override
-    public void initDataDelay() {
+    public void setData() {
         productList = new ArrayList<>();
         rechargeAdapter = new LvCommonAdapter<RechargeResponse.PackageBean>(mBaseContext, R.layout.gv_recharge_item, productList) {
             @Override
@@ -241,12 +214,12 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 tv2.setText("售价￥" + item.salePrice);
                 LinearLayout ll_recharge_item = viewHolder.getView(R.id.ll_recharge_item);
                 if (!item.clickEnable) {
-                    tv1.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
-                    tv2.setTextColor(getContext().getResources().getColor(R.color.color_edittext));
+                    tv1.setTextColor(getResources().getColor(R.color.color_edittext));
+                    tv2.setTextColor(getResources().getColor(R.color.color_edittext));
                     ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_default);
                 } else {
-                    tv1.setTextColor(getContext().getResources().getColor(R.color.title_color));
-                    tv2.setTextColor(getContext().getResources().getColor(R.color.android_default_dialog_title));
+                    tv1.setTextColor(getResources().getColor(R.color.title_color));
+                    tv2.setTextColor(getResources().getColor(R.color.android_default_dialog_title));
                     ll_recharge_item.setBackgroundResource(R.drawable.shape_recharge_press);
                 }
             }
@@ -274,10 +247,74 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
         presenter.getProducts();
     }
 
+    /**
+     * 6.0以上系统申请通讯录权限
+     */
+    public void applyContactPermission() {
+        if (PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.READ_CONTACTS)) {
+            skipToContactsContract();
+        } else {
+            setPermissionHelper(false, new String[]{Manifest.permission.READ_CONTACTS});
+        }
+    }
+
+    public void skipToContactsContract() {
+        try {
+            //跳转通讯录
+            startActivityForResult(new Intent(Intent.ACTION_PICK,
+                    ContactsContract.Contacts.CONTENT_URI), 0);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(@NonNull String[] permissionName) {
+        super.onPermissionGranted(permissionName);
+        for (String permissonStr : permissionName) {
+            if (Manifest.permission.READ_CONTACTS.equals(permissonStr)) {
+                skipToContactsContract();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onPermissionReallyDeclined(@NonNull String permissionName) {
+        super.onPermissionReallyDeclined(permissionName);
+        //禁止不再询问会直接回调这方法
+        permissionDialog.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateUserInfo(LoginResponse response) {
+        //更新手机号
+        initPhoneAndQuery();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showPwdDialog(PwdDialogEvent event) {
+        //填写完居住地址回来弹出密码框（PwdDialog）
+        if (pwdDialog != null) {
+            pwdDialog.showDialog();
+        }
+    }
+
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("请开启读取通讯录权限后重试");
+        permissionDialog.setNeedFinish(false);
+        permissionDialog.setConfirmStr("去设置");
+        permissionDialog.setCancleStr("暂不");
+        permissionDialog.setTitle("读取通讯录权限未开启");
+    }
+
+
     @Override
     protected boolean translateStatusBar() {
         return true;
     }
+
 
     //对手机号的格式指定
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -456,42 +493,51 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            // ContentProvider展示数据类似一个单个数据库表
-            // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
-            ContentResolver reContentResolverol = mBaseContext.getContentResolver();
-            // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
-            Uri contactData = data.getData();
-            // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
-            Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
-            if (cursor.getCount() == 0) {
-                permissionDialog.show();
-                return;
-            }
-            cursor.moveToFirst();
-            // 条件为联系人ID
-            String contactId = cursor.getString(cursor
-                    .getColumnIndex(ContactsContract.Contacts._ID));
-            // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
-            Cursor phone = reContentResolverol.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
-                            + contactId, null, null);
-            while (phone != null && phone.moveToNext()) {
-                //填入号码
-                String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
-                if (sb.toString().length() != 11) {
-                    ToastUtils.showShortToast("手机号码格式有误");
-                } else {
-                    sb.insert(3, " ");
-                    sb.insert(8, " ");
-                    etRecharge.setText(sb.toString());
-                    etRecharge.setSelection(sb.length());
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            try {
+                // ContentProvider展示数据类似一个单个数据库表
+                // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
+                ContentResolver reContentResolverol = getContentResolver();
+                // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
+                Uri contactData = data.getData();
+                // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
+                Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
+                //线上发现cursor有可能为空，如果为空不作任何处理
+                if (cursor == null) {
+                    ToastUtils.showShortToast("获取通讯录失败");
+                    return;
                 }
-            }
-            if (phone != null) {
-                phone.close();
+                if (cursor.getCount() == 0) {
+                    permissionDialog.show();
+                    return;
+                }
+                cursor.moveToFirst();
+                // 条件为联系人ID
+                String contactId = cursor.getString(cursor
+                        .getColumnIndex(ContactsContract.Contacts._ID));
+                // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+                Cursor phone = reContentResolverol.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
+                                + contactId, null, null);
+                while (phone != null && phone.moveToNext()) {
+                    //填入号码
+                    String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    final StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
+                    if (sb.toString().length() != 11) {
+                        ToastUtils.showShortToast("手机号码格式有误");
+                    } else {
+                        sb.insert(3, " ");
+                        sb.insert(8, " ");
+                        setPhoneText(sb.toString());
+                    }
+                }
+                if (phone != null) {
+                    phone.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -599,7 +645,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                 if (paymentType == 0 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
                     ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
                 } else {
-                    RechargeFragment.this.paymentType = paymentType;
+                    RechargeActivity.this.paymentType = paymentType;
                     if (paymentType == 0) {
                         //钱包支付
                         if (StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit()) >= StringUtils.string2Double(salePrice)) {
@@ -619,7 +665,7 @@ public class RechargeFragment extends BaseFragment implements IRechargeView {
                         presenter.confirmRechargeOrder(LoginHelper.getInstance().getIdPerson(), mobile.replace(" ", ""), productId, orderNoResponse, paymentType, "", "");
                     }
                     orderDialog.dissmissDialog();
-                    RechargeFragment.this.orderNo = orderNoResponse;
+                    RechargeActivity.this.orderNo = orderNoResponse;
                 }
             }
         });

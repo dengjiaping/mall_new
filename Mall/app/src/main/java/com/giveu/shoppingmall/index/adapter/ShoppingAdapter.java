@@ -29,19 +29,18 @@ public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultList
     }
 
     @Override
-    protected void convert(ViewHolder holder, ShoppingResponse.ResultListBean item, int position) {
+    protected void convert(ViewHolder holder, final ShoppingResponse.ResultListBean item, int position) {
         ImageView ivCommodity = holder.getView(R.id.iv_commodity);
         ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //K00002691 K00002713可以分期    K00002912可以一次
-                CommodityDetailActivity.startIt(mContext, true, "K00002713");
+                CommodityDetailActivity.startIt(mContext, item.isInstallments == 1, item.skuCode);
             }
         });
         holder.setText(R.id.tv_commodity_name, item.name);
         TextView tvMonthAmount = holder.getView(R.id.tv_monthly_price);
-        holder.setText(R.id.tv_price, "¥"+StringUtils.format2(item.salePrice));
+        holder.setText(R.id.tv_price, "¥" + StringUtils.format2(item.salePrice));
         CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供：¥",
                 StringUtils.format2(item.monthAmount), " 起",
                 16, 11, R.color.color_ff2a2a, R.color.color_4a4a4a);
@@ -51,6 +50,6 @@ public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultList
         mDatas.clear();
         mDatas.addAll(data);
         notifyDataSetChanged();
-        this.srcIp = srcIp + "/";
+        this.srcIp = srcIp + ImageUtils.ImageSize.img_size_200_200;
     }
 }

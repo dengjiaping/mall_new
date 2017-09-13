@@ -23,6 +23,8 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
+import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -109,6 +111,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private String commodityPrice;
     private int commodityAmounts;
     private String commodityName;
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,11 +127,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog = new BuyCommodityDialog(mBaseContext);
         //地址选择对话框
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
         creditDialog = new CreditCommodityDialog(mBaseContext);
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
         initBanner();
-        //服务的流式布局对应的adapter
+        //服务承诺的流式布局对应的adapter
         serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
@@ -208,13 +212,20 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
             public void confirm(int amounts) {
-                //如果是分期产品，那么需要选择分期数，首付等
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        ConfirmOrderActivity.startIt(mBaseContext);
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+                }
+/*                //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
                     commodityAmounts = amounts;
                     presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
                 } else {
                     ConfirmOrderActivity.startIt(mBaseContext);
-                }
+                }*/
             }
 
             @Override
@@ -241,6 +252,13 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
         });
     }
+
+    public void showNotActiveDialog() {
+        if (notActiveDialog != null) {
+            notActiveDialog.showDialog();
+        }
+    }
+
 
     public void showChooseCityDialog() {
         if (chooseCityDialog != null) {
@@ -303,7 +321,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 获取商品信息
      */
     public void getCommodityInfo() {
-        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "SC", skuCode);
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), Const.CHANNEL, skuCode);
     }
 
     @Override
@@ -362,13 +380,16 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             //获取购买对话框选择属性对应的skuCode，更新skuCode
             skuCode = buyDialog.getSkuCode();
             llChooseAttr.setMiddleText(buyDialog.getAttrStr());
-            commodityDetailFragment.refreshCommodityDetail(skuCode);
             //刷新商品详情activity的数据
             activity.initData(skuCode, skuResponse.collectStatus, skuResponse.skuInfo.monthAmount);
             smallIconStr = skuResponse.skuInfo.srcIp + "/" + skuResponse.skuInfo.src;
             commodityName = skuResponse.skuInfo.name;
             commodityPrice = skuResponse.skuInfo.salePrice;
         }
+    }
+
+    public void refreshCommodityDetail(CommodityDetailResponse data) {
+        commodityDetailFragment.refreshCommodityDetail(data);
     }
 
 
@@ -379,6 +400,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 dvStock.setMiddleText("有货");
                 //可点击购买
                 buyDialog.setBuyEnable(true);
+                //activity的购买按键是否可点击
                 activity.setBuyEnable(true);
                 break;
 

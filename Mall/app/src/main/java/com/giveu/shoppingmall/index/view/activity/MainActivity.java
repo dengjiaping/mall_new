@@ -41,7 +41,6 @@ import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.model.bean.response.LotteryResponse;
-import com.giveu.shoppingmall.recharge.view.fragment.RechargeFragment;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
@@ -70,7 +69,6 @@ import static java.lang.System.currentTimeMillis;
 //import com.fastaccess.permission.base.PermissionHelper;
 
 public class MainActivity extends BasePermissionActivity {
-    public RechargeFragment rechargeFragment;
     public MainCashFragment mainCashFragment;
     private ShoppingFragment shoppingFragment;
     //    public MainRepayFragment mainRepayFragment;
@@ -121,7 +119,7 @@ public class MainActivity extends BasePermissionActivity {
 
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
-//        rechargeFragment = new RechargeFragment();
+//        rechargeFragment = new RechargeActivity();
         mainCashFragment = new MainCashFragment();
 //        mainRepayFragment = new MainRepayFragment();
         mainMeFragment = new MainMeFragment();
@@ -604,7 +602,7 @@ public class MainActivity extends BasePermissionActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
             try {
-                if (rechargeFragment != null) {
+                if (true) {
                     // ContentProvider展示数据类似一个单个数据库表
                     // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
                     ContentResolver reContentResolverol = getContentResolver();
@@ -639,7 +637,7 @@ public class MainActivity extends BasePermissionActivity {
                         } else {
                             sb.insert(3, " ");
                             sb.insert(8, " ");
-                            rechargeFragment.setPhoneText(sb.toString());
+//                            rechargeFragment.setPhoneText(sb.toString());
                         }
                     }
                     if (phone != null) {

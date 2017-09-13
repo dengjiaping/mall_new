@@ -113,7 +113,13 @@
 
         <!--商城-->
         <activity android:name=".index.view.activity.CommodityDetailActivity" />
-        <activity android:name=".index.view.activity.PayChannelActivity" android:label="支付方式"/>
+        <activity
+            android:name=".index.view.activity.PayChannelActivity"
+            android:label="支付方式" />
+        <activity
+            android:name=".recharge.view.fragment.RechargeActivity"
+            android:label="手机充值"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!--个人中心-->
         <activity
@@ -336,8 +342,8 @@
 
         <activity
             android:name=".me.view.activity.LivingAddressActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:label="我的居住地址" />
+            android:label="我的居住地址"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".me.view.activity.SecurityCenterActivity"
             android:label="安全中心页" />
@@ -380,7 +386,7 @@
             android:label="订单跟踪" />
         <activity
             android:name=".index.view.activity.OrderPayResultActivity"
-            android:label="支付首付金额"/>
+            android:label="支付首付金额" />
         <!--二期商城-->
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"
@@ -393,7 +399,9 @@
         <activity
             android:name=".index.view.activity.ShoppingClassifyActivity"
             android:label="商品分类" />
-
+        <activity
+            android:name=".me.view.activity.OfftheShelfActivity"
+            android:label="商品下架" />
         <activity
             android:name=".index.view.activity.ShoppingSearchActivity"
             android:label="商品搜索" />

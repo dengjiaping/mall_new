@@ -495,13 +495,13 @@ public class ApiImpl {
 
     //新增收货地址
     public static void addAddress(Activity context, String address, String addressType, String city, String custName, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(idPerson), StringUtils.string2Int(isDefault), phone, province, region, street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_addAddress, BaseBean.class, context, responseListener);
     }
 
     //修改收货地址
     public static void updateAddress(Activity context, String address, String addressType, String city, String custName, String id, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "id", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(id), StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "id", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(id), StringUtils.string2Long(idPerson), StringUtils.string2Int(isDefault), phone, province, region, street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress, BaseBean.class, context, responseListener);
     }
 
@@ -577,8 +577,8 @@ public class ApiImpl {
     }
 
     //商品介绍
-    public static void getCommodityDetail(Activity context, String skuCode, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode"}, new Object[]{skuCode});
+    public static void getCommodityDetail(Activity context, String skuCode,String channel, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode","channel"}, new Object[]{skuCode,channel});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
     }
 
