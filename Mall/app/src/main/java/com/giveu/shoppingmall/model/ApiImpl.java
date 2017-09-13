@@ -33,6 +33,7 @@ import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
+import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
@@ -607,6 +608,10 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_getAppDownPayAndMonthPay, DownPayMonthPayResponse.class, context, responseListener);
     }
 
+    //商城首页
+    public static void getShoppingIndex(Activity context, BaseRequestAgent.ResponseListener<IndexResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_skus_index, IndexResponse.class, context, responseListener);
     //创建订单
     public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});

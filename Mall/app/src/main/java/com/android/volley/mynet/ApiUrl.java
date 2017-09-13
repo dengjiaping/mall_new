@@ -190,7 +190,9 @@ public interface ApiUrl {
     //商品SKU搜索
     String sc_goods_search_goodsSearch = BASE_URL + "sc/goods/search/goodsSearch";
     //获取首付和分期数
-    String order_getAppDownPayAndMonthPay = BASE_URL + "order/getAppDownPayAndMonthPay";
+    String order_getAppDownPayAndMonthPay = BASE_URL + "/order/getAppDownPayAndMonthPay";
+    //商城首页
+    String sc_goods_skus_index = BASE_URL + "/sc/goods/skus/index";
     //创建订单
     String order_createOrderSc = BASE_URL + "order/createOrderSc";
 }

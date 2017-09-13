@@ -22,10 +22,12 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
 import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
+import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeActivity;
@@ -65,6 +67,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     ImageView ivMessage;
     @BindView(R.id.fab_up_slide)
     ImageView fabUpSlide;
+    @BindView(R.id.ll_emptyView)
+    LinearLayout llEmptyView;
     private ShoppingAdapter shoppingAdapter;
     private ShoppingPresenter presenter;
     private int bannerHeight;
@@ -89,6 +93,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             statusView.setVisibility(View.GONE);
         }
         presenter = new ShoppingPresenter(this);
+        //刚开始隐藏头布局的所有内容
+        initBanner(null);
+        initHot(null);
+        initMore(null);
+        initCategory(null);
+//        skipToActivity(0,null);
         presenter.getIndexContent();
         return view;
     }
@@ -110,6 +120,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.fillView.setVisibility(View.VISIBLE);
             return;
         }
+        viewHolder.banner.setVisibility(View.VISIBLE);
+        viewHolder.fillView.setVisibility(View.GONE);
         bannerHeight = (int) (DensityUtils.getWidth() / (750 / 410.f));
         viewHolder.banner.getLayoutParams().height = bannerHeight;
         //设置banner样式
@@ -140,6 +152,29 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
     /**
+     * 0跳转至h5,1跳转搜索界面，2跳转商品详情，3跳转分类
+     * @param urlTypeValue
+     * @param decorationsBean
+     */
+    private void skipToActivity(int urlTypeValue, IndexResponse.DecorationsBean decorationsBean) {
+        switch (urlTypeValue) {
+            case 0:
+//                CustomWebViewActivity.startIt(mBaseContext, decorationsBean.url, "");
+                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
+                break;
+            case 1:
+                ShoppingSearchActivity.startIt(mBaseContext);
+                break;
+            case 2:
+                CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);
+                break;
+            case 3:
+                ShoppingClassifyActivity.startIt(mBaseContext);
+                break;
+        }
+    }
+
+    /**
      * 热门品类
      *
      * @param indexResponse
@@ -150,6 +185,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.gvHot.setVisibility(View.GONE);
             return;
         }
+        viewHolder.rlHot.setVisibility(View.VISIBLE);
+        viewHolder.gvHot.setVisibility(View.VISIBLE);
         viewHolder.tvMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,14 +200,30 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
+                ImageView ivSmall = holder.getView(R.id.iv_small);
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
-                ivCommodity.setOnClickListener(new View.OnClickListener() {
+                ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
+                        + item.iconSrc, R.drawable.ic_defalut_pic_corner, ivSmall, DensityUtils.dip2px(4));
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ShoppingListActivity.startIt(mContext);
                     }
                 });
+                holder.setText(R.id.tv_category, item.title);
+                holder.setText(R.id.tv_name, item.name);
+                switch(position){
+                    case 0:
+//                        holder.setTextColor(R.id.tv_category,)
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
             }
         };
         viewHolder.gvHot.setAdapter(commonAdapter);
@@ -186,6 +239,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.gvCategory.setVisibility(View.GONE);
             return;
         }
+        viewHolder.gvCategory.setVisibility(View.VISIBLE);
         viewHolder.gvCategory.getLayoutParams().height = DensityUtils.dip2px(200);
         LvCommonAdapter<IndexResponse.DecorationsBean> commonAdapter = new LvCommonAdapter<IndexResponse.DecorationsBean>(mBaseContext, R.layout.gv_category_item, indexResponse.decorations) {
             @Override
@@ -196,12 +250,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
-                ivCommodity.setOnClickListener(new View.OnClickListener() {
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ShoppingListActivity.startIt(mContext);
                     }
                 });
+                holder.setText(R.id.tv_title, item.title);
+                holder.setText(R.id.tv_name, item.name);
             }
         };
         viewHolder.gvCategory.setAdapter(commonAdapter);
@@ -218,6 +274,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.llCategoryMore.setVisibility(View.GONE);
             return;
         }
+        viewHolder.llCategoryMore.setVisibility(View.VISIBLE);
         viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,16 +309,20 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.stopAutoPlay();
     }
 
-    @OnClick({R.id.ll_search,R.id.fab_up_slide})
+    @OnClick({R.id.ll_search, R.id.fab_up_slide, R.id.ll_emptyView})
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_search:
                 ShoppingSearchActivity.startIt(mBaseContext);
                 break;
             case R.id.fab_up_slide:
                 ptrlv.getRefreshableView().smoothScrollToPosition(0);
+                break;
+            case R.id.ll_emptyView:
+                presenter.getIndexContent();
+                llEmptyView.setVisibility(View.GONE);
                 break;
         }
     }
@@ -301,7 +362,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 }
                 int scrollY = getScrollY();
                 //滚动半个屏幕时显示回到顶部icon
-                if (scrollY >= DensityUtils.getHeight()/2) {
+                if (scrollY >= DensityUtils.getHeight() / 2) {
                     fabUpSlide.setVisibility(View.VISIBLE);
                 } else {
                     fabUpSlide.setVisibility(View.GONE);
@@ -383,6 +444,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         } else {
             LogUtil.e("is null");
         }
+        llEmptyView.setVisibility(View.GONE);
     }
 
     @Override
