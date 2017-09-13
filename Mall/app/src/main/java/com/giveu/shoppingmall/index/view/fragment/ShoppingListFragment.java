@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.index.adapter.ShopListItemAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
@@ -65,8 +66,8 @@ public class ShoppingListFragment extends BaseFragment {
 
     private List<GoodsSearchResponse.GoodsBean> shoppingList;
     private ShopListItemAdapter mAdapter;
-    private String channel = "SC";
-    private String idPerson = "13042734";
+    private String channel = Const.CHANNEL;
+    private String idPerson = LoginHelper.getInstance().getIdPerson();
     private String keyword = "小米";
     private String orderSort = SORT_BY_SIZE;
     private int pageNum = 1;
@@ -90,6 +91,10 @@ public class ShoppingListFragment extends BaseFragment {
         rbPrice.setTag(true);
 
         return view;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     @Override
@@ -169,7 +174,7 @@ public class ShoppingListFragment extends BaseFragment {
                     public void onSuccess(GoodsSearchResponse response) {
                         mRefreshView.setPullRefreshEnable(true);
 
-                        if (CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+                        if (response.data != null && CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
 
                             if (pageIndex == 1) {
                                 shoppingList.clear();
@@ -186,6 +191,7 @@ public class ShoppingListFragment extends BaseFragment {
 
                             pageIndex++;
                             shoppingList.addAll(response.data.resultList);
+                            mAdapter.setSrcIp(response.data.srcIp);
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (pageIndex == 1) {
@@ -213,43 +219,5 @@ public class ShoppingListFragment extends BaseFragment {
     @Override
     public void initDataDelay() {
         initDataForFragment();
-    }
-
-    public static byte[] getAssertsFile(Context context, String fileName) {
-        InputStream inputStream = null;
-        AssetManager assetManager = context.getAssets();
-        try {
-            inputStream = assetManager.open(fileName);
-            if (inputStream == null) {
-                return null;
-            }
-
-            BufferedInputStream bis = null;
-            int length;
-            try {
-                bis = new BufferedInputStream(inputStream);
-                length = bis.available();
-                byte[] data = new byte[length];
-                bis.read(data);
-
-                return data;
-            } catch (IOException e) {
-
-            } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

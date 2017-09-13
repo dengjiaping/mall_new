@@ -27,6 +27,9 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
 
     private boolean isFirstIn = true;
 
+    private int start = 0;
+    private int end = 0;
+
     public StableEditText(Context context) {
         super(context);
         init();
@@ -44,7 +47,6 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
 
     private void init() {
         stableTextColor = DEFAULT_STABLE_TEXT_COLOR;
-        colorSpan = new ForegroundColorSpan(stableTextColor);
         addTextChangedListener(new TextWatcher() {
             String textBefore;
 
@@ -91,10 +93,15 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
             initStableText = true;
         }
 
-        SpannableString spannableString = new SpannableString(newText);
-        spannableString.setSpan(colorSpan, 0, stableText.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        if (end > start) {
+            colorSpan = new ForegroundColorSpan(stableTextColor);
+            SpannableString spannableString = new SpannableString(newText);
+            spannableString.setSpan(colorSpan, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            super.setText(spannableString, type);
+        } else {
+            super.setText(newText, type);
+        }
 
-        super.setText(spannableString, type);
         setSelection(newText.length());
     }
 
@@ -145,6 +152,15 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
     public void setStableText(CharSequence s) {
         stableText = s;
         initStableText = false;
+        setText(stableText);
+    }
+
+    public void setSpannerStableText(CharSequence s, int start, int end, int color) {
+        stableText = s;
+        initStableText = false;
+        this.start = start;
+        this.end = end;
+        stableTextColor = color;
         setText(stableText);
     }
 

@@ -142,7 +142,6 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             public void OnBannerClick(int position) {
                 skipToActivity(indexResponse.srcIp, indexResponse.decorations.get(position));
-                ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
         //设置标题集合（当banner样式有显示title时）

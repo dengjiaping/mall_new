@@ -10,13 +10,13 @@ import java.util.List;
 
 public class GoodsSearchResponse extends BaseBean<GoodsSearchResponse> {
 
+
     /**
-     * pageNum : 0
+     * pageNum : 1
      * pageSize : 10
-     * pages : 10
-     * srcIp :"srcIp": "http://fastdfs.dafysz.cn"
-     *
-     * resultList : [{"src":"/enqile_m/img/app/order/icon_mianxi--b893377ec5.png","isPromotion":1,"name":"碧欧泉Biotherm 基因活颜抗皱精华 50ml/1.69oz Skin Vivo Reversi","skuCode":"MES201609010289341","isFullsub":11736,"monthAmount":100,"salePrice":400,"keywords":"无 50ml/1.69oz 走秀网络科技有限公司","srcIp":"http://10.10.11.139/","isInstallments":36548}]
+     * pages : 1
+     * srcIp : http://fastdfs.dafysz.cn
+     * resultList : [{"keywords":"小米不仅仅大","monthAmount":"0.0","name":"小米5s 全网通 高配版 3GB内存 64GB ROM 哑光金 移动联通电信4G手机","salePrice":"1999.0","skuCode":"K00002735","isInstallments":1,"src":"group1/M0D/6D/7E/CgsLw1mSiDSAMqF4AAPGOtetOv8730.jpg","isPromotion":null}]
      */
 
     public int pageNum;
@@ -25,29 +25,27 @@ public class GoodsSearchResponse extends BaseBean<GoodsSearchResponse> {
     public String srcIp;
     public List<GoodsBean> resultList;
 
+
     public static class GoodsBean {
         /**
-         * src : /enqile_m/img/app/order/icon_mianxi--b893377ec5.png
-         * isPromotion : 1
-         * name : 碧欧泉Biotherm 基因活颜抗皱精华 50ml/1.69oz Skin Vivo Reversi
-         * skuCode : MES201609010289341
-         * isFullsub : 11736
-         * monthAmount : 100
-         * salePrice : 400
-         * keywords : 无 50ml/1.69oz 走秀网络科技有限公司
-         * srcIp : http://10.10.11.139/
-         * isInstallments : 36548
+         * keywords : 小米不仅仅大
+         * monthAmount : 0.0
+         * name : 小米5s 全网通 高配版 3GB内存 64GB ROM 哑光金 移动联通电信4G手机
+         * salePrice : 1999.0
+         * skuCode : K00002735
+         * isInstallments : 1
+         * src : group1/M0D/6D/7E/CgsLw1mSiDSAMqF4AAPGOtetOv8730.jpg
+         * isPromotion : null
          */
 
-        public String src;
-        public int isPromotion;
-        public String name;
-        public String skuCode;
-        public String isFullsub;
-        public String monthAmount;
-        public String salePrice;
         public String keywords;
-        public String srcIp;
+        public String monthAmount;
+        public String name;
+        public String salePrice;
+        public String skuCode;
         public int isInstallments;
+        public String src;
+        public String isPromotion;
+
     }
 }

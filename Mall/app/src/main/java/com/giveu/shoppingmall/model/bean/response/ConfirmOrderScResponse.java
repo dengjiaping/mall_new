@@ -8,18 +8,15 @@ import com.android.volley.mynet.BaseBean;
 
 public class ConfirmOrderScResponse extends BaseBean<ConfirmOrderScResponse> {
 
+
     /**
-     * downPayment : 10.21
-     * orderNo : success
-     * payMoney : 10.21
-     * payType : 1
-     * remainingTime : 600
+     * idPerson : 10056737
+     * orderNo : JD0016045
+     * payMoney : 4399.0
      */
 
-    private double downPayment;
+    private int idPerson;
     private String orderNo;
-    private double payMoney;
-    private int payType;
-    private int remainingTime;
+    private String payMoney;
 
 }

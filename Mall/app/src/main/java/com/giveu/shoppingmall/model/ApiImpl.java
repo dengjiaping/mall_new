@@ -623,7 +623,7 @@ public class ApiImpl {
     //订单确认
     public static void confirmOrderSc(Activity context, String channel, int courtesyCardId, int downPaymentRate, String idPerson, String idProduct, int installDate, int insuranceFee, int payType, CreateOrderResponse.ReceiverJoBean receiverJoBean, int reservingDate, SkuInfo skuInfo, String userComments, String userMobile, String userName, BaseRequestAgent.ResponseListener<ConfirmOrderScResponse> listener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "courtesyCardId", "downPaymentRate", "idPerson", "idProduct", "installDate", "insuranceFee", "payType", "receiverJo", "reservingDate", "skuInfo", "userComments", "userMobile", "userName"}, new Object[]{channel, courtesyCardId, downPaymentRate, idPerson, idProduct, installDate, insuranceFee, payType, receiverJoBean, reservingDate, skuInfo, userComments, userMobile, userName});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, CreateOrderResponse.class, context, listener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, ConfirmOrderScResponse.class, context, listener);
     }
 }
 

@@ -1,17 +1,21 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
@@ -21,6 +25,7 @@ import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
+import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
@@ -34,14 +39,12 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.DetailView;
+import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
-import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,6 +102,14 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvSkuInfoQuantity;
     @BindView(R.id.confirm_order_skuinfo_total_price)
     TextView tvSkuInfoTotalPrice;
+    @BindView(R.id.confirm_order_total_price)
+    TextView totalPrice;
+    @BindView(R.id.confirm_order_agreement)
+    TextView tvAgreement;
+    @BindView(R.id.confirm_order_agreement_checkbox)
+    CheckBox cbAgreement;
+    @BindView(R.id.tv_ok)
+    TextView tvOK;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -128,9 +139,10 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String skuCode;
     private int downPaymentRate;
     private int quantity;
-    private String idPerson;
+    private String idPerson = LoginHelper.getInstance().getIdPerson();
     private String customerName = null;
     private String customerPhone = null;
+    private ConfirmDialog confirmDialog;
 
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
@@ -149,6 +161,12 @@ public class ConfirmOrderActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_confirm_order);
         baseLayout.setTitle("订单信息确认");
+        baseLayout.setBackClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog.show();
+            }
+        });
 
         downPaymentRate = getIntent().getIntExtra("downPaymentRate", 0);
         quantity = getIntent().getIntExtra("quantity", 0);
@@ -167,7 +185,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
 
-        msgEditText.setStableText("买家留言(选填)：");
+        msgEditText.setSpannerStableText("买家留言(选填)：", 4, 8, getResources().getColor(R.color.title_color));
         msgEditText.setText("提示信息");
 
         firstPayDialog = new CustomListDialog(this, new AdapterView.OnItemClickListener() {
@@ -187,31 +205,47 @@ public class ConfirmOrderActivity extends BaseActivity {
         monthDialog.setData(monthList = Arrays.asList(new CharSequence[]{"3个月", "6个月", "9个月", "12个月", "18个月", "24个月",}));
         pwdDialog = new DealPwdDialog(mBaseContext);
 
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《消费分期合同》", R.color.black, R.color.title_color, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //即有钱包用户注册协议
+                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.xFFQLoanStatic, "《消费分期合同》");
+            }
+        });
+
+        initDialog();
+    }
+
+    private void initDialog() {
+        confirmDialog = new ConfirmDialog(this);
+        confirmDialog.setContent("确定离开吗？好货不等人哦~");
+        confirmDialog.setCancleStr("去意已决");
+        confirmDialog.setConfirmStr("我再看看");
+        confirmDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                confirmDialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                finish();
+                confirmDialog.dismiss();
+            }
+        });
     }
 
     @Override
     public void setData() {
-        quantity = 1;
-        skuCode = "E0002072";
-        idPerson = "11111";
-        downPaymentRate = 1;
-
-        SkuInfo skuInfo = new SkuInfo();
-        skuInfo.setQuantity(quantity);
-        skuInfo.setSkuCode(skuCode);
-        ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, skuInfo, new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
+        ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, new SkuInfo(quantity, skuCode), new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
             @Override
             public void onSuccess(CreateOrderResponse response) {
-                String mockResults = new String(getAssertsFile(mBaseContext, "createOrderSc.json"));
-                result = new Gson().fromJson(mockResults, CreateOrderResponse.class);
-                updateUI(result);
+                updateUI(response);
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                String mockResults = new String(getAssertsFile(mBaseContext, "createOrderSc.json"));
-                result = new Gson().fromJson(mockResults, CreateOrderResponse.class);
-                updateUI(result);
+                ToastUtils.showShortToast("创建订单失败");
             }
         });
     }
@@ -264,7 +298,9 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
                         15, 13, R.color.black, R.color.black);
+                totalPrice.setText("支付金额：¥" + StringUtils.format2(skuInfoBean.totalPrice));
             }
+
         }
     }
 
@@ -352,10 +388,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                 AddressManageActivity.startItForResult(this, Const.ADDRESSMANAGE);
                 break;
             case R.id.tv_ok:
-                pwdDialog.showDialog();
                 confirmOrderSc();
                 break;
-
             default:
                 break;
         }
@@ -367,12 +401,12 @@ public class ConfirmOrderActivity extends BaseActivity {
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
-
+                        pwdDialog.showDialog();
                     }
 
                     @Override
                     public void onError(BaseBean errorBean) {
-
+                        ToastUtils.showShortToast("订单确认失败!");
                     }
                 });
     }
@@ -405,6 +439,13 @@ public class ConfirmOrderActivity extends BaseActivity {
                 });
             }
 
+        });
+
+        cbAgreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tvOK.setEnabled(isChecked);
+            }
         });
     }
 
@@ -446,42 +487,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         return receiverJoBean;
     }
 
-
-    public static byte[] getAssertsFile(Context context, String fileName) {
-        InputStream inputStream = null;
-        AssetManager assetManager = context.getAssets();
-        try {
-            inputStream = assetManager.open(fileName);
-            if (inputStream == null) {
-                return null;
-            }
-
-            BufferedInputStream bis = null;
-            int length;
-            try {
-                bis = new BufferedInputStream(inputStream);
-                length = bis.available();
-                byte[] data = new byte[length];
-                bis.read(data);
-
-                return data;
-            } catch (IOException e) {
-
-            } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            confirmDialog.show();
+            return true;
         }
-
-        return null;
+        return super.onKeyDown(keyCode, event);
     }
 }
