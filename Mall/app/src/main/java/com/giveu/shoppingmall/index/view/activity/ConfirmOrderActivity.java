@@ -191,6 +191,11 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @Override
     public void setData() {
+        quantity = 1;
+        skuCode = "E0002072";
+        idPerson = "11111";
+        downPaymentRate = 1;
+
         SkuInfo skuInfo = new SkuInfo();
         skuInfo.setQuantity(quantity);
         skuInfo.setSkuCode(skuCode);
@@ -206,6 +211,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onError(BaseBean errorBean) {
                 String mockResults = new String(getAssertsFile(mBaseContext, "createOrderSc.json"));
                 result = new Gson().fromJson(mockResults, CreateOrderResponse.class);
+                updateUI(result);
             }
         });
     }
