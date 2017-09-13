@@ -4,7 +4,6 @@ import com.android.volley.mynet.BaseBean;
 
 import java.util.List;
 
-// FIXME generate failure  field _$SkuSpecs3169
 /**
  * Created by 513419 on 2017/9/7.
  */

@@ -22,7 +22,7 @@ public interface IOrderInfoView<T extends BaseBean> extends IView {
 
     void applyToRefundSuccess();
 
-    void verifyPayPwdSuccess();
+    void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment);
 
     void verifyPayPwdFailure(int remainTimes);
 

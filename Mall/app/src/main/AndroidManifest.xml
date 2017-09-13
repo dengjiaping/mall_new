@@ -378,6 +378,9 @@
         <activity
             android:name=".me.view.activity.OrderTraceActivity"
             android:label="订单跟踪" />
+        <activity
+            android:name=".index.view.activity.OrderPayResultActivity"
+            android:label="支付首付金额"/>
         <!--二期商城-->
         <activity
             android:name=".index.view.activity.ConfirmOrderActivity"

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
@@ -143,16 +144,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
     private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
-    int orderPayType;
-    double downPayment;//首付金额
-    boolean isHaveDownPayment;//是否有首付金额
+    int orderPayType;//支付方式
     String serviceUrl;//服务详情
     String serviceName;
+    boolean isWalletPay;//是否钱包支付
+    double finalPayment;//最终支付金额
 
-    public static void startIt(Activity activity, String orderNo, String src) {
+    public static void startIt(Activity activity, String orderNo) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
         intent.putExtra("orderNo", orderNo);
-        intent.putExtra("src", src);
         activity.startActivity(intent);
     }
 
@@ -166,7 +166,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         balanceDeficientDialog = new BalanceDeficientDialog(mBaseContext);
         presenter = new OrderHandlePresenter(this);
         orderNo = getIntent().getStringExtra("orderNo");
-        src = getIntent().getStringExtra("src");
         //调用接口获取订单详情
         presenter.getOrderDetail(orderNo);
     }
@@ -194,13 +193,13 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         dealFooterView(response.status);
         //倒计时
         long timeLeft = 0;
-        if (StringUtils.isNotNull(response.remainingTime))
+        if (StringUtils.isNotNull(response.remainingTime)) {
             timeLeft = Long.parseLong(response.remainingTime);
+        }
         //status为待首付和待付款时，则采用倒计时
-        if (response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) {
+        if ((response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY)) {
             tvPay.setClickable(true);
             llTimeLeft.setVisibility(View.VISIBLE);
-            llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_00bbc0));
             tvTimeLeft.setRestTime(timeLeft);
             tvTimeLeft.startCount(new CountDownTextView.CountEndListener() {
                 @Override
@@ -244,10 +243,13 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 tvAddress.setText(adress);
             }
         }
-        //商品icon
-        ImageUtils.loadImage(src, ivPicture);
 
         if (response.skuInfo != null) {
+            //商品icon
+            if (StringUtils.isNotNull(response.skuInfo.src) && StringUtils.isNotNull(response.skuInfo.srcIp)) {
+                src = response.skuInfo.srcIp + response.skuInfo.src;
+                ImageUtils.loadImage(src, ivPicture);
+            }
             //商品标题
             if (StringUtils.isNotNull(response.skuInfo.name)) {
                 tvName.setText(response.skuInfo.name);
@@ -270,21 +272,22 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //支付方式
         orderPayType = response.payType;
+        if (response.payType == 0) {
+            isWalletPay = true;
+        } else {
+            isWalletPay = false;
+        }
         if (StringUtils.isNotNull(OrderStatus.getOrderPayType(response.payType))) {
             tvPayType.setText(OrderStatus.getOrderPayType(response.payType));
         }
         //首付
         if (StringUtils.isNotNull(response.downPayment)) {
-            isHaveDownPayment = true;
-            downPayment = Double.parseDouble(response.downPayment);
             if (StringUtils.isNotNull(response.selDownPaymentRate)) {
                 rlDownPayment.setVisibility(View.VISIBLE);
                 tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
             } else {
                 rlDownPayment.setVisibility(View.GONE);
             }
-        } else {
-            isHaveDownPayment = false;
         }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
@@ -386,8 +389,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
     //验证交易密码成功
     @Override
-    public void verifyPayPwdSuccess() {
+    public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
+        VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
     }
 
     //验证交易密码失败
@@ -404,35 +408,40 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         switch (view.getId()) {
             //去支付、去首付
             case R.id.tv_pay:
-                //是否开通钱包
-                if (LoginHelper.getInstance().hasQualifications()) {
-                    //是否设置了交易密码
-                    if (LoginHelper.getInstance().hasSetPwd()) {
-                        //钱包可消费余额是否足够
-                        if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < downPayment && "0".equals(orderPayType)) {
-                            balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
-                            balanceDeficientDialog.show();
-                            return;
-                        }
-                        dealPwdDialog.setPrice("¥" + StringUtils.format2(downPayment + ""));
-                        dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
-                            @Override
-                            public void checkPwd(String payPwd) {
-                                presenter.onVerifyPayPwd(payPwd);
+                //是否勾选消费分期合同
+                if (cbContract.isChecked()) {
+                    //是否开通钱包
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        //是否设置了交易密码
+                        if (LoginHelper.getInstance().hasSetPwd()) {
+                            //如果是钱包支付的话，判断钱包余额是否足够
+                            if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && orderPayType == 0) {
+                                balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
+                                balanceDeficientDialog.show();
+                                return;
                             }
-                        });
-                        dealPwdDialog.showDialog();
+                            dealPwdDialog.setPrice("¥" + StringUtils.format2(finalPayment + ""));
+                            dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+                                @Override
+                                public void checkPwd(String payPwd) {
+                                    presenter.onVerifyPayPwd(payPwd, orderNo, isWalletPay, finalPayment + "");
+                                }
+                            });
+                            dealPwdDialog.showDialog();
+                        } else {
+                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                        }
                     } else {
-                        TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                        notActiveDialog.showDialog();
                     }
                 } else {
-                    notActiveDialog.showDialog();
+                    ToastUtils.showLongToast("请阅读并勾选消费分期合同");
                 }
                 break;
 
             //消费分期合同
             case R.id.tv_contract:
-
+                CustomWebViewActivity.startIt(mBaseContext, "www.baidu.com", "消费分期合同");
                 break;
 
             //订单追踪

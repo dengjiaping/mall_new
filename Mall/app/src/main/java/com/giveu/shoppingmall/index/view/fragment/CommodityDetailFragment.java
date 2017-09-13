@@ -9,9 +9,6 @@ import android.widget.RadioGroup;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
-import com.giveu.shoppingmall.base.BasePresenter;
-import com.giveu.shoppingmall.index.presenter.CommodityDetailPresenter;
-import com.giveu.shoppingmall.index.view.agent.ICommodityDetailView;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 
 
@@ -20,15 +17,13 @@ import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
  * 商品介绍
  */
 
-public class CommodityDetailFragment extends BaseFragment implements ICommodityDetailView {
+public class CommodityDetailFragment extends BaseFragment{
     private View view;
     private RadioGroup rgCommodity;
     private WebCommodityFragment introduceFragment;
     private WebCommodityFragment paramsFragment;
     private FragmentManager fragmentManager;
     private boolean fromCommodityDetail;
-    private String skuCode;
-    private CommodityDetailPresenter presenter;
     private CommodityDetailResponse data;
 
 
@@ -38,24 +33,13 @@ public class CommodityDetailFragment extends BaseFragment implements ICommodityD
         baseLayout.setTitleBarAndStatusBar(false, false);
         rgCommodity = (RadioGroup) view.findViewById(R.id.rg_commodity);
         fragmentManager = getChildFragmentManager();
-            skuCode = getArguments().getString("skuCode");
-        presenter = new CommodityDetailPresenter(this);
-        refreshCommodityDetail(skuCode);
         showFragment(0);
         return view;
     }
 
     @Override
-    protected BasePresenter[] initPresenters() {
-        return new BasePresenter[]{presenter};
-    }
-
-    @Override
     public void initDataDelay() {
 
-    }
-    public void refreshCommodityDetail(String skuCode){
-        presenter.getCommodityDetail(skuCode);
     }
 
     @Override
@@ -77,10 +61,6 @@ public class CommodityDetailFragment extends BaseFragment implements ICommodityD
                 }
             }
         });
-    }
-
-    public void showCommodityIntroduce(){
-        rgCommodity.check(R.id.rb_introduce);
     }
 
     /**
@@ -140,8 +120,7 @@ public class CommodityDetailFragment extends BaseFragment implements ICommodityD
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
-    @Override
-    public void showCommodity(CommodityDetailResponse data) {
+    public void refreshCommodityDetail(CommodityDetailResponse data) {
         this.data = data;
         if (introduceFragment != null) {
             introduceFragment.setHtmlStr(data.intruction);

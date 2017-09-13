@@ -25,6 +25,8 @@ import com.giveu.shoppingmall.index.presenter.CommodityPresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityView;
 import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
+import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -121,6 +123,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             llCredit.setVisibility(View.GONE);
             viewDivider.setVisibility(View.GONE);
         }
+        //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
         presenter = new CommodityPresenter(this);
     }
@@ -164,13 +167,20 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         }
     }
 
+    /**
+     {@link CommodityInfoFragment#showSkuIntroduction(SkuIntroductionResponse)}}
+     CommodityInfoFragment切换商品参数后调用，刷新收藏状态并更新商品详情信息
+     * @param skuCode
+     * @param collectStatus
+     * @param monthAmount
+     */
     public void initData(String skuCode, int collectStatus, String monthAmount) {
         setCollectStatus(collectStatus);
         if (isCredit) {
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
                     13, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
-        commodityDetailFragment.refreshCommodityDetail(skuCode);
+        presenter.getCommodityDetail(skuCode);
     }
 
     /**
@@ -201,12 +211,15 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             case R.id.ll_collect:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
+                        //收藏商品
                         boolean isCheck = (boolean) ivCollect.getTag();
                         String collectSkuCode = commodityInfoFragment.getSkuCode();
                         //已收藏则取消收藏
                         if (isCheck) {
+                            //取消收藏
                             presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 1);
                         } else {
+                            //收藏
                             presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
                         }
                     } else {
@@ -253,7 +266,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     /**
      * 是否可点击购买
      *
-     * @param enable
+     * @param enable {@link CommodityInfoFragment#showStockState(int)} ()}
      */
     public void setBuyEnable(boolean enable) {
         tvBuy.setEnabled(enable);
@@ -265,7 +278,8 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     }
 
     /**
-     * 根据状态显示是否有货，是否可点击
+     * 根据状态显示是否有货，是否可点击{@link CommodityInfoFragment#showStockState(int) 检查完库存后调用，
+     * 无货时立即购买按钮不可点击}
      *
      * @param state
      */
@@ -323,12 +337,16 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         startAnimation(tabLayout, 0, -200, 1, 0);
     }
 
+    /**
+     * 在商品信息中点击上拉查看商品详情，直接跳至第二个tab
+     */
     public void showCommodityDetail() {
         vpContent.setCurrentItem(1, false);
     }
 
     @Override
     public void onBackPressed() {
+        //返回键可返回上一个fragment
         if (vpContent != null && vpContent.getCurrentItem() == 1) {
             vpContent.setCurrentItem(0);
         } else {
@@ -336,6 +354,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         }
     }
 
+    /**
+     * 向服务器发出收藏请求后的回调
+     */
     @Override
     public void collectOperator() {
         boolean isCheck = (boolean) ivCollect.getTag();
@@ -346,5 +367,15 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             collectCommodity();
         }
         ivCollect.setTag(!isCheck);
+    }
+
+    /**
+     * 刷新商品详情的相关信息（网页）
+     * @param data
+     */
+    @Override
+    public void showCommodity(CommodityDetailResponse data) {
+        commodityDetailFragment.refreshCommodityDetail(data);
+        commodityInfoFragment.refreshCommodityDetail(data);
     }
 }
