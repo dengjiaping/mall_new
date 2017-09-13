@@ -333,6 +333,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageIndex = 1;
+                presenter.getHeadContent();
                 ptrlv.setPullLoadEnable(false);
             }
 
