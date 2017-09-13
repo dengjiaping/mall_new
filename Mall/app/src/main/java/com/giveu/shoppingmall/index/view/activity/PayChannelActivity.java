@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.CountDownTextView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
@@ -108,24 +109,24 @@ public class PayChannelActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.tv_back:
-                    finish();
+                finish();
                 break;
 
             case R.id.tv_confirm:
                 PayUtils.AliPay(mBaseContext, orderNo, new PayUtils.AliPayThread.OnPayListener() {
                     @Override
                     public void onSuccess() {
-
+                        OrderPayResultActivity.startIt(mBaseContext, null, orderNo, true);
                     }
 
                     @Override
                     public void onFail() {
-
+                        OrderPayResultActivity.startIt(mBaseContext, null, orderNo, false);
                     }
 
                     @Override
                     public void onCancel() {
-
+                        ToastUtils.showShortToast("取消支付");
                     }
                 });
                 break;
@@ -170,7 +171,7 @@ public class PayChannelActivity extends BaseActivity {
                                 llPayFail.setVisibility(View.VISIBLE);
                             }
                         });
-                    }else {
+                    } else {
                         isOrderValid = false;
                         llPayStatus.setVisibility(View.GONE);
                         llPayFail.setVisibility(View.VISIBLE);

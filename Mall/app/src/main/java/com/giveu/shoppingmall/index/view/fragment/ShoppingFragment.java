@@ -48,6 +48,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by 513419 on 2017/8/30.
@@ -62,6 +63,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     LinearLayout llSearch;
     @BindView(R.id.iv_message)
     ImageView ivMessage;
+    @BindView(R.id.fab_up_slide)
+    ImageView fabUpSlide;
     private ShoppingAdapter shoppingAdapter;
     private ShoppingPresenter presenter;
     private int bannerHeight;
@@ -86,12 +89,6 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             statusView.setVisibility(View.GONE);
         }
         presenter = new ShoppingPresenter(this);
-        llSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShoppingSearchActivity.startIt(mBaseContext);
-            }
-        });
         presenter.getIndexContent();
         return view;
     }
@@ -255,6 +252,19 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.stopAutoPlay();
     }
 
+    @OnClick({R.id.ll_search,R.id.fab_up_slide})
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.ll_search:
+                ShoppingSearchActivity.startIt(mBaseContext);
+                break;
+            case R.id.fab_up_slide:
+                ptrlv.getRefreshableView().smoothScrollToPosition(0);
+                break;
+        }
+    }
 
     @Override
     protected void setListener() {
@@ -290,6 +300,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                     recordSp.append(firstVisibleItem, itemRecord);//设置值
                 }
                 int scrollY = getScrollY();
+                //滚动半个屏幕时显示回到顶部icon
+                if (scrollY >= DensityUtils.getHeight()/2) {
+                    fabUpSlide.setVisibility(View.VISIBLE);
+                } else {
+                    fabUpSlide.setVisibility(View.GONE);
+                }
                 float rate = (float) (scrollY * 1.0 / bannerHeight);
                 if (rate > 1) {
                     rate = 1;
@@ -376,6 +392,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 shoppingAdapter.setDataAndSrcIp(shoppingResponse.resultList, shoppingResponse.srcIp);
             }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     public static class HeaderViewHolder {

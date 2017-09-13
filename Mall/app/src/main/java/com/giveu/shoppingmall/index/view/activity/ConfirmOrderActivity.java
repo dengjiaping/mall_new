@@ -166,8 +166,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                 AddAddressActivity.startIt(this);
                 break;
             case R.id.tv_ok:
-//                pwdDialog.showDialog();
-                PayChannelActivity.startIt(mBaseContext, "", "");
+                pwdDialog.showDialog();
+//                PayChannelActivity.startIt(mBaseContext, "", "");
                 break;
 
             default:
@@ -189,7 +189,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
                             //校验手机验证码
-                            //VerifyActivity.startItForShopping(mBaseContext, LoginHelper.getInstance().getPhone());
+                            VerifyActivity.startItForShopping(mBaseContext, "",false,"");
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);
