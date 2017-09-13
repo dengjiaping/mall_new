@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.AddAddressActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
@@ -79,7 +80,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
         holder.setOnClickListener(R.id.tv_edit, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAddressActivity.startIt((Activity) mContext, item);
+                AddAddressActivity.startItForResult((Activity) mContext, item, Const.ADDRESSMANAGE);
             }
         });
         holder.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {

@@ -52,7 +52,9 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                textBefore = s.toString().replaceFirst(stableText.toString(), "");
+                if (s.toString().startsWith(stableText.toString())) {
+                    textBefore = s.subSequence(stableText.length(), s.length()).toString();
+                }
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {

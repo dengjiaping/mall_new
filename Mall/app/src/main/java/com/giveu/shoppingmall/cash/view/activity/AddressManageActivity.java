@@ -112,7 +112,7 @@ public class AddressManageActivity extends BaseActivity {
         tvAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAddressActivity.startIt(mBaseContext);
+                AddAddressActivity.startItForResult(mBaseContext,Const.ADDRESSMANAGE);
             }
         });
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
+import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
@@ -51,6 +52,7 @@ import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
+import com.giveu.shoppingmall.model.bean.response.SkuInfo;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
@@ -603,6 +605,12 @@ public class ApiImpl {
     public static void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, BaseRequestAgent.ResponseListener<DownPayMonthPayResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuCode"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuCode});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_getAppDownPayAndMonthPay, DownPayMonthPayResponse.class, context, responseListener);
+    }
+
+    //创建订单
+    public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_createOrderSc, CreateOrderResponse.class, context, responseListener);
     }
 }
 

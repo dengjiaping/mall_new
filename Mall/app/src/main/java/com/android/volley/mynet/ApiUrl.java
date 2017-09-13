@@ -21,6 +21,7 @@ public interface ApiUrl {
         String authorize = H5_BASE_URL + "h5/sales/index.html#/Common/Authorize";//代扣
         String uRProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/URProtocol";//注册
         String oConsumeLoanStatic = H5_BASE_URL + "h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
+        String xFFQLoanStatic = H5_BASE_URL + "h5/sales/index.html#/XFFQ/XFFQLoanStatic";//消费分期合同
     }
 
     //帮助与反馈
@@ -187,8 +188,10 @@ public interface ApiUrl {
     //一级类目查询子类目(商品分类)
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
     //商品SKU搜索
-    String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
+    String sc_goods_search_goodsSearch = BASE_URL + "sc/goods/search/goodsSearch";
     //获取首付和分期数
-    String order_getAppDownPayAndMonthPay = BASE_URL + "/order/getAppDownPayAndMonthPay";
+    String order_getAppDownPayAndMonthPay = BASE_URL + "order/getAppDownPayAndMonthPay";
+    //创建订单
+    String order_createOrderSc = BASE_URL + "order/createOrderSc";
 }
 
