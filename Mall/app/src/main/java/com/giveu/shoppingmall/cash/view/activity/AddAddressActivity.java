@@ -67,18 +67,19 @@ public class AddAddressActivity extends BasePermissionActivity {
     public static final String ADD = "add";
     public static final String EDIT = "edit";
     private PermissionDialog permissionDialog;
+    AddressListResponse addressResponse;
 
-    public static void startIt(Activity activity) {
+    public static void startItForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("type", ADD);
-        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
+        activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void startIt(Activity activity, AddressListResponse item) {
+    public static void startItForResult(Activity activity, AddressListResponse item, int requestCode) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("type", EDIT);
-        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     private void initPermissionDialog() {
@@ -94,7 +95,7 @@ public class AddAddressActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_add_address);
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
-        baseLayout.setTitle("订单信息确认");
+        baseLayout.setTitle("添加收货地址");
         baseLayout.setRightTextColor(R.color.color_00bbc0);
         permissionDialog = new PermissionDialog(mBaseContext);
         permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
@@ -124,17 +125,17 @@ public class AddAddressActivity extends BasePermissionActivity {
             etDetailAddress.setText(StringUtils.nullToEmptyString(item.address));
             tvAddress.setText(StringUtils.nullToEmptyString(item.province) + StringUtils.nullToEmptyString(item.city) + StringUtils.nullToEmptyString(item.region) + StringUtils.nullToEmptyString(item.street));
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
-            cbDefault.setChecked(1 == item.isDefault ? true : false);
+            cbDefault.setChecked("1".equals(item.isDefault) ? true : false);
         }
         baseLayout.setRightTextAndListener("保存", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (canCommit) {
                     //满足条件
-                    String building = etDetailAddress.getText().toString();
-                    String phone = etReceivingPhone.getText().toString();
-                    String name = etReceivingName.getText().toString();
-                    String isDefault = cbDefault.isChecked() ? "1" : "0";
+                    final String building = etDetailAddress.getText().toString();
+                    final String phone = etReceivingPhone.getText().toString();
+                    final String name = etReceivingName.getText().toString();
+                    final String isDefault = cbDefault.isChecked() ? "1" : "0";
                     //添加居住地址
                     String type = getIntent().getStringExtra("type");
 
@@ -146,7 +147,10 @@ public class AddAddressActivity extends BasePermissionActivity {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ToastUtils.showShortToast("添加地址成功");
-                                        setResult(RESULT_OK);
+                                        addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
+                                        Intent intent = new Intent();
+                                        intent.putExtra("addressResponse", addressResponse);
+                                        setResult(RESULT_OK, intent);
                                         finish();
                                     }
 
@@ -166,7 +170,10 @@ public class AddAddressActivity extends BasePermissionActivity {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ToastUtils.showShortToast("修改地址成功");
-                                        setResult(RESULT_OK);
+                                        addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
+                                        Intent intent = new Intent();
+                                        intent.putExtra("addressResponse", addressResponse);
+                                        setResult(RESULT_OK, intent);
                                         finish();
                                     }
 

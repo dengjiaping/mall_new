@@ -4,13 +4,12 @@ package com.giveu.shoppingmall.me.presenter;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
-import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
-import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.OrderTraceActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -30,7 +29,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
     //获取订单详情
     public void getOrderDetail(String orderNo) {
 
-        ApiImpl.getOrderDetail(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
+        ApiImpl.getOrderDetail(getView().getAct(), Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<OrderDetailResponse>() {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 if (getView() != null) {
@@ -81,7 +80,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //确认收货
     public void onConfirmReceive(final String orderNo) {
-        ApiImpl.confirmReceive(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.confirmReceive(getView().getAct(), Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
@@ -98,7 +97,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //申请退款
     public void onApplyToRefund(String orderNo) {
-        ApiImpl.applyToRefundForRecharge(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.applyToRefundForRecharge(getView().getAct(), Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
@@ -120,7 +119,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //取消订单
     public void onCancelOrder(final String orderNo) {
-        ApiImpl.cancelOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.cancelOrder(getView().getAct(), Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
@@ -137,7 +136,7 @@ public class OrderHandlePresenter extends BasePresenter<IOrderInfoView> {
 
     //删除订单
     public void onDeleteOrder(final String orderNo) {
-        ApiImpl.deleteOrder(getView().getAct(), OrderState.CHANNEL, "10056737", orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
+        ApiImpl.deleteOrder(getView().getAct(), Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {

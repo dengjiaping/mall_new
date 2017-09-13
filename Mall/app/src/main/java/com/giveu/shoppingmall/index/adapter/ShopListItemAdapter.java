@@ -9,6 +9,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -21,10 +22,15 @@ import java.util.List;
 
 public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBean> {
     private Context mContext;
+    private String srcIp = "";
 
     public ShopListItemAdapter(Context context, List lists) {
         super(context, R.layout.adapter_shopping_list_item, lists);
         mContext = context;
+    }
+
+    public void setSrcIp(String ip) {
+        srcIp = ip;
     }
 
     @Override
@@ -33,23 +39,23 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             @Override
             public void onClick(View v) {
                 //K00002691可以分期   K00002713可以一次
-                if(item.getIsInstallments()==1){
-                    CommodityDetailActivity.startIt(mContext, true, item.getSkuCode());
-                }else {
-                    CommodityDetailActivity.startIt(mContext, false, item.getSkuCode());
+                if (item.isInstallments == 1) {
+                    CommodityDetailActivity.startIt(mContext, true, item.skuCode);
+                } else {
+                    CommodityDetailActivity.startIt(mContext, false, item.skuCode);
                 }
             }
         });
 
         ImageView image = holder.getView(R.id.item_left_image);
-        ImageUtils.loadImage(item.getSrcIp() + item.getSrc(), R.drawable.defalut_img_88_88, image);
+        ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.defalut_img_88_88, image);
 
-        holder.setText(R.id.item_right_name, item.getName());
+        holder.setText(R.id.item_right_name, item.name);
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
         //true就不显示月供,实际上隐藏售价view，月供view变成售价
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.getMonthAmount() + "", "", 14, 11, R.color.red, R.color.color_999999);
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount + "", "", 14, 11, R.color.red, R.color.color_999999);
 
-        holder.setText(R.id.item_right_price, "¥" + item.getSalePrice());
+        holder.setText(R.id.item_right_price, "¥" + item.salePrice);
     }
 }

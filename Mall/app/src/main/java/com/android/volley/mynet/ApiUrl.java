@@ -16,11 +16,12 @@ public interface ApiUrl {
         String commonProblem = DebugConfig.getCommonQuestionBaseUrl() + "question/";//常见问题
         String cashBLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
         String cashLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
-        String test = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//人身意外伤害保险
+        String xFFQInsuredNotice = H5_BASE_URL + "h5/sales/index.html#/XFFQ/XFFQInsuredNotice";//人身意外伤害保险
         String pAProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/PAProtocol";//钱包激活
         String authorize = H5_BASE_URL + "h5/sales/index.html#/Common/Authorize";//代扣
         String uRProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/URProtocol";//注册
         String oConsumeLoanStatic = H5_BASE_URL + "h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
+        String xFFQLoanStatic = H5_BASE_URL + "h5/sales/index.html#/XFFQ/XFFQLoanStatic";//消费分期合同
     }
 
     //帮助与反馈
@@ -187,10 +188,12 @@ public interface ApiUrl {
     //一级类目查询子类目(商品分类)
     String sc_goods_shopTypes_childrenShopTypes = BASE_URL + "sc/goods/shopTypes/childrenShopTypes";
     //商品SKU搜索
-    String sc_goods_search_goodsSearch = BASE_URL + "/sc/goods/search/goodsSearch";
+    String sc_goods_search_goodsSearch = BASE_URL + "sc/goods/search/goodsSearch";
     //获取首付和分期数
     String order_getAppDownPayAndMonthPay = BASE_URL + "/order/getAppDownPayAndMonthPay";
     //商城首页
     String sc_goods_skus_index = BASE_URL + "/sc/goods/skus/index";
+    //创建订单
+    String order_createOrderSc = BASE_URL + "order/createOrderSc";
 }
 

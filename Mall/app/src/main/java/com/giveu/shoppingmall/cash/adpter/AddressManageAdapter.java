@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.AddAddressActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
@@ -79,7 +80,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
         holder.setOnClickListener(R.id.tv_edit, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAddressActivity.startIt((Activity) mContext, item);
+                AddAddressActivity.startItForResult((Activity) mContext, item, Const.ADDRESSMANAGE);
             }
         });
         holder.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
@@ -93,7 +94,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
         holder.setOnClickListener(R.id.tv_default_check, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (0 == item.isDefault) {
+                if ("0".equals(item.isDefault)) {
                     //不是默认地址设置成默认地址
                     ApiImpl.setDefaultAddress((Activity) mContext, item.id, LoginHelper.getInstance().getIdPerson(), new BaseRequestAgent.ResponseListener<BaseBean>() {
                         @Override
@@ -102,10 +103,10 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
                             for (int i = 0; i < mDatas.size(); i++) {
                                 if (i != mPosition) {
                                     //其他项取消勾选
-                                    mDatas.get(i).isDefault = 0;
+                                    mDatas.get(i).isDefault = "0";
                                 } else {
                                     //选择项勾选
-                                    mDatas.get(mPosition).isDefault = 1;
+                                    mDatas.get(mPosition).isDefault = "1";
                                 }
                             }
                             notifyDataSetChanged();
@@ -120,7 +121,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
                 }
             }
         });
-        if (1 == item.isDefault) {
+        if ("1".equals(item.isDefault)) {
             //选择项选中状态
             Drawable drawableLeft = mContext.getResources().getDrawable(R.drawable.ic_round_checkbox_checked);
             tvDefaultCheck.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);

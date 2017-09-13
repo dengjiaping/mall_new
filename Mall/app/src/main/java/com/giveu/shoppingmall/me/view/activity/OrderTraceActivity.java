@@ -15,15 +15,14 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -93,7 +92,7 @@ public class OrderTraceActivity extends BaseActivity {
     public void setData() {
         orderNo = getIntent().getStringExtra("orderNo");
         src = getIntent().getStringExtra("src");
-        ApiImpl.getOrderTrace(mBaseContext, OrderState.CHANNEL, "10056737", orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
+        ApiImpl.getOrderTrace(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), orderNo, src, new BaseRequestAgent.ResponseListener<OrderTraceResponse>() {
             @Override
             public void onSuccess(OrderTraceResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data.logisticsInfo)) {

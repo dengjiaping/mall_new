@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
 import com.giveu.shoppingmall.model.bean.response.ContractResponse;
 import com.giveu.shoppingmall.model.bean.response.CostFeeResponse;
 import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
+import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
@@ -52,6 +53,7 @@ import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
+import com.giveu.shoppingmall.model.bean.response.SkuInfo;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.TokenBean;
@@ -335,8 +337,8 @@ public class ApiImpl {
     }
 
     //取现合同生成
-    public static void addEnchashmentCredit(Activity context, String InsuranceFee, String bankName, String bankNo, String creditAmount, String creditType, String idPerson, String idProduct, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<EnchashmentCreditResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"InsuranceFee", "bankName", "bankNo", "creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(InsuranceFee), bankName, bankNo, StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
+    public static void addEnchashmentCredit(Activity context, String insuranceFee, String bankName, String bankNo, String creditAmount, String creditType, String idPerson, String idProduct, String phone, String randCode, String smsCode, BaseRequestAgent.ResponseListener<EnchashmentCreditResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"insuranceFee", "bankName", "bankNo", "creditAmount", "creditType", "idPerson", "idProduct", "phone", "randCode", "smsCode"}, new Object[]{StringUtils.string2Int(insuranceFee), bankName, bankNo, StringUtils.string2Int(creditAmount), creditType, StringUtils.string2Long(idPerson), StringUtils.string2Long(idProduct), phone, randCode, smsCode});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_addEnchashmentCredit, EnchashmentCreditResponse.class, context, responseListener);
     }
 
@@ -496,13 +498,13 @@ public class ApiImpl {
 
     //新增收货地址
     public static void addAddress(Activity context, String address, String addressType, String city, String custName, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(idPerson), StringUtils.string2Int(isDefault), phone, province, region, street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_addAddress, BaseBean.class, context, responseListener);
     }
 
     //修改收货地址
     public static void updateAddress(Activity context, String address, String addressType, String city, String custName, String id, String idPerson, String isDefault, String phone, String province, String region, String street, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "id", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(id), StringUtils.string2Long(idPerson), isDefault, phone, province, region, street});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"address", "addressType", "city", "custName", "id", "idPerson", "isDefault", "phone", "province", "region", "street"}, new Object[]{address, addressType, city, custName, StringUtils.string2Long(id), StringUtils.string2Long(idPerson), StringUtils.string2Int(isDefault), phone, province, region, street});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.personCenter_address_updateAddress, BaseBean.class, context, responseListener);
     }
 
@@ -610,6 +612,10 @@ public class ApiImpl {
     public static void getShoppingIndex(Activity context, BaseRequestAgent.ResponseListener<IndexResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_skus_index, IndexResponse.class, context, responseListener);
+    //创建订单
+    public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_createOrderSc, CreateOrderResponse.class, context, responseListener);
     }
 }
 

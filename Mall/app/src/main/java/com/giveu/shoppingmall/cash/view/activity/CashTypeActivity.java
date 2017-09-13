@@ -180,7 +180,7 @@ public class CashTypeActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //人身意外伤害保险
-                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.test, "人身意外伤害保险");
+                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.xFFQInsuredNotice, "人身意外伤害保险");
             }
         });
 

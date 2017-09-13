@@ -148,4 +148,12 @@ public class PaymentTypeDialog {
     public void setOnChoosePayTypeListener(OnChoosePayTypeListener listener) {
         this.listener = listener;
     }
+
+    public void disableWalletPay() {
+        llWallet.setVisibility(View.GONE);
+    }
+
+    public void disableWechatPay(){
+        llWeChat.setVisibility(View.GONE);
+    }
 }
