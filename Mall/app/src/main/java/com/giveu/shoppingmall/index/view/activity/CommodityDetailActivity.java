@@ -28,6 +28,7 @@ import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -168,8 +169,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     }
 
     /**
-     {@link CommodityInfoFragment#showSkuIntroduction(SkuIntroductionResponse)}}
-     CommodityInfoFragment切换商品参数后调用，刷新收藏状态并更新商品详情信息
+     * {@link CommodityInfoFragment#showSkuIntroduction(SkuIntroductionResponse)}}
+     * CommodityInfoFragment切换商品参数后调用，刷新收藏状态并更新商品详情信息
+     *
      * @param skuCode
      * @param collectStatus
      * @param monthAmount
@@ -180,7 +182,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
                     13, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
-        presenter.getCommodityDetail(skuCode);
+        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
     /**
@@ -371,6 +373,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
 
     /**
      * 刷新商品详情的相关信息（网页）
+     *
      * @param data
      */
     @Override

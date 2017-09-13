@@ -30,6 +30,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="32dp"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
             android:layout_marginLeft="@dimen/default_layout_screen_gap">
 
             <LinearLayout
@@ -63,6 +64,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="5.5dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_message" />
         </LinearLayout>
     </LinearLayout>

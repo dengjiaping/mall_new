@@ -328,6 +328,7 @@ public class ImageUtils {
     }
     public interface ImageSize{
         String img_size_240_240 = "/s240x240fdfs/";
+        String img_size_200_200 = "/s200x200fdfs/";
     }
 
     public static Bitmap getViewBitmap(View view, int width, int height) {

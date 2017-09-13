@@ -304,7 +304,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 获取商品信息
      */
     public void getCommodityInfo() {
-        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), "SC", skuCode);
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), Const.CHANNEL, skuCode);
     }
 
     @Override

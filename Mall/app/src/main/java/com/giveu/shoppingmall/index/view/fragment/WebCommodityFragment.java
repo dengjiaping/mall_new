@@ -33,7 +33,7 @@ public class WebCommodityFragment extends Fragment {
     private ScrollView mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
-    private String htmlStr;
+    private String htmlUrl;
 
     @Nullable
     @Override
@@ -100,7 +100,7 @@ public class WebCommodityFragment extends Fragment {
                 mScrollView.smoothScrollTo(0, 0);
             }
         });
-        wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
+        wvCommodity.loadDataWithBaseURL("", htmlUrl, "text/html", "utf-8", null);
     }
 
 
@@ -111,13 +111,14 @@ public class WebCommodityFragment extends Fragment {
     public void loadHtml(String htmlStr) {
         htmlStr = replaceHtmlStr(htmlStr);
         if (wvCommodity != null) {
+            wvCommodity.loadUrl("http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702");
             wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
         }
     }
 
     public void setHtmlStr(String htmlStr) {
         htmlStr = replaceHtmlStr(htmlStr);
-        this.htmlStr = htmlStr;
+        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
 
     }
 

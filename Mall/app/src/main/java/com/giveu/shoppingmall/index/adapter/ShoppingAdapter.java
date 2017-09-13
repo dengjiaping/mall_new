@@ -50,6 +50,6 @@ public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultList
         mDatas.clear();
         mDatas.addAll(data);
         notifyDataSetChanged();
-        this.srcIp = srcIp + "/";
+        this.srcIp = srcIp + ImageUtils.ImageSize.img_size_200_200;
     }
 }

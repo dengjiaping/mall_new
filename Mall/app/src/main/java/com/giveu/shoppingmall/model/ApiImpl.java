@@ -577,8 +577,8 @@ public class ApiImpl {
     }
 
     //商品介绍
-    public static void getCommodityDetail(Activity context, String skuCode, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode"}, new Object[]{skuCode});
+    public static void getCommodityDetail(Activity context, String skuCode,String channel, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode","channel"}, new Object[]{skuCode,channel});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
     }
 
