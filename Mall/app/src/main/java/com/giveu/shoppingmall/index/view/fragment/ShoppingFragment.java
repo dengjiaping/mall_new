@@ -32,7 +32,6 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -97,6 +96,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setAdapter(shoppingAdapter);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
+        ptrlv.getRefreshableView().addHeaderView(headerView);
+        ptrlv.setVisibility(View.GONE);
         presenter = new ShoppingPresenter(this);
         //刚开始隐藏头布局的所有内容
       /*  initBanner(null);
@@ -140,7 +141,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                skipToActivity(indexResponse.decorations.get(position));
+                skipToActivity(indexResponse.srcIp, indexResponse.decorations.get(position));
                 ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
@@ -158,10 +159,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      *
      * @param decorationsBean
      */
-    private void skipToActivity(IndexResponse.DecorationsBean decorationsBean) {
+    private void skipToActivity(String srcIp, IndexResponse.DecorationsBean decorationsBean) {
         switch (decorationsBean.urlTypeValue) {
             case 0:
-                CustomWebViewActivity.startIt(mBaseContext, decorationsBean.url, "");
+                CustomWebViewActivity.startIt(mBaseContext, srcIp + "/" + decorationsBean.url, "");
 //                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
                 break;
             case 1:
@@ -206,7 +207,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp, item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -253,7 +254,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp, item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -375,7 +376,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 }
                 int scrollY = getScrollY();
                 //滚动半个屏幕时显示回到顶部icon
-                if (scrollY >= DensityUtils.getHeight() / 2) {
+                if (scrollY >= DensityUtils.getHeight()) {
                     fabUpSlide.setVisibility(View.VISIBLE);
                 } else {
                     fabUpSlide.setVisibility(View.GONE);
@@ -435,14 +436,45 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getIndexContent(List<GoodsSearchResponse.GoodsBean> contentList, String srcIp) {
+        //显示查询结果
+        if (pageIndex == 1) {
+            ptrlv.onRefreshComplete();
+        }
+        ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
-            shoppingAdapter.setDataAndSrcIp(contentList, srcIp);
+            if (pageIndex == 1) {
+                shoppingAdapter.setDataAndSrcIp(contentList, srcIp);
+                if (contentList.size() >= pageSize) {
+                    ptrlv.setPullLoadEnable(true);
+                } else {
+                    ptrlv.setPullLoadEnable(false);
+                    ptrlv.showEnd("没有更多数据");
+                }
+            } else {
+                shoppingAdapter.getData().addAll(contentList);
+                shoppingAdapter.notifyDataSetChanged();
+            }
+            pageIndex++;
+            llEmptyView.setVisibility(View.GONE);
+            ptrlv.setVisibility(View.VISIBLE);
+        } else {
+            if (pageIndex == 1) {
+                shoppingAdapter.getData().clear();
+                shoppingAdapter.notifyDataSetChanged();
+                llEmptyView.setVisibility(View.VISIBLE);
+                ptrlv.setVisibility(View.GONE);
+                ptrlv.setPullLoadEnable(false);
+            } else {
+                ptrlv.setPullLoadEnable(false);
+                ptrlv.showEnd("没有更多数据");
+            }
         }
 
     }
 
     @Override
-    public void getHeadContentFail() {
+    public void getDataFail() {
+        ptrlv.setVisibility(View.GONE);
         llEmptyView.setVisibility(View.VISIBLE);
         pageIndex = 1;
     }
@@ -465,13 +497,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         initMore(indexResponse);
                         break;
                     case 4 + "":
-                        presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.code);
+                        presenter.getIndexContent("SC", LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.code);
                         break;
                 }
             }
-            llEmptyView.setVisibility(View.GONE);
-            ptrlv.getRefreshableView().addHeaderView(headerView);
-            shoppingAdapter.notifyDataSetChanged();
         } else {
             llEmptyView.setVisibility(View.VISIBLE);
         }

@@ -5,7 +5,6 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityView;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ public class CommodityPresenter extends BasePresenter<ICommodityView> {
 
 
     public void getCommodityDetail(String channel, String skuCode) {
-        ApiImpl.getCommodityDetail(null, skuCode, channel, new BaseRequestAgent.ResponseListener<CommodityDetailResponse>() {
+        ApiImpl.getCommodityDetail(null, skuCode, channel, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
-            public void onSuccess(CommodityDetailResponse response) {
+            public void onSuccess(BaseBean response) {
                 if (getView() != null && response.data != null) {
-                    getView().showCommodity(response.data);
+                    getView().showCommodity(response.data.toString());
                 }
             }
 

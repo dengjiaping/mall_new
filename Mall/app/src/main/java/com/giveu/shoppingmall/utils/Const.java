@@ -16,5 +16,7 @@ public class Const {
     public static final String ADDRESS_TIME = "addressTime";
     public static final String CLOSE = "close";//领取优惠券关闭按钮
     public static final String RECEIVE = "receive";//领取优惠券领取按钮
-    public static final String CHANNEL = "sc";
+    public static final String CHANNEL = "SC";
+    public static final String PLATFORM = "Android";
+
 }

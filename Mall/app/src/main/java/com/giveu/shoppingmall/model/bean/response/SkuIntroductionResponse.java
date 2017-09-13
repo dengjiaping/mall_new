@@ -52,7 +52,7 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
         public String src;
         public String srcIp;
         public String supplier;
-        public List<ServiceSafeguardsBean> serviceSafeguards;
+        public List<String> serviceSafeguards;
         public List<String> srcs;
 
 

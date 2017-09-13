@@ -23,9 +23,8 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
 import com.giveu.shoppingmall.index.presenter.CommodityPresenter;
 import com.giveu.shoppingmall.index.view.agent.ICommodityView;
-import com.giveu.shoppingmall.index.view.fragment.CommodityDetailFragment;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
-import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
+import com.giveu.shoppingmall.index.view.fragment.WebCommodityFragment;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -72,7 +71,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     LinearLayout llChooseAddress;
     private List<Fragment> fragmentList = new ArrayList<>();
     private CommodityInfoFragment commodityInfoFragment;
-    private CommodityDetailFragment commodityDetailFragment;
+    private WebCommodityFragment commodityDetailFragment;
     private String[] tabTitles = new String[]{"商品", "详情"};
     private boolean isCredit;//是否分期产品
     private String skuCode;
@@ -100,7 +99,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         commodityInfoFragment.setArguments(infoBundle);
         tvCommodityDetail.setAlpha(0);
         //商品详情
-        commodityDetailFragment = new CommodityDetailFragment();
+        commodityDetailFragment = new WebCommodityFragment();
         Bundle detailBundle = new Bundle();
         detailBundle.putString("skuCode", skuCode);
         commodityDetailFragment.setArguments(detailBundle);
@@ -126,6 +125,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
         presenter = new CommodityPresenter(this);
+        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
     @Override
@@ -373,11 +373,10 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     /**
      * 刷新商品详情的相关信息（网页）
      *
-     * @param data
      */
     @Override
-    public void showCommodity(CommodityDetailResponse data) {
-        commodityDetailFragment.refreshCommodityDetail(data);
-        commodityInfoFragment.refreshCommodityDetail(data);
+    public void showCommodity(String url) {
+        commodityDetailFragment.refreshCommodityDetail(url);
+        commodityInfoFragment.refreshCommodityDetail(url);
     }
 }

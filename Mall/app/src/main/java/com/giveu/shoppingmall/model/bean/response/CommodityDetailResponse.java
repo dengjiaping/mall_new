@@ -6,7 +6,5 @@ import com.android.volley.mynet.BaseBean;
  * Created by 513419 on 2017/9/7.
  */
 
-public class CommodityDetailResponse extends BaseBean<CommodityDetailResponse> {
-    public String intruction;
-    public String param;
+public class CommodityDetailResponse extends BaseBean<String> {
 }

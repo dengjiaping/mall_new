@@ -48,16 +48,16 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
 
             BaseBean info = new BaseBean();
             BaseBeanParent baseBeanParent = (BaseBeanParent) new Gson().fromJson(responseString, BaseBeanParent.class);
-            try{
-                if (baseBeanParent != null){
-                    if (baseBeanParent.isStatusSuccess()){
+            try {
+                if (baseBeanParent != null) {
+                    if (baseBeanParent.isStatusSuccess()) {
                         //status成功才解析
                         info = (BaseBean) new Gson().fromJson(responseString, resultClzz);
-                    }else{
+                    } else {
                         info = baseBeanParent.toBaseBean();
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 info.message = "app数据解析错误";
             }
@@ -106,18 +106,18 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("token", "Authorization: Bearer " + SharePrefUtil.getAppToken());//Authorization:+空格+Bearer空格+token
         String jsonParams = new Gson().toJson(getParams());
-        if(getParams().isEmpty()){
+        if (getParams().isEmpty()) {
             jsonParams = "";
         }
         String md5Str = MD5.MD5Encode(jsonParams + "!$*6uOuop@^&%,.$*ci(hf_&]|");
-        if ( !TextUtils.isEmpty(md5Str)){
+        if (!TextUtils.isEmpty(md5Str)) {
             headerMap.put("sign", md5Str.toLowerCase());
         }
         headerMap.put("deviceId", SharePrefUtil.getUUId());
+        headerMap.put("platform", Const.PLATFORM);
         LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }
-
 
 
 }

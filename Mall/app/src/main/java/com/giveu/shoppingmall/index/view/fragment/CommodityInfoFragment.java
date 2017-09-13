@@ -24,7 +24,6 @@ import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
-import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -94,7 +93,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     @BindView(R.id.ll_server)
     LinearLayout llServer;
     private View view;
-    private CommodityDetailFragment commodityDetailFragment;
+    private WebCommodityFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
     private BuyCommodityDialog buyDialog;//商品属性对话框
     private ChooseCityDialog chooseCityDialog;
@@ -143,7 +142,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         };
         flServer.setAdapter(serverAdapter);
         //上拉对应的view
-        commodityDetailFragment = new CommodityDetailFragment();
+        commodityDetailFragment = new WebCommodityFragment();
         Bundle detailBundle = new Bundle();
         detailBundle.putString("skuCode", skuCode);
         commodityDetailFragment.setArguments(detailBundle);
@@ -321,7 +320,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 获取商品信息
      */
     public void getCommodityInfo() {
-        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), Const.CHANNEL, skuCode);
+        presenter.getSkuIntroduce("13042734", Const.CHANNEL, skuCode);
     }
 
     @Override
@@ -369,9 +368,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             //服务承诺对应的数据
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuInfo.serviceSafeguards)) {
                 ArrayList<String> serverList = new ArrayList<>();
-                for (SkuIntroductionResponse.ServiceSafeguardsBean safeguard : skuResponse.skuInfo.serviceSafeguards) {
-                    serverList.add(safeguard.name);
+                for (String serviceSafeguard : skuResponse.skuInfo.serviceSafeguards) {
+                    serverList.add(serviceSafeguard);
                 }
+              /*  for (SkuIntroductionResponse.ServiceSafeguardsBean safeguard : skuResponse.skuInfo.serviceSafeguards) {
+                }*/
                 serverAdapter.setDatas(serverList);
                 llServer.setVisibility(View.VISIBLE);
             } else {
@@ -388,8 +389,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         }
     }
 
-    public void refreshCommodityDetail(CommodityDetailResponse data) {
-        commodityDetailFragment.refreshCommodityDetail(data);
+    public void refreshCommodityDetail(String url) {
+        commodityDetailFragment.refreshCommodityDetail(url);
     }
 
 

@@ -13,6 +13,6 @@ import java.util.List;
 
 public interface IShoppingView extends IView{
     void getIndexContent(List<GoodsSearchResponse.GoodsBean> contentList, String srcIp);
-    void getHeadContentFail();
+    void getDataFail();
     void getHeadContent(ArrayList<IndexResponse> data);
 }

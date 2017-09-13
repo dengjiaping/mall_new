@@ -38,6 +38,7 @@ public class WebCommodityFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_web_commodity, null);
+        baseLayout.setTitleBarAndStatusBar(false,false);
         initView();
         return view;
     }
@@ -155,6 +156,14 @@ public class WebCommodityFragment extends BaseFragment {
 ////            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
 //        }
     }
+
+    public void refreshCommodityDetail(String url) {
+        htmlUrl = "http://" + url;
+        if (wvCommodity != null) {
+            wvCommodity.loadUrl(htmlUrl);
+        }
+    }
+
 
     public String replaceHtmlStr(String htmlStr) {
         htmlStr = htmlStr.replace("src=", "width=100% src=");

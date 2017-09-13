@@ -36,7 +36,7 @@ public class CommodityDetailFragment extends BaseFragment{
         introduceFragment = new WebCommodityFragment();
         introduceFragment.setFromCommodityDetail(fromCommodityDetail);
         if (data != null) {
-            introduceFragment.setHtmlStr(data.intruction);
+//            introduceFragment.setHtmlStr(data.intruction);
         }
         if (!introduceFragment.isAdded()) {
             fragmentManager.beginTransaction().add(R.id.mContainer, introduceFragment).commitAllowingStateLoss();
@@ -85,7 +85,7 @@ public class CommodityDetailFragment extends BaseFragment{
                     introduceFragment = new WebCommodityFragment();
                     introduceFragment.setFromCommodityDetail(fromCommodityDetail);
                     if (data != null) {
-                        introduceFragment.setHtmlStr(data.intruction);
+//                        introduceFragment.setHtmlStr(data.intruction);
                     }
                     if (!introduceFragment.isAdded()) {
                         fragmentManager.beginTransaction().add(R.id.mContainer, introduceFragment).commitAllowingStateLoss();
@@ -128,12 +128,12 @@ public class CommodityDetailFragment extends BaseFragment{
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
-    public void refreshCommodityDetail(CommodityDetailResponse data) {
-        this.data = data;
+    public void refreshCommodityDetail(String url) {
+//        this.data = url;
         if (introduceFragment != null) {
 //            introduceFragment.setHtmlStr(data.intruction);
             if (introduceFragment.isAdded()) {
-                introduceFragment.loadHtml(data.toString());
+                introduceFragment.loadHtml(url);
             }
         }
      /*   if (paramsFragment != null) {

@@ -18,7 +18,6 @@ import com.giveu.shoppingmall.model.bean.response.BankListResponse;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
 import com.giveu.shoppingmall.model.bean.response.CheckSmsResponse;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
-import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderScResponse;
@@ -581,9 +580,9 @@ public class ApiImpl {
     }
 
     //商品介绍
-    public static void getCommodityDetail(Activity context, String skuCode, String channel, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
+    public static void getCommodityDetail(Activity context, String skuCode, String channel, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode", "channel"}, new Object[]{skuCode, channel});
-        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, BaseBean.class, context, responseListener);
     }
 
     //商品库存检查
