@@ -399,7 +399,9 @@
         <activity
             android:name=".index.view.activity.ShoppingClassifyActivity"
             android:label="商品分类" />
-
+        <activity
+            android:name=".me.view.activity.OfftheShelfActivity"
+            android:label="商品下架" />
         <activity
             android:name=".index.view.activity.ShoppingSearchActivity"
             android:label="商品搜索" />

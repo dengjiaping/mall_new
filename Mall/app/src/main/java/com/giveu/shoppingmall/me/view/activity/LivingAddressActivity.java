@@ -195,7 +195,6 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         });
         etName.checkFormat(EditView.Style.NAME);
         etPhone.checkFormat(EditView.Style.PHONE);
-        etEmail.checkFormat(EditView.Style.EMAIL);
         etName.addTextChangedListener(new TextChangeListener() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -230,12 +229,6 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
         if (etPhone.getText().toString().length() != 11) {
             if (showToast) {
                 ToastUtils.showShortToast("请输入11位的手机号");
-            }
-            return false;
-        }
-        if (StringUtils.isNull(etEmail.getText().toString()) || !StringUtils.isEmail(etEmail.getText().toString())) {
-            if (showToast) {
-                ToastUtils.showShortToast("请输入正确的电子邮箱");
             }
             return false;
         }
@@ -275,7 +268,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
 
     @Override
     public void addSuccess() {
-        LoginHelper.getInstance().setHasExistLive("2");
+        LoginHelper.getInstance().setHasExistLive("1");
         ToastUtils.showShortToast("居住地址添加成功");
         EventBusUtils.poseEvent(new PwdDialogEvent());
         finish();
