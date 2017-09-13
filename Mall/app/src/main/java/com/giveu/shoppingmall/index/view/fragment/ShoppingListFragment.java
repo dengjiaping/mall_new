@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,9 +22,15 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,50 +166,136 @@ public class ShoppingListFragment extends BaseFragment {
     public void initDataForFragment() {
         pageIndex = 1;
         ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
-            @Override
-            public void onSuccess(GoodsSearchResponse response) {
-                mRefreshView.setPullRefreshEnable(true);
-                if (CommonUtils.isNotNullOrEmpty(response.data.getGoodsList())) {
+                    @Override
+                    public void onSuccess(GoodsSearchResponse response) {
+                        mRefreshView.setPullRefreshEnable(true);
 
-                    if (pageIndex == 1) {
-                        shoppingList.clear();
-                        if (response.data.getGoodsList().size() >= pageSize) {
-                            mRefreshView.setPullLoadEnable(true);
-                        } else {
-                            mRefreshView.setPullLoadEnable(false);
-                            mRefreshView.showEnd("没有更多数据");
+                        if (CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+                            String mockResults = new String(getAssertsFile(mBaseContext, "goods.json"));
+                            if (StringUtils.isNotNull(mockResults)) {
+                                GoodsSearchResponse result = new Gson().fromJson(mockResults, GoodsSearchResponse.class);
+                                response.data.resultList.addAll(result.data.resultList);
+                            }
                         }
 
-                        emptyView.setVisibility(View.GONE);
-                        mRefreshView.onRefreshComplete();
+                        if (CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+
+                            if (pageIndex == 1) {
+                                shoppingList.clear();
+                                if (response.data.resultList.size() >= pageSize) {
+                                    mRefreshView.setPullLoadEnable(true);
+                                } else {
+                                    mRefreshView.setPullLoadEnable(false);
+                                    mRefreshView.showEnd("没有更多数据");
+                                }
+
+                                emptyView.setVisibility(View.GONE);
+                                mRefreshView.onRefreshComplete();
+                            }
+
+                            pageIndex++;
+                            shoppingList.addAll(response.data.resultList);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (pageIndex == 1) {
+                                mRefreshView.onRefreshComplete();
+                                mRefreshView.setPullLoadEnable(false);
+                                emptyView.setVisibility(View.VISIBLE);
+                                shoppingList.clear();
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                mRefreshView.setPullLoadEnable(false);
+                                mRefreshView.showEnd("没有更多数据");
+                            }
+                        }
                     }
 
-                    pageIndex++;
-                    shoppingList.addAll(response.data.getGoodsList());
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    if (pageIndex == 1) {
+                    @Override
+                    public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
-                        mRefreshView.setPullLoadEnable(false);
-                        emptyView.setVisibility(View.VISIBLE);
-                        shoppingList.clear();
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        mRefreshView.setPullLoadEnable(false);
-                        mRefreshView.showEnd("没有更多数据");
+                        GoodsSearchResponse result = null;
+                        String mockResults = new String(getAssertsFile(mBaseContext, "goods.json"));
+                        if (StringUtils.isNotNull(mockResults)) {
+                            result = new Gson().fromJson(mockResults, GoodsSearchResponse.class);
+                        }
+
+                        if (result != null && CommonUtils.isNotNullOrEmpty(result.data.resultList)) {
+                            mAdapter.setSrcIp(result.data.srcIp);
+                            if (pageIndex == 1) {
+                                shoppingList.clear();
+                                if (result.data.resultList.size() >= pageSize) {
+                                    mRefreshView.setPullLoadEnable(true);
+                                } else {
+                                    mRefreshView.setPullLoadEnable(false);
+                                    mRefreshView.showEnd("没有更多数据");
+                                }
+
+                                emptyView.setVisibility(View.GONE);
+                                mRefreshView.onRefreshComplete();
+                            }
+
+                            pageIndex++;
+                            shoppingList.addAll(result.data.resultList);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (pageIndex == 1) {
+                                mRefreshView.onRefreshComplete();
+                                mRefreshView.setPullLoadEnable(false);
+                                emptyView.setVisibility(View.VISIBLE);
+                                shoppingList.clear();
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                mRefreshView.setPullLoadEnable(false);
+                                mRefreshView.showEnd("没有更多数据");
+                            }
+                        }
                     }
+
                 }
-            }
 
-            @Override
-            public void onError(BaseBean errorBean) {
-                mRefreshView.onRefreshComplete();
-            }
-        });
+        );
     }
 
     @Override
     public void initDataDelay() {
         initDataForFragment();
+    }
+
+    public static byte[] getAssertsFile(Context context, String fileName) {
+        InputStream inputStream = null;
+        AssetManager assetManager = context.getAssets();
+        try {
+            inputStream = assetManager.open(fileName);
+            if (inputStream == null) {
+                return null;
+            }
+
+            BufferedInputStream bis = null;
+            int length;
+            try {
+                bis = new BufferedInputStream(inputStream);
+                length = bis.available();
+                byte[] data = new byte[length];
+                bis.read(data);
+
+                return data;
+            } catch (IOException e) {
+
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

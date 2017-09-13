@@ -60,9 +60,7 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
 
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("showRightImage", true);
-        titleBarFragment = TitleBarFragment.newInstance(bundle);
+        titleBarFragment = TitleBarFragment.newInstance(null);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.shopping_classify_title, titleBarFragment)
                 .commit();
