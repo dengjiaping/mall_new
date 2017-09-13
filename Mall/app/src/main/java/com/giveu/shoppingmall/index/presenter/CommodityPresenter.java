@@ -40,8 +40,8 @@ public class CommodityPresenter extends BasePresenter<ICommodityView> {
     }
 
 
-    public void getCommodityDetail(String skuCode) {
-        ApiImpl.getCommodityDetail(null, skuCode, new BaseRequestAgent.ResponseListener<CommodityDetailResponse>() {
+    public void getCommodityDetail(String channel, String skuCode) {
+        ApiImpl.getCommodityDetail(null, skuCode, channel, new BaseRequestAgent.ResponseListener<CommodityDetailResponse>() {
             @Override
             public void onSuccess(CommodityDetailResponse response) {
                 if (getView() != null && response.data != null) {

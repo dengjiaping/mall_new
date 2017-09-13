@@ -14,7 +14,6 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
@@ -47,7 +46,7 @@ public class PayChannelActivity extends BaseActivity {
     @BindView(R.id.ll_pay_status)
     LinearLayout llPayStatus;
     private ConfirmDialog cancelDialog;
-    private boolean isOrderValid = true;
+    private boolean isOrderValid = true;//订单是否有效，有效的话返回上个页面的时候给予提示
     private String orderNo;
     private String timeLeft;
 
@@ -65,15 +64,6 @@ public class PayChannelActivity extends BaseActivity {
         orderNo = getIntent().getStringExtra("orderNo");
         tvMoney.setText("¥" + StringUtils.format2(getIntent().getStringExtra("payment")));
         getRestTime();
-        tvRemainTime.setRestTime(Long.parseLong(timeLeft));
-        tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
-            @Override
-            public void onEnd() {
-                isOrderValid = false;
-                llPayStatus.setVisibility(View.GONE);
-                llPayFail.setVisibility(View.VISIBLE);
-            }
-        });
         cancelDialog = new ConfirmDialog(mBaseContext);
         cancelDialog.setContent("是否放弃支付?");
         cancelDialog.setConfirmStr("取消");
@@ -171,6 +161,19 @@ public class PayChannelActivity extends BaseActivity {
                 if (response != null) {
                     if (StringUtils.isNotNull(response.timeLeft)) {
                         timeLeft = response.timeLeft;
+                        tvRemainTime.setRestTime(Long.parseLong(timeLeft));
+                        tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
+                            @Override
+                            public void onEnd() {
+                                isOrderValid = false;
+                                llPayStatus.setVisibility(View.GONE);
+                                llPayFail.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }else {
+                        isOrderValid = false;
+                        llPayStatus.setVisibility(View.GONE);
+                        llPayFail.setVisibility(View.VISIBLE);
                     }
                 }
             }

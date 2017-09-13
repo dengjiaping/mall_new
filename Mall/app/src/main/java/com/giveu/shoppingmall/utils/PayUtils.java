@@ -61,9 +61,10 @@ public class PayUtils {
 
     /**
      * 支付宝支付
+     *
      * @param activity
      * @param orderInfo 订单信息
-     * @param listener 支付结果回调
+     * @param listener  支付结果回调
      */
     public static void AliPay(Activity activity, String orderInfo, AliPayThread.OnPayListener listener) {
         //支付宝支付是一个异步过程
@@ -88,27 +89,29 @@ public class PayUtils {
             PayTask alipay = new PayTask(activity.get());
             final Map<String, String> result = alipay.payV2(orderInfo, true);
             if (listener != null) {
-                //支付结果
-                activity.get().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String resultCode = result.get("resultStatus");
-                        switch (resultCode) {
-                            //支付成功
-                            case "9000":
-                                listener.onSuccess();
-                                break;
-                            //取消支付
-                            case "6001":
-                                listener.onCancel();
-                                break;
-                            //支付失败
-                            default:
-                                listener.onFail();
-                                break;
+                if (activity.get() != null) {
+                    //支付结果
+                    activity.get().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String resultCode = result.get("resultStatus");
+                            switch (resultCode) {
+                                //支付成功
+                                case "9000":
+                                    listener.onSuccess();
+                                    break;
+                                //取消支付
+                                case "6001":
+                                    listener.onCancel();
+                                    break;
+                                //支付失败
+                                default:
+                                    listener.onFail();
+                                    break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 

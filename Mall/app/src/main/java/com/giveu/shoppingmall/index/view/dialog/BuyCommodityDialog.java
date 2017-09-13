@@ -122,7 +122,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                     13, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
         //显示商品信息，图片，名称，价格
-        updateInfo(response.skuInfo.srcIp + "/" + response.skuInfo.src, response.skuInfo.name, response.skuInfo.salePrice);
+        updateInfo(response.skuInfo.srcIp + ImageUtils.ImageSize.img_size_200_200 + response.skuInfo.src, response.skuInfo.name, response.skuInfo.salePrice);
         //存储默认选中的位置，根据skuCodes遍历查找位置
         ArrayList<Integer> defaultList = new ArrayList<>();
         for (int i = 0; i < skuSpecs.size(); i++) {

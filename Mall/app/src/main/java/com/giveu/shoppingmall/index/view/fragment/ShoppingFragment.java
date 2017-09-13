@@ -166,7 +166,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+                ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -197,7 +197,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+                ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
                 ivCommodity.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -236,7 +236,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.ivCategoryMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
-        ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
+        ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                 + decorationsBean.picSrc, R.drawable.ic_defalut_pic_corner, viewHolder.ivCommodity, DensityUtils.dip2px(4));
         viewHolder.tvTitle.setText(decorationsBean.name);
         viewHolder.tvIntroduction.setText(decorationsBean.title);
