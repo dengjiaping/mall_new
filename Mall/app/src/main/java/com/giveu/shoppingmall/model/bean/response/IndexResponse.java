@@ -39,6 +39,6 @@ public class IndexResponse extends BaseBean<ArrayList<IndexResponse>> {
         public String picSrc;
         public String code;
         public String url;
-        public String urlTypeValue;
+        public int urlTypeValue;
     }
 }

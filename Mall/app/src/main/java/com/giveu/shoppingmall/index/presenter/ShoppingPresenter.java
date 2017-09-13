@@ -208,7 +208,7 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
     }
 
     public void getIndexContent(String channel, String idPerson, int pageNumber, int pageSize, String code ) {
-        ApiImpl.getGoodsSearch(getView().getAct(), channel, idPerson, "", "", pageNumber, pageSize, 0, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+        ApiImpl.getGoodsSearch(getView().getAct(), channel, "13042734", "小米", "synthesize", pageNumber, pageSize, 0, "", new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
             @Override
             public void onSuccess(GoodsSearchResponse response) {
                 if (getView() != null) {
