@@ -66,10 +66,10 @@ public class ShoppingListFragment extends BaseFragment {
     private List<GoodsSearchResponse.GoodsBean> shoppingList;
     private ShopListItemAdapter mAdapter;
     private String channel = "SC";
-    private String idPerson = LoginHelper.getInstance().getIdPerson();
-    private String keyword = "iphone";
+    private String idPerson = "13042734";
+    private String keyword = "小米";
     private String orderSort = SORT_BY_SIZE;
-    private int pageNum = 0;
+    private int pageNum = 1;
     private int pageSize = 10;
     private int shopTypeId = 1;
     private int pageIndex = 1;
@@ -164,18 +164,10 @@ public class ShoppingListFragment extends BaseFragment {
 
     public void initDataForFragment() {
         pageIndex = 1;
-        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, "",new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, "", new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override
                     public void onSuccess(GoodsSearchResponse response) {
                         mRefreshView.setPullRefreshEnable(true);
-
-                        if (CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
-                            String mockResults = new String(getAssertsFile(mBaseContext, "goods.json"));
-                            if (StringUtils.isNotNull(mockResults)) {
-                                GoodsSearchResponse result = new Gson().fromJson(mockResults, GoodsSearchResponse.class);
-                                response.data.resultList.addAll(result.data.resultList);
-                            }
-                        }
 
                         if (CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
 
@@ -212,44 +204,7 @@ public class ShoppingListFragment extends BaseFragment {
                     @Override
                     public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
-                        GoodsSearchResponse result = null;
-                        String mockResults = new String(getAssertsFile(mBaseContext, "goods.json"));
-                        if (StringUtils.isNotNull(mockResults)) {
-                            result = new Gson().fromJson(mockResults, GoodsSearchResponse.class);
-                        }
-
-                        if (result != null && CommonUtils.isNotNullOrEmpty(result.data.resultList)) {
-                            mAdapter.setSrcIp(result.data.srcIp);
-                            if (pageIndex == 1) {
-                                shoppingList.clear();
-                                if (result.data.resultList.size() >= pageSize) {
-                                    mRefreshView.setPullLoadEnable(true);
-                                } else {
-                                    mRefreshView.setPullLoadEnable(false);
-                                    mRefreshView.showEnd("没有更多数据");
-                                }
-
-                                emptyView.setVisibility(View.GONE);
-                                mRefreshView.onRefreshComplete();
-                            }
-
-                            pageIndex++;
-                            shoppingList.addAll(result.data.resultList);
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            if (pageIndex == 1) {
-                                mRefreshView.onRefreshComplete();
-                                mRefreshView.setPullLoadEnable(false);
-                                emptyView.setVisibility(View.VISIBLE);
-                                shoppingList.clear();
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                mRefreshView.setPullLoadEnable(false);
-                                mRefreshView.showEnd("没有更多数据");
-                            }
-                        }
                     }
-
                 }
 
         );
