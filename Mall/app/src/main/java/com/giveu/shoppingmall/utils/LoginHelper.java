@@ -446,37 +446,14 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasExistLive() {
+        loginPersonInfo.existLive = "0";
         if (loginPersonInfo != null && !"0".equals(loginPersonInfo.existLive)) {
             return true;
         } else {
             return false;
         }
     }
-    /**
-     * 是否居住地址只可编辑邮箱
-     *
-     * @return
-     */
-    public boolean canOnlyEditEmail() {
-        if (loginPersonInfo != null && "1".equals(loginPersonInfo.existLive)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-//    /**
-//     * 居住地址是否完整(包含邮箱)
-//     *
-//     * @return
-//     */
-//    public boolean hasFullAddress() {
-//        if (loginPersonInfo != null && "2".equals(loginPersonInfo.existLive)) {
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
     /**
      * 设置是否有居住地址
      *
