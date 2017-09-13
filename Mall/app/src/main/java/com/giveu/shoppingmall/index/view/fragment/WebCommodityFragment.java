@@ -34,7 +34,7 @@ public class WebCommodityFragment extends Fragment {
     private ScrollView mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
-    private String htmlUrl;
+    private String htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
 
     @Nullable
     @Override
@@ -101,7 +101,6 @@ public class WebCommodityFragment extends Fragment {
                 mScrollView.smoothScrollTo(0, 0);
             }
         });
-        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
         wvCommodity.loadUrl(htmlUrl);
         LogUtil.e("htmlUrl = " + htmlUrl);
     }
@@ -112,20 +111,20 @@ public class WebCommodityFragment extends Fragment {
     }
 
     public void loadHtml(String htmlStr) {
-        htmlStr = replaceHtmlStr(htmlStr);
-        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
-        if (wvCommodity != null) {
-            wvCommodity.loadUrl(htmlUrl);
-        }
+//        htmlStr = replaceHtmlStr(htmlStr);
+//        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
+//        if (wvCommodity != null) {
+//            wvCommodity.loadUrl(htmlUrl);
+//        }
     }
 
     public void setHtmlStr(String htmlStr) {
-        htmlStr = replaceHtmlStr(htmlStr);
-        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
-        if (wvCommodity != null) {
-            wvCommodity.loadUrl(htmlUrl);
-//            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
-        }
+//        htmlStr = replaceHtmlStr(htmlStr);
+//        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
+//        if (wvCommodity != null) {
+//            wvCommodity.loadUrl(htmlUrl);
+////            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
+//        }
     }
 
     public String replaceHtmlStr(String htmlStr) {

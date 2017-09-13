@@ -47,7 +47,9 @@
             android:id="@+id/iv_commodity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:src="@drawable/classify_default" />
     </LinearLayout>
 
