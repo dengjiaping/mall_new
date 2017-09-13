@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
 import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
+import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
@@ -129,7 +130,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                LogUtil.e(images.get(position));
+                ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
         //设置标题集合（当banner样式有显示title时）
@@ -155,7 +156,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.tvMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShoppingListActivity.startIt(mBaseContext);
+                ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
         LvCommonAdapter<IndexResponse.DecorationsBean> commonAdapter = new LvCommonAdapter<IndexResponse.DecorationsBean>(mBaseContext, R.layout.rv_hot_item, indexResponse.decorations) {
@@ -229,17 +230,11 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.ivCategoryMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShoppingListActivity.startIt(mBaseContext);
+                ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
-//        LinearLayout llCategoryMore = (LinearLayout) headerView.findViewById(R.id.ll_category_more);
-//        ImageView ivMore = (ImageView) headerView.findViewById(R.id.iv_category_more);
-//        ivMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
-//        ivMore.getLayoutParams().height = (int) (ivMore.getLayoutParams().width * (240 / 159f));
-//        llCategoryMore.getLayoutParams().height = ivMore.getLayoutParams().height + DensityUtils.dip2px(15 + 61);
         viewHolder.ivCategoryMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
-//        viewHolder.llCategoryMore.getLayoutParams().height = viewHolder.ivCategoryMore.getLayoutParams().height + DensityUtils.dip2px(15 + 61);
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
         ImageUtils.loadImageWithCorner(indexResponse.srcIp + "/"
                 + decorationsBean.picSrc, R.drawable.ic_defalut_pic_corner, viewHolder.ivCommodity, DensityUtils.dip2px(4));
