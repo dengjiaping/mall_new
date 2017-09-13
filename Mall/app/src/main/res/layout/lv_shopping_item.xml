@@ -29,6 +29,8 @@
             android:id="@+id/tv_commodity_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="vivo Y55全网通高通8核超薄5.2英寸大屏4G智能美颜自拍手机"
             android:textColor="@color/color_4a4a4a"
             android:textSize="@dimen/ts_13" />
@@ -49,8 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:gravity="bottom"
-            android:text="月供：¥407.00"
-            android:textColor="@color/red" />
+            />
 
         <View
             android:layout_width="match_parent"

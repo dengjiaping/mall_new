@@ -76,6 +76,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.getRefreshableView().addHeaderView(headerView);
         shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<ShoppingResponse.ResultListBean>());
         ptrlv.setAdapter(shoppingAdapter);
+        ptrlv.setPullLoadEnable(false);
         ViewGroup.LayoutParams layoutParams = statusView.getLayoutParams();
         layoutParams.height = DensityUtils.getStatusBarHeight();
         statusView.setLayoutParams(layoutParams);

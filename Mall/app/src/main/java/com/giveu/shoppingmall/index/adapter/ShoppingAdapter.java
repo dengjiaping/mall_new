@@ -3,12 +3,14 @@ package com.giveu.shoppingmall.index.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.model.bean.response.ShoppingResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -38,8 +40,11 @@ public class ShoppingAdapter extends LvCommonAdapter<ShoppingResponse.ResultList
             }
         });
         holder.setText(R.id.tv_commodity_name, item.name);
+        TextView tvMonthAmount = holder.getView(R.id.tv_monthly_price);
         holder.setText(R.id.tv_price, "¥"+StringUtils.format2(item.salePrice));
-        holder.setText(R.id.tv_monthly_price, "月供：¥"+StringUtils.format2(item.monthAmount));
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供：¥",
+                StringUtils.format2(item.monthAmount), " 起",
+                16, 11, R.color.color_ff2a2a, R.color.color_4a4a4a);
     }
 
     public void setDataAndSrcIp(List<ShoppingResponse.ResultListBean> data, String srcIp) {
