@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -17,13 +16,15 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.cash.view.activity.AddAddressActivity;
+import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
-import com.giveu.shoppingmall.index.view.dialog.ChooseCouponDialog;
+import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderScResponse;
 import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuInfo;
@@ -60,7 +61,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     StableEditText msgEditText;
     //优惠券
     @BindView(R.id.confirm_order_coupon)
-    DetailView dvCouponView;
+    DetailView dvCardsView;
     //首付
     @BindView(R.id.confirm_order_first_pay)
     DetailView dvFirstPayView;
@@ -87,7 +88,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvAddressPhone;
     @BindView(R.id.confirm_order_address_content)
     TextView tvAddressContent;
-    private CreateOrderResponse.ReceiverJoBean addressJoBean;
     //sku商品信息
     @BindView(R.id.confirm_order_skuinfo_icon)
     ImageView ivSkuInfoIcon;
@@ -100,28 +100,61 @@ public class ConfirmOrderActivity extends BaseActivity {
     @BindView(R.id.confirm_order_skuinfo_total_price)
     TextView tvSkuInfoTotalPrice;
 
-
-    private ChooseCouponDialog couponDialog;
+    //地址信息
+    private CreateOrderResponse.ReceiverJoBean addressJoBean;
+    //优惠券信息
+    private List<CreateOrderResponse.CardListBean> cardList;
+    private ChooseCardsDialog chooseCardsDialog;
     private PaymentTypeDialog paymentTypeDialog;
     private CustomListDialog firstPayDialog;
     private CustomListDialog monthDialog;
     private DealPwdDialog pwdDialog;
 
-    private int payType = 2;
-    private int couponType = 0;
+    private int payType = 2; //支付方式
+    private int cardId = 0; //优惠券Id
 
+    //首付列表,暂时不用
     private List<CharSequence> firstPayList;
+    //分期列表,暂时不用
     private List<CharSequence> monthList;
-
+    //送货时间,暂时不用
     private String sendTime;
+    //安装时间,暂时不用
     private String installTime;
 
     private CreateOrderResponse result;
+
+    private String channel;
+    private String skuCode;
+    private int downPaymentRate;
+    private int quantity;
+    private String idPerson;
+    private String customerName = null;
+    private String customerPhone = null;
+
+    public static void startIt(Context context) {
+        Intent intent = new Intent(context, ConfirmOrderActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startIt(Context context, int downPaymentRate, int quantity, String skuCode) {
+        Intent intent = new Intent(context, ConfirmOrderActivity.class);
+        intent.putExtra("downPaymentRate", downPaymentRate);
+        intent.putExtra("quantity", quantity);
+        intent.putExtra("skuCode", skuCode);
+        context.startActivity(intent);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_confirm_order);
         baseLayout.setTitle("订单信息确认");
+
+        downPaymentRate = getIntent().getIntExtra("downPaymentRate", 0);
+        quantity = getIntent().getIntExtra("quantity", 0);
+        skuCode = getIntent().getStringExtra("skuCode");
+        channel = Const.CHANNEL;
+        idPerson = LoginHelper.getInstance().getIdPerson();
 
         paymentTypeDialog = new PaymentTypeDialog(this);
         paymentTypeDialog.disableWalletPay();
@@ -136,14 +169,6 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         msgEditText.setStableText("买家留言(选填)：");
         msgEditText.setText("提示信息");
-
-        couponDialog = new ChooseCouponDialog(this, Arrays.asList(new CharSequence[]{"满600减30元全品类", "不使用优惠券"}), new ChooseCouponDialog.OnChooseTypeListener() {
-            @Override
-            public void onChooseType(int type, String typeMsg) {
-                couponType = type;
-                dvCouponView.setRightText(typeMsg);
-            }
-        });
 
         firstPayDialog = new CustomListDialog(this, new AdapterView.OnItemClickListener() {
             @Override
@@ -167,14 +192,13 @@ public class ConfirmOrderActivity extends BaseActivity {
     @Override
     public void setData() {
         SkuInfo skuInfo = new SkuInfo();
-        skuInfo.setQuantity(1);
-        skuInfo.setSkuCode(4538000);
-        ApiImpl.createOrderSc(this, "qq", "1111", 10, skuInfo, new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
+        skuInfo.setQuantity(quantity);
+        skuInfo.setSkuCode(skuCode);
+        ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, skuInfo, new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
             @Override
             public void onSuccess(CreateOrderResponse response) {
                 String mockResults = new String(getAssertsFile(mBaseContext, "createOrderSc.json"));
                 result = new Gson().fromJson(mockResults, CreateOrderResponse.class);
-                Log.d("zlt", "response = " + result);
                 updateUI(result);
             }
 
@@ -182,7 +206,6 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onError(BaseBean errorBean) {
                 String mockResults = new String(getAssertsFile(mBaseContext, "createOrderSc.json"));
                 result = new Gson().fromJson(mockResults, CreateOrderResponse.class);
-                Log.d("zlt", "response = " + result);
             }
         });
     }
@@ -192,7 +215,24 @@ public class ConfirmOrderActivity extends BaseActivity {
         updateAddress(result.data.receiverJo);
         //更新商品界面
         updateSku(result);
+        //更新优惠券界面
+        updateCard(result.data.cardList);
 
+    }
+
+    private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
+        if (lists != null && lists.size() > 0) {
+            cardList = lists;
+            chooseCardsDialog = new ChooseCardsDialog(this, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
+                @Override
+                public void onChooseType(int id, String name) {
+                    dvCardsView.setRightText(name);
+                    cardId = id;
+                }
+            });
+        } else {
+            dvCardsView.setRightText("没有可用优惠券");
+        }
     }
 
     private void updateSku(CreateOrderResponse result) {
@@ -225,6 +265,13 @@ public class ConfirmOrderActivity extends BaseActivity {
     private void updateAddress(CreateOrderResponse.ReceiverJoBean bean) {
         if (bean != null) {
             addressJoBean = bean;
+
+            if (customerName == null || customerPhone == null) {
+                //第一次初始化的时候保存客户姓名和电话，之后手动修改地址就不改变
+                customerName = addressJoBean.custName;
+                customerPhone = addressJoBean.phone;
+            }
+
             if (StringUtils.isNotNull(addressJoBean.custName)) {
                 tvAddressName.setText(addressJoBean.custName);
             }
@@ -270,11 +317,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    public static void startIt(Context context) {
-        Intent intent = new Intent(context, ConfirmOrderActivity.class);
-        context.startActivity(intent);
-    }
-
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_coupon,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
             R.id.confirm_order_household,
@@ -287,7 +329,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                 paymentTypeDialog.showDialog(payType);
                 break;
             case R.id.confirm_order_coupon:
-                couponDialog.show(couponType);
+                if (cardList != null && cardList.size() > 0) {
+                    chooseCardsDialog.show(cardId);
+                }
                 break;
             case R.id.confirm_order_first_pay:
                 firstPayDialog.show();
@@ -299,15 +343,32 @@ public class ConfirmOrderActivity extends BaseActivity {
                 ConfirmHouseHoldActivity.startItForResult(this, 0, installTime, sendTime);
                 break;
             case R.id.rl_receiving_address:
-                AddAddressActivity.startItForResult(this, Const.ADDRESSMANAGE);
+                AddressManageActivity.startItForResult(this, Const.ADDRESSMANAGE);
                 break;
             case R.id.tv_ok:
                 pwdDialog.showDialog();
+                confirmOrderSc();
                 break;
 
             default:
                 break;
         }
+    }
+
+    private void confirmOrderSc() {
+        ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
+                payType, addressJoBean, 0, new SkuInfo(quantity, skuCode), msgEditText.getFinalText(),
+                customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
+                    @Override
+                    public void onSuccess(ConfirmOrderScResponse response) {
+
+                    }
+
+                    @Override
+                    public void onError(BaseBean errorBean) {
+
+                    }
+                });
     }
 
     @Override
@@ -355,10 +416,30 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         }
 
-        if (requestCode == Const.ADDRESSMANAGE && resultCode == RESULT_OK){//地址修改
-            setData();
+        if (requestCode == Const.ADDRESSMANAGE && resultCode == RESULT_OK) {//地址修改
+            if (data.getSerializableExtra("address") != null) {
+                AddressListResponse address = (AddressListResponse) data.getSerializableExtra("address");
+                updateAddress(converAddressBean(address));
+            }
         }
     }
+
+    private CreateOrderResponse.ReceiverJoBean converAddressBean(AddressListResponse response) {
+        CreateOrderResponse.ReceiverJoBean receiverJoBean = new CreateOrderResponse.ReceiverJoBean();
+        receiverJoBean.custName = response.custName;
+        receiverJoBean.address = response.address;
+        receiverJoBean.phone = response.phone;
+        receiverJoBean.province = response.province;
+        receiverJoBean.provinceCode = response.provinceCode;
+        receiverJoBean.city = response.city;
+        receiverJoBean.cityCode = response.cityCode;
+        receiverJoBean.region = response.region;
+        receiverJoBean.regionCode = response.regionCode;
+        receiverJoBean.street = response.street;
+        receiverJoBean.streetCode = response.streetCode;
+        return receiverJoBean;
+    }
+
 
     public static byte[] getAssertsFile(Context context, String fileName) {
         InputStream inputStream = null;

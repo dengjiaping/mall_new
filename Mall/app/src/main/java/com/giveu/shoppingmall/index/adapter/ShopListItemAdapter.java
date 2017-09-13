@@ -40,7 +40,8 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             public void onClick(View v) {
                 //K00002691可以分期   K00002713可以一次
                 if (item.isInstallments == 1) {
-                    CommodityDetailActivity.startIt(mContext, true, item.skuCode);
+//                    CommodityDetailActivity.startIt(mContext, true, item.skuCode);
+                    ConfirmOrderActivity.startIt(mContext);
                 } else {
                     CommodityDetailActivity.startIt(mContext, false, item.skuCode);
                 }

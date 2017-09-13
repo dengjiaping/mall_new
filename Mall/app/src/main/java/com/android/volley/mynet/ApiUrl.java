@@ -193,5 +193,7 @@ public interface ApiUrl {
     String order_getAppDownPayAndMonthPay = BASE_URL + "order/getAppDownPayAndMonthPay";
     //创建订单
     String order_createOrderSc = BASE_URL + "order/createOrderSc";
+    //订单确认
+    String order_confirmOrderSc = BASE_URL + "order/confirmOrderSc";
 }
 

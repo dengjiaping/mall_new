@@ -45,7 +45,7 @@ public class AddressManageActivity extends BaseActivity {
 
     public static void startItForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, AddressManageActivity.class);
-        intent.putExtra("canClick",true);
+        intent.putExtra("canClick", true);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -112,7 +112,7 @@ public class AddressManageActivity extends BaseActivity {
         tvAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAddressActivity.startItForResult(mBaseContext,Const.ADDRESSMANAGE);
+                AddAddressActivity.startItForResult(mBaseContext, Const.ADDRESSMANAGE);
             }
         });
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,13 +120,14 @@ public class AddressManageActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = getIntent();
-                boolean canClick = intent.getBooleanExtra("canClick",false);
-                if(canClick){
+                boolean canClick = intent.getBooleanExtra("canClick", false);
+                if (canClick) {
                     //订单确认页过来，需要点击回调返回数据
                     if (addressManageAdapter != null && position > 0) {
                         Intent data = new Intent();
-                        data.putExtra("adress", addressManageAdapter.getItem(position - 1));
+                        data.putExtra("address", addressManageAdapter.getItem(position - 1));
                         setResult(RESULT_OK, data);
+                        finish();
                     }
                 }
             }

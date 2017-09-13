@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.CommodityInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.ConfirmOrderScResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.ContactsBean;
 import com.giveu.shoppingmall.model.bean.response.ContactsResponse;
@@ -579,8 +580,8 @@ public class ApiImpl {
     }
 
     //商品介绍
-    public static void getCommodityDetail(Activity context, String skuCode,String channel, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode","channel"}, new Object[]{skuCode,channel});
+    public static void getCommodityDetail(Activity context, String skuCode, String channel, BaseRequestAgent.ResponseListener<CommodityDetailResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"skuCode", "channel"}, new Object[]{skuCode, channel});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_detail, CommodityDetailResponse.class, context, responseListener);
     }
 
@@ -611,6 +612,12 @@ public class ApiImpl {
     public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_createOrderSc, CreateOrderResponse.class, context, responseListener);
+    }
+
+    //订单确认
+    public static void confirmOrderSc(Activity context, String channel, int courtesyCardId, int downPaymentRate, String idPerson, String idProduct, int installDate, int insuranceFee, int payType, CreateOrderResponse.ReceiverJoBean receiverJoBean, int reservingDate, SkuInfo skuInfo, String userComments, String userMobile, String userName, BaseRequestAgent.ResponseListener<ConfirmOrderScResponse> listener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "courtesyCardId", "downPaymentRate", "idPerson", "idProduct", "installDate", "insuranceFee", "payType", "receiverJo", "reservingDate", "skuInfo", "userComments", "userMobile", "userName"}, new Object[]{channel, courtesyCardId, downPaymentRate, idPerson, idProduct, installDate, insuranceFee, payType, receiverJoBean, reservingDate, skuInfo, userComments, userMobile, userName});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, CreateOrderResponse.class, context, listener);
     }
 }
 

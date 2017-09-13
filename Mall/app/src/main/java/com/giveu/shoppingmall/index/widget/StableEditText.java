@@ -158,6 +158,6 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
         if (stableText == null) {
             return reslut;
         }
-        return reslut.replaceFirst(stableText.toString(), "");
+        return reslut.substring(stableText.length());
     }
 }

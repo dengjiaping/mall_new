@@ -6,13 +6,21 @@ package com.giveu.shoppingmall.model.bean.response;
 
 public class SkuInfo {
     private int quantity;
-    private int skuCode;
+    private String skuCode;
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public void setSkuCode(int skuCode) {
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
+    }
+
+    public SkuInfo() {
+    }
+
+    public SkuInfo(int quantity, String skuCode) {
+        this.quantity = quantity;
         this.skuCode = skuCode;
     }
 }
