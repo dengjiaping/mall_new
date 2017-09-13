@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -221,6 +222,9 @@ public class MainMeFragment extends BaseFragment {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 BaseApplication.getInstance().fetchUserInfo();
+                if (!NetWorkUtils.isNetWorkConnected()) {
+                    ptrsv.onRefreshComplete();
+                }
             }
         });
     }

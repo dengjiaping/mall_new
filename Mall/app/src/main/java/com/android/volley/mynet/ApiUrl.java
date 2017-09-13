@@ -21,6 +21,7 @@ public interface ApiUrl {
         String authorize = H5_BASE_URL + "h5/sales/index.html#/Common/Authorize";//代扣
         String uRProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/URProtocol";//注册
         String oConsumeLoanStatic = H5_BASE_URL + "h5/sales/index.html#/OConsume/OConsumeLoanStatic";//充值
+        String xFFQLoanStatic = H5_BASE_URL + "h5/sales/index.html#/XFFQ/XFFQLoanStatic";//消费分期合同
     }
 
     //帮助与反馈

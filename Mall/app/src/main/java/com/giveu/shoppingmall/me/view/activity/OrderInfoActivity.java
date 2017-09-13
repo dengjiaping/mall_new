@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.mynet.ApiUrl;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
@@ -351,8 +352,18 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvUserComments.setText(userComments);
         }
         //支付金额
-        if (StringUtils.isNotNull(response.totalPrice)) {
-//            tvTotal.setText("¥" + StringUtils.format2(response.totalPrice));
+        if (response.status == 1) {
+            if (StringUtils.isNotNull(response.totalPrice)) {
+                tvTotal.setText("¥" + StringUtils.format2(response.totalPrice));
+                finalPayment = Double.parseDouble(response.totalPrice);
+            }
+        } else if (response.status == 2) {
+            if (StringUtils.isNotNull(response.downPayment)) {
+                tvTotal.setText("¥" + StringUtils.format2(response.downPayment));
+                finalPayment = Double.parseDouble(response.downPayment);
+            }
+        } else {
+            
         }
 
         //充值号码
@@ -441,7 +452,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //消费分期合同
             case R.id.tv_contract:
-                CustomWebViewActivity.startIt(mBaseContext, "www.baidu.com", "消费分期合同");
+                CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.xFFQLoanStatic, "消费分期合同");
                 break;
 
             //订单追踪

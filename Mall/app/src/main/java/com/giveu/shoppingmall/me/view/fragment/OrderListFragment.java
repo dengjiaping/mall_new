@@ -23,7 +23,8 @@ import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -94,7 +95,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                String orderNo = mDatas.get(position - 1).orderNo;
+                String orderNo = adapter.getData().get(position - 1).orderNo;
                 if (StringUtils.isNotNull(orderNo))
                     OrderInfoActivity.startIt(mBaseContext, orderNo);
             }
@@ -105,6 +106,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullLoadEnable(false);
                 onRefresh();
+                if (!NetWorkUtils.isNetWorkConnected()) {
+                    ptrlv.onRefreshComplete();
+                }
             }
 
             @Override
@@ -130,7 +134,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, OrderState.CHANNEL, "10056737", pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, "10056737", pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
                 ll_emptyView.setVisibility(View.GONE);
@@ -177,11 +181,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         });
     }
 
-    //不需要做处理
-    @Override
-    public void showOrderDetail(BaseBean response) {
-
-    }
 
     //订单删除成功
     @Override
@@ -193,14 +192,23 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     //取消订单成功
     @Override
     public void cancelOrderSuccess(String orderNo) {
-        removeData(orderNo);
+        if (orderState == 0) {
+            ToastUtils.showLongToast("lskd");
+            onRefresh();
+        } else {
+            removeData(orderNo);
+        }
         ToastUtils.showLongToast("订单取消成功");
     }
 
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        removeData(orderNo);
+        if (orderState == 0) {
+            onRefresh();
+        } else {
+            removeData(orderNo);
+        }
         ToastUtils.showLongToast("确认收货成功");
     }
 
@@ -239,5 +247,12 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             ptrlv.setPullLoadEnable(false);
             ll_emptyView.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    //不需要做处理
+    @Override
+    public void showOrderDetail(BaseBean response) {
+
     }
 }

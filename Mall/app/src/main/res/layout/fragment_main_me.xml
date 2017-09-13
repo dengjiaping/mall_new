@@ -7,14 +7,14 @@
 
     <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView
         android:id="@+id/ptrsv"
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <ScrollView
+       <!-- <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:fillViewport="true">-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -515,6 +515,6 @@
             </LinearLayout>
 
 
-        </ScrollView>
+       <!-- </ScrollView>-->
     </com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView>
 </RelativeLayout>

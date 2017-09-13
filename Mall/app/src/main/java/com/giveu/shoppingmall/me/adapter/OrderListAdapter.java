@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
-import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -20,6 +19,7 @@ import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 
 import java.util.List;
@@ -33,14 +33,9 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     private OrderHandlePresenter presenter;
     private String channelName = "";//渠道名称
     private ConfirmDialog dialog;//确认弹框
-    private String orderNo;
-    private String src;
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
     private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
-    private String payType;//支付方式
-    private double finalPayment;//最终支付金额
-    private boolean isWalletPay;//是否钱包支付
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
@@ -55,19 +50,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     @Override
-    protected void convert(ViewHolder viewHolder, OrderListResponse.SkuInfoBean item, int position) {
+    protected void convert(ViewHolder viewHolder, final OrderListResponse.SkuInfoBean item, int position) {
         viewHolder.setText(R.id.tv_channel_name, channelName);
-        if (StringUtils.isNotNull(item.orderNo)) {
-            orderNo = item.orderNo;
-        }
-        if (StringUtils.isNotNull(item.payType)) {
-            payType = item.payType;
-            if ("0".equals(payType)) {
-                isWalletPay = true;
-            } else {
-                isWalletPay = false;
-            }
-        }
         if (StringUtils.isNotNull(item.name))
             viewHolder.setText(R.id.tv_name, item.name);
         if (StringUtils.isNotNull(item.salePrice))
@@ -76,9 +60,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         //图片icon
         if (StringUtils.isNotNull(item.srcIp)) {
             if (StringUtils.isNotNull(item.src)) {
-                src = item.srcIp + item.src;
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
-                ImageUtils.loadImage(src, imageView);
+                ImageUtils.loadImage(item.srcIp + item.src, imageView);
             }
         }
         /**
@@ -127,13 +110,23 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showCancelDialog();
+                        showCancelDialog(item.orderNo);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onPay();
+                        if (StringUtils.isNotNull(item.timeLeft)) {
+                            Double finalPayment;
+                            if (item.status == 1) {
+                                finalPayment = Double.parseDouble(item.payPrice);
+                            } else {
+                                finalPayment = Double.parseDouble(item.downPayment);
+                            }
+                            onPay(item.orderNo, item.payType, finalPayment);
+                        } else {
+                            ToastUtils.showLongToast("订单已失效");
+                        }
                     }
                 });
                 break;
@@ -147,13 +140,23 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo, src);
+                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onPay();
+                        if (StringUtils.isNotNull(item.timeLeft)) {
+                            Double finalPayment;
+                            if (item.status == 1) {
+                                finalPayment = Double.parseDouble(item.payPrice);
+                            } else {
+                                finalPayment = Double.parseDouble(item.downPayment);
+                            }
+                            onPay(item.orderNo, item.payType, finalPayment);
+                        } else {
+                            ToastUtils.showLongToast("订单已失效");
+                        }
                     }
                 });
                 break;
@@ -174,13 +177,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo, src);
+                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showReceiveDialog();
+                        showReceiveDialog(item.orderNo);
                     }
                 });
                 break;
@@ -193,29 +196,41 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(orderNo, src);
+                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
                     }
                 });
                 break;
 
             //订单已关闭
             case OrderState.CLOSED:
-                viewHolder.setVisible(R.id.tv_button_left, true);
-                viewHolder.setVisible(R.id.tv_button_right, true);
-                viewHolder.setText(R.id.tv_button_left, "订单追踪");
-                viewHolder.setText(R.id.tv_button_right, "删除订单");
-                viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        presenter.onTrace(orderNo, src);
-                    }
-                });
-                viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDeleteDialog();
-                    }
-                });
+                if (item.orderType == 0) {
+                    viewHolder.setVisible(R.id.tv_button_left, true);
+                    viewHolder.setVisible(R.id.tv_button_right, true);
+                    viewHolder.setText(R.id.tv_button_left, "订单追踪");
+                    viewHolder.setText(R.id.tv_button_right, "删除订单");
+                    viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            presenter.onTrace(item.orderNo, item.srcIp + item.src);
+                        }
+                    });
+                    viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showDeleteDialog(item.orderNo);
+                        }
+                    });
+                } else {
+                    viewHolder.setVisible(R.id.tv_button_left, false);
+                    viewHolder.setVisible(R.id.tv_button_right, true);
+                    viewHolder.setText(R.id.tv_button_right, "删除订单");
+                    viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showDeleteDialog(item.orderNo);
+                        }
+                    });
+                }
                 break;
 
             //充值中
@@ -238,7 +253,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showRefundDialog();
+                        showRefundDialog(item.orderNo);
                     }
                 });
                 break;
@@ -248,7 +263,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //点击去支付、去首付后的流程处理
-    private void onPay() {
+    private void onPay(final String order, final String payType, final double finalPayment) {
         //是否有开通钱包
         if (LoginHelper.getInstance().hasQualifications()) {
             //是否设置了交易密码
@@ -263,7 +278,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
-                        presenter.onVerifyPayPwd(payPwd, orderNo, isWalletPay, finalPayment + "");
+                        if ("0".equals(payType)) {
+                            presenter.onVerifyPayPwd(payPwd, order, true, finalPayment + "");
+                        } else {
+                            presenter.onVerifyPayPwd(payPwd, order, false, finalPayment + "");
+                        }
                     }
                 });
                 dealPwdDialog.showDialog();
@@ -277,13 +296,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
 
     //取消订单dialog
-    private void showCancelDialog() {
+    private void showCancelDialog(final String order) {
         dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("确认取消订单？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                presenter.onCancelOrder(orderNo);
+                presenter.onCancelOrder(order);
                 dialog.dismiss();
             }
 
@@ -296,13 +315,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //确认收货dialog
-    private void showReceiveDialog() {
+    private void showReceiveDialog(final String order) {
         dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("是否确认收货？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                presenter.onConfirmReceive(orderNo);
+                presenter.onConfirmReceive(order);
                 dialog.dismiss();
             }
 
@@ -315,13 +334,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //删除订单diaolog
-    private void showDeleteDialog() {
+    private void showDeleteDialog(final String order) {
         dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("是否删除订单？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                presenter.onDeleteOrder(orderNo);
+                presenter.onDeleteOrder(order);
                 dialog.dismiss();
             }
 
@@ -335,13 +354,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
 
     //申请退款diaolog
-    private void showRefundDialog() {
+    private void showRefundDialog(final String order) {
         dialog = new ConfirmDialog((Activity) mContext);
         dialog.setContent("确认申请退款？");
         dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                presenter.onApplyToRefund(orderNo);
+                presenter.onApplyToRefund(order);
                 dialog.dismiss();
             }
 
