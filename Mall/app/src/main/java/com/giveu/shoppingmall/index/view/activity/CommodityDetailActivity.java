@@ -32,7 +32,6 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -225,7 +224,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                             presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
                         }
                     } else {
-                        ToastUtils.showShortToast("请先激活钱包再来操作");
+                        commodityInfoFragment.showNotActiveDialog();
                     }
                 }
 

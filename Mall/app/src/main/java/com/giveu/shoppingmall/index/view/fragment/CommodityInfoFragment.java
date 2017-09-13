@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
@@ -110,6 +111,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private String commodityPrice;
     private int commodityAmounts;
     private String commodityName;
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -125,6 +127,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog = new BuyCommodityDialog(mBaseContext);
         //地址选择对话框
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
         creditDialog = new CreditCommodityDialog(mBaseContext);
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
@@ -209,13 +212,20 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
             public void confirm(int amounts) {
-                //如果是分期产品，那么需要选择分期数，首付等
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    if (LoginHelper.getInstance().hasQualifications()) {
+                        ConfirmOrderActivity.startIt(mBaseContext);
+                    } else {
+                        notActiveDialog.showDialog();
+                    }
+                }
+/*                //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
                     commodityAmounts = amounts;
                     presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
                 } else {
                     ConfirmOrderActivity.startIt(mBaseContext);
-                }
+                }*/
             }
 
             @Override
@@ -242,6 +252,13 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
         });
     }
+
+    public void showNotActiveDialog() {
+        if (notActiveDialog != null) {
+            notActiveDialog.showDialog();
+        }
+    }
+
 
     public void showChooseCityDialog() {
         if (chooseCityDialog != null) {
@@ -371,7 +388,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         }
     }
 
-    public void refreshCommodityDetail(CommodityDetailResponse data){
+    public void refreshCommodityDetail(CommodityDetailResponse data) {
         commodityDetailFragment.refreshCommodityDetail(data);
     }
 
