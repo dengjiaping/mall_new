@@ -5,6 +5,7 @@
     android:id="@+id/ll_category"
     android:background="@drawable/shape_commodity"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="wrap_content"
         android:text="手表馆"
@@ -12,8 +13,11 @@
         android:textColor="@color/black"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="12dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_name" />
+
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:text="尽享品质生活"
         android:textSize="@dimen/ts_12"
