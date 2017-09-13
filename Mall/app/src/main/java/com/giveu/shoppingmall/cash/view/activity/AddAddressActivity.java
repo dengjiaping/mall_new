@@ -69,17 +69,17 @@ public class AddAddressActivity extends BasePermissionActivity {
     private PermissionDialog permissionDialog;
     AddressListResponse addressResponse;
 
-    public static void startIt(Activity activity) {
+    public static void startItForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("type", ADD);
-        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
+        activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void startIt(Activity activity, AddressListResponse item) {
+    public static void startItForResult(Activity activity, AddressListResponse item, int requestCode) {
         Intent intent = new Intent(activity, AddAddressActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("type", EDIT);
-        activity.startActivityForResult(intent, Const.ADDRESSMANAGE);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     private void initPermissionDialog() {

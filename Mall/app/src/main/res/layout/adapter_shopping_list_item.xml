@@ -11,19 +11,19 @@
         android:id="@+id/item_left_image"
         android:layout_width="120dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/defalut_img_88_88" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/item_right_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:text="vivo Y55全网通高通8核超薄5.2英寸大屏4G智能美颜自拍手机"
             android:textColor="@color/color_3e3e3e"
             android:textSize="@dimen/ts_14" />
@@ -32,20 +32,26 @@
             android:id="@+id/item_right_desc"
             android:layout_width="match_parent"
             android:layout_height="15dp"
-            android:layout_marginTop="4dp"
+            android:layout_below="@id/item_right_name"
             android:gravity="center_vertical|left"
             android:text="手势自拍，闪速证明指纹"
             android:textColor="@color/color_999999"
             android:textSize="@dimen/ts_10" />
 
-        <View
+        <TextView
+            android:id="@+id/item_right_price"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:text="￥6880.00"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_13" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_above="@id/item_right_price"
             android:gravity="bottom|left"
             android:orientation="horizontal">
 
@@ -62,13 +68,6 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/item_right_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="￥6880.00"
-            android:textColor="@color/color_9b9b9b"
-            android:textSize="@dimen/ts_13" />
-    </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

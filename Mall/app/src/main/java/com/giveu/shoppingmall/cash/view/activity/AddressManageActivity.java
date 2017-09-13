@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.mynet.BaseBean;
@@ -42,6 +43,12 @@ public class AddressManageActivity extends BaseActivity {
         activity.startActivity(intent);
     }
 
+    public static void startItForResult(Activity activity, int requestCode) {
+        Intent intent = new Intent(activity, AddressManageActivity.class);
+        intent.putExtra("canClick",true);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_address_manage);
@@ -56,7 +63,7 @@ public class AddressManageActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.getAddressList(mBaseContext,LoginHelper.getInstance().getIdPerson(), "5", new BaseRequestAgent.ResponseListener<AddressListResponse>() {
+        ApiImpl.getAddressList(mBaseContext, LoginHelper.getInstance().getIdPerson(), "5", new BaseRequestAgent.ResponseListener<AddressListResponse>() {
             @Override
             public void onSuccess(AddressListResponse response) {
                 if (response != null && response.data != null) {
@@ -79,7 +86,7 @@ public class AddressManageActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(Const.ADDRESSMANAGE == requestCode && RESULT_OK == resultCode){
+        if (Const.ADDRESSMANAGE == requestCode && RESULT_OK == resultCode) {
             //添加成功或修改成功回来刷新页面
             setData();
         }
@@ -105,7 +112,23 @@ public class AddressManageActivity extends BaseActivity {
         tvAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAddressActivity.startIt(mBaseContext);
+                AddAddressActivity.startItForResult(mBaseContext,Const.ADDRESSMANAGE);
+            }
+        });
+        ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = getIntent();
+                boolean canClick = intent.getBooleanExtra("canClick",false);
+                if(canClick){
+                    //订单确认页过来，需要点击回调返回数据
+                    if (addressManageAdapter != null && position > 0) {
+                        Intent data = new Intent();
+                        data.putExtra("adress", addressManageAdapter.getItem(position - 1));
+                        setResult(RESULT_OK, data);
+                    }
+                }
             }
         });
     }

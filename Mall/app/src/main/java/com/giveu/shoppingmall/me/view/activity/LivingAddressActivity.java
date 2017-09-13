@@ -97,6 +97,11 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
             tvCommit.setVisibility(View.GONE);
             tvSyncAddress.setVisibility(View.GONE);
+            if("".equals(StringUtils.getTextFromView(etEmail))){
+                llEmail.setVisibility(View.GONE);
+            }else{
+                llEmail.setVisibility(View.VISIBLE);
+            }
             setEditDisabled(etEmail);
             setEditDisabled(etPhone);
             setEditDisabled(etName);
@@ -262,6 +267,10 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
             String name = etName.getText().toString();
             String email = etEmail.getText().toString();
             //添加居住地址
+            if("".equals(etEmail.getText().toString())){
+                //没有邮箱的时候传null  传空字符串的话 会返回电子邮箱不正确
+                email = null;
+            }
             presenter.addLiveAddress(LoginHelper.getInstance().getIdPerson(), phone, name, email, province, city, region, street, building);
         }
     }
