@@ -446,7 +446,6 @@ public class LoginHelper extends AbsSharePref {
      * @return
      */
     public boolean hasExistLive() {
-        loginPersonInfo.existLive = "0";
         if (loginPersonInfo != null && !"0".equals(loginPersonInfo.existLive)) {
             return true;
         } else {

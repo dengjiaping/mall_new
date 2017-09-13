@@ -43,6 +43,7 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
         public String src;
         public String srcIp;
         public int status;
+        public int isInstallments;
         public boolean isCheck = false;//单项是否选中,默认未选中
         public boolean isShowCb = false;//每一项前面是否显示框，默认不显示
         /**

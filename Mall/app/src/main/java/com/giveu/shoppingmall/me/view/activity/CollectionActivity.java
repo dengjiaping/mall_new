@@ -16,7 +16,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
-import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
+import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.me.adapter.CollectionAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
@@ -51,10 +51,7 @@ public class CollectionActivity extends BaseActivity {
     CheckBox cbChoose;
     @BindView(R.id.tv_delete_text)
     TextView tvDeleteText;
-    @BindView(R.id.ll_off_the_shelf)
-    LinearLayout llOffTheShelf;
-    @BindView(R.id.tv_back)
-    TextView tvBack;
+
     private int pageIndex = 1;
     private final int pageSize = 10;
     String type;//DELETEMORE 全选删除多项; DELETEONE 长按删除某一项
@@ -175,11 +172,22 @@ public class CollectionActivity extends BaseActivity {
                 showDeleteGoodsDialog(collectionAdapter, -1, DELETEMORE);
             }
         });
-        tvBack.setOnClickListener(new View.OnClickListener() {
+        ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                CommonUtils.startActivity(mBaseContext, ShoppingClassifyActivity.class);
-                finish();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (collectionAdapter != null) {
+                    if (collectionAdapter.getItem(position) != null) {
+                        CollectionResponse.ResultListBean item = collectionAdapter.getItem(position);
+                        if (item.hasInvalid()) {
+                            //失效显示已下架
+                            OfftheShelfActivity.startIt(mBaseContext);
+                        } else {
+                            //跳转商品介绍
+                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1, item.skuCode);
+                        }
+                    }
+                }
+
             }
         });
     }
