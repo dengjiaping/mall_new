@@ -16,7 +16,7 @@ public interface ApiUrl {
         String commonProblem = DebugConfig.getCommonQuestionBaseUrl() + "question/";//常见问题
         String cashBLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashB/CashBLoanStatic";//随借随还
         String cashLoanStatic = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//现金贷
-        String test = H5_BASE_URL + "h5/sales/index.html#/CashI/CashLoanStatic";//人身意外伤害保险
+        String xFFQInsuredNotice = H5_BASE_URL + "h5/sales/index.html#/XFFQ/XFFQInsuredNotice";//人身意外伤害保险
         String pAProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/PAProtocol";//钱包激活
         String authorize = H5_BASE_URL + "h5/sales/index.html#/Common/Authorize";//代扣
         String uRProtocol = H5_BASE_URL + "h5/sales/index.html#/Common/URProtocol";//注册
