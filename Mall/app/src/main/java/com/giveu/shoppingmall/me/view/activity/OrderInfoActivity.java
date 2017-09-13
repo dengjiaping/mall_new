@@ -18,7 +18,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
-import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
+import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -138,6 +138,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     LinearLayout llContract;
 
 
+
     private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
     private String orderNo;
@@ -150,6 +151,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     String serviceName;
     boolean isWalletPay;//是否钱包支付
     double finalPayment;//最终支付金额
+    int orderType;//商品类型
+    String skuCode = "";
+    boolean isCredit = false;
 
     public static void startIt(Activity activity, String orderNo) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
@@ -190,6 +194,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void showOrderDetail(OrderDetailResponse response) {
         //区分京东商品和话费流量商品
         showUIByOrderType(response.orderType);
+        orderType = response.orderType;
         //底部按钮
         dealFooterView(response.status);
         //倒计时
@@ -270,6 +275,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
                 tvTotalPrice.setText("¥" + StringUtils.format2(response.skuInfo.totalPrice));
             }
+            //skuCode
+            if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
+                skuCode = response.skuInfo.skuCode;
+            }
         }
         //支付方式
         orderPayType = response.payType;
@@ -292,6 +301,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
+            isCredit = true;
             rlStagingNum.setVisibility(View.VISIBLE);
             tvStagingNum.setText(response.selStagingNumberRate + "个月");
         } else {
@@ -303,6 +313,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvMonthPayment.setText("¥" + StringUtils.format2(response.monthPayment));
         } else {
             rlMonthPayment.setVisibility(View.GONE);
+            isCredit = false;
         }
         //大家电
         if (StringUtils.isNotNull(response.deliverGoods) && StringUtils.isNotNull(response.installGoods)) {
@@ -412,7 +423,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         dealPwdDialog.showPwdError(remainTimes);
     }
 
-    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund, R.id.iv_service_detail})
+    @OnClick({R.id.tv_pay, R.id.tv_contract, R.id.tv_order_trace, R.id.tv_trace, R.id.tv_confirm_receive, R.id.tv_apply_refund, R.id.iv_service_detail, R.id.ll_order_info})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -475,8 +486,16 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 presenter.onApplyToRefund(orderNo);
                 break;
 
+            //服务详情
             case R.id.iv_service_detail:
                 CustomWebViewActivity.startIt(mBaseContext, serviceUrl, serviceName);
+                break;
+
+            //跳转商品详情
+            case R.id.ll_order_info:
+                if (orderType == 0) {
+                    CommodityDetailActivity.startIt(mBaseContext, isCredit, skuCode);
+                }
             default:
                 break;
 

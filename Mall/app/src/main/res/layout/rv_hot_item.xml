@@ -12,13 +12,15 @@
         android:layout_marginTop="13dp">
 
         <ImageView
+            android:id="@+id/iv_small"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:src="@drawable/ic_default_pic" />
+            />
 
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top"
@@ -41,7 +43,7 @@
             android:text="999抢笔记本"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_13"
-            android:id="@+id/tv_category" />
+            android:id="@+id/tv_title" />
 
         <ImageView
             android:id="@+id/iv_commodity"

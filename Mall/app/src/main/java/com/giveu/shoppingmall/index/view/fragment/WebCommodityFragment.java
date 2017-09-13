@@ -1,8 +1,6 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.utils.LogUtil;
+import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.widget.CommodityWebView;
 
 
@@ -25,7 +23,7 @@ import com.giveu.shoppingmall.widget.CommodityWebView;
  * 商品介绍
  */
 
-public class WebCommodityFragment extends Fragment {
+public class WebCommodityFragment extends BaseFragment {
     private View view;
     private CommodityWebView wvCommodity;
     private WebSettings webSettings;
@@ -36,12 +34,38 @@ public class WebCommodityFragment extends Fragment {
     private ProgressBar pBar;
     private String htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_web_commodity, null);
         initView();
         return view;
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void onVisible() {
+        super.onVisible();
+        if (wvCommodity != null) {
+            wvCommodity.onResume();
+        }
+    }
+
+    @Override
+    protected void onInvisible() {
+        super.onInvisible();
+        if (wvCommodity != null) {
+            wvCommodity.onPause();
+        }
+    }
+
+    @Override
+    public void initDataDelay() {
+        wvCommodity.loadUrl(htmlUrl);
+        wvCommodity.onResume();
     }
 
     private void initView() {
@@ -67,6 +91,7 @@ public class WebCommodityFragment extends Fragment {
         webSettings = wvCommodity.getSettings();
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setJavaScriptEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         wvCommodity.setWebViewClient(new WebViewClient() {
             @Override
@@ -101,8 +126,6 @@ public class WebCommodityFragment extends Fragment {
                 mScrollView.smoothScrollTo(0, 0);
             }
         });
-        wvCommodity.loadUrl(htmlUrl);
-        LogUtil.e("htmlUrl = " + htmlUrl);
     }
 
 

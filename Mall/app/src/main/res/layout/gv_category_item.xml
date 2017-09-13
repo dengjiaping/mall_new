@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_category"
     android:layout_width="80dp"
     android:layout_height="120dp"
-    android:id="@+id/ll_category"
     android:background="@drawable/shape_commodity"
     android:orientation="vertical">
+
     <TextView
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
-        android:text="手表馆"
-        android:textSize="@dimen/ts_16"
-        android:textColor="@color/black"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="12dp"
-        android:layout_height="wrap_content" />
+        android:maxLines="1"
+        android:text="手表馆"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ts_16" />
+
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
-        android:text="尽享品质生活"
-        android:textSize="@dimen/ts_12"
-        android:textColor="@color/color_9b9b9b"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_height="wrap_content" />
+        android:text="尽享品质生活"
+        android:textColor="@color/color_9b9b9b"
+        android:textSize="@dimen/ts_12" />
+
     <ImageView
         android:id="@+id/iv_commodity"
         android:layout_width="match_parent"
-        android:scaleType="centerCrop"
+        android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/classify_default"
-        />
+        android:scaleType="centerCrop"
+        android:src="@drawable/classify_default" />
 
 </LinearLayout>

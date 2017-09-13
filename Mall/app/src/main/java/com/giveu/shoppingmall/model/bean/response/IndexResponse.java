@@ -36,6 +36,7 @@ public class IndexResponse extends BaseBean<IndexResponse> {
         public String title;
         public String iconSrc;
         public String picSrc;
+        public String code;
         public String url;
         public String urlTypeValue;
     }

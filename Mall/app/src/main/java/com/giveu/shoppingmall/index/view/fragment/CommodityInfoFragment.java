@@ -175,7 +175,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         //设置图片加载器
         banner.setImageLoader(new BannerImageLoader());
         //设置轮播时间
-        banner.setDelayTime(2000);
+//        banner.setDelayTime(2000);
         //设置指示器位置（当banner模式中有指示器时）
         banner.setIndicatorGravity(BannerConfig.CENTER);
         //banner设置方法全部调用完毕时最后调用
