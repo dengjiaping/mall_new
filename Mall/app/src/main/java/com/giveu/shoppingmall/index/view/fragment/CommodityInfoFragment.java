@@ -211,9 +211,10 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
             public void confirm(int amounts) {
+                commodityAmounts = amounts;
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
                     if (LoginHelper.getInstance().hasQualifications()) {
-                        ConfirmOrderActivity.startIt(mBaseContext);
+                        ConfirmOrderActivity.startIt(mBaseContext,0,amounts,skuCode);
                     } else {
                         notActiveDialog.showDialog();
                     }
@@ -320,7 +321,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 获取商品信息
      */
     public void getCommodityInfo() {
-        presenter.getSkuIntroduce("13042734", Const.CHANNEL, skuCode);
+        presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), Const.CHANNEL, skuCode);
     }
 
     @Override

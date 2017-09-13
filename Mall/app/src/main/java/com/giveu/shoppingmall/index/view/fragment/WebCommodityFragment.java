@@ -38,7 +38,7 @@ public class WebCommodityFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_web_commodity, null);
-        baseLayout.setTitleBarAndStatusBar(false,false);
+        baseLayout.setTitleBarAndStatusBar(false, false);
         initView();
         return view;
     }
@@ -136,13 +136,13 @@ public class WebCommodityFragment extends BaseFragment {
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
-    public void loadHtml(String htmlStr) {
+    public void loadHtml(String htmlUrl) {
 //        htmlStr = replaceHtmlStr(htmlStr);
 //        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
 //        if (wvCommodity != null) {
 //            wvCommodity.loadUrl(htmlUrl);
 //        }
-        htmlUrl = "http://" + htmlStr;
+        this.htmlUrl = htmlUrl;
         if (wvCommodity != null) {
             wvCommodity.loadUrl(htmlUrl);
         }
@@ -158,7 +158,7 @@ public class WebCommodityFragment extends BaseFragment {
     }
 
     public void refreshCommodityDetail(String url) {
-        htmlUrl = "http://" + url;
+        htmlUrl = url;
         if (wvCommodity != null) {
             wvCommodity.loadUrl(htmlUrl);
         }

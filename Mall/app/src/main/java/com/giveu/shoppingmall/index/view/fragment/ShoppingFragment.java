@@ -497,6 +497,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         initMore(indexResponse);
                         break;
                     case 4 + "":
+                        //头部数据加载完成后再加载单品数据
                         presenter.getIndexContent("SC", LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.code);
                         break;
                 }

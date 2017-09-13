@@ -148,7 +148,11 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             attrList.addAll(skuSpecBean.specValues);
             allAttrMap.add(attrList);
             //添加这个属性的流式布局
-            addView(defaultList.get(i), skuSpecBean.name, attrList);
+            if (i < defaultList.size()) {
+                addView(defaultList.get(i), skuSpecBean.name, attrList);
+            } else {
+                addView(-1, skuSpecBean.name, attrList);
+            }
         }
     }
 
@@ -203,12 +207,12 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     public void setBuyEnable(boolean enable) {
         tvConfirm.setEnabled(enable);
         llChooseCredit.setEnabled(enable);
-        if(enable){
-            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_00bbc0));
-            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_00bbc0));
-        }else {
-            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_d8d8d8));
-            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity,R.color.color_d8d8d8));
+        if (enable) {
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
+            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
+        } else {
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
+            llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
         }
     }
 

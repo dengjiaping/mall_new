@@ -35,7 +35,7 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommodityDetailActivity.startIt(mContext, item.isInstallments == 1, "K00002691"/*item.skuCode*/);
+                CommodityDetailActivity.startIt(mContext, false, item.skuCode);
             }
         });
         holder.setText(R.id.tv_commodity_name, item.name);
