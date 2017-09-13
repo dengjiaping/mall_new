@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.giveu.shoppingmall.R;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.widget.CommodityWebView;
 
 
@@ -100,7 +101,9 @@ public class WebCommodityFragment extends Fragment {
                 mScrollView.smoothScrollTo(0, 0);
             }
         });
-        wvCommodity.loadDataWithBaseURL("", htmlUrl, "text/html", "utf-8", null);
+        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
+        wvCommodity.loadUrl(htmlUrl);
+        LogUtil.e("htmlUrl = " + htmlUrl);
     }
 
 
@@ -110,16 +113,19 @@ public class WebCommodityFragment extends Fragment {
 
     public void loadHtml(String htmlStr) {
         htmlStr = replaceHtmlStr(htmlStr);
+        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
         if (wvCommodity != null) {
-            wvCommodity.loadUrl("http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702");
-            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
+            wvCommodity.loadUrl(htmlUrl);
         }
     }
 
     public void setHtmlStr(String htmlStr) {
         htmlStr = replaceHtmlStr(htmlStr);
         this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
-
+        if (wvCommodity != null) {
+            wvCommodity.loadUrl(htmlUrl);
+//            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
+        }
     }
 
     public String replaceHtmlStr(String htmlStr) {
