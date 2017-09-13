@@ -141,7 +141,7 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     protected void startViewPagerOrActivity() {
-        getAdSplashImage();
+      //  getAdSplashImage();
         if (hasEnterOtherActivity) {
             return;
         }

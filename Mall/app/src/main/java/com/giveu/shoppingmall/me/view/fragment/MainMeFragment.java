@@ -22,7 +22,6 @@ import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.CollectionActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
-import com.giveu.shoppingmall.me.view.activity.MessageActivity;
 import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
 import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
@@ -106,12 +105,12 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.setBlueWhiteStyle();
         baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
         notActiveDialog = new NotActiveDialog(mBaseContext);
-        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MessageActivity.startIt(mBaseContext);
-            }
-        });
+//        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                MessageActivity.startIt(mBaseContext);
+//            }
+//        });
         registerEventBus();
         ButterKnife.bind(this, view);
         ptrsv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
