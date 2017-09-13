@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.model.bean.response.CommodityDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -128,7 +129,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
         initBanner();
-        //服务的流式布局对应的adapter
+        //服务承诺的流式布局对应的adapter
         serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
@@ -362,13 +363,16 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             //获取购买对话框选择属性对应的skuCode，更新skuCode
             skuCode = buyDialog.getSkuCode();
             llChooseAttr.setMiddleText(buyDialog.getAttrStr());
-            commodityDetailFragment.refreshCommodityDetail(skuCode);
             //刷新商品详情activity的数据
             activity.initData(skuCode, skuResponse.collectStatus, skuResponse.skuInfo.monthAmount);
             smallIconStr = skuResponse.skuInfo.srcIp + "/" + skuResponse.skuInfo.src;
             commodityName = skuResponse.skuInfo.name;
             commodityPrice = skuResponse.skuInfo.salePrice;
         }
+    }
+
+    public void refreshCommodityDetail(CommodityDetailResponse data){
+        commodityDetailFragment.refreshCommodityDetail(data);
     }
 
 
@@ -379,6 +383,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 dvStock.setMiddleText("有货");
                 //可点击购买
                 buyDialog.setBuyEnable(true);
+                //activity的购买按键是否可点击
                 activity.setBuyEnable(true);
                 break;
 
