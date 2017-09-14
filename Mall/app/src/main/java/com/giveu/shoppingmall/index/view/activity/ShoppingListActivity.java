@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.view.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ public class ShoppingListActivity extends BaseActivity {
 
     private ShoppingListFragment contentFragment;
     private TitleBarFragment titleFragment;
+    private int shopTypeId;
+    private boolean isFromShoppingClassify = false;//是否从商品类目页传过来的
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -24,10 +27,17 @@ public class ShoppingListActivity extends BaseActivity {
 
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
-
+        shopTypeId = getIntent().getIntExtra("shopTypeId", 1);
+        isFromShoppingClassify = getIntent().getBooleanExtra("isFromShoppingClassify", false);
         titleFragment = TitleBarFragment.newInstance(null);
 
+
         contentFragment = ShoppingListFragment.newInstance();
+        if (isFromShoppingClassify) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("shopTypeId", shopTypeId);
+            contentFragment.setArguments(bundle);
+        }
         contentFragment.initDataForFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
@@ -43,5 +53,13 @@ public class ShoppingListActivity extends BaseActivity {
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ShoppingListActivity.class);
         context.startActivity(intent);
+    }
+
+    //从商品类目页传过来的
+    public static void startItFromShoppingClassify(Activity activity, int shopTypeId) {
+        Intent intent = new Intent(activity, ShoppingListActivity.class);
+        intent.putExtra("shopTypeId", shopTypeId);
+        intent.putExtra("isFromShoppingClassify", true);
+        activity.startActivity(intent);
     }
 }

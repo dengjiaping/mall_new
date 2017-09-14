@@ -1,7 +1,5 @@
 package com.giveu.shoppingmall.index.view.fragment;
 
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,14 +21,9 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
-import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +75,9 @@ public class ShoppingListFragment extends BaseFragment {
 
         baseLayout.setTitleBarAndStatusBar(false, false);
 
+        if (getArguments() != null) {
+            shopTypeId = getArguments().getInt("shopTypeId");
+        }
         shoppingList = new ArrayList<>();
 
         mAdapter = new ShopListItemAdapter(mBaseContext, shoppingList);

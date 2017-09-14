@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShoppingListActivity.startIt(mContext);
+                    ShoppingListActivity.startItFromShoppingClassify((Activity) mContext, datas.get(0).shopTypeId);
                 }
             });
         }

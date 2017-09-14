@@ -9,11 +9,13 @@ public class ShoppingBean {
     private int type;
     private int tag;
     private ShopTypesBean typesBean;
+    public int shopTypeId;
 
-    public ShoppingBean(int type, int tag, ShopTypesBean bean) {
+    public ShoppingBean(int type, int tag, ShopTypesBean bean, int shopTypeId) {
         this.type = type;
         this.tag = tag;
         typesBean = bean;
+        this.shopTypeId = shopTypeId;
     }
 
     public int getType() {

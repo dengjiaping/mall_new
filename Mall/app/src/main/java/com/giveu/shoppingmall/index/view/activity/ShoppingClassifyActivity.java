@@ -166,7 +166,7 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
     }
 
 
-    private void getChildrenShopTypes(int shopTypeId) {
+    private void getChildrenShopTypes(final int shopTypeId) {
         ApiImpl.getChildrenShopTypes(mBaseContext, shopTypeId, new BaseRequestAgent.ResponseListener<ShopTypesBean>() {
                     @Override
                     public void onSuccess(ShopTypesBean response) {
@@ -175,10 +175,10 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
                             list2.clear();
                             int tag = 0;
                             for (ShopTypesBean parent : results) {
-                                list2.add(new ShoppingBean(0, tag, parent));
+                                list2.add(new ShoppingBean(0, tag, parent, shopTypeId));
                                 if (parent.getChild() != null) {
                                     for (ShopTypesBean child : parent.getChild()) {
-                                        list2.add(new ShoppingBean(1, tag, child));
+                                        list2.add(new ShoppingBean(1, tag, child, shopTypeId));
                                     }
                                 }
                                 tag++;
