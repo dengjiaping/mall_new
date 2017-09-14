@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.me.presenter;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -54,9 +55,8 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
                         @Override
                         public void run() {
                             Gson gson = new Gson();
-
                             //本地缓存地址
-                            StringUtils.saveAddress(getView().getAct(), gson.toJson(response.data));
+                            StringUtils.saveAddress(BaseApplication.getInstance(), gson.toJson(response.data));
                             //缓存地址时间
                             SharePrefUtil.getInstance().putString(Const.ADDRESS_TIME, DateUtil.getCurrentTime2yyyyMMdd());
                         }
