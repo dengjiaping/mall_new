@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -75,9 +76,7 @@ public class ShoppingListFragment extends BaseFragment {
 
         baseLayout.setTitleBarAndStatusBar(false, false);
 
-        if (getArguments() != null) {
-            shopTypeId = getArguments().getInt("shopTypeId");
-        }
+
         shoppingList = new ArrayList<>();
 
         mAdapter = new ShopListItemAdapter(mBaseContext, shoppingList);
@@ -85,7 +84,6 @@ public class ShoppingListFragment extends BaseFragment {
         mRefreshView.setPullLoadEnable(false);
         rbAll.setChecked(true);
         rbPrice.setTag(true);
-
         return view;
     }
 
@@ -161,7 +159,6 @@ public class ShoppingListFragment extends BaseFragment {
     public static ShoppingListFragment newInstance() {
 
         Bundle args = new Bundle();
-
         ShoppingListFragment fragment = new ShoppingListFragment();
         fragment.setArguments(args);
         return fragment;
