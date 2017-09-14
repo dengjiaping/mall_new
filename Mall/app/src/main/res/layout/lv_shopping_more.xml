@@ -50,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:src="@drawable/classify_default" />
+                 />
         </LinearLayout>
 
         <ImageView

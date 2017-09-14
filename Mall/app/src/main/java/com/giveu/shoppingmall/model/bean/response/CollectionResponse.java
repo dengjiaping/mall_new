@@ -68,11 +68,11 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
         public boolean hasShowMonthAmount() {
             //true不显示月供
             if (StringUtils.isNotNull(monthAmount)) {
-                if ((0 == Double.parseDouble(monthAmount))) {
-                    return true;
+                if ((0 != Double.parseDouble(monthAmount))) {
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 
