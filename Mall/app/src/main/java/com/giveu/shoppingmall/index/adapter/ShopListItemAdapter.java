@@ -9,7 +9,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
-import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -49,7 +48,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         });
 
         ImageView image = holder.getView(R.id.item_left_image);
-        ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.defalut_img_88_88, image);
+        ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.ic_defalut_pic_corner, image);
 
         holder.setText(R.id.item_right_name, item.name);
 

@@ -21,7 +21,6 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -67,6 +66,7 @@ public class ShoppingListFragment extends BaseFragment {
     private int pageNum = 1;
     private int pageSize = 10;
     private int shopTypeId = 1;
+    private String code;
     private int pageIndex = 1;
 
     @Override
@@ -75,10 +75,7 @@ public class ShoppingListFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         baseLayout.setTitleBarAndStatusBar(false, false);
-
-
         shoppingList = new ArrayList<>();
-
         mAdapter = new ShopListItemAdapter(mBaseContext, shoppingList);
         mRefreshView.setAdapter(mAdapter);
         mRefreshView.setPullLoadEnable(false);
@@ -93,6 +90,10 @@ public class ShoppingListFragment extends BaseFragment {
 
     public void setShopTypeId(int shopTypeId) {
         this.shopTypeId = shopTypeId;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
@@ -166,7 +167,7 @@ public class ShoppingListFragment extends BaseFragment {
 
     public void initDataForFragment() {
         pageIndex = 1;
-        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, "", new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+        ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override
                     public void onSuccess(GoodsSearchResponse response) {
                         mRefreshView.setPullRefreshEnable(true);

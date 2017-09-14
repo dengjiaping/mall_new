@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.index.adapter.ShoppingAdapter;
 import com.giveu.shoppingmall.index.presenter.ShoppingPresenter;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingClassifyActivity;
+import com.giveu.shoppingmall.index.view.activity.ShoppingListActivity;
 import com.giveu.shoppingmall.index.view.activity.ShoppingSearchActivity;
 import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
@@ -160,7 +161,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
     /**
-     * 0跳转至h5,1跳转搜索界面，2跳转商品详情，3跳转分类
+     * 0跳转至h5,1跳转商品列表，2跳转商品详情，3跳转分类
      *
      * @param decorationsBean
      */
@@ -171,7 +172,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 //                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
                 break;
             case 1:
-                ShoppingSearchActivity.startIt(mBaseContext);
+                ShoppingListActivity.startIt(mBaseContext,decorationsBean.code);
                 break;
             case 2:
                 CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);

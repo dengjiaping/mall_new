@@ -32,18 +32,40 @@ public class NoScrollViewPager extends ViewPager {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+            return super.dispatchTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent arg0) {
-        if (scrollDisabled)
-            return false;
-        else
-            return super.onTouchEvent(arg0);
+        try {
+            if (scrollDisabled) {
+                return false;
+            } else {
+                return super.onTouchEvent(arg0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.onTouchEvent(arg0);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        if (scrollDisabled)
-            return false;
-        else
-            return super.onInterceptTouchEvent(arg0);
+        try {
+            if (scrollDisabled) {
+                return false;
+            } else {
+                return super.onInterceptTouchEvent(arg0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.onInterceptTouchEvent(arg0);
     }
 }

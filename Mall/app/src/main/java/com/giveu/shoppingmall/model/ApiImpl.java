@@ -605,7 +605,18 @@ public class ApiImpl {
 
     //商品SKU搜索
     public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNum", "pageSize", "shopTypeId", "code"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize, shopTypeId, code});
+        //如果是类目过来的，code为空，如果是首页过来的code不为空
+        if (StringUtils.isNull(code)) {
+            Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNum", "pageSize", "shopTypeId", "code"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize, shopTypeId, code});
+            RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
+        } else {
+            getIndexContent(context, channel, idPerson, orderSort, pageNumber, pageSize, code, responseListener);
+        }
+    }
+
+    //首页单品
+    public static void getIndexContent(Activity context, String channel, String idPerson, String orderSort, int pageNumber, int pageSize, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderSort", "pageNum", "pageSize", "code"}, new Object[]{channel, idPerson, orderSort, pageNumber, pageSize, code});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
     }
 
