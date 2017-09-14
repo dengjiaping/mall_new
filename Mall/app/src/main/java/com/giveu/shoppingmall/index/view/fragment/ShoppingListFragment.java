@@ -72,14 +72,9 @@ public class ShoppingListFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         ButterKnife.bind(this, view);
-
         baseLayout.setTitleBarAndStatusBar(false, false);
-
-        if (getArguments() != null) {
-            shopTypeId = getArguments().getInt("shopTypeId");
-        }
+        
         shoppingList = new ArrayList<>();
-
         mAdapter = new ShopListItemAdapter(mBaseContext, shoppingList);
         mRefreshView.setAdapter(mAdapter);
         mRefreshView.setPullLoadEnable(false);
