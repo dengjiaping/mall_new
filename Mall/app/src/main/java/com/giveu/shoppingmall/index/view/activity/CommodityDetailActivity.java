@@ -113,6 +113,8 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         vpContent.setScrollDisabled(false);
         vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
         ivCollect.setTag(false);//设置tag标识是否已收藏
+        //目前只有一次性产品
+        isCredit = false;
         //是否分期产品，分期产品显示月供
         if (isCredit) {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
