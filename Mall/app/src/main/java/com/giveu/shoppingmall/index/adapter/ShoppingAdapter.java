@@ -31,6 +31,8 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
     @Override
     protected void convert(ViewHolder holder, final GoodsSearchResponse.GoodsBean item, int position) {
         ImageView ivCommodity = holder.getView(R.id.iv_commodity);
+        TextView tvPrice = holder.getView(R.id.tv_price);
+        TextView tvMonthAmount = holder.getView(R.id.tv_monthly_price);
         if (StringUtils.isNull(item.skuCode)) {
             holder.getConvertView().setVisibility(View.INVISIBLE);
             return;
@@ -45,11 +47,19 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
             }
         });
         holder.setText(R.id.tv_commodity_name, item.name);
-        TextView tvMonthAmount = holder.getView(R.id.tv_monthly_price);
-        holder.setText(R.id.tv_price, "¥" + StringUtils.format2(item.salePrice));
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供：¥",
-                StringUtils.format2(item.monthAmount), " 起",
-                16, 11, R.color.color_ff2a2a, R.color.color_4a4a4a);
+
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_4a4a4a);
+//        if (item.hasShowMonthAmount()) {
+//            //true就不显示月供,实际上隐藏售价view，月供view变成售价
+//            holder.setVisible(R.id.tv_price, false);
+//            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_4a4a4a);
+//        } else {
+//            holder.setVisible(R.id.tv_price, true);
+//            //textView,str1,str2,str3,tvSize1,tvSize2,tvColor1,tvColor2
+//            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 16, 13, R.color.red, R.color.color_4a4a4a);
+//            tvPrice.setText("¥" + StringUtils.format2(item.salePrice));
+//        }
+
     }
 
     public void setDataAndSrcIp(List<GoodsSearchResponse.GoodsBean> data, String srcIp) {

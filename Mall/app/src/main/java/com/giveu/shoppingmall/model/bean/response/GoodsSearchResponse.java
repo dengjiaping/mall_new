@@ -46,6 +46,17 @@ public class GoodsSearchResponse extends BaseBean<GoodsSearchResponse> {
         public int isInstallments;
         public String src;
         public String isPromotion;
-
+        /**
+         * 是否显示月供
+         *
+         * @return
+         */
+        public boolean hasShowMonthAmount() {
+            //isInstallments 0分期不显示月供
+            if (0 == isInstallments) {
+               return false;
+            }
+            return true;
+        }
     }
 }

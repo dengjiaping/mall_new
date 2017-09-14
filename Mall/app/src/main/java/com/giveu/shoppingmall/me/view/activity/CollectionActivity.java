@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,8 +25,8 @@ import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
-import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
+import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,21 +150,14 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 //PullToRefreshListView从1开始
-                showDeleteGoodsDialog(collectionAdapter, position - 1, DELETEONE);
+                if( position < collectionAdapter.getCount()){
+                    //下拉刷新底部没有更多数据这行也能触发点击事件，需排除
+                    showDeleteGoodsDialog(collectionAdapter, position - 1, DELETEONE);
+                }
                 return false;
             }
         });
-        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                setData();
-            }
-        });
         tvDeleteText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,9 +167,10 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (collectionAdapter != null && position > 0) {
+                LogUtils.e(position + "");
+                if (collectionAdapter != null && position > 0 && position <= collectionAdapter.getCount()) {
                     if (collectionAdapter.getItem(position - 1) != null) {
-                        CollectionResponse.ResultListBean item = collectionAdapter.getItem(position -1);
+                        CollectionResponse.ResultListBean item = collectionAdapter.getItem(position - 1);
                         if (item.hasInvalid()) {
                             //失效显示已下架
                             OfftheShelfActivity.startIt(mBaseContext);
@@ -306,7 +299,7 @@ public class CollectionActivity extends BaseActivity {
                     //满足条件
                     List<String> skuCodes = new ArrayList<>();
                     if (DELETEONE.equals(type)) {
-                        if (position > 0 && (collectionAdapter.getItem(position) != null)) {
+                        if (position > 0 && position < collectionAdapter.getCount()&& (collectionAdapter.getItem(position) != null)) {
                             //长按删除
                             skuCodes.add(collectionAdapter.getItem(position).skuCode);
                             deleteGoods(skuCodes, position, null);
