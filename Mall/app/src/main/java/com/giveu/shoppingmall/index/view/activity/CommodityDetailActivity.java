@@ -29,6 +29,7 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -129,7 +130,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
         presenter = new CommodityPresenter(this);
-        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
+//        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
     @Override
@@ -380,6 +381,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      */
     @Override
     public void showCommodity(String url) {
+        LogUtil.e("showCommodity");
 //        url = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002691";
         commodityDetailFragment.refreshCommodityDetail(url);
         commodityInfoFragment.refreshCommodityDetail(url);
