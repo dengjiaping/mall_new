@@ -53,6 +53,7 @@ import com.giveu.shoppingmall.model.bean.response.RepaymentResponse;
 import com.giveu.shoppingmall.model.bean.response.RpmDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.SegmentResponse;
 import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
+import com.giveu.shoppingmall.model.bean.response.ShopTypesResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuInfo;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.model.bean.response.SmsCodeResponse;
@@ -567,6 +568,12 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(null, ApiUrl.sc_goods_search_hotword_refresh, BaseBean.class, context, responseListener);
     }
 
+    //虚拟类目初始化
+    public static void initGoodsShopTypes(Activity context, String channel, BaseRequestAgent.ResponseListener<ShopTypesResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel"}, new Object[]{channel});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_shopTypes_init, ShopTypesResponse.class, context, responseListener);
+    }
+
     //一级类目查询子类目(商品分类)
     public static void getChildrenShopTypes(Activity context, int shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"shopTypeId"}, new Object[]{shopTypeId});
@@ -625,6 +632,8 @@ public class ApiImpl {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "courtesyCardId", "downPaymentRate", "idPerson", "idProduct", "installDate", "insuranceFee", "payType", "receiverJo", "reservingDate", "skuInfo", "userComments", "userMobile", "userName"}, new Object[]{channel, courtesyCardId, downPaymentRate, idPerson, idProduct, installDate, insuranceFee, payType, receiverJoBean, reservingDate, skuInfo, userComments, userMobile, userName});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, ConfirmOrderScResponse.class, context, listener);
     }
+
+
 }
 
 

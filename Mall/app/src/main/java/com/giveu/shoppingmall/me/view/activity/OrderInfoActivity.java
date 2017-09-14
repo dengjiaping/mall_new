@@ -496,6 +496,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 if (orderType == 0) {
                     CommodityDetailActivity.startIt(mBaseContext, isCredit, skuCode);
                 }
+                break;
             default:
                 break;
 

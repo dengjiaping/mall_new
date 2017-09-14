@@ -197,5 +197,7 @@ public interface ApiUrl {
     String order_createOrderSc = BASE_URL + "order/createOrderSc";
     //订单确认
     String order_confirmOrderSc = BASE_URL + "order/confirmOrderSc";
+    //虚拟类目初始化
+    String sc_goods_shopTypes_init = BASE_URL + "sc/goods/shopTypes/init";
 }
 
