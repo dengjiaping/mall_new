@@ -214,6 +214,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
 
         initDialog();
+        mAddressBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddressManageActivity.startItForResult(mBaseContext, Const.ADDRESSMANAGE);
+            }
+        });
     }
 
     private void initDialog() {
