@@ -28,6 +28,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
+import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.dialog.LotteryDialog;
 import com.giveu.shoppingmall.index.view.fragment.ShoppingFragment;
@@ -203,6 +204,11 @@ public class MainActivity extends BasePermissionActivity {
         } else {
             needRefreshLottery = true;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginSuccess(LoginSuccessEvent successEvent) {
+        setIntent(new Intent());
     }
 
     /**

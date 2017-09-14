@@ -23,6 +23,7 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
@@ -240,7 +241,11 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 lotteryEvent.skip2H5 = true;
             }
         } else {
+            //之前的逻辑是登录成功时调回首页的，当二级页面内进行登录操作后是不应该回到主页的，如果删除下面的注释代码
+            //那么在二级页面返回时是会锁住屏幕，这是错误的，所以需要发通知告诉MainActivity，我已经登陆过了，你onStart的时候
+            //不能锁住屏幕
 //            MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
+            EventBusUtils.poseEvent(new LoginSuccessEvent());
         }
         EventBusUtils.poseEvent(lotteryEvent);
         finish();
