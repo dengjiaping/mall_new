@@ -34,15 +34,14 @@ public class ShoppingListActivity extends BaseActivity {
 
         contentFragment = ShoppingListFragment.newInstance();
         if (isFromShoppingClassify) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("shopTypeId", shopTypeId);
-            contentFragment.setArguments(bundle);
+            contentFragment.setShopTypeId(shopTypeId);
         }
-        contentFragment.initDataForFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
                 .replace(R.id.activity_shopping_list_title, titleFragment)
                 .commit();
+
+        contentFragment.initDataForFragment();
     }
 
     @Override

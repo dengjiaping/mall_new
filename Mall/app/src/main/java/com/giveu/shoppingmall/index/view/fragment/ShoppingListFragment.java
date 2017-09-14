@@ -61,7 +61,7 @@ public class ShoppingListFragment extends BaseFragment {
     private ShopListItemAdapter mAdapter;
     private String channel = Const.CHANNEL;
     private String idPerson = LoginHelper.getInstance().getIdPerson();
-    private String keyword = "小米";
+    private String keyword = "";
     private String orderSort = SORT_BY_SIZE;
     private int pageNum = 1;
     private int pageSize = 10;
@@ -91,6 +91,10 @@ public class ShoppingListFragment extends BaseFragment {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public void setShopTypeId(int shopTypeId) {
+        this.shopTypeId = shopTypeId;
     }
 
     @Override

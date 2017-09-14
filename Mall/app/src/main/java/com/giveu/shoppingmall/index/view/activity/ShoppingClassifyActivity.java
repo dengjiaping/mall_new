@@ -175,10 +175,10 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
                             list2.clear();
                             int tag = 0;
                             for (ShopTypesBean parent : results) {
-                                list2.add(new ShoppingBean(0, tag, parent, shopTypeId));
+                                list2.add(new ShoppingBean(0, tag, parent, parent.getId()));
                                 if (parent.getChild() != null) {
                                     for (ShopTypesBean child : parent.getChild()) {
-                                        list2.add(new ShoppingBean(1, tag, child, shopTypeId));
+                                        list2.add(new ShoppingBean(1, tag, child, child.getId()));
                                     }
                                 }
                                 tag++;
