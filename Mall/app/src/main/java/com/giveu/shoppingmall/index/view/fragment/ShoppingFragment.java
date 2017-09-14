@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.recharge.view.fragment.RechargeActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -97,14 +98,15 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.getRefreshableView().addHeaderView(headerView);
-        ptrlv.setVisibility(View.GONE);
+//        ptrlv.setVisibility(View.GONE);
         presenter = new ShoppingPresenter(this);
         //刚开始隐藏头布局的所有内容
-      /*  initBanner(null);
+        initBanner(null);
         initHot(null);
         initMore(null);
-        initCategory(null);*/
+        initCategory(null);
 //        skipToActivity(0,null);
+        showLoading();
         presenter.getHeadContent();
         return view;
     }
@@ -122,8 +124,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initBanner(final IndexResponse indexResponse) {
         if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.banner.setVisibility(View.GONE);
+            viewHolder.fillView.setVisibility(View.VISIBLE);
             return;
         }
+        viewHolder.banner.setVisibility(View.VISIBLE);
+        viewHolder.fillView.setVisibility(View.GONE);
         bannerHeight = (int) (DensityUtils.getWidth() / (750 / 410.f));
         viewHolder.banner.getLayoutParams().height = bannerHeight;
         //设置banner样式
@@ -183,8 +189,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initHot(final IndexResponse indexResponse) {
         if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.rlHot.setVisibility(View.GONE);
+            viewHolder.gvHot.setVisibility(View.GONE);
             return;
         }
+        viewHolder.rlHot.setVisibility(View.VISIBLE);
+        viewHolder.gvHot.setVisibility(View.VISIBLE);
         viewHolder.tvMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,8 +249,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initCategory(final IndexResponse indexResponse) {
         if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.gvCategory.setVisibility(View.GONE);
             return;
         }
+        viewHolder.gvCategory.setVisibility(View.VISIBLE);
         LvCommonAdapter<IndexResponse.DecorationsBean> commonAdapter = new LvCommonAdapter<IndexResponse.DecorationsBean>(mBaseContext, R.layout.gv_category_item, indexResponse.decorations) {
             @Override
             protected void convert(ViewHolder holder, final IndexResponse.DecorationsBean item, int position) {
@@ -272,8 +284,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      */
     private void initMore(IndexResponse indexResponse) {
         if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
+            viewHolder.llCategoryMore.setVisibility(View.GONE);
             return;
         }
+        viewHolder.llCategoryMore.setVisibility(View.VISIBLE);
         viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,6 +334,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ptrlv.getRefreshableView().smoothScrollToPosition(0);
                 break;
             case R.id.ll_emptyView:
+                pageIndex = 1;
+                showLoading();
                 presenter.getHeadContent();
                 llEmptyView.setVisibility(View.GONE);
                 break;
@@ -333,6 +349,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageIndex = 1;
+                showLoading();
                 presenter.getHeadContent();
                 ptrlv.setPullLoadEnable(false);
             }
@@ -438,6 +455,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         //显示查询结果
         if (pageIndex == 1) {
             ptrlv.onRefreshComplete();
+            hideLoding();
         }
         ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
@@ -454,14 +472,15 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 shoppingAdapter.notifyDataSetChanged();
             }
             pageIndex++;
-            llEmptyView.setVisibility(View.GONE);
-            ptrlv.setVisibility(View.VISIBLE);
+//            llEmptyView.setVisibility(View.GONE);
+//            ptrlv.setVisibility(View.VISIBLE);
         } else {
             if (pageIndex == 1) {
+                hideLoding();
                 shoppingAdapter.getData().clear();
                 shoppingAdapter.notifyDataSetChanged();
-                llEmptyView.setVisibility(View.VISIBLE);
-                ptrlv.setVisibility(View.GONE);
+//                llEmptyView.setVisibility(View.VISIBLE);
+//                ptrlv.setVisibility(View.GONE);
                 ptrlv.setPullLoadEnable(false);
             } else {
                 ptrlv.setPullLoadEnable(false);
@@ -472,10 +491,21 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     }
 
     @Override
-    public void getDataFail() {
-        ptrlv.setVisibility(View.GONE);
-        llEmptyView.setVisibility(View.VISIBLE);
-        pageIndex = 1;
+    public void getDataFail(boolean isHeader) {
+        //头部返回数据错误，那么显示空布局
+        if (isHeader) {
+            llEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            //如果单品数据第一页就获取失败了，那么添加一个虚假数据，否则滑动会有bug
+            if (pageIndex == 1) {
+                GoodsSearchResponse.GoodsBean goodsBean = new GoodsSearchResponse.GoodsBean();
+                shoppingAdapter.getData().clear();
+                shoppingAdapter.getData().add(goodsBean);
+                shoppingAdapter.notifyDataSetChanged();
+            }
+        }
+        ptrlv.onRefreshComplete();
+        hideLoding();
     }
 
     @Override
@@ -497,11 +527,22 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         break;
                     case 4 + "":
                         //头部数据加载完成后再加载单品数据
-                        presenter.getIndexContent("SC", LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.code);
+                        if (CommonUtils.isNotNullOrEmpty(indexResponse.decorations)) {
+                            presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.decorations.get(0).code);
+                        } else {
+//                            llEmptyView.setVisibility(View.VISIBLE);
+                            ptrlv.onRefreshComplete();
+                            GoodsSearchResponse.GoodsBean goodsBean = new GoodsSearchResponse.GoodsBean();
+                            shoppingAdapter.getData().clear();
+                            shoppingAdapter.getData().add(goodsBean);
+                            shoppingAdapter.notifyDataSetChanged();
+                            hideLoding();
+                        }
                         break;
                 }
             }
         } else {
+            hideLoding();
             llEmptyView.setVisibility(View.VISIBLE);
         }
     }

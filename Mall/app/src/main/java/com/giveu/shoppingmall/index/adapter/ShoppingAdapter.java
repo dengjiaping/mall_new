@@ -31,6 +31,12 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
     @Override
     protected void convert(ViewHolder holder, final GoodsSearchResponse.GoodsBean item, int position) {
         ImageView ivCommodity = holder.getView(R.id.iv_commodity);
+        if (StringUtils.isNull(item.skuCode)) {
+            holder.getConvertView().setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            holder.getConvertView().setVisibility(View.VISIBLE);
+        }
         ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override

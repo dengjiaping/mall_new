@@ -9,9 +9,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
@@ -30,7 +30,7 @@ public class WebCommodityFragment extends BaseFragment {
     private WebSettings webSettings;
     private boolean fromCommodityDetail;
     private ImageView fab_up_slide;
-    private ScrollView mScrollView;
+    private LinearLayout mScrollView;
     private RelativeLayout mContainer;
     private ProgressBar pBar;
     private String htmlUrl;
@@ -74,21 +74,13 @@ public class WebCommodityFragment extends BaseFragment {
     private void initView() {
         mContainer = (RelativeLayout) view.findViewById(R.id.mContainer);
         fab_up_slide = (ImageView) view.findViewById(R.id.fab_up_slide);
-        mScrollView = (ScrollView) view.findViewById(R.id.mScrollView);
+        mScrollView = (LinearLayout) view.findViewById(R.id.mScrollView);
         pBar = (ProgressBar) view.findViewById(R.id.pb_web);
 //        wvCommodity = (CommodityWebView) view.findViewById(R.id.wv_commodity);
         wvCommodity = new CommodityWebView(getContext());
-        wvCommodity.clearCache(true);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         wvCommodity.setLayoutParams(layoutParams);
-        if (fromCommodityDetail) {
-            mScrollView.addView(wvCommodity);
-        } else {
-            mContainer.addView(wvCommodity);
-            mScrollView.setVisibility(View.GONE);
-            mContainer.removeView(pBar);
-            mContainer.addView(pBar);
-        }
+        mScrollView.addView(wvCommodity);
         wvCommodity.fromCommodityDetail(fromCommodityDetail);
         wvCommodity.setFocusable(false);
         webSettings = wvCommodity.getSettings();
@@ -126,7 +118,7 @@ public class WebCommodityFragment extends BaseFragment {
         fab_up_slide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mScrollView.smoothScrollTo(0, 0);
+//                mScrollView.smoothScrollTo(0, 0);
             }
         });
     }
@@ -174,17 +166,17 @@ public class WebCommodityFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (wvCommodity != null) {
+       /* if (wvCommodity != null) {
             wvCommodity.onPause();
-        }
+        }*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (wvCommodity != null) {
+       /* if (wvCommodity != null) {
             wvCommodity.onResume();
-        }
+        }*/
     }
 
     @Override
