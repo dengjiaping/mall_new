@@ -61,7 +61,7 @@ public class ShoppingListFragment extends BaseFragment {
     private ShopListItemAdapter mAdapter;
     private String channel = Const.CHANNEL;
     private String idPerson = LoginHelper.getInstance().getIdPerson();
-    private String keyword = "小米";
+    private String keyword = "";
     private String orderSort = SORT_BY_SIZE;
     private int pageNum = 1;
     private int pageSize = 10;
@@ -75,24 +75,25 @@ public class ShoppingListFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         baseLayout.setTitleBarAndStatusBar(false, false);
-
-        if (getArguments() != null) {
-            shopTypeId = getArguments().getInt("shopTypeId");
-            code = getArguments().getString("code");
-        }
         shoppingList = new ArrayList<>();
-
         mAdapter = new ShopListItemAdapter(mBaseContext, shoppingList);
         mRefreshView.setAdapter(mAdapter);
         mRefreshView.setPullLoadEnable(false);
         rbAll.setChecked(true);
         rbPrice.setTag(true);
-
         return view;
     }
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public void setShopTypeId(int shopTypeId) {
+        this.shopTypeId = shopTypeId;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
@@ -159,7 +160,6 @@ public class ShoppingListFragment extends BaseFragment {
     public static ShoppingListFragment newInstance() {
 
         Bundle args = new Bundle();
-
         ShoppingListFragment fragment = new ShoppingListFragment();
         fragment.setArguments(args);
         return fragment;

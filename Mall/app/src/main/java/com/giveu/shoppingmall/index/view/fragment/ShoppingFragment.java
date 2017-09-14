@@ -166,13 +166,13 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      * @param decorationsBean
      */
     private void skipToActivity(String srcIp, IndexResponse.DecorationsBean decorationsBean) {
-        switch (1) {
+        switch (decorationsBean.urlTypeValue) {
             case 0:
                 CustomWebViewActivity.startIt(mBaseContext, srcIp + "/" + decorationsBean.url, "");
 //                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
                 break;
             case 1:
-                ShoppingListActivity.startItFromShoppingClassify(mBaseContext,-1);
+                ShoppingListActivity.startIt(mBaseContext,decorationsBean.code);
                 break;
             case 2:
                 CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);

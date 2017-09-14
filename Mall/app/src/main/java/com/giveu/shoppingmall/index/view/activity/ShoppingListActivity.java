@@ -35,15 +35,15 @@ public class ShoppingListActivity extends BaseActivity {
 
 
         contentFragment = ShoppingListFragment.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putInt("shopTypeId", shopTypeId);
-        bundle.putString("code", code);
-        contentFragment.setArguments(bundle);
-        contentFragment.initDataForFragment();
+        contentFragment.setShopTypeId(shopTypeId);
+        //首页过来的商品列表是需要code的
+        contentFragment.setCode(code);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
                 .replace(R.id.activity_shopping_list_title, titleFragment)
                 .commit();
+
+        contentFragment.initDataForFragment();
     }
 
     @Override
