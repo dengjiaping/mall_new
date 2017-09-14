@@ -40,6 +40,9 @@ public class WebCommodityFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_web_commodity, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         initView();
+        if (StringUtils.isNotNull(htmlUrl)) {
+            wvCommodity.loadUrl(htmlUrl);
+        }
         return view;
     }
 
@@ -66,9 +69,7 @@ public class WebCommodityFragment extends BaseFragment {
 
     @Override
     public void initDataDelay() {
-        if (StringUtils.isNotNull(htmlUrl)) {
-            wvCommodity.loadUrl(htmlUrl);
-        }
+
     }
 
     private void initView() {

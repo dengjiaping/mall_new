@@ -19,6 +19,7 @@ public class ShoppingListActivity extends BaseActivity {
     private ShoppingListFragment contentFragment;
     private TitleBarFragment titleFragment;
     private int shopTypeId;
+    private String code;
     private boolean isFromShoppingClassify = false;//是否从商品类目页传过来的
 
     @Override
@@ -28,16 +29,16 @@ public class ShoppingListActivity extends BaseActivity {
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
         shopTypeId = getIntent().getIntExtra("shopTypeId", 1);
-        isFromShoppingClassify = getIntent().getBooleanExtra("isFromShoppingClassify", false);
+//        isFromShoppingClassify = getIntent().getBooleanExtra("isFromShoppingClassify", false);
+        code = getIntent().getStringExtra("code");
         titleFragment = TitleBarFragment.newInstance(null);
 
 
         contentFragment = ShoppingListFragment.newInstance();
-        if (isFromShoppingClassify) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("shopTypeId", shopTypeId);
-            contentFragment.setArguments(bundle);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putInt("shopTypeId", shopTypeId);
+        bundle.putString("code", code);
+        contentFragment.setArguments(bundle);
         contentFragment.initDataForFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
@@ -50,8 +51,9 @@ public class ShoppingListActivity extends BaseActivity {
     }
 
 
-    public static void startIt(Context context) {
+    public static void startIt(Context context, String code) {
         Intent intent = new Intent(context, ShoppingListActivity.class);
+        intent.putExtra("code", code);
         context.startActivity(intent);
     }
 
@@ -59,7 +61,7 @@ public class ShoppingListActivity extends BaseActivity {
     public static void startItFromShoppingClassify(Activity activity, int shopTypeId) {
         Intent intent = new Intent(activity, ShoppingListActivity.class);
         intent.putExtra("shopTypeId", shopTypeId);
-        intent.putExtra("isFromShoppingClassify", true);
+//        intent.putExtra("isFromShoppingClassify", true);
         activity.startActivity(intent);
     }
 }

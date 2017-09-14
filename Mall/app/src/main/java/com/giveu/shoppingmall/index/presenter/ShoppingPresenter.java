@@ -42,14 +42,14 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
         getView().getDataFail(shoppingResponse.data);*/
     }
 
-    public void getIndexContent(String channel, String idPerson, int pageNumber, int pageSize, String code ) {
-        ApiImpl.getGoodsSearch(null, channel, idPerson, "", "salesVolume", pageNumber, pageSize, 0, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+    public void getIndexContent(String channel, String idPerson, int pageNumber, int pageSize, String code) {
+        ApiImpl.getIndexContent(null, channel, idPerson, "salesVolume", pageNumber, pageSize, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
             @Override
             public void onSuccess(GoodsSearchResponse response) {
                 if (getView() != null) {
-                    if(response.data!=null&&CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
-                        getView().getIndexContent(response.data.resultList, response.srcIp);
-                    }else {
+                    if (response.data != null && CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+                        getView().getIndexContent(response.data.resultList, response.data.srcIp);
+                    } else {
                         getView().getDataFail(false);
                     }
                 }

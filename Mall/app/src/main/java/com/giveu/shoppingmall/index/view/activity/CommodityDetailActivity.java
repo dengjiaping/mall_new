@@ -90,6 +90,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         setContentView(R.layout.activity_commodity_detail);
         baseLayout.setTitleBarAndStatusBar(false, false);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
+        isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
         //商品介绍
         commodityInfoFragment = new CommodityInfoFragment();
@@ -379,6 +380,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      */
     @Override
     public void showCommodity(String url) {
+//        url = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002691";
         commodityDetailFragment.refreshCommodityDetail(url);
         commodityInfoFragment.refreshCommodityDetail(url);
     }
