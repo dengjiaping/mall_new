@@ -133,7 +133,7 @@ public class CommodityDetailFragment extends BaseFragment{
         if (introduceFragment != null) {
 //            introduceFragment.setHtmlStr(data.intruction);
             if (introduceFragment.isAdded()) {
-                introduceFragment.loadHtml(url);
+//                introduceFragment.loadHtml(url);
             }
         }
      /*   if (paramsFragment != null) {

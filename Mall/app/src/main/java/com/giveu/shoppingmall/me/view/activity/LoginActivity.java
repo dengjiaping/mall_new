@@ -240,7 +240,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 lotteryEvent.skip2H5 = true;
             }
         } else {
-            MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
+//            MainActivity.startItDealLock(0, mBaseContext, LoginActivity.class.getName(), false);
         }
         EventBusUtils.poseEvent(lotteryEvent);
         finish();

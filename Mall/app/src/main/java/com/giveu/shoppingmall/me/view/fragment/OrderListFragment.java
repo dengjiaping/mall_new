@@ -85,6 +85,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         ptrlv.setPullRefreshEnable(true);
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
+        ptrlv.setScrollingWhileRefreshingEnabled(true);
         return fragmentView;
 
     }

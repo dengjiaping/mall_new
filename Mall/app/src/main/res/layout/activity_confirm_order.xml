@@ -37,7 +37,6 @@
                         android:drawableLeft="@drawable/icon_address"
                         android:drawablePadding="5dp"
                         android:gravity="center"
-                        android:text="张超"
                         android:textColor="@color/black"
                         android:textSize="@dimen/ts_15" />
 
@@ -49,7 +48,6 @@
                         android:layout_alignTop="@id/confirm_order_address_name"
                         android:layout_marginRight="@dimen/default_layout_screen_gap"
                         android:gravity="center"
-                        android:text="18118751982"
                         android:textColor="@color/black"
                         android:textSize="@dimen/ts_15" />
 
@@ -61,7 +59,6 @@
                         android:layout_marginLeft="35dp"
                         android:layout_marginRight="@dimen/default_layout_screen_gap"
                         android:paddingBottom="8dp"
-                        android:text="中华人民共和国广东省深圳市福田区沙头街道沙嘴中心103栋601"
                         android:textColor="@color/color_9b9b9b"
                         android:textSize="@dimen/ts_15" />
 
@@ -98,7 +95,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginLeft="16dp"
-                    android:src="@drawable/ic_question" />
+                    android:src="@drawable/ic_default_pic" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -114,7 +111,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="iphone 7苹果新品全网通4iphone 7苹果新品全网通4G手机果新品全网通4G手机"
                         android:textColor="@color/color_4a4a4a"
                         android:textSize="@dimen/ts_15" />
 
@@ -129,7 +125,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="￥4799.00"
                             android:textColor="@color/color_474747"
                             android:textSize="@dimen/ts_15" />
 
@@ -137,7 +132,6 @@
                             android:id="@+id/confirm_order_skuinfo_quantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="X1"
                             android:textColor="@color/color_474747"
                             android:textSize="@dimen/ts_15" />
                     </LinearLayout>
@@ -161,7 +155,6 @@
                     android:layout_alignParentRight="true"
                     android:gravity="right|center_vertical"
                     android:paddingRight="@dimen/default_layout_screen_gap"
-                    android:text="4799元"
                     android:textColor="@color/red"
                     android:textSize="@dimen/ts_15" />
 
@@ -485,7 +478,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/default_layout_screen_gap"
-            android:text="支付金额：￥4799.00"
             android:textColor="@color/title_color"
             android:textSize="@dimen/ts_16" />
 
