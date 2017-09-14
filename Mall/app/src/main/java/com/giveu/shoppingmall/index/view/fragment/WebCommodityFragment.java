@@ -78,6 +78,23 @@ public class WebCommodityFragment extends BaseFragment {
         mScrollView = (LinearLayout) view.findViewById(R.id.mScrollView);
         pBar = (ProgressBar) view.findViewById(R.id.pb_web);
 //        wvCommodity = (CommodityWebView) view.findViewById(R.id.wv_commodity);
+        initWebView();
+        if (fromCommodityDetail) {
+            fab_up_slide.setVisibility(View.VISIBLE);
+        } else {
+            fab_up_slide.setVisibility(View.GONE);
+        }
+
+
+        fab_up_slide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                mScrollView.smoothScrollTo(0, 0);
+            }
+        });
+    }
+
+    private void initWebView(){
         wvCommodity = new CommodityWebView(getContext());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         wvCommodity.setLayoutParams(layoutParams);
@@ -95,12 +112,6 @@ public class WebCommodityFragment extends BaseFragment {
                 super.onPageFinished(view, url);
             }
         });
-        if (fromCommodityDetail) {
-            fab_up_slide.setVisibility(View.VISIBLE);
-        } else {
-            fab_up_slide.setVisibility(View.GONE);
-        }
-
         wvCommodity.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -116,12 +127,6 @@ public class WebCommodityFragment extends BaseFragment {
             }
 
         });
-        fab_up_slide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mScrollView.smoothScrollTo(0, 0);
-            }
-        });
     }
 
 
@@ -129,55 +134,39 @@ public class WebCommodityFragment extends BaseFragment {
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
-    public void loadHtml(String htmlUrl) {
-//        htmlStr = replaceHtmlStr(htmlStr);
-//        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
-//        if (wvCommodity != null) {
-//            wvCommodity.loadUrl(htmlUrl);
-//        }
-        this.htmlUrl = htmlUrl;
-        if (wvCommodity != null) {
-            wvCommodity.loadUrl(htmlUrl);
-        }
-    }
-
-    public void setHtmlStr(String htmlStr) {
-//        htmlStr = replaceHtmlStr(htmlStr);
-//        this.htmlUrl = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002702";
-//        if (wvCommodity != null) {
-//            wvCommodity.loadUrl(htmlUrl);
-////            wvCommodity.loadDataWithBaseURL("", htmlStr, "text/html", "utf-8", null);
-//        }
-    }
 
     public void refreshCommodityDetail(String url) {
         htmlUrl = url;
         if (wvCommodity != null) {
+            wvCommodity.removeAllViews();
+            wvCommodity.destroy();
+            if (wvCommodity.getParent() != null) {
+                ((ViewGroup) wvCommodity.getParent()).removeView(wvCommodity);
+            }
+            wvCommodity = null;
+        }
+        initWebView();
+        if (wvCommodity != null) {
             wvCommodity.loadUrl(htmlUrl);
         }
     }
 
-
-    public String replaceHtmlStr(String htmlStr) {
-        htmlStr = htmlStr.replace("src=", "width=100% src=");
-        return htmlStr;
-    }
 
 
     @Override
     public void onPause() {
         super.onPause();
-       /* if (wvCommodity != null) {
+        if (wvCommodity != null) {
             wvCommodity.onPause();
-        }*/
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-       /* if (wvCommodity != null) {
+        if (wvCommodity != null) {
             wvCommodity.onResume();
-        }*/
+        }
     }
 
     @Override
