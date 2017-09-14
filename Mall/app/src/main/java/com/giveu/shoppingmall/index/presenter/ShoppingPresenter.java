@@ -7,6 +7,7 @@ import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -31,7 +32,7 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
                     CommonLoadingView.showErrorToast(errorBean);
-                    getView().getDataFail();
+                    getView().getDataFail(true);
                 }
             }
         });
@@ -42,11 +43,15 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
     }
 
     public void getIndexContent(String channel, String idPerson, int pageNumber, int pageSize, String code ) {
-        ApiImpl.getGoodsSearch(null, channel, idPerson, "小米", "salesVolume", pageNumber, pageSize, 0, "", new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
+        ApiImpl.getGoodsSearch(null, channel, idPerson, "", "salesVolume", pageNumber, pageSize, 0, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
             @Override
             public void onSuccess(GoodsSearchResponse response) {
                 if (getView() != null) {
-                    getView().getIndexContent(response.data.resultList,response.srcIp);
+                    if(response.data!=null&&CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+                        getView().getIndexContent(response.data.resultList, response.srcIp);
+                    }else {
+                        getView().getDataFail(false);
+                    }
                 }
             }
 
@@ -54,7 +59,7 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
                     CommonLoadingView.showErrorToast(errorBean);
-                    getView().getDataFail();
+                    getView().getDataFail(false);
                 }
             }
         });
