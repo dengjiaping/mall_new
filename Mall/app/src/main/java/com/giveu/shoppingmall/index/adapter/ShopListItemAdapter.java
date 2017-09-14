@@ -12,6 +12,7 @@ import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.List;
 
@@ -56,6 +57,6 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount + "", "", 14, 11, R.color.red, R.color.color_999999);
         tvMonthAmount.setVisibility(View.GONE);
 
-        holder.setText(R.id.item_right_price, "¥" + item.salePrice);
+        holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
     }
 }

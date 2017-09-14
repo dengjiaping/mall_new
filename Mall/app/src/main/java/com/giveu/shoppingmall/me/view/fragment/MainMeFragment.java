@@ -33,6 +33,7 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView;
@@ -115,6 +116,7 @@ public class MainMeFragment extends BaseFragment {
         registerEventBus();
         ButterKnife.bind(this, view);
         ptrsv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        ptrsv.setScrollingWhileRefreshingEnabled(true);
         return view;
     }
 
@@ -168,19 +170,19 @@ public class MainMeFragment extends BaseFragment {
             //订单数量显示个数处理逻辑
             if (LoginHelper.getInstance().getOrderDownpaymentNum() > 0) {
                 tvDownPayment.setVisibility(View.VISIBLE);
-                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownpaymentNum()+"");
+                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownpaymentNum() + "");
             } else {
                 tvDownPayment.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderPayNum() > 0) {
                 tvWaitingPay.setVisibility(View.VISIBLE);
-                tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum()+"");
+                tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum() + "");
             } else {
                 tvWaitingPay.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderReceiveNum() > 0) {
                 tvWaitingReceive.setVisibility(View.VISIBLE);
-                tvWaitingReceive.setText(LoginHelper.getInstance().getOrderReceiveNum()+"");
+                tvWaitingReceive.setText(LoginHelper.getInstance().getOrderReceiveNum() + "");
             } else {
                 tvWaitingReceive.setVisibility(View.GONE);
             }
@@ -219,12 +221,17 @@ public class MainMeFragment extends BaseFragment {
         ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                BaseApplication.getInstance().fetchUserInfo();
-                if (!NetWorkUtils.isNetWorkConnected()) {
+                if (LoginHelper.getInstance().loginPersonInfo != null) {
+                    BaseApplication.getInstance().fetchUserInfo();
+                    if (!NetWorkUtils.isNetWorkConnected()) {
+                        ptrsv.onRefreshComplete();
+                    }
+                } else {
                     ptrsv.onRefreshComplete();
                 }
             }
         });
+
     }
 
     @Override
