@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -248,7 +249,23 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             EventBusUtils.poseEvent(new LoginSuccessEvent());
         }
         EventBusUtils.poseEvent(lotteryEvent);
+        settingPatternOrFingerPrint();
         finish();
+    }
+
+    /**
+     * 设置手势密码的提示
+     */
+    public void settingPatternOrFingerPrint() {
+        if (LoginHelper.getInstance().shouldShowSetting()) {
+            FingerPrintHelper fingerHelper = new FingerPrintHelper(mBaseContext);
+            if (fingerHelper.isHardwareEnable()) {
+                FingerPrintActivity.startIt(mBaseContext, true);
+            } else {
+                CreateGestureActivity.startIt(mBaseContext);
+            }
+            LoginHelper.getInstance().reduceRemingTimes();
+        }
     }
 
     @Override

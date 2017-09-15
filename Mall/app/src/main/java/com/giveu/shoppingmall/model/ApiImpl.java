@@ -552,8 +552,8 @@ public class ApiImpl {
     }
 
     //确认支付
-    public static void confirmPay(Activity context, String channel, String idPerson, String orderNo, String randomCode, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmPayResponse> responseListener) {
-        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "randomCode", "smsCode", "smsMobile"}, new Object[]{channel, idPerson, orderNo, randomCode, smsCode, smsMobile});
+    public static void confirmPay(Activity context, String channel, String idPerson, String orderNo, String smsCode, String smsMobile, BaseRequestAgent.ResponseListener<ConfirmPayResponse> responseListener) {
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "smsCode", "smsMobile"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo, smsCode, smsMobile});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.orderApp_confirmPay, ConfirmPayResponse.class, context, responseListener);
     }
 
