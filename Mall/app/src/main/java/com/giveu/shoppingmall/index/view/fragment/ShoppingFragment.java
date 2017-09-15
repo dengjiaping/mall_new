@@ -99,6 +99,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.getRefreshableView().addHeaderView(headerView);
+        ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 //        ptrlv.setVisibility(View.GONE);
         presenter = new ShoppingPresenter(this);
         //刚开始隐藏头布局的所有内容

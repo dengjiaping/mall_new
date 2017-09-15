@@ -414,7 +414,12 @@ public class CashTypeActivity extends BaseActivity {
     @Override
     public void setListener() {
         super.setListener();
-
+        cbDescTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoanAmount(idProduct,(int)chooseQuota);
+            }
+        });
         rulerView.setOnAdjustIndicateListener(new RulerView.OnAdjustIndicateListener() {
             @Override
             public void stop() {
@@ -471,7 +476,8 @@ public class CashTypeActivity extends BaseActivity {
     private void showLoanAmount(int idProduct, int chooseQuota) {
         if (idProduct != 0) {
             llShowData.setVisibility(View.VISIBLE);
-            ApiImpl.repayCost(mBaseContext, idProduct, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
+            String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
+            ApiImpl.repayCost(mBaseContext, idProduct,insuranceFee, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
                 @Override
                 public void onSuccess(RepayCostResponse response) {
                     if (response.data != null) {
@@ -587,7 +593,8 @@ public class CashTypeActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_monthly_payment:
                 //查看月供
-                ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(), localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
+                ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(),insuranceFee, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
                         MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext, response.data);

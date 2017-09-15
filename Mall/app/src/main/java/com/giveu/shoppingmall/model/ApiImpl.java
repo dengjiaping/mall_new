@@ -310,8 +310,8 @@ public class ApiImpl {
     }
 
     //分期产品取现费用计算
-    public static void repayCost(Activity context, int idProduct, int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+    public static void repayCost(Activity context, int idProduct,String insuranceFee,  int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "insuranceFee","loan"}, new Object[]{idProduct,StringUtils.string2Int(insuranceFee), loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_repaycost, RepayCostResponse.class, context, responseListener);
     }
 
@@ -332,8 +332,8 @@ public class ApiImpl {
     }
 
     //分期取现月供明细
-    public static void rpmDetail(Activity context, String idPerson, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson), idProduct, loan});
+    public static void rpmDetail(Activity context, String idPerson,String insuranceFee, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","insuranceFee" ,"idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson),StringUtils.string2Int(insuranceFee), idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
 
