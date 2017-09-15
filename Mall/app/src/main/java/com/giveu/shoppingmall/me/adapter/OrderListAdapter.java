@@ -274,7 +274,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                     balanceDeficientDialog.show();
                     return;
                 }
-                dealPwdDialog.setPrice("¥" + StringUtils.format2(finalPayment + ""));
+                dealPwdDialog.setPrice(finalPayment+"");
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
@@ -292,6 +292,14 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         } else {
             notActiveDialog.showDialog();
         }
+    }
+
+    public void showDealPwdDialogError(int remainTimes){
+        dealPwdDialog.showPwdError(remainTimes);
+    }
+
+    public void dismissDealPwdDialog(){
+        dealPwdDialog.dissmissDialog();
     }
 
 

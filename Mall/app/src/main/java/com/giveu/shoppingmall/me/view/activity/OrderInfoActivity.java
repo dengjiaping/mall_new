@@ -443,7 +443,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                                 balanceDeficientDialog.show();
                                 return;
                             }
-                            dealPwdDialog.setPrice("¥" + StringUtils.format2(finalPayment + ""));
+                            dealPwdDialog.setPrice(finalPayment + "");
                             dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                                 @Override
                                 public void checkPwd(String payPwd) {

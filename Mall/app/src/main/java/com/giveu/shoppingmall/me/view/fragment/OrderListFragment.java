@@ -59,7 +59,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     private OrderHandlePresenter presenter;
     private OrderListAdapter adapter;
     private List<OrderListResponse.SkuInfoBean> mDatas;
-    private DealPwdDialog dealPwdDialog;
 
     @Override
     protected BasePresenter[] initPresenters() {
@@ -75,7 +74,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
         baseLayout.setTitleBarAndStatusBar(false, false);
         fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
         ButterKnife.bind(this, fragmentView);
-        dealPwdDialog = new DealPwdDialog(mBaseContext);
         mDatas = new ArrayList<>();
 
         presenter = new OrderHandlePresenter(this);
@@ -195,7 +193,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     @Override
     public void cancelOrderSuccess(String orderNo) {
         if (orderState == 0) {
-            ToastUtils.showLongToast("lskd");
             onRefresh();
         } else {
             removeData(orderNo);
@@ -223,6 +220,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     //验证交易密码成功
     @Override
     public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
+        adapter.dismissDealPwdDialog();
         CommonUtils.closeSoftKeyBoard(mBaseContext);
         VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
     }
@@ -231,7 +229,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     @Override
     public void verifyPayPwdFailure(int remainTimes) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
-        dealPwdDialog.showPwdError(remainTimes);
+        adapter.showDealPwdDialogError(remainTimes);
     }
 
     //在mDatas中移除订单号为orderNo的订单

@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.view.activity.RequestPasswordActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.MD5;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.PassWordInputView;
 
 /**
@@ -86,7 +87,7 @@ public class DealPwdDialog {
     }
 
     public void setPrice(String price) {
-        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", price, "", 16, 13, R.color.color_00adb2, R.color.color_4a4a4a);
+        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "", 16, 13, R.color.color_00adb2, R.color.color_4a4a4a);
     }
 
     //密码验证错误时显示错误弹框
