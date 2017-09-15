@@ -15,11 +15,15 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -84,6 +88,7 @@ public class FingerPrintActivity extends BaseActivity {
         initDialog();
         fingerHelper = new FingerPrintHelper(mBaseContext);
         initAnim();
+        registerEventBus();
     }
 
     private void initDialog() {
@@ -104,6 +109,11 @@ public class FingerPrintActivity extends BaseActivity {
                 settingDialog.dismiss();
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginSuccess(LoginSuccessEvent successEvent) {
+        finish();
     }
 
     private void initAnim() {

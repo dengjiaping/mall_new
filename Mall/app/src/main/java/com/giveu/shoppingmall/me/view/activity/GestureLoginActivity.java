@@ -15,10 +15,14 @@ import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -76,6 +80,7 @@ public class GestureLoginActivity extends BaseActivity {
             baseLayout.setTitle("解锁");
             baseLayout.hideBack();
         }
+        registerEventBus();
 
     }
 
@@ -114,6 +119,11 @@ public class GestureLoginActivity extends BaseActivity {
 
         }
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginSuccess(LoginSuccessEvent successEvent) {
+        finish();
+    }
 
     /**
      * 更新状态
