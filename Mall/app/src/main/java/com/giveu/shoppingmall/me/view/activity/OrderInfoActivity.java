@@ -367,12 +367,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (response.status == 1) {
             if (StringUtils.isNotNull(response.totalPrice)) {
                 tvTotal.setText("¥" + StringUtils.format2(response.totalPrice));
-                finalPayment = Double.parseDouble(response.totalPrice);
+                finalPayment = StringUtils.string2Double(response.totalPrice);
             }
         } else if (response.status == 2) {
             if (StringUtils.isNotNull(response.downPayment)) {
                 tvTotal.setText("¥" + StringUtils.format2(response.downPayment));
-                finalPayment = Double.parseDouble(response.downPayment);
+                finalPayment = StringUtils.string2Double(response.downPayment);
             }
         } else {
 
