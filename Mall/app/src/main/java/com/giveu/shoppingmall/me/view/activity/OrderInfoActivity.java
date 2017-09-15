@@ -140,7 +140,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     LinearLayout llConsigneeInfo;
 
 
-
     private ConfirmDialog dialog;
     private OrderHandlePresenter presenter;
     private String orderNo;
@@ -255,7 +254,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (response.skuInfo != null) {
             //商品icon
             if (StringUtils.isNotNull(response.skuInfo.src) && StringUtils.isNotNull(response.skuInfo.srcIp)) {
-                src = response.skuInfo.srcIp + response.skuInfo.src;
+                src = response.skuInfo.srcIp + ImageUtils.ImageSize.img_size_200_200 + response.skuInfo.src;
                 ImageUtils.loadImage(src, ivPicture);
             }
             //商品标题
@@ -376,7 +375,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 finalPayment = Double.parseDouble(response.downPayment);
             }
         } else {
-            
+
         }
 
         //充值号码
@@ -439,7 +438,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                         //是否设置了交易密码
                         if (LoginHelper.getInstance().hasSetPwd()) {
                             //如果是钱包支付的话，判断钱包余额是否足够
-                            if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && orderPayType == 0) {
+                            if (Double.parseDouble(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && orderPayType == 0) {
                                 balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
                                 balanceDeficientDialog.show();
                                 return;

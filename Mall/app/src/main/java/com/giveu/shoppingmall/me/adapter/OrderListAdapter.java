@@ -61,7 +61,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (StringUtils.isNotNull(item.srcIp)) {
             if (StringUtils.isNotNull(item.src)) {
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
-                ImageUtils.loadImage(item.srcIp + item.src, imageView);
+                ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src, imageView);
             }
         }
         /**
@@ -269,7 +269,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             //是否设置了交易密码
             if (LoginHelper.getInstance().hasSetPwd()) {
                 //钱包可消费余额是否足够
-                if (Integer.parseInt(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && "0".equals(payType)) {
+                if (Double.parseDouble(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && "0".equals(payType)) {
                     balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
                     balanceDeficientDialog.show();
                     return;
