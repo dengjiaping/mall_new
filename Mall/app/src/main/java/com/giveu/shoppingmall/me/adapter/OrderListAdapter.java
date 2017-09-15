@@ -149,9 +149,9 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                         if (StringUtils.isNotNull(item.timeLeft)) {
                             Double finalPayment;
                             if (item.status == 1) {
-                                finalPayment = Double.parseDouble(item.payPrice);
+                                finalPayment = StringUtils.string2Double(item.payPrice);
                             } else {
-                                finalPayment = Double.parseDouble(item.downPayment);
+                                finalPayment = StringUtils.string2Double(item.downPayment);
                             }
                             onPay(item.orderNo, item.payType, finalPayment);
                         } else {
