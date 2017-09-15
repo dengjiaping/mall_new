@@ -3,6 +3,9 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,13 +60,15 @@ import butterknife.OnClick;
 public class ConfirmOrderActivity extends BaseActivity {
     //选择付款方式
     @BindView(R.id.confirm_order_pay_type)
-    DetailView dvPayView;
+    TextView dvPayView;
     //买家留言
     @BindView(R.id.confirm_order_msg_edit)
     StableEditText msgEditText;
     //优惠券
-    @BindView(R.id.confirm_order_coupon)
-    DetailView dvCardsView;
+    @BindView(R.id.confirm_order_card_text)
+    TextView dvCardsView;
+    @BindView(R.id.confirm_order_card_layout)
+    RelativeLayout rlCardsViewLayout;
     //首付
     @BindView(R.id.confirm_order_first_pay)
     DetailView dvFirstPayView;
@@ -134,8 +139,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     //安装时间,暂时不用
     private String installTime;
 
-    private CreateOrderResponse result;
-
     private String channel;
     private String skuCode;
     private int downPaymentRate;
@@ -183,13 +186,10 @@ public class ConfirmOrderActivity extends BaseActivity {
         paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
             @Override
             public void onChooseType(int type, String paymentTypeStr) {
-                dvPayView.setRightText(paymentTypeStr);
+                dvPayView.setText(paymentTypeStr);
                 payType = type;
             }
         });
-
-        msgEditText.setSpannerStableText("买家留言(选填)：", 4, 8, getResources().getColor(R.color.title_color));
-        msgEditText.setText("提示信息");
 
         firstPayDialog = new CustomListDialog(this, new AdapterView.OnItemClickListener() {
             @Override
@@ -208,7 +208,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         monthDialog.setData(monthList = Arrays.asList(new CharSequence[]{"3个月", "6个月", "9个月", "12个月", "18个月", "24个月",}));
         pwdDialog = new DealPwdDialog(mBaseContext);
 
-        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "《消费分期合同》", R.color.black, R.color.title_color, new View.OnClickListener() {
+        CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "消费分期合同", R.color.black, R.color.title_color, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //即有钱包用户注册协议
@@ -217,6 +217,26 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
 
         initDialog();
+
+        initMsgEditText();
+    }
+
+    private void initMsgEditText() {
+        //第一次进入界面EditText未获取焦点,设置显示内容
+        SpannableString desc = new SpannableString("买家回复（选填）：对本次交易的说明");
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 0, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_color)), 4, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 8, 9, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_cccccc)), 9, desc.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        msgEditText.setText(desc);
+        //第一次点击EditText获取焦点，重置显示内容
+        msgEditText.setOnFirstFocusedListener(new StableEditText.OnFirstFocusedListener() {
+            @Override
+            public void firstFocused() {
+                msgEditText.setSpannerStableText("买家回复（选填）：", 4, 8, getResources().getColor(R.color.title_color));
+            }
+        });
     }
 
     private void initDialog() {
@@ -258,6 +278,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     rlEmptyView.setVisibility(View.VISIBLE);
                 }
             }
+
         });
     }
 
@@ -277,12 +298,17 @@ public class ConfirmOrderActivity extends BaseActivity {
             chooseCardsDialog = new ChooseCardsDialog(this, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
                 @Override
                 public void onChooseType(int id, String name) {
-                    dvCardsView.setRightText(name);
+                    dvCardsView.setText(name);
                     cardId = id;
                 }
             });
+            if (rlCardsViewLayout.getVisibility() != View.VISIBLE) {
+                rlCardsViewLayout.setVisibility(View.VISIBLE);
+            }
         } else {
-            dvCardsView.setRightText("没有可用优惠券");
+            if (rlCardsViewLayout.getVisibility() != View.GONE) {
+                rlCardsViewLayout.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -292,7 +318,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             if (StringUtils.isNotNull(skuInfoBean.src) && StringUtils.isNotNull(skuInfoBean.srcIp)) {
                 String url = skuInfoBean.srcIp + "/" + skuInfoBean.src;
-                ImageUtils.loadImage(url, R.drawable.defalut_img_88_88, ivSkuInfoIcon);
+                ImageUtils.loadImage(url, R.drawable.default_img_240_240, ivSkuInfoIcon);
             }
 
             if (StringUtils.isNotNull(skuInfoBean.name)) {
@@ -308,7 +334,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
-                        15, 13, R.color.black, R.color.black);
+                        15, 13, R.color.red, R.color.black);
                 totalPrice.setText("支付金额：¥" + StringUtils.format2(skuInfoBean.totalPrice));
             }
 
@@ -370,7 +396,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_coupon,
+    @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_card_text,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
             R.id.confirm_order_household,
             R.id.tv_ok, R.id.rl_receiving_address, R.id.confirm_order_empty})
@@ -381,7 +407,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             case R.id.confirm_order_pay_type:
                 paymentTypeDialog.showDialog(payType);
                 break;
-            case R.id.confirm_order_coupon:
+            case R.id.confirm_order_card_text:
                 if (cardList != null && cardList.size() > 0) {
                     chooseCardsDialog.show(cardId);
                 }
@@ -428,7 +454,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        ToastUtils.showShortToast("订单确认失败!");
+                        CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
     }
@@ -446,8 +472,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                         //密码校验成功
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
-                            //校验手机验证码
-                            VerifyActivity.startItForShopping(mBaseContext, orderNo, false, paymentNum);
+                            //校验手机验证码,payType为钱包时传入true,否则传入false
+                            VerifyActivity.startItForShopping(mBaseContext, orderNo, payType == 0, paymentNum);
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);

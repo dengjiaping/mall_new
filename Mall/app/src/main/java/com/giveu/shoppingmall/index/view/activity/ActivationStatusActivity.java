@@ -190,18 +190,21 @@ public class ActivationStatusActivity extends BaseActivity {
         });
     }
 
-    private void receiveCoupon() {
-        //这里是直接进行领取优惠券活动，不需要任何处理
-        ApiImpl.receiveCoupon(mBaseContext,LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
-            @Override
-            public void onSuccess(BaseBean response) {
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-            }
-        });
-    }
+    /**
+     * 以后活动可能用到
+     */
+//    private void receiveCoupon() {
+//        //这里是直接进行领取优惠券活动，不需要任何处理
+//        ApiImpl.receiveCoupon(mBaseContext,LoginHelper.getInstance().getIdPerson(), LoginHelper.getInstance().getUserId(), new BaseRequestAgent.ResponseListener<BaseBean>() {
+//            @Override
+//            public void onSuccess(BaseBean response) {
+//            }
+//
+//            @Override
+//            public void onError(BaseBean errorBean) {
+//            }
+//        });
+//    }
 
 
     @Override
@@ -264,7 +267,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 //领取优惠券
                 if (isShow && hasShowCoupon) {
                     couponDialog.showDialog();
-                    receiveCoupon();
+                  //  receiveCoupon();
                 }
 //                doLottery();
                 break;

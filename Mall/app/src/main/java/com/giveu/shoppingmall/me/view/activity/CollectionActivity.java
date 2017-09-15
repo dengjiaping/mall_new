@@ -94,7 +94,7 @@ public class CollectionActivity extends BaseActivity {
                     collectionResponse.isShowCb = rightTextClick;
                 }
                 collectionAdapter.notifyDataSetChanged();
-                rightTextClick = rightTextClick == true ? false : true;
+                rightTextClick = !rightTextClick;
             }
         });
         goodsList = new ArrayList<>();
@@ -110,7 +110,7 @@ public class CollectionActivity extends BaseActivity {
                     if (collectionAdapter.getData().get(i) == null) {
                         return;
                     }
-                    if (true == collectionAdapter.getData().get(i).isCheck) {
+                    if (collectionAdapter.getData().get(i).isCheck) {
                         //记录选中项
                         count++;
                     } else {
@@ -180,6 +180,12 @@ public class CollectionActivity extends BaseActivity {
                         }
                     }
                 }
+
+            }
+        });
+        ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -309,7 +315,7 @@ public class CollectionActivity extends BaseActivity {
                         List<CollectionResponse.ResultListBean> list = collectionAdapter.getData();
                         List<CollectionResponse.ResultListBean> removeList = new ArrayList<>();
                         for (int i = 0; i < collectionAdapter.getData().size(); i++) {
-                            if (true == list.get(i).isCheck) {
+                            if (list.get(i).isCheck) {
                                 removeList.add(list.get(i));
                                 skuCodes.add(collectionAdapter.getItem(i).skuCode);
                             }

@@ -310,8 +310,8 @@ public class ApiImpl {
     }
 
     //分期产品取现费用计算
-    public static void repayCost(Activity context, int idProduct, int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "loan"}, new Object[]{idProduct, loan});
+    public static void repayCost(Activity context, int idProduct,String insuranceFee,  int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "insuranceFee","loan"}, new Object[]{idProduct,StringUtils.string2Int(insuranceFee), loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_repaycost, RepayCostResponse.class, context, responseListener);
     }
 
@@ -332,8 +332,8 @@ public class ApiImpl {
     }
 
     //分期取现月供明细
-    public static void rpmDetail(Activity context, String idPerson, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson), idProduct, loan});
+    public static void rpmDetail(Activity context, String idPerson,String insuranceFee, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","insuranceFee" ,"idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson),StringUtils.string2Int(insuranceFee), idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
 
@@ -481,7 +481,7 @@ public class ApiImpl {
 
     //获取我的订单列表
     public static void getOrderList(Activity context, String channel, String idPerson, String pageNum, String pageSize, String status, BaseRequestAgent.ResponseListener<OrderListResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, idPerson, pageNum, pageSize, status});
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "pageNum", "pageSize", "status"}, new Object[]{channel, StringUtils.string2Long(idPerson), pageNum, pageSize, status});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.orderApp_myListOrder, OrderListResponse.class, context, responseListener);
     }
 
@@ -523,31 +523,31 @@ public class ApiImpl {
 
     //获取订单详情
     public static void getOrderDetail(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<OrderDetailResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_orderDetail, OrderDetailResponse.class, context, responseListener);
     }
 
     //删除订单
     public static void deleteOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_deleteOrder, BaseBean.class, context, responseListener);
     }
 
     //取消订单
     public static void cancelOrder(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_cancelOrder, BaseBean.class, context, responseListener);
     }
 
     //订单跟踪
     public static void getOrderTrace(Activity context, String channel, String idPerson, String orderNo, String src, BaseRequestAgent.ResponseListener<OrderTraceResponse> responseListener) {
-        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "src"}, new Object[]{channel, idPerson, orderNo, src});
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo", "src"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo, src});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_orderLogistics, OrderTraceResponse.class, context, responseListener);
     }
 
     //充值申请退款
     public static void applyToRefundForRecharge(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_rechargeApplyForRefund, BaseBean.class, context, responseListener);
     }
 
@@ -559,7 +559,7 @@ public class ApiImpl {
 
     //确认收货
     public static void confirmReceive(Activity context, String channel, String idPerson, String orderNo, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, idPerson, orderNo});
+        Map<String, Object> requestParam = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderNo"}, new Object[]{channel, StringUtils.string2Long(idPerson), orderNo});
         RequestAgent.getInstance().sendPostRequest(requestParam, ApiUrl.order_confirmReceipt, BaseBean.class, context, responseListener);
     }
 

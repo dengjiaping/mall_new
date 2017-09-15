@@ -34,7 +34,7 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
         ImageView ivGoods = holder.getView(R.id.iv_goods);
         TextView tvMonthAmount = holder.getView(R.id.tv_month_amount);
         TextView tvPrice = holder.getView(R.id.tv_price);
-        ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_240_240 + item.src, R.drawable.defalut_img_400_400, ivGoods);
+        ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_240_240 + item.src, R.drawable.default_img_240_240, ivGoods);
         if (item.isShowCb) {
             //显示
             holder.setVisible(R.id.cb_choose, true);

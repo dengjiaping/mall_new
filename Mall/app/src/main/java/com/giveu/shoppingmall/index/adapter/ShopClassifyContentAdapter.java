@@ -58,7 +58,7 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
             String iconUrl = datas.get(position).getTypesBean().getIconSrc();
             if (iconUrl != null) {
 
-                ImageUtils.loadImage(iconUrl, R.drawable.defalut_img_400_400, contentHolder.image);
+                ImageUtils.loadImage(iconUrl, R.drawable.default_img_240_240, contentHolder.image);
 
             }
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
