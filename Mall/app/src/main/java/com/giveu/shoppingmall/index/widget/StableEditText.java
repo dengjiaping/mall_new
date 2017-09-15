@@ -77,6 +77,11 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
 
     @Override
     public void setText(CharSequence text, BufferType type) {
+        if (isFirstIn) {
+            super.setText(text, type);
+            return;
+        }
+
         String newText;
         if (text == null) {
             text = "";
@@ -119,29 +124,12 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         if (focused && isFirstIn) {
             setText("");
-            setTextColor(Color.BLACK);
+//            setTextColor(Color.parseColor("#4a4a4a"));
             isFirstIn = false;
+            if (firstFocusedListener != null){
+                firstFocusedListener.firstFocused();
+            }
         }
-    }
-
-    /**
-     * 设置左侧固定字体的颜色
-     *
-     * @param color 左侧固定字体颜色
-     */
-    public void setStableTextColor(int color) {
-        stableTextColor = color;
-        colorSpan = new ForegroundColorSpan(stableTextColor);
-        setText(getFinalText());
-    }
-
-    /**
-     * 返回固定字体的颜色
-     *
-     * @return
-     */
-    public int getStableTextColor() {
-        return stableTextColor;
     }
 
     /**
@@ -170,10 +158,23 @@ public class StableEditText extends android.support.v7.widget.AppCompatEditText 
      * @return
      */
     public String getFinalText() {
+        if (isFirstIn){
+            return null;
+        }
         String reslut = getText().toString();
         if (stableText == null) {
             return reslut;
         }
         return reslut.substring(stableText.length());
+    }
+
+    public OnFirstFocusedListener firstFocusedListener;
+
+    public void setOnFirstFocusedListener(OnFirstFocusedListener listener){
+        firstFocusedListener = listener;
+    }
+
+    public interface OnFirstFocusedListener {
+        void firstFocused();
     }
 }
