@@ -603,20 +603,22 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_choose, CommodityInfoResponse.class, context, responseListener);
     }
 
-    //商品SKU搜索
-    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNumber, int pageSize, int shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
-        //如果是类目过来的，code为空，如果是首页过来的code不为空
-        if (StringUtils.isNull(code)) {
-            Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "keyword", "orderSort", "pageNum", "pageSize", "shopTypeId", "code"}, new Object[]{channel, idPerson, keyword, orderSort, pageNumber, pageSize, shopTypeId, code});
-            RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
-        } else {
-            getIndexContent(context, channel, idPerson, orderSort, pageNumber, pageSize, code, responseListener);
-        }
-    }
+    /**
+     * 商品SKU搜索
+     * shopTypeId和keyword和code字段互斥，三者只选其一
+     * 使用其中一个字段的时候需要把另外字段置空
+     */
 
-    //首页单品
-    public static void getIndexContent(Activity context, String channel, String idPerson, String orderSort, int pageNumber, int pageSize, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderSort", "pageNum", "pageSize", "code"}, new Object[]{channel, idPerson, orderSort, pageNumber, pageSize, code});
+    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNum, int pageSize, int shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderSort", "pageNum", "pageSize"}, new Object[]{channel, idPerson, orderSort, pageNum, pageSize});
+
+        if (StringUtils.isNotNull(code)) {
+            requestParams2.put("code", code);
+        } else if (StringUtils.isNotNull(keyword)) {
+            requestParams2.put("keyword", keyword);
+        } else {
+            requestParams2.put("shopTypeId", shopTypeId);
+        }
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
     }
 

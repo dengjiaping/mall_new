@@ -65,7 +65,7 @@ public class ShoppingListFragment extends BaseFragment {
     private String orderSort = SORT_BY_SIZE;
     private int pageNum = 1;
     private int pageSize = 10;
-    private int shopTypeId = 1;
+    private int shopTypeId = 0;
     private String code;
     private int pageIndex = 1;
 
@@ -84,16 +84,25 @@ public class ShoppingListFragment extends BaseFragment {
         return view;
     }
 
+    //shopTypeId和keyword和code字段互斥，三者只选其一
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+        this.code = null;
+        this.shopTypeId = 0;
     }
 
+    //shopTypeId和keyword和code字段互斥，三者只选其一
     public void setShopTypeId(int shopTypeId) {
         this.shopTypeId = shopTypeId;
+        this.keyword = null;
+        this.code = null;
     }
 
+    //shopTypeId和keyword和code字段互斥，三者只选其一
     public void setCode(String code) {
         this.code = code;
+        this.keyword = null;
+        this.shopTypeId = 0;
     }
 
     @Override
@@ -158,7 +167,6 @@ public class ShoppingListFragment extends BaseFragment {
     }
 
     public static ShoppingListFragment newInstance() {
-
         Bundle args = new Bundle();
         ShoppingListFragment fragment = new ShoppingListFragment();
         fragment.setArguments(args);
