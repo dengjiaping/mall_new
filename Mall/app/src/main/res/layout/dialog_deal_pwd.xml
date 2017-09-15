@@ -9,22 +9,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="15dp"
+        android:layout_height="60dp"
         >
 
         <ImageView
             android:id="@+id/iv_dismiss"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
+            android:padding="15dp"
             android:src="@drawable/ic_dismiss" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="请输入交易密码"
             android:textColor="@color/color_030303"
@@ -32,10 +30,10 @@
 
     </RelativeLayout>
 
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/shape_line_grey"/>
+        android:layout_height="1px"
+        android:background="@color/line_bg"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -57,10 +55,10 @@
         android:textSize="@dimen/ts_28"
         android:textColor="@color/color_00adb2"/>
 
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/shape_line_grey"/>
+        android:layout_height="1px"
+        android:background="@color/line_bg"/>
 
     <com.giveu.shoppingmall.widget.PassWordInputView
         android:id="@+id/inputview_dialog"
