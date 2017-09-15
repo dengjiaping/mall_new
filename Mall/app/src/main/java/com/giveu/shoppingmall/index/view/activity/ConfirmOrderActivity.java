@@ -139,8 +139,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     //安装时间,暂时不用
     private String installTime;
 
-    private CreateOrderResponse result;
-
     private String channel;
     private String skuCode;
     private int downPaymentRate;
@@ -443,9 +441,10 @@ public class ConfirmOrderActivity extends BaseActivity {
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
-                        pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
+                        pwdDialog.setPrice("¥" + paymentNum);
+                        pwdDialog.showDialog();
                     }
 
                     @Override
@@ -468,8 +467,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                         //密码校验成功
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
-                            //校验手机验证码
-                            VerifyActivity.startItForShopping(mBaseContext, orderNo, false, paymentNum);
+                            //校验手机验证码,payType为钱包时传入true,否则传入false
+                            VerifyActivity.startItForShopping(mBaseContext, orderNo, payType == 0, paymentNum);
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);
