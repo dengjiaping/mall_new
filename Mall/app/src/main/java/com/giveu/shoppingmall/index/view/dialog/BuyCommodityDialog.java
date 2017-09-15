@@ -204,10 +204,39 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         return skuCode;
     }
 
-    public void setBuyEnable(boolean enable) {
-        tvConfirm.setEnabled(enable);
-        llChooseCredit.setEnabled(enable);
-        if (enable) {
+    /**
+     * 获取是否有货前，购买按钮时不允许点击的
+     */
+    public void setBuyDisable() {
+        tvConfirm.setEnabled(false);
+        llChooseCredit.setEnabled(false);
+    }
+
+    public void setBuyEnable(int state) {
+        switch (state) {
+            case 0:
+                tvConfirm.setText("确认");
+                //可点击购买
+                tvConfirm.setEnabled(true);
+                llChooseCredit.setEnabled(true);
+                break;
+
+            case 1:
+                tvConfirm.setText("无货");
+                //不可点击立即购买或在购买对话框中不可点击下一步
+                tvConfirm.setEnabled(false);
+                llChooseCredit.setEnabled(false);
+
+                break;
+
+            case 2:
+                tvConfirm.setText("商品售罄");
+                //不可点击立即购买或在购买对话框中不可点击下一步
+                tvConfirm.setEnabled(false);
+                llChooseCredit.setEnabled(false);
+                break;
+        }
+        if (state == 0) {
             tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
             llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
         } else {

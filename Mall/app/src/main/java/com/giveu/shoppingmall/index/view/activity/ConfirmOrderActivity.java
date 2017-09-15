@@ -1,6 +1,5 @@
 package com.giveu.shoppingmall.index.view.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -110,6 +109,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     CheckBox cbAgreement;
     @BindView(R.id.tv_ok)
     TextView tvOK;
+    @BindView(R.id.confirm_order_empty)
+    RelativeLayout rlEmptyView;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -121,7 +122,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private CustomListDialog monthDialog;
     private DealPwdDialog pwdDialog;
 
-    private int payType = 2; //支付方式
+    private int payType = 2; //支付方式,暂时默认用支付宝
     private int cardId = 0; //优惠券Id
 
     //首付列表,暂时不用
@@ -240,12 +241,20 @@ public class ConfirmOrderActivity extends BaseActivity {
         ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, new SkuInfo(quantity, skuCode), new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
             @Override
             public void onSuccess(CreateOrderResponse response) {
-                updateUI(response);
+                if (response.data != null) {
+                    if (rlEmptyView.getVisibility() != View.GONE) {
+                        rlEmptyView.setVisibility(View.GONE);
+                    }
+                    updateUI(response);
+                }
             }
 
             @Override
             public void onError(BaseBean errorBean) {
                 ToastUtils.showShortToast("创建订单失败");
+                if (rlEmptyView.getVisibility() != View.VISIBLE) {
+                    rlEmptyView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -362,7 +371,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_coupon,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
             R.id.confirm_order_household,
-            R.id.tv_ok, R.id.rl_receiving_address})
+            R.id.tv_ok, R.id.rl_receiving_address, R.id.confirm_order_empty})
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -389,6 +398,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                 break;
             case R.id.tv_ok:
                 confirmOrderSc();
+                break;
+            case R.id.confirm_order_empty:
+                setData();
                 break;
             default:
                 break;
