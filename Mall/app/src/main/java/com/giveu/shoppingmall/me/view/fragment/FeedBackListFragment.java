@@ -105,7 +105,7 @@ public class FeedBackListFragment extends BaseFragment implements IFeedBackView 
                         @Override
                         protected void convert(ViewHolder holder, FeedBackResponse.QuestionImageListBean item, int position) {
                             ImageView ivPic = holder.getView(R.id.iv_img);
-                            ImageUtils.loadImage(item.smallImage, R.drawable.defalut_img_88_88, ivPic);
+                            ImageUtils.loadImage(item.smallImage, R.drawable.default_img_240_240, ivPic);
                         }
                     };
                     gv_item.setAdapter(gridViewAdapter);

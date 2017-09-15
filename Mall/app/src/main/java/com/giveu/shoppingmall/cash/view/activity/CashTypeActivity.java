@@ -417,7 +417,7 @@ public class CashTypeActivity extends BaseActivity {
         cbDescTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLoanAmount(idProduct,(int)chooseQuota);
+                showLoanAmount(localIdProduct,(int)chooseQuota);
             }
         });
         rulerView.setOnAdjustIndicateListener(new RulerView.OnAdjustIndicateListener() {
