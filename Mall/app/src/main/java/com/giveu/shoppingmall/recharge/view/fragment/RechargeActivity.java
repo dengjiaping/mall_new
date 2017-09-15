@@ -125,7 +125,6 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_main_recharge);
         baseLayout.setTitle("手机充值");
-        baseLayout.hideBack();
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);

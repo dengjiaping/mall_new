@@ -66,7 +66,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
-        android:layout_marginTop="22dp" />
+        android:layout_marginTop="22dp"
+        />
 
     <TextView
         android:id="@+id/tv_forget_pwd"
