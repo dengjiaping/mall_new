@@ -43,6 +43,7 @@ import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
+import com.giveu.shoppingmall.model.bean.response.PayResultResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
@@ -644,6 +645,12 @@ public class ApiImpl {
     public static void confirmOrderSc(Activity context, String channel, int courtesyCardId, int downPaymentRate, String idPerson, String idProduct, int installDate, int insuranceFee, int payType, CreateOrderResponse.ReceiverJoBean receiverJoBean, int reservingDate, SkuInfo skuInfo, String userComments, String userMobile, String userName, BaseRequestAgent.ResponseListener<ConfirmOrderScResponse> listener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "courtesyCardId", "downPaymentRate", "idPerson", "idProduct", "installDate", "insuranceFee", "payType", "receiverJo", "reservingDate", "skuInfo", "userComments", "userMobile", "userName"}, new Object[]{channel, courtesyCardId, downPaymentRate, idPerson, idProduct, installDate, insuranceFee, payType, receiverJoBean, reservingDate, skuInfo, userComments, userMobile, userName});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, ConfirmOrderScResponse.class, context, listener);
+    }
+
+    //订单确认
+    public static void thirdPayQuery(Activity context, String payId, BaseRequestAgent.ResponseListener<PayResultResponse> listener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"payId"}, new Object[]{payId});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.pay_query, PayResultResponse.class, context, listener);
     }
 
 

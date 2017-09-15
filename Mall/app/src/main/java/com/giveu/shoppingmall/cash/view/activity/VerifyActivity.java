@@ -29,6 +29,7 @@ import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.EventBusUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -348,7 +349,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
-            PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum,data.alipay);
+            LogUtil.e("payId = "+data.payId);
+            PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum,data.alipay,data.payId);
         }
         finish();
     }

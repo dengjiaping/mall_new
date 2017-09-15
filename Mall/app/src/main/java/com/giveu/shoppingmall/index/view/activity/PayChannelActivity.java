@@ -16,7 +16,9 @@ import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -54,13 +56,17 @@ public class PayChannelActivity extends BaseActivity {
     private String paymentNum;
     private String alipayStr;
     private String timeLeft;
+    private String payId;
 
-    public static void startIt(Activity activity, String orderNo, String paymentNum, String alipayStr) {
+    public static void startIt(Activity activity, String orderNo, String paymentNum, String alipayStr,String payId) {
         Intent intent = new Intent(activity, PayChannelActivity.class);
         intent.putExtra("orderNo", orderNo);
         intent.putExtra("paymentNum", paymentNum);
+        intent.putExtra("payId", payId);
         intent.putExtra("alipayStr", alipayStr);
         activity.startActivity(intent);
+        LogUtil.e("payId = "+payId);
+
     }
 
     @Override
@@ -69,6 +75,8 @@ public class PayChannelActivity extends BaseActivity {
         baseLayout.setTitle("支付首付金额");
         orderNo = getIntent().getStringExtra("orderNo");
         alipayStr = getIntent().getStringExtra("alipayStr");
+        payId = getIntent().getStringExtra("payId");
+        LogUtil.e("payId = "+payId);
         paymentNum = StringUtils.format2(getIntent().getStringExtra("paymentNum"));
         tvMoney.setText("¥" + paymentNum);
         getRestTime();
@@ -125,16 +133,12 @@ public class PayChannelActivity extends BaseActivity {
                 PayUtils.AliPay(mBaseContext, alipayStr, new PayUtils.AliPayThread.OnPayListener() {
                     @Override
                     public void onSuccess() {
-                        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
-                        OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, true);
-                        finish();
+                        payQuery();
                     }
 
                     @Override
                     public void onFail() {
-                        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
-                        OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, false);
-                        finish();
+                        showPayResult(false);
                     }
 
                     @Override
@@ -148,6 +152,37 @@ public class PayChannelActivity extends BaseActivity {
                 OrderInfoActivity.startIt(mBaseContext, orderNo);
                 break;
         }
+    }
+
+    /**
+     * 显示支付结果
+     * @param isSuccess
+     */
+    private void showPayResult(boolean isSuccess) {
+        ConfirmPayResponse confirmPayResponse = new ConfirmPayResponse();
+        confirmPayResponse.payPrice = paymentNum;
+        //关闭之前的确认订单界面
+        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
+        OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, isSuccess);
+        finish();
+    }
+
+    private void payQuery() {
+        ApiImpl.payQuery(mBaseContext, payId, new BaseRequestAgent.ResponseListener<PayQueryResponse>() {
+            @Override
+            public void onSuccess(PayQueryResponse response) {
+                if (response != null && response.data != null && response.data.paySuccess) {
+                    showPayResult(true);
+                } else {
+                    showPayResult(false);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                showPayResult(false);
+            }
+        });
     }
 
     @Override

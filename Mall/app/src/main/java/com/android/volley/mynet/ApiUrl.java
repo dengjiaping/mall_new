@@ -183,6 +183,8 @@ public interface ApiUrl {
     String sc_goods_sku_stock = BASE_URL + "sc/goods/sku/stock";
     //商品选配
     String sc_goods_sku_choose = BASE_URL + "sc/goods/sku/choose";
+    //支付状态查询
+//    String pay_query = BASE_URL +"pay/query";
     //商品搜索热词更新
     String sc_goods_search_hotword_refresh = BASE_URL + "sc/goods/search/hotWord/refresh";
     //一级类目查询子类目(商品分类)
