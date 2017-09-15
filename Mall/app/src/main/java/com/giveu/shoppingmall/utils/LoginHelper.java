@@ -2,10 +2,13 @@ package com.giveu.shoppingmall.utils;
 
 import android.app.Activity;
 
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.sharePref.AbsSharePref;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
+
+import java.util.HashMap;
 
 /**
  * 保存用户信息
@@ -164,19 +167,30 @@ public class LoginHelper extends AbsSharePref {
         }
 
         if (CommonUtils.isNotNullOrEmpty(personInfo.myOrder)) {
+            //存放待付款、待首付、待收货的订单数
+            HashMap orderNum = new HashMap(personInfo.myOrder.size());
             for (LoginResponse.MyOrderBean myOrderBean : personInfo.myOrder) {
-                switch (myOrderBean.status) {
-                    case 1:
-                        putInt(ORDER_PAY_NUM, myOrderBean.num);
-                        break;
-                    case 2:
-                        putInt(ORDER_DOWNPAYMENT_NUM, myOrderBean.num);
-                        break;
-                    case 4:
-                        putInt(ORDER_RECEIVE_NUM, myOrderBean.num);
-                        break;
-                }
+                orderNum.put(myOrderBean.status, myOrderBean.num);
             }
+            if (orderNum.get(OrderState.WAITINGPAY) != null) {
+                putInt(ORDER_PAY_NUM, (int) orderNum.get(OrderState.WAITINGPAY));
+            } else {
+                putInt(ORDER_PAY_NUM, 0);
+            }
+            if (orderNum.get(OrderState.DOWNPAYMENT) != null) {
+                putInt(ORDER_DOWNPAYMENT_NUM, (int) orderNum.get(OrderState.DOWNPAYMENT));
+            } else {
+                putInt(ORDER_DOWNPAYMENT_NUM, 0);
+            }
+            if (orderNum.get(OrderState.WAITINGRECEIVE) != null) {
+                putInt(ORDER_RECEIVE_NUM, (int) orderNum.get(OrderState.WAITINGRECEIVE));
+            } else {
+                putInt(ORDER_RECEIVE_NUM, 0);
+            }
+        } else {
+            putInt(ORDER_PAY_NUM, 0);
+            putInt(ORDER_DOWNPAYMENT_NUM, 0);
+            putInt(ORDER_RECEIVE_NUM, 0);
         }
         //剩余提醒次数
         int remainingTimes = getInt(REMAINING_TIMES, -1);
@@ -440,6 +454,7 @@ public class LoginHelper extends AbsSharePref {
             putBoolean(ISSETPWD, loginPersonInfo.isSetPwd);
         }
     }
+
     /**
      * 是否有居住地址
      *

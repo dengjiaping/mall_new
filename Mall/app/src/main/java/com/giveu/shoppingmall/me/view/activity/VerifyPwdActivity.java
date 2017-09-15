@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
 import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
@@ -29,6 +30,9 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -103,6 +107,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             ImageUtils.loadImageWithCorner(LoginHelper.getInstance().getUserPic(), R.drawable.ic_default_avatar, ivAvatar, DensityUtils.dip2px(25));
         }
         fingerHelper = new FingerPrintHelper(mBaseContext);
+        registerEventBus();
 
     }
 
@@ -148,6 +153,10 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         presenter.login(LoginHelper.getInstance().getPhone(), MD5.MD5Encode(etPwd.getText().toString()));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginSuccess(LoginSuccessEvent successEvent) {
+        finish();
+    }
 
     @Override
     public void setData() {
