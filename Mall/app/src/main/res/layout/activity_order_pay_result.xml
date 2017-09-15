@@ -163,6 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
+                android:visibility="gone"
                 android:text="*每月最迟还款日，我们将从您绑定银行卡代扣本期应还费用,请保证绑定银行卡有足够余额"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="@dimen/ts_12" />

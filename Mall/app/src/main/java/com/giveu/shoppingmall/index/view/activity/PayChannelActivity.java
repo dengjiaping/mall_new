@@ -11,8 +11,10 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -49,12 +51,15 @@ public class PayChannelActivity extends BaseActivity {
     private ConfirmDialog cancelDialog;
     private boolean isOrderValid = true;//订单是否有效，有效的话返回上个页面的时候给予提示
     private String orderNo;
+    private String paymentNum;
+    private String alipayStr;
     private String timeLeft;
 
-    public static void startIt(Activity activity, String orderNo, String payment) {
+    public static void startIt(Activity activity, String orderNo, String paymentNum, String alipayStr) {
         Intent intent = new Intent(activity, PayChannelActivity.class);
         intent.putExtra("orderNo", orderNo);
-        intent.putExtra("payment", payment);
+        intent.putExtra("paymentNum", paymentNum);
+        intent.putExtra("alipayStr", alipayStr);
         activity.startActivity(intent);
     }
 
@@ -63,7 +68,9 @@ public class PayChannelActivity extends BaseActivity {
         setContentView(R.layout.activity_pay_channel);
         baseLayout.setTitle("支付首付金额");
         orderNo = getIntent().getStringExtra("orderNo");
-        tvMoney.setText("¥" + StringUtils.format2(getIntent().getStringExtra("payment")));
+        alipayStr = getIntent().getStringExtra("alipayStr");
+        paymentNum = StringUtils.format2(getIntent().getStringExtra("paymentNum"));
+        tvMoney.setText("¥" + paymentNum);
         getRestTime();
         cancelDialog = new ConfirmDialog(mBaseContext);
         cancelDialog.setContent("是否放弃支付?");
@@ -113,15 +120,21 @@ public class PayChannelActivity extends BaseActivity {
                 break;
 
             case R.id.tv_confirm:
-                PayUtils.AliPay(mBaseContext, orderNo, new PayUtils.AliPayThread.OnPayListener() {
+                final ConfirmPayResponse confirmPayResponse = new ConfirmPayResponse();
+                confirmPayResponse.payPrice = paymentNum;
+                PayUtils.AliPay(mBaseContext, alipayStr, new PayUtils.AliPayThread.OnPayListener() {
                     @Override
                     public void onSuccess() {
-                        OrderPayResultActivity.startIt(mBaseContext, null, orderNo, true);
+                        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
+                        OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, true);
+                        finish();
                     }
 
                     @Override
                     public void onFail() {
-                        OrderPayResultActivity.startIt(mBaseContext, null, orderNo, false);
+                        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
+                        OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, false);
+                        finish();
                     }
 
                     @Override
@@ -160,9 +173,9 @@ public class PayChannelActivity extends BaseActivity {
             @Override
             public void onSuccess(OrderDetailResponse response) {
                 if (response != null) {
-                    if (StringUtils.isNotNull(response.timeLeft)) {
-                        timeLeft = response.timeLeft;
-                        tvRemainTime.setRestTime(Long.parseLong(timeLeft));
+                    if (StringUtils.isNotNull(response.data.remainingTime)) {
+                        timeLeft = response.data.remainingTime;
+                        tvRemainTime.setRestTime(StringUtils.string2Long(timeLeft));
                         tvRemainTime.startCount(new CountDownTextView.CountEndListener() {
                             @Override
                             public void onEnd() {
@@ -172,6 +185,7 @@ public class PayChannelActivity extends BaseActivity {
                             }
                         });
                     } else {
+                        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
                         isOrderValid = false;
                         llPayStatus.setVisibility(View.GONE);
                         llPayFail.setVisibility(View.VISIBLE);

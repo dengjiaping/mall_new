@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -196,7 +197,8 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
      * 设置手势密码的提示
      */
     public void settingPatternOrFingerPrint() {
-        if (LoginHelper.getInstance().shouldShowSetting()) {
+        if (LoginHelper.getInstance().shouldShowSetting()
+                && !SharePrefUtil.hasFingerPrint() && TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
             FingerPrintHelper fingerHelper = new FingerPrintHelper(mBaseContext);
             if (fingerHelper.isHardwareEnable()) {
                 FingerPrintActivity.startIt(mBaseContext, true);

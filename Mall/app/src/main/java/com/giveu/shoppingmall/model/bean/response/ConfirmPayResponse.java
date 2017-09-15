@@ -21,4 +21,7 @@ public class ConfirmPayResponse extends BaseBean<ConfirmPayResponse> implements 
     public String latesRepayDate;
     public String payPrice;
     public String paymentNum;
+    public String alipay;
+    public String payId;
+    public int payType;
 }

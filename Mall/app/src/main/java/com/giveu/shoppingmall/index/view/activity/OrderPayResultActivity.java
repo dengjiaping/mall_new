@@ -59,8 +59,8 @@ public class OrderPayResultActivity extends BaseActivity {
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        baseLayout.setTitle("订单支付");
         setContentView(R.layout.activity_order_pay_result);
+        baseLayout.setTitle("订单支付");
         orderNo = getIntent().getStringExtra("orderNo");
         isSuccess = getIntent().getBooleanExtra("isSuccess", false);
         response = (ConfirmPayResponse) getIntent().getSerializableExtra("ConfirmPayResponse");

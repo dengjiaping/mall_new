@@ -399,7 +399,11 @@ public class ConfirmOrderActivity extends BaseActivity {
                 AddressManageActivity.startItForResult(this, Const.ADDRESSMANAGE);
                 break;
             case R.id.tv_ok:
-                confirmOrderSc();
+                if ("去支付".equals(tvOK.getText().toString())) {
+                    pwdDialog.showDialog();
+                } else {
+                    confirmOrderSc();
+                }
                 break;
             case R.id.confirm_order_empty:
                 setData();
@@ -415,9 +419,11 @@ public class ConfirmOrderActivity extends BaseActivity {
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
+                        pwdDialog.setPrice(response.data.payMoney);
                         pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
+                        tvOK.setText("去支付");
                     }
 
                     @Override

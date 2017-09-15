@@ -38,6 +38,7 @@ import com.giveu.shoppingmall.utils.MD5;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.listener.TextChangeListener;
+import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
@@ -257,7 +258,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
      * 设置手势密码的提示
      */
     public void settingPatternOrFingerPrint() {
-        if (LoginHelper.getInstance().shouldShowSetting()) {
+        if (LoginHelper.getInstance().shouldShowSetting()
+                && !SharePrefUtil.hasFingerPrint() && TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
             FingerPrintHelper fingerHelper = new FingerPrintHelper(mBaseContext);
             if (fingerHelper.isHardwareEnable()) {
                 FingerPrintActivity.startIt(mBaseContext, true);

@@ -544,6 +544,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             }
         } else {
             hideLoding();
+            initBanner(null);
+            initHot(null);
+            initMore(null);
+            initCategory(null);
             llEmptyView.setVisibility(View.VISIBLE);
         }
     }

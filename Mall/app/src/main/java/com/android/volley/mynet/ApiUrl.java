@@ -174,7 +174,7 @@ public interface ApiUrl {
     //确认收货
     String order_confirmReceipt = BASE_URL + "order/confirmReceipt";
     //确认支付
-    String orderApp_confirmPay = BASE_URL + "orderApp/confirmPay";
+    String order_confirmPaySc = BASE_URL + "order/confirmPaySc";
     //商品介绍
     String sc_goods_sku_instruction = BASE_URL + "sc/goods/sku/instruction";
     //商品详情
