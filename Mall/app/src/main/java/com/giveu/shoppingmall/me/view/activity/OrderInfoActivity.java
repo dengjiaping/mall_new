@@ -136,6 +136,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     LinearLayout llApplyRefund;
     @BindView(R.id.ll_contract)
     LinearLayout llContract;
+    @BindView(R.id.ll_consignee_info)
+    LinearLayout llConsigneeInfo;
 
 
 
@@ -512,10 +514,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (orderType == 0) {
             llEntityGoods.setVisibility(View.VISIBLE);
             llUserComments.setVisibility(View.VISIBLE);
+            llConsigneeInfo.setVisibility(View.VISIBLE);
             llVirtualGoods.setVisibility(View.GONE);
         } else {
             llEntityGoods.setVisibility(View.GONE);
             llUserComments.setVisibility(View.GONE);
+            llConsigneeInfo.setVisibility(View.GONE);
             llVirtualGoods.setVisibility(View.VISIBLE);
         }
     }
