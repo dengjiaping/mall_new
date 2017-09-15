@@ -15,7 +15,6 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
-import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.LoginPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILoginView;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
@@ -185,11 +184,27 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
         } else {
             //重新计时
             BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
-            MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
+            settingPatternOrFingerPrint();
+//            MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
         }
         //登录成功后需重新刷新周年庆活动状态
         EventBusUtils.poseEvent(new LotteryEvent());
         finish();
+    }
+
+    /**
+     * 设置手势密码的提示
+     */
+    public void settingPatternOrFingerPrint() {
+        if (LoginHelper.getInstance().shouldShowSetting()) {
+            FingerPrintHelper fingerHelper = new FingerPrintHelper(mBaseContext);
+            if (fingerHelper.isHardwareEnable()) {
+                FingerPrintActivity.startIt(mBaseContext, true);
+            } else {
+                CreateGestureActivity.startIt(mBaseContext);
+            }
+            LoginHelper.getInstance().reduceRemingTimes();
+        }
     }
 
     @Override

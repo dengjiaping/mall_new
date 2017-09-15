@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -71,7 +72,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public static final String SHOPPING = "shopping";
     private String salePrice;
     private String randomCode;
-    private String payment;//商城订单支付金额
+    private String paymentNum;//商城订单支付金额
 
     public static void startIt(Activity activity, String insuranceFee, String statusType, String creditAmount, String creditType, String idProduct, String randCode, String chooseBankName, String chooseBankNo) {
         Intent intent = new Intent(activity, VerifyActivity.class);
@@ -86,13 +87,13 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         activity.startActivity(intent);
     }
 
-    public static void startItForShopping(Activity activity, String orderNo, boolean isWalletPay, String payment) {
+    public static void startItForShopping(Activity activity, String orderNo, boolean isWalletPay, String paymentNum) {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("isForShopping", true);
         intent.putExtra("orderNo", orderNo);
         intent.putExtra("statusType", SHOPPING);
         intent.putExtra("isWalletPay", isWalletPay);//是否钱包支付
-        intent.putExtra("payment", payment);//支付金额
+        intent.putExtra("paymentNum", paymentNum);//支付金额
 
         activity.startActivity(intent);
     }
@@ -132,7 +133,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             tvDivider.setVisibility(View.VISIBLE);
             tvUnreceived.setVisibility(View.VISIBLE);
             tvSendCode.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_767876));
-            payment = getIntent().getStringExtra("payment");
+            paymentNum = getIntent().getStringExtra("paymentNum");
             isWalletPay = getIntent().getBooleanExtra("isWalletPay", false);
         } else {
             tvDivider.setVisibility(View.GONE);
@@ -212,7 +213,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                             if (isWalletPay) {
 
                             } else {
-                                presenter.confirmPayForShop(orderNo, randomCode, smsCode, mobile);
+                                presenter.confirmPayForShop(Const.CHANNEL,orderNo, LoginHelper.getInstance().getIdPerson(), smsCode, LoginHelper.getInstance().getPhone());
                             }
                             break;
                     }
@@ -347,7 +348,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
-            PayChannelActivity.startIt(mBaseContext, orderNo, payment);
+            PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum);
         }
         finish();
     }

@@ -144,6 +144,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String customerName = null;
     private String customerPhone = null;
     private ConfirmDialog confirmDialog;
+    private String orderNo;
+    private String paymentNum;
 
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
@@ -414,6 +416,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
                         pwdDialog.showDialog();
+                        orderNo = response.data.orderNo;
+                        paymentNum = response.data.payMoney;
                     }
 
                     @Override
@@ -437,7 +441,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
                             //校验手机验证码
-                            VerifyActivity.startItForShopping(mBaseContext, "", false, "");
+                            VerifyActivity.startItForShopping(mBaseContext, orderNo, false, paymentNum);
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);

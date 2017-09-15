@@ -507,9 +507,9 @@
             android:layout_centerInParent="true"
             android:button="@null"
             android:drawablePadding="10dp"
-            android:drawableTop="@drawable/icon_network_error"
+            android:drawableTop="@drawable/ic_defalut_empty"
             android:gravity="center"
-            android:text="创建订单失败.请点击重试"
+            android:text="创建订单失败,请点击重试"
             android:textColor="@color/color_666666" />
     </RelativeLayout>
 </RelativeLayout>
