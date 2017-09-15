@@ -26,7 +26,6 @@
             android:gravity="top"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"
-            android:text="智能数码"
             android:textColor="#ff1516"
             android:textSize="@dimen/ts_16" />
     </LinearLayout>
@@ -40,7 +39,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="999抢笔记本"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_13"
             android:id="@+id/tv_title" />

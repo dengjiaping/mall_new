@@ -197,7 +197,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
             }
         });
-        buyDialog.setBuyEnable(false);
+        buyDialog.setBuyDisable();
 
         buyDialog.setOnChooseCompleteListener(new BuyCommodityDialog.OnChooseCompleteListener() {
             @Override
@@ -401,7 +401,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             case 0:
                 dvStock.setMiddleText("有货");
                 //可点击购买
-                buyDialog.setBuyEnable(true);
+                buyDialog.setBuyEnable(state);
                 //activity的购买按键是否可点击
                 activity.setBuyEnable(true);
                 break;
@@ -409,7 +409,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             case 1:
                 dvStock.setMiddleText("无货");
                 //不可点击立即购买或在购买对话框中不可点击下一步
-                buyDialog.setBuyEnable(false);
+                buyDialog.setBuyEnable(state);
                 activity.setBuyEnable(false);
 
                 break;
@@ -417,7 +417,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             case 2:
                 dvStock.setMiddleText("商品售罄");
                 //不可点击立即购买或在购买对话框中不可点击下一步
-                buyDialog.setBuyEnable(false);
+                buyDialog.setBuyEnable(state);
                 activity.setBuyEnable(false);
                 break;
         }

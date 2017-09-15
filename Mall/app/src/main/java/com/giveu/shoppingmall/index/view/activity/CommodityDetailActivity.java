@@ -29,7 +29,6 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -147,7 +146,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      * 收藏商品
      */
     private void collectCommodity() {
-        setCollectStatus(1);
+        setCollectStatus(0);
         ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleY", 1f, 1.5f, 1f);
         ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleX", 1f, 1.5f, 1f);
         AnimatorSet animSet = new AnimatorSet();
@@ -162,7 +161,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      * @param collectStatus
      */
     public void setCollectStatus(int collectStatus) {
-        if (collectStatus == 1) {
+        if (collectStatus == 0) {
             ivCollect.setTag(true);
             ivCollect.setImageResource(R.drawable.ic_collect_select);
             tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
@@ -381,8 +380,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      */
     @Override
     public void showCommodity(String url) {
-        LogUtil.e("showCommodity");
-//        url = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002691";
         commodityDetailFragment.refreshCommodityDetail(url);
         commodityInfoFragment.refreshCommodityDetail(url);
     }

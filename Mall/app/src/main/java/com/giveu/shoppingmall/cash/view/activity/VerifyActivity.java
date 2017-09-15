@@ -90,7 +90,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         Intent intent = new Intent(activity, VerifyActivity.class);
         intent.putExtra("isForShopping", true);
         intent.putExtra("orderNo", orderNo);
-        intent.putExtra("statusType", "shopping");
+        intent.putExtra("statusType", SHOPPING);
         intent.putExtra("isWalletPay", isWalletPay);//是否钱包支付
         intent.putExtra("payment", payment);//支付金额
 

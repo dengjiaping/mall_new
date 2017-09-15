@@ -263,6 +263,7 @@ public class ActivationStatusActivity extends BaseActivity {
                 tvHintBottom.setText(lab);
                 //领取优惠券
                 if (isShow && hasShowCoupon) {
+                    couponDialog.showDialog();
                     receiveCoupon();
                 }
 //                doLottery();
