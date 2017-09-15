@@ -77,6 +77,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private HeaderViewHolder viewHolder;
     private int pageIndex = 1;
     private final int pageSize = 20;
+    private String contentCode ;
     private View headerView;
 
     @Override
@@ -364,6 +365,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
+                presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, contentCode);
             }
         });
         ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -535,6 +537,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                     case 4 + "":
                         //头部数据加载完成后再加载单品数据
                         if (CommonUtils.isNotNullOrEmpty(indexResponse.decorations)) {
+                            contentCode = indexResponse.decorations.get(0).code;
                             presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.decorations.get(0).code);
                         } else {
 //                            llEmptyView.setVisibility(View.VISIBLE);
