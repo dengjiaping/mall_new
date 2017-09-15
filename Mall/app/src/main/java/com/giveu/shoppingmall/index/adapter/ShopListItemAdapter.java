@@ -51,12 +51,18 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.ic_defalut_pic_corner, image);
 
         holder.setText(R.id.item_right_name, item.name);
+        holder.setText(R.id.item_right_desc, item.keywords);
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
+        TextView tvPrice = holder.getView(R.id.item_right_price);
         //true就不显示月供,实际上隐藏售价view，月供view变成售价
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount + "", "", 14, 11, R.color.red, R.color.color_999999);
-        tvMonthAmount.setVisibility(View.GONE);
-
-        holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
+        if (StringUtils.isNotNull(item.monthAmount)) {
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 14, 11, R.color.red, R.color.color_999999);
+            holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
+            tvPrice.setVisibility(View.VISIBLE);
+        } else {
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 14, 11, R.color.red, R.color.color_999999);
+            tvPrice.setVisibility(View.INVISIBLE);
+        }
     }
 }
