@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -85,12 +84,12 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
     }
 
     private class ContentHolder extends TitleHolder {
-        LinearLayout layout;
+        View layout;
         ImageView image;
 
         ContentHolder(View itemView) {
             super(itemView);
-            layout = (LinearLayout) itemView.findViewById(R.id.item_content_ll);
+            layout = itemView.findViewById(R.id.item_content_ll);
             image = (ImageView) itemView.findViewById(R.id.item_content_image);
         }
     }
