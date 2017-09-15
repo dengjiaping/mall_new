@@ -162,7 +162,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      * @param collectStatus
      */
     public void setCollectStatus(int collectStatus) {
-        if (collectStatus == 1) {
+        if (collectStatus == 0) {
             ivCollect.setTag(true);
             ivCollect.setImageResource(R.drawable.ic_collect_select);
             tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
@@ -381,8 +381,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      */
     @Override
     public void showCommodity(String url) {
-        LogUtil.e("showCommodity");
-//        url = "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/introduce?skuCode=K00002691";
         commodityDetailFragment.refreshCommodityDetail(url);
         commodityInfoFragment.refreshCommodityDetail(url);
     }
