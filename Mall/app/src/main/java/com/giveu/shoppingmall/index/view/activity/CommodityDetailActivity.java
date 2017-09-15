@@ -29,7 +29,6 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -147,7 +146,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
      * 收藏商品
      */
     private void collectCommodity() {
-        setCollectStatus(1);
+        setCollectStatus(0);
         ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleY", 1f, 1.5f, 1f);
         ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(ivCollect, "scaleX", 1f, 1.5f, 1f);
         AnimatorSet animSet = new AnimatorSet();
