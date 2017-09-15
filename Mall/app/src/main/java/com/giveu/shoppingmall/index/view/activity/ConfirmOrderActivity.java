@@ -292,7 +292,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             if (StringUtils.isNotNull(skuInfoBean.src) && StringUtils.isNotNull(skuInfoBean.srcIp)) {
                 String url = skuInfoBean.srcIp + "/" + skuInfoBean.src;
-                ImageUtils.loadImage(url, R.drawable.defalut_img_88_88, ivSkuInfoIcon);
+                ImageUtils.loadImage(url, R.drawable.default_img_240_240, ivSkuInfoIcon);
             }
 
             if (StringUtils.isNotNull(skuInfoBean.name)) {

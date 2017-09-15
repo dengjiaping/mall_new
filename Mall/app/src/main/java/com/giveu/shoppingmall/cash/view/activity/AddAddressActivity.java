@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
-import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -125,7 +124,7 @@ public class AddAddressActivity extends BasePermissionActivity {
             etDetailAddress.setText(StringUtils.nullToEmptyString(item.address));
             tvAddress.setText(StringUtils.nullToEmptyString(item.province) + StringUtils.nullToEmptyString(item.city) + StringUtils.nullToEmptyString(item.region) + StringUtils.nullToEmptyString(item.street));
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
-            cbDefault.setChecked("1".equals(item.isDefault) ? true : false);
+            cbDefault.setChecked("1".equals(item.isDefault));
         }
         baseLayout.setRightTextAndListener("保存", new View.OnClickListener() {
             @Override
@@ -162,27 +161,29 @@ public class AddAddressActivity extends BasePermissionActivity {
                                 break;
                             case EDIT:
                                 //修改地址，如果地址选择器没有选，才使用带过来的数据
-                                city = StringUtils.isNull(city) ? item.city : city;
-                                province = StringUtils.isNull(province) ? item.province : province;
-                                region = StringUtils.isNull(region) ? item.region : region;
-                                street = StringUtils.isNull(street) ? item.street : street;
-                                ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
-                                    @Override
-                                    public void onSuccess(BaseBean response) {
-                                        ToastUtils.showShortToast("修改地址成功");
-                                        addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
-                                        Intent intent = new Intent();
-                                        intent.putExtra("addressResponse", addressResponse);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
+                                if (item != null) {
+                                    city = StringUtils.isNull(city) ? item.city : city;
+                                    province = StringUtils.isNull(province) ? item.province : province;
+                                    region = StringUtils.isNull(region) ? item.region : region;
+                                    street = StringUtils.isNull(street) ? item.street : street;
+                                    ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                        @Override
+                                        public void onSuccess(BaseBean response) {
+                                            ToastUtils.showShortToast("修改地址成功");
+                                            addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
+                                            Intent intent = new Intent();
+                                            intent.putExtra("addressResponse", addressResponse);
+                                            setResult(RESULT_OK, intent);
+                                            finish();
+                                        }
 
-                                    @Override
-                                    public void onError(BaseBean errorBean) {
-                                        CommonLoadingView.showErrorToast(errorBean);
-                                    }
-                                });
-                                break;
+                                        @Override
+                                        public void onError(BaseBean errorBean) {
+                                            CommonLoadingView.showErrorToast(errorBean);
+                                        }
+                                    });
+                                    break;
+                                }
                         }
                     }
                 } else {
