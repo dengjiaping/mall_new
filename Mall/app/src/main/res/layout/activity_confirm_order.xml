@@ -19,13 +19,14 @@
                 android:id="@+id/rl_receiving_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:minHeight="80dp">
 
                 <RelativeLayout
                     android:id="@+id/confirm_order_address_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/confirm_order_address_name"
@@ -71,10 +72,11 @@
                     android:layout_gravity="center"
                     android:background="@null"
                     android:button="@null"
+                    android:clickable="false"
                     android:drawableLeft="@drawable/ic_address"
                     android:drawablePadding="5dp"
                     android:text="添加收获地址"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </FrameLayout>
 
@@ -487,8 +489,27 @@
             android:layout_height="match_parent"
             android:background="@drawable/selector_ok_button"
             android:gravity="center"
-            android:text="去支付"
+            android:text="确认支付"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_18" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/confirm_order_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:button="@null"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/icon_network_error"
+            android:gravity="center"
+            android:text="创建订单失败.请点击重试"
+            android:textColor="@color/color_666666" />
+    </RelativeLayout>
 </RelativeLayout>
