@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
             android:gravity="center"
-            android:text=" 您尚无取现额度，即有商城即将上线，敬请期待。通过商城消费可积累信用提高取现额度哦"
+            android:text=" 您尚无取现额度，通过商城消费可积累信用提高取现额度哦"
             android:textColor="@color/color_4a4a4a"
             android:textSize="@dimen/ts_14" />
 
@@ -33,7 +33,7 @@
             android:id="@+id/tv_back"
             style="@style/click_enabled_bt"
             android:layout_marginTop="53dp"
-            android:text="返回" />
+            android:text="去商城" />
     </LinearLayout>
 
 

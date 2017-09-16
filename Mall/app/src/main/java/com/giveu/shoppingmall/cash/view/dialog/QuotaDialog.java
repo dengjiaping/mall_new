@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 
 
@@ -40,6 +41,7 @@ public class QuotaDialog {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MainActivity.startIt(mActivity);
                 mDialog.dismiss();
             }
         });

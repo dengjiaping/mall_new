@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,6 +86,13 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         context.startActivity(intent);
     }
 
+    public static void startItForResult(Activity context, boolean isCredit, String skuCode, int resultCode, boolean isCollection) {
+        Intent intent = new Intent(context, CommodityDetailActivity.class);
+        intent.putExtra("isCredit", isCredit);
+        intent.putExtra("skuCode", skuCode);
+        intent.putExtra("isCollection", isCollection);
+        context.startActivityForResult(intent, resultCode);
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -377,11 +386,22 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
 
     /**
      * 刷新商品详情的相关信息（网页）
-     *
      */
     @Override
     public void showCommodity(String url) {
         commodityDetailFragment.refreshCommodityDetail(url);
         commodityInfoFragment.refreshCommodityDetail(url);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            boolean isCollection = getIntent().getBooleanExtra("isCollection", false);
+            if (isCollection) {
+                setResult(RESULT_OK);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

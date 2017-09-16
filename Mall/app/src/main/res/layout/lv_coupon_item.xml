@@ -39,7 +39,6 @@
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="50"
                     android:textColor="@color/white"
                     android:textSize="@dimen/ts_19" />
 
@@ -50,7 +49,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="满60元可用"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_10" />
         </LinearLayout>
@@ -75,7 +73,6 @@
                 android:id="@+id/tv_descpt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="现取500元免费用7天"
                 android:textStyle="bold"
                 android:textColor="@color/color_6c6c6c"
                 android:textSize="@dimen/ts_15" />
@@ -85,7 +82,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="2017.9.10-2017.10.31"
                 android:textColor="@color/color_9d9d9d"
                 android:textSize="@dimen/ts_9" />
 
