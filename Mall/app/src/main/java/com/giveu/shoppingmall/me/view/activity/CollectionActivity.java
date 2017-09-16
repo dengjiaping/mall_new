@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,11 +21,13 @@ import com.giveu.shoppingmall.me.adapter.CollectionAdapter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CollectionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
+import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -97,31 +100,8 @@ public class CollectionActivity extends BaseActivity {
                 rightTextClick = !rightTextClick;
             }
         });
-        goodsList = new ArrayList<>();
-        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
-            @Override
-            public void itemClick() {
-                itemNotClickList = new ArrayList<>();
-                int count = 0;
-                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
-                    return;
-                }
-                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
-                    if (collectionAdapter.getData().get(i) == null) {
-                        return;
-                    }
-                    if (collectionAdapter.getData().get(i).isCheck) {
-                        //记录选中项
-                        count++;
-                    } else {
-                        itemNotClickList.add(i);
-                    }
-                }
-                deleteColorAndCanClick(count);
-            }
-        });
-        ptrlv.setAdapter(collectionAdapter);
-        deleteColorAndCanClick(0);
+
+        ptrlv.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setPullRefreshEnable(false);
     }
@@ -164,6 +144,17 @@ public class CollectionActivity extends BaseActivity {
                 showDeleteGoodsDialog(collectionAdapter, -1, DELETEMORE);
             }
         });
+        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                setData();
+            }
+        });
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -176,23 +167,50 @@ public class CollectionActivity extends BaseActivity {
                             OfftheShelfActivity.startIt(mBaseContext);
                         } else {
                             //跳转商品介绍
-                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1, item.skuCode);
+                            CommodityDetailActivity.startItForResult(mBaseContext, item.isInstallments == 1, item.skuCode, Const.COLLECTION,true);
                         }
                     }
                 }
 
             }
         });
+
+    }
+
+    @Override
+    public void setData() {
+        ptrlv.setPullLoadEnable(false);
+        goodsList = new ArrayList<>();
+        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
+            @Override
+            public void itemClick() {
+                itemNotClickList = new ArrayList<>();
+                int count = 0;
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+                    return;
+                }
+                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
+                    if (collectionAdapter.getData().get(i) == null) {
+                        return;
+                    }
+                    if (collectionAdapter.getData().get(i).isCheck) {
+                        //记录选中项
+                        count++;
+                    } else {
+                        itemNotClickList.add(i);
+                    }
+                }
+                deleteColorAndCanClick(count);
+            }
+        });
+        ptrlv.setAdapter(collectionAdapter);
+        deleteColorAndCanClick(0);
         ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-    }
-
-    @Override
-    public void setData() {
         ApiImpl.getCollectionList(mBaseContext, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
@@ -236,6 +254,8 @@ public class CollectionActivity extends BaseActivity {
                         pageIndex++;
                     } else {
                         if (pageIndex == 1) {
+                            goodsList.clear();
+                            collectionAdapter.notifyDataSetChanged();
                             baseLayout.showEmpty("暂无收藏");
                             ptrlv.setPullLoadEnable(false);
                             baseLayout.setRightText("");
@@ -389,5 +409,13 @@ public class CollectionActivity extends BaseActivity {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ptrlv.setLayoutParams(layoutParams);
         llBottomDelete.setVisibility(View.GONE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(Const.COLLECTION == requestCode && RESULT_OK == resultCode){
+            pageIndex = 1;
+            setData();
+        }
     }
 }

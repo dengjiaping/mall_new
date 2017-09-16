@@ -78,7 +78,6 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                     @Override
                     public void onClick(View v) {
                         MainActivity.startIt(mContext);
-                        ToastUtils.showLongToast(couponBean.useRuleDesc);
                     }
                 });
                 //使用规则dialog

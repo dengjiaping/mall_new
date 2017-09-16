@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.cash.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.CashRecordsResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -84,8 +86,15 @@ public class CaseRecordActivity extends BaseActivity {
                 if (response != null) {
                     caseRecordList = response.data;
                     ptrlv.onRefreshComplete();
-                    caseRecordAdapter.setData(caseRecordList);
-                    caseRecordAdapter.notifyDataSetChanged();
+                    if(CommonUtils.isNullOrEmpty(caseRecordList)){
+                        baseLayout.showEmpty("暂无取现记录");
+                        ptrlv.setVisibility(View.GONE);
+                    }else{
+                        ptrlv.setVisibility(View.VISIBLE);
+                        caseRecordAdapter.setData(caseRecordList);
+                        caseRecordAdapter.notifyDataSetChanged();
+                    }
+
                 }
             }
 
