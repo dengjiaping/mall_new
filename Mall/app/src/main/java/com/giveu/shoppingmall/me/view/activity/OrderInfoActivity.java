@@ -245,9 +245,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 tvMobile.setText(response.receiverJo.mobile);
             }
             //收货地址
-            String adress = response.receiverJo.province + response.receiverJo.city + response.receiverJo.county + response.receiverJo.address;
-            if (StringUtils.isNotNull(adress)) {
-                tvAddress.setText(adress);
+            String address = response.receiverJo.province + response.receiverJo.city + response.receiverJo.county + response.receiverJo.address;
+            if (StringUtils.isNotNull(address)) {
+                tvAddress.setText(address);
             }
         }
 
@@ -292,25 +292,25 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvPayType.setText(OrderStatus.getOrderPayType(response.payType));
         }
         //首付
-        if (StringUtils.isNotNull(response.downPayment)) {
-            if (StringUtils.isNotNull(response.selDownPaymentRate)) {
-                rlDownPayment.setVisibility(View.VISIBLE);
-                tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
-            } else {
+//        if (StringUtils.isNotNull(response.downPayment)) {
+        /*    if (StringUtils.isNotNull(response.selDownPaymentRate)) {
                 rlDownPayment.setVisibility(View.GONE);
-            }
-        }
+                tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
+            } else {*/
+                rlDownPayment.setVisibility(View.GONE);
+//            }
+//        }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
             isCredit = true;
-            rlStagingNum.setVisibility(View.VISIBLE);
+            rlStagingNum.setVisibility(View.GONE);
             tvStagingNum.setText(response.selStagingNumberRate + "个月");
         } else {
             rlStagingNum.setVisibility(View.GONE);
         }
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
-            rlMonthPayment.setVisibility(View.VISIBLE);
+            rlMonthPayment.setVisibility(View.GONE);
             tvMonthPayment.setText("¥" + StringUtils.format2(response.monthPayment));
         } else {
             rlMonthPayment.setVisibility(View.GONE);
@@ -389,7 +389,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //消费分期合同
         if (response.orderType == 0) {
-            llContract.setVisibility(View.VISIBLE);
+            llContract.setVisibility(View.GONE);
         } else {
             llContract.setVisibility(View.GONE);
         }

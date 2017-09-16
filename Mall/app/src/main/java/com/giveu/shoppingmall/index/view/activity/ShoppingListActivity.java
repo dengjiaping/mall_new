@@ -32,19 +32,17 @@ public class ShoppingListActivity extends BaseActivity {
         titleFragment = TitleBarFragment.newInstance(null);
 
         contentFragment = ShoppingListFragment.newInstance();
-        contentFragment.setShopTypeId(shopTypeId);
-
-        //首页过来的商品列表是需要code的
-        if (StringUtils.isNotNull(code)) {
-            contentFragment.setCode(code);
-        }
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
                 .replace(R.id.activity_shopping_list_title, titleFragment)
                 .commit();
 
-        contentFragment.initDataForFragment();
+        //首页过来的商品列表是需要code的
+        if (StringUtils.isNotNull(code)) {
+            contentFragment.searchByCode(code);
+        }else {
+            contentFragment.searchByShopTypeId(shopTypeId);
+        }
     }
 
     @Override

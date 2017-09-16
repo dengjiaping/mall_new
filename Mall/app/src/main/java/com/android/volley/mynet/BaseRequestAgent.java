@@ -281,14 +281,14 @@ public abstract class BaseRequestAgent {
             if (error != null) {
                 errorBean.result = VolleyErrorHelper.getVolleyErrorCode(error) + "";
                 if (VolleyErrorHelper.getVolleyErrorCode(error) == VolleyErrorHelper.NetworkCode.NETWORK_TIMEOUT_CODE) {
-                    errorBean.message = "连接服务器超时";
+                    errorBean.message = VolleyErrorHelper.ErrorMessage.TIME_OUT;
                 } else if (VolleyErrorHelper.getVolleyErrorCode(error) == VolleyErrorHelper.NetworkCode.NETWORK_NOLINK_CODE) {
-                    errorBean.message = "请检查网络连接";
+                    errorBean.message = VolleyErrorHelper.ErrorMessage.NO_LINK;
                 } else {
                     errorBean.message = error.getMessage();
                 }
                 if (VolleyErrorHelper.getVolleyErrorCode(error) == 200) {
-                    errorBean.message = "数据解析错误";
+                    errorBean.message = VolleyErrorHelper.ErrorMessage.REPONSE_JSON_PARSE_ERROR;
                 }
             }
 
@@ -327,11 +327,11 @@ public abstract class BaseRequestAgent {
         CrashReportUtil.setTryCatchOnline(new CrashReportUtil.ITryCatch() {
             @Override
             public void onCatch() {
-                if (!NetWorkUtils.isNetWorkConnected()) {
-                    //判断网络状态
-                    ToastUtils.showShortToast("请检查网络连接");
-                    return;
-                }
+//                if (!NetWorkUtils.isNetWorkConnected()) {
+//                    //判断网络状态
+//                    ToastUtils.showShortToast("请检查网络连接");
+//                    return;
+//                }
                 if (loadingDialogContext != null) {
                     LoadingDialog.showIfNotExist(loadingDialogContext, false);
                 }

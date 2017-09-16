@@ -109,10 +109,31 @@ public class OrderPayResultActivity extends BaseActivity {
                 break;
 
             case R.id.tv_repay:
-                OrderInfoActivity.startIt(mBaseContext, orderNo);
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void setListener() {
+        super.setListener();
+        baseLayout.setBackClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuccess) {
+                    MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);
+                }
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isSuccess) {
+            MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);
+        }
+        finish();
     }
 
     @Override

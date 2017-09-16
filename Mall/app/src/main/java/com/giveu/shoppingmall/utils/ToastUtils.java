@@ -39,9 +39,11 @@ public class ToastUtils {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast toast = Toast.makeText(context, str, duration);
+                    if (context != null) {
+                        Toast toast = Toast.makeText(context, str, duration);
 //            toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                        toast.show();
+                    }
                 }
             });
         }

@@ -483,7 +483,8 @@
                 android:layout_height="54dp"
                 android:layout_marginBottom="157dp"
                 android:background="@color/white"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <CheckBox
                     android:id="@+id/confirm_order_agreement_checkbox"
@@ -525,16 +526,15 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/default_layout_screen_gap"
             android:textColor="@color/title_color"
-            android:textSize="@dimen/ts_16"
-            android:visibility="gone" />
+            android:textSize="@dimen/ts_16" />
 
         <TextView
             android:id="@+id/tv_ok"
-            android:layout_width="match_parent"
+            android:layout_width="115dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_ok_button"
             android:gravity="center"
-            android:text="确认"
+            android:text="去支付"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_18" />
     </LinearLayout>
@@ -543,9 +543,11 @@
         android:id="@+id/confirm_order_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:visibility="visible">
 
         <TextView
+            android:id="@+id/confirm_order_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -554,6 +556,7 @@
             android:drawableTop="@drawable/ic_defalut_empty"
             android:gravity="center"
             android:text="创建订单失败,请点击重试"
-            android:textColor="@color/color_666666" />
+            android:textColor="@color/color_666666"
+            android:visibility="gone" />
     </RelativeLayout>
 </RelativeLayout>

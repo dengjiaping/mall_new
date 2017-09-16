@@ -51,11 +51,21 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
     @Override
     protected void convert(ViewHolder viewHolder, final OrderListResponse.SkuInfoBean item, int position) {
-        viewHolder.setText(R.id.tv_channel_name, channelName);
+        if (StringUtils.isNotNull(channelName)) {
+            viewHolder.setText(R.id.tv_channel_name, channelName);
+        }
         if (StringUtils.isNotNull(item.name))
             viewHolder.setText(R.id.tv_name, item.name);
-        if (StringUtils.isNotNull(item.salePrice))
-            viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice));
+
+
+        if (StringUtils.isNotNull(item.salePrice)) {
+            if (item.orderType == 0) {
+                viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice) + " × " + item.quantity);
+            } else {
+                viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice));
+            }
+        }
+
 
         //图片icon
         if (StringUtils.isNotNull(item.srcIp)) {
@@ -274,7 +284,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                     balanceDeficientDialog.show();
                     return;
                 }
-                dealPwdDialog.setPrice(finalPayment+"");
+                dealPwdDialog.setPrice(finalPayment + "");
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
@@ -294,11 +304,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         }
     }
 
-    public void showDealPwdDialogError(int remainTimes){
+    public void showDealPwdDialogError(int remainTimes) {
         dealPwdDialog.showPwdError(remainTimes);
     }
 
-    public void dismissDealPwdDialog(){
+    public void dismissDealPwdDialog() {
         dealPwdDialog.dissmissDialog();
     }
 

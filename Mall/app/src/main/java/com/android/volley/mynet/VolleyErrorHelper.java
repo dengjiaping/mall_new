@@ -92,15 +92,11 @@ public class VolleyErrorHelper {
 	/**
 	 *	错误code定义
 	 */
-	public static interface NetworkCode {
+	public interface NetworkCode {
 		/**
 		 *
 		 * 服务器定义的错误code
 		 * -1	客户端提交的参数有误
-		 * -2	服务端异常
-		 * -3	用户被禁用
-		 * -4	调用已过期的接口
-		 * -5	用户在其他设备登陆
 		 */
 		String NETWORK_ERROR_CODE1 = "-1"; // 客户端提交的参数有误
 		/**
@@ -111,6 +107,13 @@ public class VolleyErrorHelper {
 		int NETWORK_SERVERERROR_CODE = -803; // 404,500等服务器错误
 	}
 
+	public interface ErrorMessage {
+		String NO_LINK = "请检查网络连接";
+		String TIME_OUT = "网络连接超时";
+		String SERVER_ERROR = "服务器出错了";
+		String PARMAS_ERROR = "客户端提交的参数有误";
+		String REPONSE_JSON_PARSE_ERROR = "数据解析错误";
+	}
 
 
 

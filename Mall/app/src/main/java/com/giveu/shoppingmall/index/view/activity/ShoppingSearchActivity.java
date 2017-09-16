@@ -204,8 +204,7 @@ public class ShoppingSearchActivity extends BaseActivity {
         hideSoftKeyboard();
         //显示搜索结果列表
         fragmentTransaction.show(contentFragment);
-        contentFragment.setKeyword(keyword);
-        contentFragment.initDataForFragment();
+        contentFragment.searchByKeyWord(keyword);
         contentLayout.setVisibility(View.VISIBLE);
         //刷新搜索历史列表
         historyQueue.offer(keyword);
