@@ -238,7 +238,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private void initMsgEditText() {
         //第一次进入界面EditText未获取焦点,设置显示内容
-        SpannableString desc = new SpannableString("买家回复（选填）：对本次交易的说明");
+        SpannableString desc = new SpannableString("买家留言（选填）：对本次交易的说明");
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 0, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_color)), 4, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 8, 9, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -249,7 +249,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         msgEditText.setOnFirstFocusedListener(new StableEditText.OnFirstFocusedListener() {
             @Override
             public void firstFocused() {
-                msgEditText.setSpannerStableText("买家回复（选填）：", 4, 8, getResources().getColor(R.color.title_color));
+                msgEditText.setSpannerStableText("买家留言（选填）：", 4, 8, getResources().getColor(R.color.title_color));
             }
         });
     }
@@ -316,6 +316,23 @@ public class ConfirmOrderActivity extends BaseActivity {
     private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
         if (lists != null && lists.size() > 0) {
             cardList = lists;
+
+            //默认选择优惠额度最大的优惠券
+            double maxCardPrice = 0;
+            String maxCardName = "";
+            for (CreateOrderResponse.CardListBean cardBean : lists) {
+                double curCardPrice = StringUtils.string2Double(cardBean.price);
+                if (curCardPrice > maxCardPrice) {
+                    maxCardPrice = curCardPrice;
+                    cardId = cardBean.id;
+                    maxCardName = cardBean.name;
+                }
+            }
+            //更新优惠券显示
+            dvCardsView.setText(maxCardName);
+            //更新实际付款金额
+            cardPrice = StringUtils.format2(maxCardPrice + "");
+            setTotalPrice();
             chooseCardsDialog = new ChooseCardsDialog(this, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
                 @Override
                 public void onChooseType(int id, String price, String name) {
@@ -370,7 +387,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(cardPrice);
         double result = tPrice - cPrice;
-        tvTotalPrice.setText("支付金额：¥" + StringUtils.format2(result + ""));
+        CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥ ", StringUtils.format2(result + ""), "",
+                15, 13, R.color.title_color, R.color.black);
     }
 
     private void updateAddress(CreateOrderResponse.ReceiverJoBean bean) {
@@ -482,6 +500,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
                         isConfirm = true;
+                        //订单确认后以下功能不可修改
                         flAddresslayout.setEnabled(false);
                         msgEditText.setEnabled(false);
                         dvPayView.setEnabled(false);
