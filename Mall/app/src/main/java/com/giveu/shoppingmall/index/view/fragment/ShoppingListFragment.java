@@ -43,6 +43,12 @@ public class ShoppingListFragment extends BaseFragment {
     private final static String SORT_PRICE_DESC = "salePriceDesc";
     //价格升序搜索
     private final static String SORT_PRICE_ASC = "salePriceAsc";
+    //价格排序按钮未处于check状态
+    private final static String STATUS_UNCHECK = "0";
+    //价格排序按钮已check,且升序搜索
+    private final static String STATUS_CHECK_UP = "1";
+    //价格排序按钮已check,且降序搜索
+    private final static String STATUS_CHECK_DOWN = "2";
 
     @BindView(R.id.shopping_list_listview)
     PullToRefreshListView mRefreshView;
@@ -80,29 +86,47 @@ public class ShoppingListFragment extends BaseFragment {
         mRefreshView.setAdapter(mAdapter);
         mRefreshView.setPullLoadEnable(false);
         rbAll.setChecked(true);
-        rbPrice.setTag(true);
+        rbPrice.setTag(0);
         return view;
     }
 
-    //shopTypeId和keyword和code字段互斥，三者只选其一
-    public void setKeyword(String keyword) {
+    /**
+     * 商品搜索——通过关键字搜索
+     * 通常用于搜索界面主动搜索
+     *
+     * @param keyword 待搜索的关键字
+     */
+    public void searchByKeyWord(String keyword) {
         this.keyword = keyword;
         this.code = null;
         this.shopTypeId = 0;
+        initDataForFragment();
     }
 
-    //shopTypeId和keyword和code字段互斥，三者只选其一
-    public void setShopTypeId(int shopTypeId) {
+    /**
+     * 商品搜索——通过ShopTypeId(商品三级类目Id)搜索
+     * 通常用于分类界面点击商品搜索
+     *
+     * @param shopTypeId 待搜索的商品三级类目Id
+     */
+    public void searchByShopTypeId(int shopTypeId) {
         this.shopTypeId = shopTypeId;
         this.keyword = null;
         this.code = null;
+        initDataForFragment();
     }
 
-    //shopTypeId和keyword和code字段互斥，三者只选其一
-    public void setCode(String code) {
+    /**
+     * 商品搜索——通过code搜索
+     * 通常用于首页搜索
+     *
+     * @param code 待搜索的code
+     */
+    public void searchByCode(String code) {
         this.code = code;
         this.keyword = null;
         this.shopTypeId = 0;
+        initDataForFragment();
     }
 
     @Override
@@ -127,12 +151,18 @@ public class ShoppingListFragment extends BaseFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.shopping_list_radio_all:
+                        if (!STATUS_UNCHECK.equals(rbPrice.getTag().toString())) {
+                            setPriceButtonStatus(STATUS_UNCHECK);
+                        }
                         orderSort = SORT_BY_SIZE;
                         initDataForFragment();
                         break;
                     case R.id.shopping_list_radio_sale:
-                        orderSort = SORT_BY_VOLUME;
+                        if (!STATUS_UNCHECK.equals(rbPrice.getTag().toString())) {
+                            setPriceButtonStatus(STATUS_UNCHECK);
+                        }
                         initDataForFragment();
+                        orderSort = SORT_BY_VOLUME;
                         break;
                     case R.id.shopping_list_radio_price:
                         break;
@@ -145,25 +175,33 @@ public class ShoppingListFragment extends BaseFragment {
         rbPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rbPrice.isChecked()) {
-                    boolean isUp = (boolean) rbPrice.getTag();
-                    Drawable drawable;
-                    if (isUp) {
-                        orderSort = SORT_PRICE_DESC;
-                        drawable = getResources().getDrawable(R.drawable.sort_down);
-                    } else {
-                        orderSort = SORT_PRICE_ASC;
-                        drawable = getResources().getDrawable(R.drawable.sort_up);
-                    }
-                    Rect bounds = rbPrice.getCompoundDrawables()[0].getBounds();
-                    drawable.setBounds(bounds);
-                    rbPrice.setCompoundDrawables(drawable, null, null, null);
-                    rbPrice.setTag(!isUp);
-                    initDataForFragment();
+                String status = rbPrice.getTag().toString();
+                if (STATUS_UNCHECK.equals(status) || STATUS_CHECK_DOWN.equals(status)) {
+                    setPriceButtonStatus(STATUS_CHECK_UP);
+                    orderSort = SORT_PRICE_ASC;
+                } else if (STATUS_CHECK_UP.equals(status)) {
+                    setPriceButtonStatus(STATUS_CHECK_DOWN);
+                    orderSort = SORT_PRICE_DESC;
                 }
+                initDataForFragment();
             }
         });
 
+    }
+
+    private void setPriceButtonStatus(String status) {
+        Drawable drawable;
+        if (STATUS_UNCHECK.equals(status)) {
+            drawable = getResources().getDrawable(R.drawable.sort_disable);
+        } else if (STATUS_CHECK_UP.equals(status)) {
+            drawable = getResources().getDrawable(R.drawable.sort_up);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.sort_down);
+        }
+        Rect bounds = rbPrice.getCompoundDrawables()[0].getBounds();
+        drawable.setBounds(bounds);
+        rbPrice.setCompoundDrawables(drawable, null, null, null);
+        rbPrice.setTag(status);
     }
 
     public static ShoppingListFragment newInstance() {
@@ -173,7 +211,7 @@ public class ShoppingListFragment extends BaseFragment {
         return fragment;
     }
 
-    public void initDataForFragment() {
+    private void initDataForFragment() {
         pageIndex = 1;
         ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override

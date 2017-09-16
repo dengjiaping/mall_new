@@ -349,7 +349,6 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
-            LogUtil.e("payId = "+data.payId);
             PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum,data.alipay,data.payId);
         }
         finish();

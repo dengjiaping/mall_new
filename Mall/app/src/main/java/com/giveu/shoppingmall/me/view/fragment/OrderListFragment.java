@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,6 +32,7 @@ import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +117,23 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
                 initDataDelay();
+            }
+        });
+
+        ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //滑动时停止图片加载，滑动停止时恢复
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    ImageLoader.getInstance().resume();
+                } else {
+                    ImageLoader.getInstance().pause();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
 

@@ -311,8 +311,8 @@ public class ApiImpl {
     }
 
     //分期产品取现费用计算
-    public static void repayCost(Activity context, int idProduct,String insuranceFee,  int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "insuranceFee","loan"}, new Object[]{idProduct,StringUtils.string2Int(insuranceFee), loan});
+    public static void repayCost(Activity context, int idProduct, String insuranceFee, int loan, BaseRequestAgent.ResponseListener<RepayCostResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idProduct", "insuranceFee", "loan"}, new Object[]{idProduct, StringUtils.string2Int(insuranceFee), loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_repaycost, RepayCostResponse.class, context, responseListener);
     }
 
@@ -333,8 +333,8 @@ public class ApiImpl {
     }
 
     //分期取现月供明细
-    public static void rpmDetail(Activity context, String idPerson,String insuranceFee, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson","insuranceFee" ,"idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson),StringUtils.string2Int(insuranceFee), idProduct, loan});
+    public static void rpmDetail(Activity context, String idPerson, String insuranceFee, int idProduct, int loan, BaseRequestAgent.ResponseListener<RpmDetailResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"idPerson", "insuranceFee", "idProduct", "loan"}, new Object[]{StringUtils.string2Long(idPerson), StringUtils.string2Int(insuranceFee), idProduct, loan});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_enchashment_rpmDetail, RpmDetailResponse.class, context, responseListener);
     }
 
@@ -608,8 +608,11 @@ public class ApiImpl {
      * 商品SKU搜索
      * shopTypeId和keyword和code字段互斥，三者只选其一
      * 使用其中一个字段的时候需要把另外字段置空
+     *
+     * @param keyword    搜索界面调用时传入的关键字
+     * @param shopTypeId 商品分类界面调用时，传入商品三级类目Id
+     * @param code       首页搜索传入code
      */
-
     public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNum, int pageSize, int shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderSort", "pageNum", "pageSize"}, new Object[]{channel, idPerson, orderSort, pageNum, pageSize});
 
@@ -622,6 +625,15 @@ public class ApiImpl {
         }
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_search_goodsSearch, GoodsSearchResponse.class, context, responseListener);
     }
+
+    /**
+     * 商品sku搜索首页专用方法
+     * @param code 待搜索的code
+     */
+    public static void getGoodsSearchForIndex(Activity context, String channel, String idPerson, String orderSort, int pageNum, int pageSize, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
+        getGoodsSearch(context, channel, idPerson, null, orderSort, pageNum, pageSize, 0, code, responseListener);
+    }
+
 
     //商品库存检查
     public static void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, BaseRequestAgent.ResponseListener<DownPayMonthPayResponse> responseListener) {

@@ -12,7 +12,8 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
-import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
+import com.giveu.shoppingmall.me.relative.OrderState;
+import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
@@ -58,14 +59,13 @@ public class PayChannelActivity extends BaseActivity {
     private String timeLeft;
     private String payId;
 
-    public static void startIt(Activity activity, String orderNo, String paymentNum, String alipayStr,String payId) {
+    public static void startIt(Activity activity, String orderNo, String paymentNum, String alipayStr, String payId) {
         Intent intent = new Intent(activity, PayChannelActivity.class);
         intent.putExtra("orderNo", orderNo);
         intent.putExtra("paymentNum", paymentNum);
         intent.putExtra("payId", payId);
         intent.putExtra("alipayStr", alipayStr);
         activity.startActivity(intent);
-        LogUtil.e("payId = "+payId);
 
     }
 
@@ -76,7 +76,6 @@ public class PayChannelActivity extends BaseActivity {
         orderNo = getIntent().getStringExtra("orderNo");
         alipayStr = getIntent().getStringExtra("alipayStr");
         payId = getIntent().getStringExtra("payId");
-        LogUtil.e("payId = "+payId);
         paymentNum = StringUtils.format2(getIntent().getStringExtra("paymentNum"));
         tvMoney.setText("¥" + paymentNum);
         getRestTime();
@@ -96,6 +95,7 @@ public class PayChannelActivity extends BaseActivity {
         });
     }
 
+
     @Override
     public void setListener() {
         super.setListener();
@@ -108,7 +108,8 @@ public class PayChannelActivity extends BaseActivity {
             @Override
             public void cancle() {
                 cancelDialog.dismiss();
-                finish();
+                BaseApplication.getInstance().finishAllExceptMainActivity();
+                MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);
             }
         });
     }
@@ -118,6 +119,11 @@ public class PayChannelActivity extends BaseActivity {
 
     }
 
+
+    /**
+     * 查看我的订单或返回按钮，可返回至订单中心，订单状态改为待首付
+     * 点击确认支付跳转第三方支付页面
+     */
     @OnClick({R.id.tv_back, R.id.tv_confirm, R.id.tv_order})
     @Override
     public void onClick(View view) {
@@ -149,22 +155,25 @@ public class PayChannelActivity extends BaseActivity {
                 break;
 
             case R.id.tv_order:
-                OrderInfoActivity.startIt(mBaseContext, orderNo);
+                BaseApplication.getInstance().finishAllExceptMainActivity();
+                MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);
                 break;
         }
     }
 
     /**
      * 显示支付结果
+     *
      * @param isSuccess
      */
     private void showPayResult(boolean isSuccess) {
         ConfirmPayResponse confirmPayResponse = new ConfirmPayResponse();
         confirmPayResponse.payPrice = paymentNum;
-        //关闭之前的确认订单界面
-        BaseApplication.getInstance().finishActivity(ConfirmOrderActivity.class);
+        //如果支付成功的话，关闭除首页的所有activity；失败的话不关闭当前activity
+        if (isSuccess) {
+            BaseApplication.getInstance().finishAllExceptMainActivity();
+        }
         OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, isSuccess);
-        finish();
     }
 
     private void payQuery() {
