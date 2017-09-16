@@ -88,8 +88,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_commodity_detail);
-        baseLayout.setTitleBarAndStatusBar(false, false);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
+        baseLayout.setTitleBarAndStatusBar(false,true);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
         //商品介绍

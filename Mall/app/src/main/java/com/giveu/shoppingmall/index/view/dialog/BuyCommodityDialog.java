@@ -222,7 +222,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                 break;
 
             case 1:
-                tvConfirm.setText("无货");
+                tvConfirm.setText("所在地区暂时无货");
                 //不可点击立即购买或在购买对话框中不可点击下一步
                 tvConfirm.setEnabled(false);
                 llChooseCredit.setEnabled(false);
@@ -253,7 +253,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             // 设置对话框宽度
             lp.width = DensityUtils.getWidth();
-            lp.height = (int) (DensityUtils.getHeight() * (0.66));
+            lp.height = (int) (DensityUtils.getHeight() * (0.76));
             dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.BOTTOM);
             dialogWindow.setWindowAnimations(R.style.dialogWindowAnim); // 添加动画
