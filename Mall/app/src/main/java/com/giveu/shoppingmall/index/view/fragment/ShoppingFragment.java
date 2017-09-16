@@ -356,19 +356,20 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                ptrlv.setPullLoadEnable(false);
                 pageIndex = 1;
                 showLoading();
                 presenter.getHeadContent();
-                ptrlv.setPullLoadEnable(false);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
-                presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, contentCode);
+                showLoading();
+                presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 1, pageSize, contentCode);
             }
         });
-        ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
+        ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
             private SparseArray<ItemRecod> recordSp = new SparseArray<>();
             private int mCurrentfirstVisibleItem = 0;
 
@@ -461,16 +462,21 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getIndexContent(List<GoodsSearchResponse.GoodsBean> contentList, String srcIp) {
+        hideLoding();
         //显示查询结果
         if (pageIndex == 1) {
             ptrlv.onRefreshComplete();
-            hideLoding();
         }
         ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
             if (pageIndex == 1) {
+                contentList.addAll(contentList);
+//                contentList.addAll(contentList);
+//                contentList.addAll(contentList);
+//                contentList.addAll(contentList);
+                contentList.addAll(contentList);
                 shoppingAdapter.setDataAndSrcIp(contentList, srcIp);
-                if (contentList.size() >= pageSize) {
+                if (contentList.size() >= 0) {
                     ptrlv.setPullLoadEnable(true);
                 } else {
                     ptrlv.setPullLoadEnable(false);
