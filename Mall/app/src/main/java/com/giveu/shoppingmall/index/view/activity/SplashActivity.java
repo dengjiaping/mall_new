@@ -51,8 +51,8 @@ public class SplashActivity extends BasePermissionActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.layout_splash);
-
-        ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
+        ivSplash.setImageResource(R.drawable.splash);
+//        ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
         baseLayout.setTitleBarAndStatusBar(false, false);
         tvSkip.setVisibility(View.GONE);
         tvVersion.setText("V" + CommonUtils.getVersionName());
