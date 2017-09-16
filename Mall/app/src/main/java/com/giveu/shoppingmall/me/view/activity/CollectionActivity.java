@@ -158,7 +158,6 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.e(position + "");
                 if (collectionAdapter != null && position > 0 && position <= collectionAdapter.getCount()) {
                     if (collectionAdapter.getItem(position - 1) != null) {
                         CollectionResponse.ResultListBean item = collectionAdapter.getItem(position - 1);
