@@ -58,11 +58,11 @@ public class CollectionAdapter extends LvCommonAdapter<CollectionResponse.Result
                 }
             }
         });
-        holder.setText(R.id.tv_name, item.name);
+        holder.setText(R.id.tv_name, StringUtils.ToAllFullWidthString(item.name));
         if (item.hasShowMonthAmount()) {
             //true就不显示月供,实际上隐藏售价view，月供view变成售价
             holder.setVisible(R.id.tv_price, false);
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_999999);
         } else {
             holder.setVisible(R.id.tv_price, true);
             //textView,str1,str2,str3,tvSize1,tvSize2,tvColor1,tvColor2

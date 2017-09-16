@@ -345,7 +345,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
 
             if (StringUtils.isNotNull(skuInfoBean.name)) {
-                tvSkuInfoName.setText(skuInfoBean.name);
+                tvSkuInfoName.setText(StringUtils.ToAllFullWidthString(skuInfoBean.name));
             }
 
             if (StringUtils.isNotNull(skuInfoBean.salePrice)) {
