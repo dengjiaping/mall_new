@@ -12,8 +12,7 @@
         android:layout_width="120dp"
         android:layout_height="match_parent"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-         />
+        android:layout_marginTop="10dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="vivo Y55全网通高通8核超薄5.2英寸大屏4G智能美颜自拍手机"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/color_3e3e3e"
             android:textSize="@dimen/ts_14" />
 
@@ -34,7 +34,6 @@
             android:layout_height="15dp"
             android:layout_below="@id/item_right_name"
             android:gravity="center_vertical|left"
-            android:text="手势自拍，闪速证明指纹"
             android:textColor="@color/color_999999"
             android:textSize="@dimen/ts_10" />
 
@@ -44,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="8dp"
-            android:text="￥6880.00"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_13" />
 
@@ -60,7 +58,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:text="月供：¥407.00"
                 android:textColor="@color/red" />
 
             <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout

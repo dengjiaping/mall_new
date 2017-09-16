@@ -490,4 +490,31 @@ public class StringUtils {
         }
         return L;
     }
+
+    /**
+     * 解决TextView自动换行文字排版参差不齐的原因
+     * @param input
+     * @return
+     */
+    public static String ToAllFullWidthString(String input) {
+        try {
+            if (!TextUtils.isEmpty(input)) {
+                char[] c = input.toCharArray();
+                for (int i = 0; i < c.length; i++) {
+                    if (c[i] == 12288) {
+                        c[i] = (char) 32;
+                        continue;
+                    }
+                    if (c[i] > 65280 && c[i] < 65375)
+                        c[i] = (char) (c[i] - 65248);
+                }
+                return new String(c);
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

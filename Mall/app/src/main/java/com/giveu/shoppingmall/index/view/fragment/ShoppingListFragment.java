@@ -187,6 +187,12 @@ public class ShoppingListFragment extends BaseFragment {
             }
         });
 
+        mRefreshView.getFooter().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //空方法，使下拉刷新控件尾部不限时点击效果
+            }
+        });
     }
 
     private void setPriceButtonStatus(String status) {

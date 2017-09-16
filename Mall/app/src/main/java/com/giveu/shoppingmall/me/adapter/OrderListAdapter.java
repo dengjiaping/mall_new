@@ -55,7 +55,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             viewHolder.setText(R.id.tv_channel_name, channelName);
         }
         if (StringUtils.isNotNull(item.name))
-            viewHolder.setText(R.id.tv_name, item.name);
+            viewHolder.setText(R.id.tv_name, StringUtils.ToAllFullWidthString(item.name));
 
 
         if (StringUtils.isNotNull(item.salePrice)) {
