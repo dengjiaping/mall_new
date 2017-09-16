@@ -21,12 +21,8 @@ import com.giveu.shoppingmall.model.bean.response.ShopTypesResponse;
 import com.giveu.shoppingmall.model.bean.response.ShoppingBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
-import com.giveu.shoppingmall.utils.ItemHeaderDecoration;
-import com.giveu.shoppingmall.utils.RecyclerViewScrollHelper;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
-import com.giveu.shoppingmall.utils.LogUtil;
-import com.giveu.shoppingmall.utils.explosionfield.Utils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -39,7 +35,7 @@ import butterknife.BindView;
  * 商品分类管理界面
  */
 
-public class ShoppingClassifyActivity extends BaseActivity implements ItemHeaderDecoration.CheckListener {
+public class ShoppingClassifyActivity extends BaseActivity {
     @BindView(R.id.shopping_classify_left_recycler)
     RecyclerView lRecyclerView;
     @BindView(R.id.shopping_classify_right_recycler)
@@ -47,15 +43,12 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
 
     private List<ShopTypesResponse> list1;//一级类目
     private List<ShoppingBean> list2;//二级类目
-//    private List<>
 
-    private ItemHeaderDecoration mDecoration;
     private RvCommonAdapter titleAdapter;
     private ShopClassifyContentAdapter mAdapter;
     private GridLayoutManager gridLayoutManager;
     private int selectPos = 0;
 
-    private RecyclerViewScrollHelper.RecyclerViewListener listener;
     private TitleBarFragment titleBarFragment;
 
     @Override
@@ -93,26 +86,13 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
                     public void onClick(View v) {
                         getChildrenShopTypes(list1.get(position).shopTypeId);
                         //update left recyclerview
-                        RecyclerViewScrollHelper.moveToCenter(lRecyclerView, position);
                         selectPos = position;
                         notifyDataSetChanged();
-
-                        //update right recyclerview
-                        mDecoration.setCurrentTag(selectPos);
-                        int targetPos = calculateTargetPos(position);
-                        RecyclerViewScrollHelper.smoothScrollToPosition(rRecyclerView, targetPos);
-
-                        listener.setMove(true);
-                        listener.setIndex(targetPos);
                     }
                 });
             }
         });
 
-
-        mDecoration = new ItemHeaderDecoration(list2);
-        rRecyclerView.addItemDecoration(mDecoration);
-        mDecoration.setCheckListener(this);
         rRecyclerView.setAdapter(mAdapter = new ShopClassifyContentAdapter(this, list2));
 
         lRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -127,22 +107,6 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
             }
         });
         rRecyclerView.setLayoutManager(gridLayoutManager);
-        listener = new RecyclerViewScrollHelper.RecyclerViewListener();
-        rRecyclerView.setOnScrollListener(listener);
-    }
-
-    private int calculateTargetPos(int position) {
-        int pos = 0;
-        for (int i = 0; i < list2.size(); i++) {
-            if (list2.get(i).getType() == 0) {
-                pos++;
-            }
-            if (pos == (position + 1)) {
-                pos = i;
-                break;
-            }
-        }
-        return pos;
     }
 
     @Override
@@ -173,15 +137,13 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
                         if (CommonUtils.isNotNullOrEmpty(response.data)) {
                             List<ShopTypesBean> results = response.data;
                             list2.clear();
-                            int tag = 0;
                             for (ShopTypesBean parent : results) {
-                                list2.add(new ShoppingBean(0, tag, parent));
+                                list2.add(new ShoppingBean(0, parent));
                                 if (parent.getChild() != null) {
                                     for (ShopTypesBean child : parent.getChild()) {
-                                        list2.add(new ShoppingBean(1, tag, child));
+                                        list2.add(new ShoppingBean(1, child));
                                     }
                                 }
-                                tag++;
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
@@ -193,21 +155,6 @@ public class ShoppingClassifyActivity extends BaseActivity implements ItemHeader
                     }
                 }
         );
-    }
-
-
-    @Override
-    public void check(int position, boolean isScroll) {
-        if (listener.isMove()) {
-            listener.setMove(false);
-        } else {
-            selectPos = position;
-            titleAdapter.notifyDataSetChanged();
-        }
-        if (rRecyclerView.canScrollVertically(1) || rRecyclerView.canScrollVertically(-1)) {
-            RecyclerViewScrollHelper.moveToCenter(lRecyclerView, position);
-            mDecoration.setCurrentTag(selectPos);
-        }
     }
 
     public static void startIt(Context context) {

@@ -53,7 +53,7 @@ public class ChooseCardsDialog {
         listView.setAdapter(mAdpter = new LvCommonAdapter<CreateOrderResponse.CardListBean>(mActivity, R.layout.dialog_choose_coupon_item, datas) {
             @Override
             protected void convert(com.giveu.shoppingmall.base.lvadapter.ViewHolder holder, final CreateOrderResponse.CardListBean item, final int position) {
-                holder.setChecked(R.id.dialog_choose_coupon_item_radio, checkIndex == position);
+                holder.setChecked(R.id.dialog_choose_coupon_item_radio, checkIndex == item.id);
                 holder.setText(R.id.dialog_choose_coupon_item_radio, item.name);
                 holder.setOnClickListener(R.id.dialog_choose_coupon_item_radio, new View.OnClickListener() {
                     @Override
