@@ -72,7 +72,7 @@ public class PayChannelActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_pay_channel);
-        baseLayout.setTitle("支付首付金额");
+        baseLayout.setTitle("支付");
         orderNo = getIntent().getStringExtra("orderNo");
         alipayStr = getIntent().getStringExtra("alipayStr");
         payId = getIntent().getStringExtra("payId");

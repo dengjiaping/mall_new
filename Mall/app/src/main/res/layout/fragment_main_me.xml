@@ -311,7 +311,7 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
+                        <!--<LinearLayout
                             android:id="@+id/ll_down_payment"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -351,7 +351,7 @@
                                 android:text="待首付"
                                 android:textColor="@color/color_9b9b9b"
                                 android:textSize="@dimen/ts_12" />
-                        </LinearLayout>
+                        </LinearLayout>-->
 
                         <LinearLayout
                             android:id="@+id/ll_waiting_receive"
@@ -391,6 +391,49 @@
                                 android:layout_gravity="center"
                                 android:layout_marginTop="5dp"
                                 android:text="待收货"
+                                android:textColor="@color/color_9b9b9b"
+                                android:textSize="@dimen/ts_12" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/ll_finished"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:paddingTop="10dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center|bottom"
+                                    android:src="@drawable/ic_down_payment" />
+
+                                <TextView
+                                    android:id="@+id/tv_finished"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right"
+                                    android:layout_marginTop="3dp"
+                                    android:background="@drawable/shape_red_circle"
+                                    android:gravity="center"
+                                    android:text="11"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/ts_11" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="5dp"
+                                android:text="已完成"
                                 android:textColor="@color/color_9b9b9b"
                                 android:textSize="@dimen/ts_12" />
                         </LinearLayout>
