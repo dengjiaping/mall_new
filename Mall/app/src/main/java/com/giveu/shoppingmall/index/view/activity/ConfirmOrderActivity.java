@@ -41,6 +41,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
+import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
@@ -362,7 +363,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
 
             if (StringUtils.isNotNull(skuInfoBean.name)) {
-                tvSkuInfoName.setText(skuInfoBean.name);
+                tvSkuInfoName.setText(StringUtils.ToAllFullWidthString(skuInfoBean.name));
             }
 
             if (StringUtils.isNotNull(skuInfoBean.salePrice)) {
@@ -490,6 +491,12 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void confirmOrderSc() {
+
+        if (addressJoBean == null) {
+            ToastUtils.showShortToast("请添加收货地址");
+            return;
+        }
+
         ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
                 payType, addressJoBean, 0, new SkuInfo(quantity, skuCode), msgEditText.getFinalText(),
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {

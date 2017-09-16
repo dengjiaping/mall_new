@@ -367,7 +367,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             });
             //更新轮播图
             banner.update(skuResponse.skuInfo.srcs);
-            tvCommoditName.setText(skuResponse.skuInfo.name);
+            tvCommoditName.setText(StringUtils.ToAllFullWidthString(skuResponse.skuInfo.name));
             CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(skuResponse.skuInfo.salePrice),
                     "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
 

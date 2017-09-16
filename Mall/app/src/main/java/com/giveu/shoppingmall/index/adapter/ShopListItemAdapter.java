@@ -50,8 +50,8 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         ImageView image = holder.getView(R.id.item_left_image);
         ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.ic_defalut_pic_corner, image);
 
-        holder.setText(R.id.item_right_name, item.name);
-        holder.setText(R.id.item_right_desc, item.keywords);
+        holder.setText(R.id.item_right_name, StringUtils.ToAllFullWidthString(item.name));
+        holder.setText(R.id.item_right_desc, StringUtils.ToAllFullWidthString(item.keywords));
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
         TextView tvPrice = holder.getView(R.id.item_right_price);
@@ -61,7 +61,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
             tvPrice.setVisibility(View.VISIBLE);
         } else {
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 14, 11, R.color.red, R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 11, R.color.red, R.color.color_999999);
             tvPrice.setVisibility(View.INVISIBLE);
         }
     }

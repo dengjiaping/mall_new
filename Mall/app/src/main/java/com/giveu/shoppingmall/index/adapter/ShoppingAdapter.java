@@ -46,9 +46,9 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
                 CommodityDetailActivity.startIt(mContext, false, item.skuCode);
             }
         });
-        holder.setText(R.id.tv_commodity_name, item.name);
+        holder.setText(R.id.tv_commodity_name, StringUtils.ToAllFullWidthString(item.name));
 
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_4a4a4a);
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_4a4a4a);
 //        if (item.hasShowMonthAmount()) {
 //            //true就不显示月供,实际上隐藏售价view，月供view变成售价
 //            holder.setVisible(R.id.tv_price, false);
