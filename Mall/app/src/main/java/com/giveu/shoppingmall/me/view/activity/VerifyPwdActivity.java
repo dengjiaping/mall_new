@@ -186,6 +186,7 @@ public class VerifyPwdActivity extends BaseActivity implements ILoginView {
             //重新计时
             BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
             settingPatternOrFingerPrint();
+            EventBusUtils.poseEvent(new LoginSuccessEvent());
 //            MainActivity.startItDealLock(0, mBaseContext, VerifyPwdActivity.class.getName(), false);
         }
         //登录成功后需重新刷新周年庆活动状态
