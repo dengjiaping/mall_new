@@ -69,11 +69,11 @@ public class CommonLoadingView extends RelativeLayout implements OnClickListener
     private View contentView;
 
     static {
-        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_NOLINK_CODE, "网络不给力!");
-        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_TIMEOUT_CODE, "网络连接超时!");
-        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_SERVERERROR_CODE, "服务器出错了!");
+        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_NOLINK_CODE, VolleyErrorHelper.ErrorMessage.NO_LINK);
+        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_TIMEOUT_CODE, VolleyErrorHelper.ErrorMessage.TIME_OUT);
+        ExceptionMap.put(VolleyErrorHelper.NetworkCode.NETWORK_SERVERERROR_CODE, VolleyErrorHelper.ErrorMessage.SERVER_ERROR);
 
-        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE1, "客户端提交的参数有误");
+        errorMap.put(VolleyErrorHelper.NetworkCode.NETWORK_ERROR_CODE1, VolleyErrorHelper.ErrorMessage.PARMAS_ERROR);
     }
 
     public CommonLoadingView(Context context, AttributeSet attrs) {
