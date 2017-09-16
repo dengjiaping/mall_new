@@ -366,7 +366,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
                 showLoading();
-                presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 1, pageSize, contentCode);
+                presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, contentCode);
             }
         });
         ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -470,13 +470,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
             if (pageIndex == 1) {
-                contentList.addAll(contentList);
-//                contentList.addAll(contentList);
-//                contentList.addAll(contentList);
-//                contentList.addAll(contentList);
-                contentList.addAll(contentList);
                 shoppingAdapter.setDataAndSrcIp(contentList, srcIp);
-                if (contentList.size() >= 0) {
+                if (contentList.size() >= pageSize) {
                     ptrlv.setPullLoadEnable(true);
                 } else {
                     ptrlv.setPullLoadEnable(false);
