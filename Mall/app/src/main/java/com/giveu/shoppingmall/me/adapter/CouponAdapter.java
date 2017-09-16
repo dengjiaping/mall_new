@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.base.lvadapter.ItemViewDelegate;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.MultiItemTypeAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.model.bean.response.CouponListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -76,6 +77,7 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                 holder.setOnClickListener(R.id.ll_root, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        MainActivity.startIt(mContext);
                         ToastUtils.showLongToast(couponBean.useRuleDesc);
                     }
                 });
