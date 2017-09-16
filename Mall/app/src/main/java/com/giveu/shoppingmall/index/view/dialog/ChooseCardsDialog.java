@@ -58,7 +58,7 @@ public class ChooseCardsDialog {
                 holder.setOnClickListener(R.id.dialog_choose_coupon_item_radio, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onChooseType(item.id, item.name);
+                        listener.onChooseType(item.id, item.price, item.name);
                         mDialog.dismiss();
                     }
                 });
@@ -75,7 +75,7 @@ public class ChooseCardsDialog {
     }
 
     public interface OnChooseTypeListener {
-        void onChooseType(int id, String name);
+        void onChooseType(int id, String price, String name);
     }
 
 

@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:button="@null"
-            android:drawableLeft="@drawable/sort_up"
+            android:drawableLeft="@drawable/sort_disable"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:text="价格"
@@ -77,6 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:drawableTop="@drawable/ic_defalut_empty"
             android:gravity="center"
             android:text="没有查询到新的内容" />
     </FrameLayout>

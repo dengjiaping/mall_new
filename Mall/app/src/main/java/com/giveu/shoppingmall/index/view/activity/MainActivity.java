@@ -453,6 +453,11 @@ public class MainActivity extends BasePermissionActivity {
         ButterKnife.bind(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private class MainActivityAdapter extends FragmentPagerAdapter {
         private ArrayList<Fragment> fragments;
 
@@ -600,6 +605,8 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        int whichFragmentInActMain = intent.getIntExtra(Const.whichFragmentInActMain, 0);
+        mViewPager.setCurrentItem(whichFragmentInActMain);
         setIntent(intent);
     }
 

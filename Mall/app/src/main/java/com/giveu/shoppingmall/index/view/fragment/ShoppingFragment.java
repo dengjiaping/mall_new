@@ -109,10 +109,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 //        ptrlv.setVisibility(View.GONE);
         presenter = new ShoppingPresenter(this);
         //刚开始隐藏头布局的所有内容
-        initBanner(null);
-        initHot(null);
-        initMore(null);
-        initCategory(null);
+        resetView();
 //        skipToActivity(0,null);
         showLoading();
         presenter.getHeadContent();
@@ -356,19 +353,20 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                ptrlv.setPullLoadEnable(false);
                 pageIndex = 1;
                 showLoading();
                 presenter.getHeadContent();
-                ptrlv.setPullLoadEnable(false);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
+                showLoading();
                 presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, contentCode);
             }
         });
-        ptrlv.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
+        ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
             private SparseArray<ItemRecod> recordSp = new SparseArray<>();
             private int mCurrentfirstVisibleItem = 0;
 
@@ -461,10 +459,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getIndexContent(List<GoodsSearchResponse.GoodsBean> contentList, String srcIp) {
+        hideLoding();
         //显示查询结果
         if (pageIndex == 1) {
             ptrlv.onRefreshComplete();
-            hideLoding();
         }
         ptrlv.setPullRefreshEnable(true);
         if (CommonUtils.isNotNullOrEmpty(contentList)) {
@@ -503,6 +501,9 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     public void getDataFail(boolean isHeader) {
         //头部返回数据错误，那么显示空布局
         if (isHeader) {
+            resetView();
+            shoppingAdapter.getData().clear();
+            shoppingAdapter.notifyDataSetChanged();
             llEmptyView.setVisibility(View.VISIBLE);
         } else {
             //如果单品数据第一页就获取失败了，那么添加一个虚假数据，否则滑动会有bug
@@ -552,13 +553,17 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 }
             }
         } else {
-            hideLoding();
-            initBanner(null);
-            initHot(null);
-            initMore(null);
-            initCategory(null);
+            resetView();
             llEmptyView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void resetView(){
+        hideLoding();
+        initBanner(null);
+        initHot(null);
+        initMore(null);
+        initCategory(null);
     }
 
     @Override

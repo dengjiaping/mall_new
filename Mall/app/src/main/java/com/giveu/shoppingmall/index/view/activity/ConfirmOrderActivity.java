@@ -41,7 +41,6 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
@@ -107,7 +106,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     @BindView(R.id.confirm_order_skuinfo_total_price)
     TextView tvSkuInfoTotalPrice;
     @BindView(R.id.confirm_order_total_price)
-    TextView totalPrice;
+    TextView tvTotalPrice;
     @BindView(R.id.confirm_order_agreement)
     TextView tvAgreement;
     @BindView(R.id.confirm_order_agreement_checkbox)
@@ -116,6 +115,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvOK;
     @BindView(R.id.confirm_order_empty)
     RelativeLayout rlEmptyView;
+    @BindView(R.id.confirm_order_empty_text)
+    TextView tvEmptyTextView;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -129,6 +130,8 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private int payType = 2; //支付方式,暂时默认用支付宝
     private int cardId = 0; //优惠券Id
+    private String cardPrice = "0";
+    private String totalPrice = "0";
 
     //首付列表,暂时不用
     private List<CharSequence> firstPayList;
@@ -150,6 +153,11 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String orderNo;
     private String paymentNum;
 
+    //订单是否出入确认状态，如果是则不可修改
+    private boolean isConfirm = false;
+    //界面初始化成功的标志
+    private boolean isInitSuccess = false;
+
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         context.startActivity(intent);
@@ -170,7 +178,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         baseLayout.setBackClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmDialog.show();
+                if (isInitSuccess) {
+                    //界面初始化失败，返回不弹出确认框
+                    confirmDialog.show();
+                }else {
+                    finish();
+                }
             }
         });
 
@@ -216,9 +229,11 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
 
-        initDialog();
+        initBackNoticeDialog();
 
         initMsgEditText();
+
+        showLoading();
     }
 
     private void initMsgEditText() {
@@ -239,7 +254,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
     }
 
-    private void initDialog() {
+    private void initBackNoticeDialog() {
         confirmDialog = new ConfirmDialog(this);
         confirmDialog.setContent("确定离开吗？好货不等人哦~");
         confirmDialog.setCancleStr("去意已决");
@@ -268,15 +283,21 @@ public class ConfirmOrderActivity extends BaseActivity {
                         rlEmptyView.setVisibility(View.GONE);
                     }
                     updateUI(response);
+                    isInitSuccess = true;
                 }
+                hideLoding();
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                ToastUtils.showShortToast("创建订单失败");
+                CommonLoadingView.showErrorToast(errorBean);
                 if (rlEmptyView.getVisibility() != View.VISIBLE) {
                     rlEmptyView.setVisibility(View.VISIBLE);
                 }
+                if (tvEmptyTextView.getVisibility() != View.VISIBLE) {
+                    tvEmptyTextView.setVisibility(View.VISIBLE);
+                }
+                hideLoding();
             }
 
         });
@@ -297,9 +318,11 @@ public class ConfirmOrderActivity extends BaseActivity {
             cardList = lists;
             chooseCardsDialog = new ChooseCardsDialog(this, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
                 @Override
-                public void onChooseType(int id, String name) {
+                public void onChooseType(int id, String price, String name) {
                     dvCardsView.setText(name);
+                    cardPrice = price;
                     cardId = id;
+                    setTotalPrice();
                 }
             });
             if (rlCardsViewLayout.getVisibility() != View.VISIBLE) {
@@ -335,10 +358,19 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
                         15, 13, R.color.red, R.color.black);
-                totalPrice.setText("支付金额：¥" + StringUtils.format2(skuInfoBean.totalPrice));
+
+                totalPrice = skuInfoBean.totalPrice;
+                setTotalPrice();
             }
 
         }
+    }
+
+    private void setTotalPrice() {
+        double tPrice = StringUtils.string2Double(totalPrice);
+        double cPrice = StringUtils.string2Double(cardPrice);
+        double result = tPrice - cPrice;
+        tvTotalPrice.setText("支付金额：¥" + StringUtils.format2(result + ""));
     }
 
     private void updateAddress(CreateOrderResponse.ReceiverJoBean bean) {
@@ -425,7 +457,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 AddressManageActivity.startItForResult(this, Const.ADDRESSMANAGE);
                 break;
             case R.id.tv_ok:
-                if ("去支付".equals(tvOK.getText().toString())) {
+                if (isConfirm) {
                     pwdDialog.showDialog();
                 } else {
                     confirmOrderSc();
@@ -449,7 +481,10 @@ public class ConfirmOrderActivity extends BaseActivity {
                         pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
-                        tvOK.setText("去支付");
+                        isConfirm = true;
+                        flAddresslayout.setEnabled(false);
+                        msgEditText.setEnabled(false);
+                        dvPayView.setEnabled(false);
                     }
 
                     @Override
@@ -538,8 +573,11 @@ public class ConfirmOrderActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            confirmDialog.show();
-            return true;
+            if (isInitSuccess) {
+                //界面初始化失败，返回不弹出确认框
+                confirmDialog.show();
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
