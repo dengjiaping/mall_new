@@ -181,7 +181,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 if (isInitSuccess) {
                     //界面初始化失败，返回不弹出确认框
                     confirmDialog.show();
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -485,6 +485,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         flAddresslayout.setEnabled(false);
                         msgEditText.setEnabled(false);
                         dvPayView.setEnabled(false);
+                        dvCardsView.setEnabled(false);
                     }
 
                     @Override
