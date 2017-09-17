@@ -39,7 +39,6 @@ public class MainCashFragment extends BaseFragment {
     LinearLayout llTop;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +55,6 @@ public class MainCashFragment extends BaseFragment {
             }
         });
         quotaDialog = new QuotaDialog(mBaseContext);
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -66,7 +64,7 @@ public class MainCashFragment extends BaseFragment {
         llTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isLoginAndActivation()){
+                if (isLoginAndActivation()) {
                     //登录并且激活
                     CashTypeActivity.startIt(mBaseContext);
                 }
@@ -97,24 +95,21 @@ public class MainCashFragment extends BaseFragment {
     /**
      * 是否登录是否激活
      */
-    public boolean isLoginAndActivation(){
+    public boolean isLoginAndActivation() {
         //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入账单
-        if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-            if (LoginHelper.getInstance().hasQualifications()) {
-                String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
-                double cylimit = Double.parseDouble(availableCylimit);
-                if (0 == cylimit) {
-                    //取现额度为0
-                    quotaDialog.showDialog();
-                } else {
-                    return true;
-                }
+        if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+            String availableCylimit = LoginHelper.getInstance().getAvailableCylimit();
+            double cylimit = Double.parseDouble(availableCylimit);
+            if (0 == cylimit) {
+                //取现额度为0
+                quotaDialog.showDialog();
             } else {
-                notActiveDialog.showDialog();
+                return true;
             }
         }
         return false;
     }
+
     @Override
     protected boolean translateStatusBar() {
         return true;

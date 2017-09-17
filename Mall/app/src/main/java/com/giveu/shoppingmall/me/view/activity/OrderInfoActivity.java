@@ -145,7 +145,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     private String orderNo;
     private String src;
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
-    private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
     int orderPayType;//支付方式
     String serviceUrl;//服务详情
@@ -167,7 +166,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         setContentView(R.layout.activity_order_info);
         baseLayout.setTitle("订单详情");
         baseLayout.ll_baselayout_content.setVisibility(View.GONE);
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         dealPwdDialog = new DealPwdDialog(mBaseContext);
         balanceDeficientDialog = new BalanceDeficientDialog(mBaseContext);
         presenter = new OrderHandlePresenter(this);
@@ -438,7 +436,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 //是否勾选消费分期合同
                 if (cbContract.isChecked()) {
                     //是否开通钱包
-                    if (LoginHelper.getInstance().hasQualifications()) {
+                    if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                         //是否设置了交易密码
                         if (LoginHelper.getInstance().hasSetPwd()) {
                             //如果是钱包支付的话，判断钱包余额是否足够
@@ -458,8 +456,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                         } else {
                             TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                         }
-                    } else {
-                        notActiveDialog.showDialog();
                     }
                 } else {
                     ToastUtils.showLongToast("请阅读并勾选消费分期合同");

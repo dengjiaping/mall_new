@@ -110,7 +110,6 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
     private String orderNo;
     private int paymentType;
     private ChargeOrderDialog orderDialog;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private PermissionDialog permissionDialog;
     private boolean pwdDismissByCancel = true;//密码框是否因为点击返回键而消失的标识
     private boolean canShowBuyDialog = true;
@@ -128,7 +127,6 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
         gvRecharge.setEnabled(false);
         presenter = new RechargePresenter(this);
         warnningDialog = new OnlyConfirmDialog(mBaseContext);
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         pwdDialog = new PwdDialog(mBaseContext);
         initPermissionDialog();
         registerEventBus();
@@ -176,25 +174,21 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int checkId, long l) {
                 //先判断有没登录，然后再判断是否有钱包资质，满足条件后才进入充值
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        //判断是否设置了交易密码
-                        if (LoginHelper.getInstance().hasSetPwd()) {
-                            if (canShowBuyDialog) {
-                                salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
-                                mobile = etRecharge.getText().toString();
-                                productType = rechargeAdapter.getItem(checkId).productType;
-                                productId = rechargeAdapter.getItem(checkId).callTrafficId;
-                                productName = rechargeAdapter.getItem(checkId).name;
-                                presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
-                                        rechargeAdapter.getItem(checkId).callTrafficId);
-                                canShowBuyDialog = false;
-                            }
-                        } else {
-                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    //判断是否设置了交易密码
+                    if (LoginHelper.getInstance().hasSetPwd()) {
+                        if (canShowBuyDialog) {
+                            salePrice = StringUtils.format2(rechargeAdapter.getItem(checkId).salePrice + "");
+                            mobile = etRecharge.getText().toString();
+                            productType = rechargeAdapter.getItem(checkId).productType;
+                            productId = rechargeAdapter.getItem(checkId).callTrafficId;
+                            productName = rechargeAdapter.getItem(checkId).name;
+                            presenter.createRechargeOrder(LoginHelper.getInstance().getIdPerson(), etRecharge.getText().toString().replace(" ", ""),
+                                    rechargeAdapter.getItem(checkId).callTrafficId);
+                            canShowBuyDialog = false;
                         }
                     } else {
-                        notActiveDialog.showDialog();
+                        TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                     }
                 }
             }

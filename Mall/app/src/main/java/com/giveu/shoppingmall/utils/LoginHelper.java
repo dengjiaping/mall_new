@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.LoginActivity;
+import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.sharePref.AbsSharePref;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -61,7 +62,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String ORDER_PAY_NUM = "orderPayNum";
     public static final String ORDER_FINISHED = "orderFinished";
     public static final String ORDER_RECEIVE_NUM = "orderReceiceNum";
-
+    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     public static LoginHelper getInstance() {
         if (instance == null) {
             instance = new LoginHelper();
@@ -228,6 +229,21 @@ public class LoginHelper extends AbsSharePref {
             LoginActivity.startIt(activity);
             return false;
         }
+    }
+
+    /**
+     * 是否登录而且激活
+     */
+    public boolean hasLoginAndActivation(Activity activity) {
+        if (hasLoginAndGotoLogin(activity)) {
+            if (LoginHelper.getInstance().hasQualifications()) {
+                return true;
+            } else {
+                notActiveDialog = new NotActiveDialog(activity);
+                notActiveDialog.showDialog();
+            }
+        }
+        return false;
     }
 
     public int getOrderPayNum() {

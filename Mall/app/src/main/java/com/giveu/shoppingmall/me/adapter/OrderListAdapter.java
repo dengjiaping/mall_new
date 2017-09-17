@@ -14,7 +14,6 @@ import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -34,13 +33,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     private String channelName = "";//渠道名称
     private ConfirmDialog dialog;//确认弹框
     private DealPwdDialog dealPwdDialog;// 输入交易密码的弹框
-    private NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     private BalanceDeficientDialog balanceDeficientDialog;//钱包余额不足的弹框
 
     public OrderListAdapter(Context context, List<OrderListResponse.SkuInfoBean> datas, OrderHandlePresenter presenter) {
         super(context, R.layout.lv_order_item, datas);
         this.presenter = presenter;
-        notActiveDialog = new NotActiveDialog((Activity) mContext);
         dealPwdDialog = new DealPwdDialog((Activity) mContext);
         balanceDeficientDialog = new BalanceDeficientDialog((Activity) mContext);
     }
@@ -279,7 +276,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     //点击去支付、去首付后的流程处理
     private void onPay(final String order, final String payType, final double finalPayment) {
         //是否有开通钱包
-        if (LoginHelper.getInstance().hasQualifications()) {
+        if (LoginHelper.getInstance().hasLoginAndActivation((Activity) mContext)) {
             //是否设置了交易密码
             if (LoginHelper.getInstance().hasSetPwd()) {
                 //钱包可消费余额是否足够
@@ -303,8 +300,6 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             } else {
                 TransactionPwdActivity.startIt((Activity) mContext, LoginHelper.getInstance().getIdPerson());
             }
-        } else {
-            notActiveDialog.showDialog();
         }
     }
 

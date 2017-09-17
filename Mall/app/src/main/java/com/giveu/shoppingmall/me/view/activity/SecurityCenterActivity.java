@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -38,7 +37,6 @@ public class SecurityCenterActivity extends BaseActivity {
     @BindView(R.id.tv_lock_type)
     TextView tvLockType;
     private FingerPrintHelper fingerHelper;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
     public static void startIt(Activity mActivity) {
         Intent intent = new Intent(mActivity, SecurityCenterActivity.class);
@@ -49,7 +47,6 @@ public class SecurityCenterActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_security_center);
         baseLayout.setTitle("安全中心");
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         //如果是假数据激活用户，隐藏
         if(LoginHelper.getInstance().hasAverageUser()){
             llChangePhoneNumber.setVisibility(View.GONE);
@@ -123,15 +120,14 @@ public class SecurityCenterActivity extends BaseActivity {
      * 是否激活钱包并且设置了交易密码，没有激活跳转激活，激活没有设置密码跳转设置交易密码
      */
     public boolean isWallActivationAndPwd() {
-        if (LoginHelper.getInstance().hasQualifications()) {
+        if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
             //判断是否设置了交易密码
             if (!LoginHelper.getInstance().hasSetPwd()) {//没有设置交易密码
                 TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                 return false;
             }
             return true;
-        } else {
-            notActiveDialog.showDialog();
+        }else {
             return false;
         }
     }

@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
 import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -81,7 +80,6 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llPayStatus;
     @BindView(R.id.tv_see)
     TextView tvSee;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.view_divider)
     View viewDivider;
     @BindView(R.id.ll_my_collection)
@@ -105,7 +103,6 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
         baseLayout.setTopBarBgDrawble(R.color.color_00c9cd);
-        notActiveDialog = new NotActiveDialog(mBaseContext);
 //        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -264,12 +261,8 @@ public class MainMeFragment extends BaseFragment {
 
             case R.id.ll_bill:
                 //登录并且有资质才可查看，否则先登录或先激活钱包
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        RepaymentActivity.startIt(mBaseContext);
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    RepaymentActivity.startIt(mBaseContext);
                 }
                 break;
 
@@ -286,21 +279,13 @@ public class MainMeFragment extends BaseFragment {
                 break;
             case R.id.ll_my_collection:
                 //我的收藏
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        CollectionActivity.startIt(mBaseContext);
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    CollectionActivity.startIt(mBaseContext);
                 }
                 break;
             case R.id.ll_my_coupon:
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        MyCouponActivity.startIt(mBaseContext);
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    MyCouponActivity.startIt(mBaseContext);
                 }
                 break;
 
@@ -311,12 +296,8 @@ public class MainMeFragment extends BaseFragment {
 
             case R.id.ll_quota:
                 //激活钱包用户直接查看额度，否则先去激活
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        QuotaActivity.startIt(mBaseContext);
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    QuotaActivity.startIt(mBaseContext);
                 }
                 break;
 

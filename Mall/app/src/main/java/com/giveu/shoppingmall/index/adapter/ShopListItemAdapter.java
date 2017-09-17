@@ -23,9 +23,11 @@ import java.util.List;
 public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBean> {
     private Context mContext;
     private String srcIp = "";
+    private List<GoodsSearchResponse.GoodsBean> lists;
 
     public ShopListItemAdapter(Context context, List lists) {
         super(context, R.layout.adapter_shopping_list_item, lists);
+        this.lists = lists;
         mContext = context;
     }
 
@@ -64,5 +66,8 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 11, R.color.red, R.color.color_999999);
             tvPrice.setVisibility(View.INVISIBLE);
         }
+
+        //最后一个Item隐藏分割线
+        holder.setVisible(R.id.item_right_bg_line, position != (lists.size() - 1));
     }
 }
