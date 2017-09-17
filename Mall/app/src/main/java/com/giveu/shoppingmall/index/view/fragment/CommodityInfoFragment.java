@@ -205,6 +205,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             @Override
             public void onComplete(String skuCode) {
                 CommodityInfoFragment.this.skuCode = skuCode;
+                buyDialog.setBuyDisable();
                 //选完属性后再次查询商品的相关信息，并检查库存
                 getCommodityInfo();
                 presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);

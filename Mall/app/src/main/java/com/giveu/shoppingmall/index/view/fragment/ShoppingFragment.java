@@ -539,6 +539,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         //头部数据加载完成后再加载单品数据
                         if (CommonUtils.isNotNullOrEmpty(indexResponse.decorations)) {
                             contentCode = indexResponse.decorations.get(0).code;
+                            GoodsSearchResponse.GoodsBean goodsBean = new GoodsSearchResponse.GoodsBean();
+                            shoppingAdapter.getData().clear();
+                            shoppingAdapter.getData().add(goodsBean);
+                            shoppingAdapter.notifyDataSetChanged();
                             presenter.getIndexContent(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, indexResponse.decorations.get(0).code);
                         } else {
 //                            llEmptyView.setVisibility(View.VISIBLE);

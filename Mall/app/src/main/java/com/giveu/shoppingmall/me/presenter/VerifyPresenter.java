@@ -6,6 +6,7 @@ import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmPayResponse;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
  * Created by 513419 on 2017/7/10.
@@ -36,7 +37,7 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
     }
 
     //商城订单支付
-    public void confirmPayForShop(String channel ,String orderNo, String idPerson, String smsCode, String smsMobile) {
+    public void confirmPayForShop(String channel, String orderNo, String idPerson, String smsCode, String smsMobile) {
         ApiImpl.confirmPay(getView().getAct(), channel, idPerson, orderNo, smsCode, smsMobile, new BaseRequestAgent.ResponseListener<ConfirmPayResponse>() {
             @Override
             public void onSuccess(ConfirmPayResponse response) {
@@ -47,6 +48,9 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
 
             @Override
             public void onError(BaseBean errorBean) {
+                if (getView() != null) {
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
 
             }
         });
