@@ -210,6 +210,8 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     public void setBuyDisable() {
         tvConfirm.setEnabled(false);
         llChooseCredit.setEnabled(false);
+        tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
+        llChooseCredit.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
     }
 
     public void setBuyEnable(int state) {

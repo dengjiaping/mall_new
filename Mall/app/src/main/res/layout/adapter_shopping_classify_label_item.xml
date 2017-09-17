@@ -2,10 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp">
+    android:layout_height="58dp"
+    android:orientation="horizontal">
 
 
     <TextView
@@ -24,8 +22,8 @@
         android:id="@+id/item_right_line"
         android:layout_width="3dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:background="@color/color_00adb2" />
 
 </RelativeLayout>

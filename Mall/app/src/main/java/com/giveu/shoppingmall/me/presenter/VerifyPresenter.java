@@ -39,7 +39,7 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
     }
 
     //商城订单支付
-    public void confirmPayForShop(String channel ,String orderNo, String idPerson, String smsCode, String smsMobile) {
+    public void confirmPayForShop(String channel, String orderNo, String idPerson, String smsCode, String smsMobile) {
         ApiImpl.confirmPay(getView().getAct(), channel, idPerson, orderNo, smsCode, smsMobile, new BaseRequestAgent.ResponseListener<ConfirmPayResponse>() {
             @Override
             public void onSuccess(ConfirmPayResponse response) {

@@ -96,7 +96,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_commodity_detail);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
-        baseLayout.setTitleBarAndStatusBar(false,true);
+        baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
@@ -173,6 +173,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             ivCollect.setTag(true);
             ivCollect.setImageResource(R.drawable.ic_collect_select);
             tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+            tvCollect.setText("已收藏");
         } else {
             ivCollect.setTag(false);
             cancelCollect();
@@ -202,6 +203,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private void cancelCollect() {
         tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_9b9b9b));
         ivCollect.setImageResource(R.drawable.ic_collect_unselect);
+        tvCollect.setText("收藏");
     }
 
 
@@ -213,7 +215,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             case R.id.ll_back:
                 if (vpContent.getCurrentItem() == 1) {
                     vpContent.setCurrentItem(0);
-                } else {
+                } else if (!commodityInfoFragment.needCloseDetail()) {
                     finish();
                 }
                 break;
@@ -357,7 +359,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         //返回键可返回上一个fragment
         if (vpContent != null && vpContent.getCurrentItem() == 1) {
             vpContent.setCurrentItem(0);
-        } else {
+        } else if (!commodityInfoFragment.needCloseDetail()) {
             super.onBackPressed();
         }
     }

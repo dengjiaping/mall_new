@@ -136,7 +136,7 @@ public class LoadingDialog extends ProgressDialog {
 
     public static LoadingDialog getDialog(Activity context, String message, boolean canceledOnTouchOutside, DialogInterface.OnDismissListener onDismissListener) {
         // 初始化dialog 加载透明样式
-        LoadingDialog dialog = new LoadingDialog(context, R.style.ProgressHUD);
+        LoadingDialog dialog = new LoadingDialog(context, R.style.ProgressLoading);
         dialog.show();
         // 加载自定义布局
         dialog.setContentView(getView(context));

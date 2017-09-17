@@ -62,10 +62,6 @@
         android:visibility="gone"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_layoutxml_bg" />
 
         <com.giveu.shoppingmall.widget.DetailView
             android:layout_width="match_parent"
@@ -76,10 +72,10 @@
             app:text_right="更换地址" />
     </LinearLayout>
 
-    <View
+  <!--  <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/default_layoutxml_bg" />
+        android:background="@color/default_layoutxml_bg" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -148,7 +144,7 @@
         <TextView
             android:id="@+id/tv_buy"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="56dp"
             android:layout_weight="1"
             android:background="@color/color_00bbc0"
             android:gravity="center"
