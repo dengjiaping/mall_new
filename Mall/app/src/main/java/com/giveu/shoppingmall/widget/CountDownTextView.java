@@ -30,6 +30,10 @@ public class CountDownTextView extends TextView {
     private String afterTime;
     private final int SECOND = 1000;
 
+    /**
+     * 以毫秒为单位
+     * @param context
+     */
     public CountDownTextView(Context context) {
         super(context);
     }
@@ -81,13 +85,17 @@ public class CountDownTextView extends TextView {
         @Override
         public void handleMessage(Message msg) {
             if (this != null) {
-                if (restTime == 0) {
+                if (restTime <= 0) {
                     stopCount();
                 } else {
                     restTime = restTime - SECOND;
-                    CountDownTextView.this.setText(beforeTime + formatTime(restTime) + afterTime);
-                    Message msg2 = Message.obtain();
-                    sendMessageDelayed(msg2, SECOND);
+                    if (restTime <= 0) {
+                        stopCount();
+                    } else {
+                        CountDownTextView.this.setText(beforeTime + formatTime(restTime) + afterTime);
+                        Message msg2 = Message.obtain();
+                        sendMessageDelayed(msg2, SECOND);
+                    }
                 }
             }
         }

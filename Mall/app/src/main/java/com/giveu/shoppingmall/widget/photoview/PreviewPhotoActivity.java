@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.widget.photoview;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -31,12 +32,18 @@ public class PreviewPhotoActivity extends BaseActivity {
     private ArrayList<String> photoList;
     private int currentPos;
     private String title;
+    private boolean isWhiteBackground;
 
     public static void startIt(Activity activity, String title, ArrayList<String> photoList, int currentPos) {
+        startIt(activity, title, photoList, currentPos, false);
+    }
+
+    public static void startIt(Activity activity, String title, ArrayList<String> photoList, int currentPos, boolean isWhiteBackground) {
         Intent intent = new Intent(activity, PreviewPhotoActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("photoList", photoList);
         intent.putExtra("currentPos", currentPos);
+        intent.putExtra("isWhiteBackground", isWhiteBackground);
         activity.startActivity(intent);
     }
 
@@ -44,6 +51,7 @@ public class PreviewPhotoActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_preview_photo);
         title = getIntent().getStringExtra("title");
+        isWhiteBackground = getIntent().getBooleanExtra("isWhiteBackground", false);
         photoList = getIntent().getStringArrayListExtra("photoList");
         currentPos = getIntent().getIntExtra("currentPos", 0);
         if (photoList == null || photoList.isEmpty()) {
@@ -106,6 +114,11 @@ public class PreviewPhotoActivity extends BaseActivity {
 //            ivPhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             ivPhoto.setLayoutParams(layoutParams);
+            if (isWhiteBackground) {
+                ivPhoto.setBackgroundColor(ContextCompat.getColor(mBaseContext, R.color.white));
+            }else {
+                ivPhoto.setBackgroundColor(ContextCompat.getColor(mBaseContext, R.color.black));
+            }
             if (isNetWorkUrl(photoList.get(position))) {
                 ImageUtils.loadImage(photoList.get(position), ivPhoto);
             } else {
