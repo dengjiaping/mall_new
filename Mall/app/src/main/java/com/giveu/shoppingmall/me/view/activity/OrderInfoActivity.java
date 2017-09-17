@@ -483,7 +483,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //申请退款
             case R.id.tv_apply_refund:
-                presenter.onApplyToRefund(orderNo);
+                showRefundDialog();
                 break;
 
             //服务详情
@@ -598,6 +598,25 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             @Override
             public void confirm() {
                 presenter.onConfirmReceive(orderNo);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    //申请退款dialog
+    private void showRefundDialog() {
+        dialog = new ConfirmDialog(mBaseContext);
+        dialog.setContent("是否申请退款？");
+        dialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                presenter.onApplyToRefund(orderNo);
                 dialog.dismiss();
             }
 
