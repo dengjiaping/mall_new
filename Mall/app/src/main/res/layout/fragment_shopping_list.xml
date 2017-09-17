@@ -70,7 +70,8 @@
         <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
             android:id="@+id/shopping_list_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:divider="@null"/>
 
         <TextView
             android:id="@+id/shopping_empty_view"

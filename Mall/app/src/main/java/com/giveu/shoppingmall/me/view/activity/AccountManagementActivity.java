@@ -14,7 +14,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.event.LotteryEvent;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -55,7 +54,6 @@ public class AccountManagementActivity extends BaseActivity {
     TextView tvPhone;
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     @BindView(R.id.iv_update)
     ImageView ivUpdate;
     @BindView(R.id.tv_perfect_info)
@@ -76,7 +74,6 @@ public class AccountManagementActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_account_management);
         baseLayout.setTitle("账号管理");
-        notActiveDialog = new NotActiveDialog(mBaseContext);
 
         //如果是假数据激活用户，隐藏
         if (LoginHelper.getInstance().hasAverageUser()) {
@@ -128,18 +125,16 @@ public class AccountManagementActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_delivery_address:
                 //地址管理
-                if (LoginHelper.getInstance().hasQualifications()) {//是否激活钱包
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    //是否激活钱包
                     AddressManageActivity.startIt(mBaseContext);
-                } else {
-                    notActiveDialog.showDialog();
                 }
                 break;
             case R.id.ll_bank_card:
                 //我的银行卡
-                if (LoginHelper.getInstance().hasQualifications()) {//是否激活钱包
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    //是否激活钱包
                     MyBankCardActivity.startIt(mBaseContext, false);
-                } else {
-                    notActiveDialog.showDialog();
                 }
                 break;
             case R.id.ll_security_center:
@@ -155,12 +150,9 @@ public class AccountManagementActivity extends BaseActivity {
                 //完善个人资料
                 if (!LoginHelper.getInstance().hasAverageUser()) {
                     // 不是假数据激活用户，跳转填写
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        //其他用户已激活
+                    if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                        //是否激活钱包
                         PerfectInfoActivity.startIt(mBaseContext);
-                    } else {
-                        //未激活
-                        notActiveDialog.showDialog();
                     }
                 }
                 break;

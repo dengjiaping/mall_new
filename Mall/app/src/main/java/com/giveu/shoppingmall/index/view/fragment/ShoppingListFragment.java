@@ -161,8 +161,8 @@ public class ShoppingListFragment extends BaseFragment {
                         if (!STATUS_UNCHECK.equals(rbPrice.getTag().toString())) {
                             setPriceButtonStatus(STATUS_UNCHECK);
                         }
-                        initDataForFragment();
                         orderSort = SORT_BY_VOLUME;
+                        initDataForFragment();
                         break;
                     case R.id.shopping_list_radio_price:
                         break;

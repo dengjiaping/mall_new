@@ -41,8 +41,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.giveu.shoppingmall.R.id.vp_content;
-
 /**
  * Created by 513419 on 2017/8/30.
  * 商品详情
@@ -51,7 +49,7 @@ import static com.giveu.shoppingmall.R.id.vp_content;
 public class CommodityDetailActivity extends BasePermissionActivity implements ICommodityView {
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
-    @BindView(vp_content)
+    @BindView(R.id.vp_content)
     public NoScrollViewPager vpContent;
     @BindView(R.id.ll_credit)
     LinearLayout llCredit;
@@ -224,24 +222,19 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                 commodityInfoFragment.showBuyDialog();
                 break;
             case R.id.ll_collect:
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        //收藏商品
-                        boolean isCheck = (boolean) ivCollect.getTag();
-                        String collectSkuCode = commodityInfoFragment.getSkuCode();
-                        //已收藏则取消收藏
-                        if (isCheck) {
-                            //取消收藏
-                            presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 1);
-                        } else {
-                            //收藏
-                            presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
-                        }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    //收藏商品
+                    boolean isCheck = (boolean) ivCollect.getTag();
+                    String collectSkuCode = commodityInfoFragment.getSkuCode();
+                    //已收藏则取消收藏
+                    if (isCheck) {
+                        //取消收藏
+                        presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 1);
                     } else {
-                        commodityInfoFragment.showNotActiveDialog();
+                        //收藏
+                        presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
                     }
                 }
-
                 break;
             case R.id.ll_choose_address:
                 commodityInfoFragment.showChooseCityDialog();

@@ -35,7 +35,6 @@ import com.giveu.shoppingmall.index.view.fragment.ShoppingFragment;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.activity.FingerPrintActivity;
-import com.giveu.shoppingmall.me.view.activity.LoginActivity;
 import com.giveu.shoppingmall.me.view.activity.RepaymentActivity;
 import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.me.view.fragment.MainMeFragment;
@@ -166,19 +165,14 @@ public class MainActivity extends BasePermissionActivity {
         lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
             @Override
             public void join() {
-                if (LoginHelper.getInstance().hasLogin()) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        if (lotteryResponse != null && lotteryResponse.data != null
-                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
-                            needRefreshLottery = true;
-                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "", true);
-                        }
-                    } else {
-                        notActiveDialog.showDialog();
-                        ivSmallLottery.setVisibility(View.VISIBLE);
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    if (lotteryResponse != null && lotteryResponse.data != null
+                            && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                        needRefreshLottery = true;
+                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "", true);
                     }
                 } else {
-                    LoginActivity.startIt(mBaseContext, true);
+                    ivSmallLottery.setVisibility(View.VISIBLE);
                 }
                 lotteryDialog.dismissDialog();
             }
@@ -303,18 +297,12 @@ public class MainActivity extends BasePermissionActivity {
         resetIconAndTextColor();
         switch (view.getId()) {
             case R.id.iv_small_lottery:
-                if (LoginHelper.getInstance().hasLogin()) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        if (lotteryResponse != null && lotteryResponse.data != null
-                                && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
-                            needRefreshLottery = true;
-                            CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "", true);
-                        }
-                    } else {
-                        notActiveDialog.showDialog();
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    if (lotteryResponse != null && lotteryResponse.data != null
+                            && StringUtils.isNotNull(lotteryResponse.data.activityUrl)) {
+                        needRefreshLottery = true;
+                        CustomWebViewActivity.startIt(mBaseContext, lotteryResponse.data.activityUrl, "", true);
                     }
-                } else {
-                    LoginActivity.startIt(mBaseContext, true);
                 }
                 break;
             case R.id.ll_recharge:
