@@ -366,7 +366,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             banner.update(skuResponse.skuInfo.srcs);
             tvCommoditName.setText(StringUtils.ToAllFullWidthString(skuResponse.skuInfo.name));
             CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(skuResponse.skuInfo.salePrice),
-                    "", 19, 15, R.color.color_ff2a2a, R.color.color_999999);
+                    "", 19, 13, R.color.color_ff2a2a, R.color.color_999999);
 
             if (StringUtils.isNotNull(skuResponse.skuInfo.adwords)) {
                 tvIntroduction.setText(skuResponse.skuInfo.adwords);

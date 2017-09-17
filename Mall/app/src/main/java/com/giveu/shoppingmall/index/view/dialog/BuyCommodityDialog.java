@@ -362,7 +362,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                 , ivCommodity, DensityUtils.dip2px(8));
         tvCommodityName.setText(StringUtils.ToAllFullWidthString(commodityName));
         CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "",
-                19, 17, R.color.color_ff2a2a, R.color.color_999999);
+                19, 13, R.color.color_ff2a2a, R.color.color_999999);
     }
 
 
