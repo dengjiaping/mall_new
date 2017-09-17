@@ -72,10 +72,10 @@
             app:text_right="更换地址" />
     </LinearLayout>
 
-    <View
+  <!--  <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/default_layoutxml_bg" />
+        android:background="@color/default_layoutxml_bg" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
