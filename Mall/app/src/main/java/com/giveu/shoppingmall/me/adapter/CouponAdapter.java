@@ -77,7 +77,21 @@ public class CouponAdapter extends MultiItemTypeAdapter<CouponListResponse> {
                 holder.setOnClickListener(R.id.ll_root, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.startIt(mContext);
+                        switch (couponBean.status) {
+                            case "0":
+                                ToastUtils.showLongToast("该优惠券未到使用时间");
+                                break;
+                            case "1":
+                                MainActivity.startIt(mContext);
+                                break;
+                            case "2":
+                                ToastUtils.showLongToast("该优惠券已使用");
+                                break;
+                            case "3":
+                                ToastUtils.showLongToast("该优惠券已过期");
+                                break;
+                        }
+
                     }
                 });
                 //使用规则dialog

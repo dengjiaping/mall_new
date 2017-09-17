@@ -47,7 +47,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     @Override
-    protected void convert(ViewHolder viewHolder, final OrderListResponse.SkuInfoBean item, int position) {
+    protected void convert(ViewHolder viewHolder, final OrderListResponse.SkuInfoBean item, final int position) {
         if (StringUtils.isNotNull(channelName)) {
             viewHolder.setText(R.id.tv_channel_name, channelName);
         }
@@ -124,16 +124,12 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                     @Override
                     public void onClick(View v) {
                         if (StringUtils.isNotNull(item.timeLeft)) {
-                            Double finalPayment;
-                            if (item.status == 1) {
-                                finalPayment = Double.parseDouble(item.payPrice);
-                            } else {
-                                finalPayment = Double.parseDouble(item.downPayment);
-                            }
+                            Double finalPayment = StringUtils.string2Double(item.totalPrice);
                             onPay(item.orderNo, item.payType, finalPayment);
                         } else {
                             ToastUtils.showLongToast("订单已失效");
                         }
+
                     }
                 });
                 if (item.orderType != 0) {
@@ -158,12 +154,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                     @Override
                     public void onClick(View v) {
                         if (StringUtils.isNotNull(item.timeLeft)) {
-                            Double finalPayment;
-                            if (item.status == 1) {
-                                finalPayment = StringUtils.string2Double(item.payPrice);
-                            } else {
-                                finalPayment = StringUtils.string2Double(item.downPayment);
-                            }
+                            Double finalPayment = StringUtils.string2Double(item.downPayment);
                             onPay(item.orderNo, item.payType, finalPayment);
                         } else {
                             ToastUtils.showLongToast("订单已失效");

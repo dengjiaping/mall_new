@@ -50,6 +50,7 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
         public String orderNo;
         public int orderType;
         public String payPrice;
+        public String totalPrice;
         public String periods;
         public int quantity;
         public String remainingTime;
