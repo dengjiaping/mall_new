@@ -48,10 +48,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.giveu.shoppingmall.R.id.fab_up_slide;
-import static com.giveu.shoppingmall.R.id.sv_goods_info;
-import static com.giveu.shoppingmall.R.id.sv_switch;
-
 /**
  * Created by 513419 on 2017/8/30.
  * 商品信息
@@ -70,13 +66,13 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     TextView tvPull;
     @BindView(R.id.ll_pull_up)
     LinearLayout llPullUp;
-    @BindView(sv_goods_info)
+    @BindView(R.id.sv_goods_info)
     ScrollView svGoodsInfo;
     @BindView(R.id.mContainer)
     RelativeLayout mContainer;
-    @BindView(sv_switch)
+    @BindView(R.id.sv_switch)
     PullDetailLayout svSwitch;
-    @BindView(fab_up_slide)
+    @BindView(R.id.fab_up_slide)
     ImageView fabUpSlide;
     @BindView(R.id.tv_commodit_name)
     TextView tvCommoditName;
@@ -110,7 +106,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private String commodityPrice;
     private int commodityAmounts;
     private String commodityName;
-    NotActiveDialog notActiveDialog;//未开通钱包的弹窗
 
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,7 +121,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         buyDialog = new BuyCommodityDialog(mBaseContext);
         //地址选择对话框
         chooseCityDialog = new ChooseCityDialog(mBaseContext);
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         creditDialog = new CreditCommodityDialog(mBaseContext);
         //不用选择街道，只选择省市区即可
         chooseCityDialog.setNeedStreet(false);
@@ -212,12 +206,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             @Override
             public void confirm(int amounts) {
                 commodityAmounts = amounts;
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    if (LoginHelper.getInstance().hasQualifications()) {
-                        ConfirmOrderActivity.startIt(mBaseContext, 0, amounts, skuCode);
-                    } else {
-                        notActiveDialog.showDialog();
-                    }
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    ConfirmOrderActivity.startIt(mBaseContext, 0, amounts, skuCode);
                 }
 /*                //如果是分期产品，那么需要选择分期数，首付等
                 if (isCredit) {
@@ -253,11 +243,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         });
     }
 
-    public void showNotActiveDialog() {
-        if (notActiveDialog != null) {
-            notActiveDialog.showDialog();
-        }
-    }
 
 
     public void showChooseCityDialog() {
@@ -514,11 +499,4 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         super.onDestroy();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
 }

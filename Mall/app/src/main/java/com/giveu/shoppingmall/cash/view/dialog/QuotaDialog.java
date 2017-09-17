@@ -28,7 +28,6 @@ public class QuotaDialog {
         View convertView = inflater.inflate(R.layout.dialog_quota, null);
         initView(convertView);
         mDialog = new CustomDialog(mActivity, convertView, R.style.login_error_dialog_Style, Gravity.CENTER, false);
-        mDialog.setCancelable(false);
     }
 
     public void showDialog() {
