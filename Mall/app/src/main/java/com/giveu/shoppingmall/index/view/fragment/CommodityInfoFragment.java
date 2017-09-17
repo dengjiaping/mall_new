@@ -39,8 +39,10 @@ import com.giveu.shoppingmall.widget.dialog.ChooseCityDialog;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
+import com.giveu.shoppingmall.widget.photoview.PreviewPhotoActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 
@@ -335,8 +337,19 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     @Override
-    public void showSkuIntroduction(SkuIntroductionResponse skuResponse) {
+    public void showSkuIntroduction(final SkuIntroductionResponse skuResponse) {
         if (skuResponse.skuInfo != null) {
+            //图片放大
+            final ArrayList<String> imageList = new ArrayList<>();
+            if (CommonUtils.isNotNullOrEmpty(skuResponse.skuSpecs)) {
+                imageList.addAll(skuResponse.skuInfo.srcs);
+            }
+            banner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    PreviewPhotoActivity.startIt(mBaseContext, "图片浏览", imageList, position,true);
+                }
+            });
             //更新轮播图
             banner.update(skuResponse.skuInfo.srcs);
             tvCommoditName.setText(StringUtils.ToAllFullWidthString(skuResponse.skuInfo.name));

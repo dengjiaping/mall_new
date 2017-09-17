@@ -1,7 +1,6 @@
 package com.giveu.shoppingmall.base;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -9,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -325,7 +323,7 @@ public class BaseLayout extends LinearLayout {
      */
     public void setStatusBarVisiable(boolean visiable) {
         if (iv_statusbar != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (visiable) {
                     iv_statusbar.setVisibility(View.VISIBLE);
                     ViewGroup.LayoutParams layoutParams = iv_statusbar.getLayoutParams();

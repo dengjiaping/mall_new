@@ -60,7 +60,7 @@ public class LoginHelper extends AbsSharePref {
     public static final String RECEIVE_STREET = "receiveStreet";
     public static final String RECEIVE_DETAIL_ADDRESS = "receiveDetailAddress";
     public static final String ORDER_PAY_NUM = "orderPayNum";
-    public static final String ORDER_DOWNPAYMENT_NUM = "orderDownpaymentNum";
+    public static final String ORDER_FINISHED = "orderFinished";
     public static final String ORDER_RECEIVE_NUM = "orderReceiceNum";
     NotActiveDialog notActiveDialog;//未开通钱包的弹窗
     public static LoginHelper getInstance() {
@@ -110,7 +110,7 @@ public class LoginHelper extends AbsSharePref {
         personInfo.receiveStreet = getString(RECEIVE_STREET, "");
         personInfo.receiveDetailAddress = getString(RECEIVE_DETAIL_ADDRESS, "");
         personInfo.orderPayNum = getInt(ORDER_PAY_NUM, 0);
-        personInfo.orderDowmpaymentNum = getInt(ORDER_DOWNPAYMENT_NUM, 0);
+        personInfo.orderFinishedNum = getInt(ORDER_FINISHED, 0);
         personInfo.orderReceiveNum = getInt(ORDER_RECEIVE_NUM, 0);
 
         if (StringUtils.isNotNull(getString(USER_ID))) {
@@ -168,7 +168,7 @@ public class LoginHelper extends AbsSharePref {
         }
 
         if (CommonUtils.isNotNullOrEmpty(personInfo.myOrder)) {
-            //存放待付款、待首付、待收货的订单数
+            //存放待付款、待收货、已完成的订单数
             HashMap orderNum = new HashMap(personInfo.myOrder.size());
             for (LoginResponse.MyOrderBean myOrderBean : personInfo.myOrder) {
                 orderNum.put(myOrderBean.status, myOrderBean.num);
@@ -178,10 +178,10 @@ public class LoginHelper extends AbsSharePref {
             } else {
                 putInt(ORDER_PAY_NUM, 0);
             }
-            if (orderNum.get(OrderState.DOWNPAYMENT) != null) {
-                putInt(ORDER_DOWNPAYMENT_NUM, (int) orderNum.get(OrderState.DOWNPAYMENT));
+            if (orderNum.get(OrderState.FINISHED) != null) {
+                putInt(ORDER_FINISHED, (int) orderNum.get(OrderState.FINISHED));
             } else {
-                putInt(ORDER_DOWNPAYMENT_NUM, 0);
+                putInt(ORDER_FINISHED, 0);
             }
             if (orderNum.get(OrderState.WAITINGRECEIVE) != null) {
                 putInt(ORDER_RECEIVE_NUM, (int) orderNum.get(OrderState.WAITINGRECEIVE));
@@ -190,7 +190,7 @@ public class LoginHelper extends AbsSharePref {
             }
         } else {
             putInt(ORDER_PAY_NUM, 0);
-            putInt(ORDER_DOWNPAYMENT_NUM, 0);
+            putInt(ORDER_FINISHED, 0);
             putInt(ORDER_RECEIVE_NUM, 0);
         }
         //剩余提醒次数
@@ -250,8 +250,8 @@ public class LoginHelper extends AbsSharePref {
         return loginPersonInfo == null ? 0 : loginPersonInfo.orderPayNum;
     }
 
-    public int getOrderDownpaymentNum() {
-        return loginPersonInfo == null ? 0 : loginPersonInfo.orderDowmpaymentNum;
+    public int getOrderFinishedNum() {
+        return loginPersonInfo == null ? 0 : loginPersonInfo.orderFinishedNum;
     }
 
     public int getOrderReceiveNum() {

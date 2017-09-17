@@ -116,7 +116,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 ptrlv.setPullRefreshEnable(false);
-                initDataDelay();
+                initData();
             }
         });
 
@@ -142,12 +142,12 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
     //下拉刷新
     private void onRefresh() {
         //刷新时pageNum重新设置为1
-        pageNum = 1;
         initDataDelay();
     }
 
     @Override
     public void initDataDelay() {
+        pageNum = 1;
         initData();
     }
 

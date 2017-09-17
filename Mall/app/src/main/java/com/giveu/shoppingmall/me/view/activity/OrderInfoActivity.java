@@ -201,8 +201,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         if (StringUtils.isNotNull(response.remainingTime)) {
             timeLeft = Long.parseLong(response.remainingTime);
         }
-        //status为待首付和待付款时，则采用倒计时
-        if ((response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY)) {
+        //status为待首付和待付款并为京东商品时，则采用倒计时
+        if ((response.status == OrderState.DOWNPAYMENT || response.status == OrderState.WAITINGPAY) && response.orderType == 0) {
             tvPay.setClickable(true);
             llTimeLeft.setVisibility(View.VISIBLE);
             tvTimeLeft.setRestTime(timeLeft);
@@ -218,7 +218,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             });
         }
         //status为待收货时
-        else if (response.status == OrderState.WAITINGRECEIVE) {
+        else if (response.status == OrderState.WAITINGRECEIVE && response.orderType == 0) {
             llTimeLeft.setVisibility(View.VISIBLE);
             tvTimeLeft.setText("剩" + response.timeLeft + "自动确认收货");
         } else {
@@ -295,7 +295,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 rlDownPayment.setVisibility(View.GONE);
                 tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
             } else {*/
-                rlDownPayment.setVisibility(View.GONE);
+        rlDownPayment.setVisibility(View.GONE);
 //            }
 //        }
         //分期数
@@ -412,7 +412,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     @Override
     public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
-        VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
+        if (isWalletPay) {
+//            VerifyActivity.startItForRecharge(mBaseContext, mobile, 0, orderNo, 0, payment);
+        } else {
+            VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
+        }
     }
 
     //验证交易密码失败
@@ -532,6 +536,9 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 llTraceAndReceive.setVisibility(View.GONE);
                 llApplyRefund.setVisibility(View.GONE);
                 tvPay.setText("去支付");
+                if (orderType != 0) {
+                    rlFooter.setVisibility(View.GONE);
+                }
                 break;
             //待首付
             case OrderState.DOWNPAYMENT:
@@ -558,7 +565,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             //订单已关闭
             case OrderState.CLOSED:
                 rlPay.setVisibility(View.GONE);
-                llTrace.setVisibility(View.VISIBLE);
+                if (orderType == 0) {
+                    llTrace.setVisibility(View.VISIBLE);
+                } else {
+                    rlFooter.setVisibility(View.GONE);
+                }
                 llTraceAndReceive.setVisibility(View.GONE);
                 llApplyRefund.setVisibility(View.GONE);
                 break;

@@ -136,6 +136,10 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                         }
                     }
                 });
+                if (item.orderType != 0) {
+                    viewHolder.setVisible(R.id.tv_button_left, false);
+                    viewHolder.setVisible(R.id.tv_button_right, false);
+                }
                 break;
 
             //待首付

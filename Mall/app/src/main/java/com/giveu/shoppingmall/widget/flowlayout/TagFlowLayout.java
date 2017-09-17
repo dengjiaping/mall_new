@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.giveu.shoppingmall.utils.LogUtil;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -157,7 +159,11 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
         TagView child = findChild(x, y);
         int pos = findPosByView(child);
         if (child != null && !child.isChecked()) {
-            doSelect(child, pos);
+            try {
+                doSelect(child, pos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (mOnTagClickListener != null) {
                 return mOnTagClickListener.onTagClick(child.getTagView(), pos, this);
             }
@@ -186,7 +192,9 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
                     Iterator<Integer> iterator = mSelectedView.iterator();
                     Integer preIndex = iterator.next();
                     TagView pre = (TagView) getChildAt(preIndex);
-                    pre.setChecked(false);
+                    if (pre != null) {
+                        pre.setChecked(false);
+                    }
                     child.setChecked(true);
                     mSelectedView.remove(preIndex);
                     mSelectedView.add(position);
