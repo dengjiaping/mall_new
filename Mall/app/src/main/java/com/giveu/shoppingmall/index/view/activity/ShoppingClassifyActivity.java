@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ShopTypesBean;
+import com.giveu.shoppingmall.utils.explosionfield.Utils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
     private int selectPos = 0;
 
     private TitleBarFragment titleBarFragment;
+    private int shopTypeId = -1;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class ShoppingClassifyActivity extends BaseActivity {
 
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
+
+        shopTypeId = getIntent().getIntExtra("shopTypeId", -1);
 
         titleBarFragment = TitleBarFragment.newInstance(null);
         getSupportFragmentManager().beginTransaction()
@@ -94,7 +99,12 @@ public class ShoppingClassifyActivity extends BaseActivity {
         });
 
         rRecyclerView.setAdapter(mAdapter = new ShopClassifyContentAdapter(this, list2));
-
+        rRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                outRect.right = Utils.dp2Px(20);
+            }
+        });
         lRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         gridLayoutManager = new GridLayoutManager(this, 3);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -117,7 +127,24 @@ public class ShoppingClassifyActivity extends BaseActivity {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     list1.clear();
                     list1.addAll(response.data);
-                    getChildrenShopTypes(list1.get(0).shopTypeId);
+
+                    int defaultId = shopTypeId;
+                    boolean isValid = false;
+
+                    for (ShopTypesResponse child : list1) {
+                        if (child.shopTypeId == defaultId) {
+                            isValid = true;
+                            break;
+                        }
+                        selectPos++;
+                    }
+
+                    if (!isValid) {
+                        defaultId = list1.get(0).shopTypeId;
+                        selectPos = 0;
+                    }
+
+                    getChildrenShopTypes(defaultId);
                 }
                 titleAdapter.notifyDataSetChanged();
             }
@@ -159,6 +186,12 @@ public class ShoppingClassifyActivity extends BaseActivity {
 
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ShoppingClassifyActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startIt(Context context, int shopTypeId) {
+        Intent intent = new Intent(context, ShoppingClassifyActivity.class);
+        intent.putExtra("shopTypeId", shopTypeId);
         context.startActivity(intent);
     }
 
