@@ -51,10 +51,10 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
     @Override
     public void onBindViewHolder(TitleHolder holder, final int position) {
         int type = getItemViewType(position);
-        holder.textView.setText(datas.get(position).getTypesBean().getName());
+        holder.textView.setText(datas.get(position).getTypesBean().name);
         if (type == 1) {
             ContentHolder contentHolder = (ContentHolder) holder;
-            String iconUrl = datas.get(position).getTypesBean().getIconSrc();
+            String iconUrl = datas.get(position).getTypesBean().iconSrc;
             if (iconUrl != null) {
 
                 ImageUtils.loadImage(iconUrl, R.drawable.default_img_240_240, contentHolder.image);
@@ -63,7 +63,7 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShoppingListActivity.startIt((Activity) mContext, datas.get(position).getTypesBean().getId());
+                    ShoppingListActivity.startIt((Activity) mContext, datas.get(position).getTypesBean().id);
                 }
             });
         }

@@ -52,7 +52,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
     private int selectPos = 0;
 
     private TitleBarFragment titleBarFragment;
-    private int shopTypeId = -1;
+    private long shopTypeId = -1;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
 
-        shopTypeId = getIntent().getIntExtra("shopTypeId", -1);
+        shopTypeId = getIntent().getLongExtra("shopTypeId", -1);
 
         titleBarFragment = TitleBarFragment.newInstance(null);
         getSupportFragmentManager().beginTransaction()
@@ -128,7 +128,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
                     list1.clear();
                     list1.addAll(response.data);
 
-                    int defaultId = shopTypeId;
+                    long defaultId = shopTypeId;
                     boolean isValid = false;
 
                     for (ShopTypesResponse child : list1) {
@@ -156,8 +156,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
         });
     }
 
-
-    private void getChildrenShopTypes(final int shopTypeId) {
+    private void getChildrenShopTypes(final long shopTypeId) {
         ApiImpl.getChildrenShopTypes(mBaseContext, shopTypeId, new BaseRequestAgent.ResponseListener<ShopTypesBean>() {
                     @Override
                     public void onSuccess(ShopTypesBean response) {
@@ -166,8 +165,8 @@ public class ShoppingClassifyActivity extends BaseActivity {
                             list2.clear();
                             for (ShopTypesBean parent : results) {
                                 list2.add(new ShoppingBean(0, parent));
-                                if (parent.getChild() != null) {
-                                    for (ShopTypesBean child : parent.getChild()) {
+                                if (parent.child != null) {
+                                    for (ShopTypesBean child : parent.child) {
                                         list2.add(new ShoppingBean(1, child));
                                     }
                                 }
@@ -189,7 +188,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startIt(Context context, int shopTypeId) {
+    public static void startIt(Context context, long shopTypeId) {
         Intent intent = new Intent(context, ShoppingClassifyActivity.class);
         intent.putExtra("shopTypeId", shopTypeId);
         context.startActivity(intent);

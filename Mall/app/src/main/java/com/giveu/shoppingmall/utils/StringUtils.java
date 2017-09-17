@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.web.BaseWebViewActivity;
 
@@ -180,6 +181,13 @@ public class StringUtils {
         msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str1ColorId)), 0, (str1 + str2 + str3).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         msp.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(str2ColorId)), (str1 + str2 + str3).length(), str5.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return msp;
+    }
+
+    public static SpannableString getSizeAndColorSpannable(CharSequence str, int colorId, int size) {
+        SpannableString msg = new SpannableString(str);
+        msg.setSpan(new ForegroundColorSpan(BaseApplication.getInstance().getResources().getColor(colorId)), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msg.setSpan(new AbsoluteSizeSpan(size, true), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return msg;
     }
 
     /**
@@ -493,6 +501,7 @@ public class StringUtils {
 
     /**
      * 解决TextView自动换行文字排版参差不齐的原因
+     *
      * @param input
      * @return
      */

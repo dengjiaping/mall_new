@@ -71,7 +71,7 @@ public class ShoppingListFragment extends BaseFragment {
     private String orderSort = SORT_BY_SIZE;
     private int pageNum = 1;
     private int pageSize = 10;
-    private int shopTypeId = 0;
+    private long shopTypeId = 0;
     private String code;
 
     @Override
@@ -108,7 +108,7 @@ public class ShoppingListFragment extends BaseFragment {
      *
      * @param shopTypeId 待搜索的商品三级类目Id
      */
-    public void searchByShopTypeId(int shopTypeId) {
+    public void searchByShopTypeId(long shopTypeId) {
         this.shopTypeId = shopTypeId;
         this.keyword = null;
         this.code = null;

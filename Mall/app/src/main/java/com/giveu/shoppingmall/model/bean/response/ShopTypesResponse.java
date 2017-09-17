@@ -17,5 +17,5 @@ public class ShopTypesResponse extends BaseBean<List<ShopTypesResponse>> {
      */
 
     public String name;
-    public int shopTypeId;
+    public long shopTypeId;
 }

@@ -18,7 +18,7 @@ public class ShoppingListActivity extends BaseActivity {
 
     private ShoppingListFragment contentFragment;
     private TitleBarFragment titleFragment;
-    private int shopTypeId;
+    private long shopTypeId;
     private String code;
     private boolean isFragmentInit = false;
 
@@ -28,7 +28,7 @@ public class ShoppingListActivity extends BaseActivity {
 
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
-        shopTypeId = getIntent().getIntExtra("shopTypeId", 0);
+        shopTypeId = getIntent().getLongExtra("shopTypeId", 0);
         code = getIntent().getStringExtra("code");
         titleFragment = TitleBarFragment.newInstance(null);
 
@@ -70,7 +70,7 @@ public class ShoppingListActivity extends BaseActivity {
     }
 
     //从商品类目页传过来的,需要传入shopTypeId
-    public static void startIt(Context context, int shopTypeId) {
+    public static void startIt(Context context, long shopTypeId) {
         Intent intent = new Intent(context, ShoppingListActivity.class);
         intent.putExtra("shopTypeId", shopTypeId);
         context.startActivity(intent);

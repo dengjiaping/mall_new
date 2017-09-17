@@ -576,7 +576,7 @@ public class ApiImpl {
     }
 
     //一级类目查询子类目(商品分类)
-    public static void getChildrenShopTypes(Activity context, int shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
+    public static void getChildrenShopTypes(Activity context, long shopTypeId, BaseRequestAgent.ResponseListener<ShopTypesBean> resonseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"shopTypeId"}, new Object[]{shopTypeId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.sc_goods_shopTypes_childrenShopTypes, ShopTypesBean.class, context, resonseListener);
     }
@@ -613,7 +613,7 @@ public class ApiImpl {
      * @param shopTypeId 商品分类界面调用时，传入商品三级类目Id
      * @param code       首页搜索传入code
      */
-    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNum, int pageSize, int shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
+    public static void getGoodsSearch(Activity context, String channel, String idPerson, String keyword, String orderSort, int pageNum, int pageSize, long shopTypeId, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "orderSort", "pageNum", "pageSize"}, new Object[]{channel, idPerson, orderSort, pageNum, pageSize});
 
         if (StringUtils.isNotNull(code)) {
