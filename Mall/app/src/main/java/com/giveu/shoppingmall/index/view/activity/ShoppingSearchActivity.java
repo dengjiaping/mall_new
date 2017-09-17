@@ -185,7 +185,12 @@ public class ShoppingSearchActivity extends BaseActivity {
                     List<String> list = new Gson().fromJson(json.getString("data"), new TypeToken<List<String>>() {
                     }.getType());
                     labels.clear();
-                    labels.addAll(list);
+                    for (String keyword : list){
+                        //避免出现空关键字
+                        if (StringUtils.isNotNull(keyword.trim())){
+                            labels.add(keyword);
+                        }
+                    }
                     mTagAdapter.notifyDataChanged();
                 } catch (Exception e) {
                     e.printStackTrace();

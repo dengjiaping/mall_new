@@ -9,14 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <RadioButton
             android:id="@+id/shopping_list_radio_all"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/white"
             android:button="@null"
             android:gravity="center"
             android:text="综合"
@@ -32,7 +32,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/white"
             android:button="@null"
             android:gravity="center"
             android:text="销量"
@@ -49,7 +48,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/white"
             android:button="@null"
             android:drawableLeft="@drawable/sort_disable"
             android:drawablePadding="5dp"

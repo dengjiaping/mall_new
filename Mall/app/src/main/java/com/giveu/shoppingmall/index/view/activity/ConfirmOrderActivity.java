@@ -506,6 +506,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
+                        tvOK.setBackgroundColor(getResources().getColor(R.color.red));
                         isConfirm = true;
                         //订单确认后以下功能不可修改
                         flAddresslayout.setEnabled(false);

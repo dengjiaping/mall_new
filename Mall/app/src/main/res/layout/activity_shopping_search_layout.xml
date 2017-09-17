@@ -94,7 +94,7 @@
             android:id="@+id/shopping_search_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/default_layoutxml_bg"
             android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>
