@@ -10,7 +10,7 @@
         android:layout_height="40dp"
         android:background="@color/white"
         app:tabIndicatorColor="@color/color_00bbc0"
-        app:tabIndicatorHeight="4dp"
+        app:tabIndicatorHeight="2dp"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/color_00bbc0"
         app:tabTextColor="@color/color_9b9b9b" />
