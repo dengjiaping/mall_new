@@ -210,7 +210,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             protected void convert(ViewHolder holder, final IndexResponse.DecorationsBean item, int position) {
                 LinearLayout llHot = holder.getView(R.id.ll_hot);
-                llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 3) / 2;
+                llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(12) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
                 ImageView ivSmall = holder.getView(R.id.iv_small);
@@ -262,7 +262,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             @Override
             protected void convert(ViewHolder holder, final IndexResponse.DecorationsBean item, int position) {
                 LinearLayout llHot = holder.getView(R.id.ll_category);
-                llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
+                llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(12) * 5) / 4;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
@@ -305,7 +305,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ShoppingClassifyActivity.startIt(mBaseContext);
             }
         });
-        viewHolder.ivCategoryMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(15) * 5) / 4;
+        viewHolder.ivCategoryMore.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(12) * 5) / 4;
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
         ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
@@ -520,6 +520,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getHeadContent(ArrayList<IndexResponse> data) {
+        pageIndex = 1;
         if (CommonUtils.isNotNullOrEmpty(data)) {
             for (IndexResponse indexResponse : data) {
                 switch (indexResponse.typeValue) {
@@ -558,11 +559,14 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             }
         } else {
             resetView();
+            shoppingAdapter.getData().clear();
+            shoppingAdapter.notifyDataSetChanged();
             llEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
     private void resetView(){
+        pageIndex = 1;
         hideLoding();
         initBanner(null);
         initHot(null);
