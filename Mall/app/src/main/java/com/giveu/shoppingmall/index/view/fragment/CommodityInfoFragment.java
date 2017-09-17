@@ -23,7 +23,6 @@ import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -247,7 +246,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
 
-
     public void showChooseCityDialog() {
         if (chooseCityDialog != null) {
             chooseCityDialog.show();
@@ -276,6 +274,19 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 svSwitch.smoothClose(true);
                 break;
 
+        }
+    }
+
+    /**
+     * 关闭详情回到顶部
+     * @return
+     */
+    public boolean needCloseDetail() {
+        if (svSwitch != null && svSwitch.getStatus() == PullDetailLayout.Status.OPEN) {
+            svSwitch.smoothClose(true);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -348,7 +359,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             banner.setOnBannerListener(new OnBannerListener() {
                 @Override
                 public void OnBannerClick(int position) {
-                    PreviewPhotoActivity.startIt(mBaseContext, "图片浏览", imageList, position,true);
+                    PreviewPhotoActivity.startIt(mBaseContext, "图片浏览", imageList, position, true);
                 }
             });
             //更新轮播图

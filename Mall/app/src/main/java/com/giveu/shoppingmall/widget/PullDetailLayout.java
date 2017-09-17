@@ -182,6 +182,10 @@ public class PullDetailLayout extends ViewGroup {
         }
     }
 
+    public Status getStatus() {
+        return mStatus;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int pWidth = MeasureSpec.getSize(widthMeasureSpec);

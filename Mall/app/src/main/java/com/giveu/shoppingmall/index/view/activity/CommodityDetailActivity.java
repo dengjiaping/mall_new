@@ -96,7 +96,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_commodity_detail);
         isCredit = getIntent().getBooleanExtra("isCredit", false);
-        baseLayout.setTitleBarAndStatusBar(false,true);
+        baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
@@ -213,7 +213,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             case R.id.ll_back:
                 if (vpContent.getCurrentItem() == 1) {
                     vpContent.setCurrentItem(0);
-                } else {
+                } else if (!commodityInfoFragment.needCloseDetail()) {
                     finish();
                 }
                 break;
@@ -357,7 +357,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         //返回键可返回上一个fragment
         if (vpContent != null && vpContent.getCurrentItem() == 1) {
             vpContent.setCurrentItem(0);
-        } else {
+        } else if (!commodityInfoFragment.needCloseDetail()) {
             super.onBackPressed();
         }
     }

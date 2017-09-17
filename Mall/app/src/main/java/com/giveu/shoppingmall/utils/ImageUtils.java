@@ -26,6 +26,7 @@ import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -229,6 +230,18 @@ public class ImageUtils {
         notifysaveImage(activity, newImageFile, false, true);
     }
 
+
+    /**
+     * 加载图片是否需要渐变动画
+     * @param url
+     * @param placeholderDrawableId
+     * @param intoImageView
+     * @param showAnim
+     */
+    public static void loadImage(String url, int placeholderDrawableId, ImageView intoImageView, boolean showAnim) {
+        loadImage(null, url, placeholderDrawableId, placeholderDrawableId, intoImageView, null, showAnim);
+    }
+
     /**
      * 加载
      *
@@ -249,7 +262,7 @@ public class ImageUtils {
      * @param errorDrawableId
      * @param intoImageView
      */
-    public static void loadImage(BitmapDisplayer displayer, String url, int placeholderDrawableId, int errorDrawableId, ImageView intoImageView, ImageLoadingListener listener) {
+    public static void loadImage(BitmapDisplayer displayer, String url, int placeholderDrawableId, int errorDrawableId, ImageView intoImageView, ImageLoadingListener listener, boolean showAnim) {
         if (intoImageView == null) {
             return;
         }
@@ -260,11 +273,26 @@ public class ImageUtils {
                 .showImageOnLoading(placeholderDrawableId)
                 .showImageForEmptyUri(placeholderDrawableId)
                 .showImageOnFail(errorDrawableId);
+        if (showAnim) {
+            builder.displayer(new FadeInBitmapDisplayer(200));
+        }
         if (displayer != null) {
             builder.displayer(displayer);
         }
         DisplayImageOptions options = builder.build();
         loadImage(url, intoImageView, options, listener);
+    }
+
+    /**
+     * 加载网络图片 centerCrop
+     *
+     * @param url
+     * @param placeholderDrawableId
+     * @param errorDrawableId
+     * @param intoImageView
+     */
+    public static void loadImage(BitmapDisplayer displayer, String url, int placeholderDrawableId, int errorDrawableId, ImageView intoImageView, ImageLoadingListener listener) {
+        loadImage(displayer, url, placeholderDrawableId, errorDrawableId, intoImageView, listener, false);
     }
 
     public static void loadImage(String url, int placeholderDrawableId, int errorDrawableId, ImageView intoImageView) {
@@ -326,7 +354,8 @@ public class ImageUtils {
         String drawable = "drawable://";
 
     }
-    public interface ImageSize{
+
+    public interface ImageSize {
         String img_size_240_240 = "/s240x240fdfs/";
         String img_size_200_200 = "/s200x200fdfs/";
     }

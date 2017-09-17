@@ -13,6 +13,6 @@ import com.youth.banner.loader.ImageLoader;
 public class BannerImageLoader extends ImageLoader {
     @Override
     public void displayImage(Context context, Object path, ImageView imageView) {
-        ImageUtils.loadImage((String) path, imageView);
+        ImageUtils.loadImage((String) path, 0, imageView,true);
     }
 }
