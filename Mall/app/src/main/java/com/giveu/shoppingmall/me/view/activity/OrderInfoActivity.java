@@ -211,7 +211,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 public void onEnd() {
                     tvPay.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
-                    ToastUtils.showLongToast("订单已失效，请重新下单");
                     tvTimeLeft.setText("订单已失效，请重新下单");
                     tvPay.setClickable(false);
                 }
@@ -261,7 +260,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品单价
             if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
-                tvSalePrice.setText("¥" + StringUtils.format2(response.skuInfo.salePrice));
+                CommonUtils.setTextWithSpanSizeAndColor(tvSalePrice, "¥", StringUtils.format2(response.skuInfo.salePrice), "", 19, 16, R.color.color_474747, R.color.color_474747);
             }
             //商品数量
             if (StringUtils.isNotNull(response.skuInfo.quantity)) {
@@ -272,7 +271,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品合计
             if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-                tvTotalPrice.setText("¥" + StringUtils.format2(response.skuInfo.totalPrice));
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 15, 13, R.color.color_ff2a2a, R.color.color_ff2a2a);
             }
             //skuCode
             if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
@@ -309,7 +308,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
             rlMonthPayment.setVisibility(View.GONE);
-            tvMonthPayment.setText("¥" + StringUtils.format2(response.monthPayment));
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthPayment, "¥ ", StringUtils.format2(response.monthPayment), "", 15, 13, R.color.color_00bbc0, R.color.color_00bbc0);
         } else {
             rlMonthPayment.setVisibility(View.GONE);
             isCredit = false;
@@ -364,12 +363,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //支付金额
         if (response.status == 1) {
             if (StringUtils.isNotNull(response.totalPrice)) {
-                tvTotal.setText("¥" + StringUtils.format2(response.totalPrice));
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.totalPrice), "", 16, 14, R.color.color_00bbc0, R.color.color_00bbc0);
                 finalPayment = StringUtils.string2Double(response.totalPrice);
             }
         } else if (response.status == 2) {
             if (StringUtils.isNotNull(response.downPayment)) {
-                tvTotal.setText("¥" + StringUtils.format2(response.downPayment));
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.downPayment), "", 16, 14, R.color.color_00bbc0, R.color.color_00bbc0);
                 finalPayment = StringUtils.string2Double(response.downPayment);
             }
         } else {
@@ -435,7 +434,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             case R.id.tv_pay:
                 //是否勾选消费分期合同
                 if (cbContract.isChecked()) {
-                    //是否开通钱包
+                    //是否登录且激活钱包
                     if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                         //是否设置了交易密码
                         if (LoginHelper.getInstance().hasSetPwd()) {

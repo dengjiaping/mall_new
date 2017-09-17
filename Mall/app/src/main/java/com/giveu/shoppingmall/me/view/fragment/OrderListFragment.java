@@ -143,15 +143,14 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //下拉刷新
     private void onRefresh() {
         //刷新时pageNum重新设置为1
-        initDataDelay();
-    }
-
-    @Override
-    public void initDataDelay() {
         pageNum = 1;
         initData();
     }
 
+    @Override
+    public void initDataDelay() {
+        onRefresh();
+    }
 
     private void initData() {
         ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
