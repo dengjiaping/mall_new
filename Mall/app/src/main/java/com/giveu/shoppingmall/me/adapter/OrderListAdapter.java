@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
@@ -15,6 +16,7 @@ import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -57,9 +59,10 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
         if (StringUtils.isNotNull(item.salePrice)) {
             if (item.orderType == 0) {
-                viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice) + " × " + item.quantity);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                viewHolder.setText(R.id.tv_quantity, " × " + item.quantity);
             } else {
-                viewHolder.setText(R.id.tv_sale_price, "¥" + StringUtils.format2(item.salePrice));
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
             }
         }
 
@@ -80,12 +83,12 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             if (StringUtils.isNotNull(item.monthPayment) && StringUtils.isNotNull(item.periods)) {
                 viewHolder.setVisible(R.id.ll_payment, true);
                 viewHolder.setVisible(R.id.ll_total, false);
-                viewHolder.setText(R.id.tv_down_payment, "¥" + StringUtils.format2(item.downPayment));
-                viewHolder.setText(R.id.tv_month_payment, "¥" + StringUtils.format2(item.monthPayment) + " * " + item.periods);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_down_payment), "¥ ", StringUtils.format2(item.downPayment), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_month_payment), "¥ ", StringUtils.format2(item.monthPayment), " * " + item.periods, 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
             } else {
                 viewHolder.setVisible(R.id.ll_payment, false);
                 viewHolder.setVisible(R.id.ll_total, true);
-                viewHolder.setText(R.id.tv_total, "¥" + StringUtils.format2(item.payPrice));
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_total), "¥ ", StringUtils.format2(item.payPrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
             }
 
         } else {
@@ -123,13 +126,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (StringUtils.isNotNull(item.timeLeft)) {
-                            Double finalPayment = StringUtils.string2Double(item.totalPrice);
-                            onPay(item.orderNo, item.payType, finalPayment);
-                        } else {
-                            ToastUtils.showLongToast("订单已失效");
-                        }
-
+                        //当在订单列表点击支付时，需调接口判断该订单是否有效
+                        presenter.getOrderDetail(item.orderNo);
                     }
                 });
                 if (item.orderType != 0) {
@@ -265,8 +263,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //点击去支付、去首付后的流程处理
-    private void onPay(final String order, final String payType, final double finalPayment) {
-        //是否有开通钱包
+    public void onPay(final String order, final String payType, final double finalPayment) {
+        //是否登录且激活钱包
         if (LoginHelper.getInstance().hasLoginAndActivation((Activity) mContext)) {
             //是否设置了交易密码
             if (LoginHelper.getInstance().hasSetPwd()) {

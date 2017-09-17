@@ -8,9 +8,9 @@
         android:id="@+id/shopping_list_radiogroup"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="@color/white"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:background="@color/white">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/shopping_list_radio_all"
@@ -69,7 +69,7 @@
             android:id="@+id/shopping_list_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"/>
+            android:divider="@null" />
 
         <TextView
             android:id="@+id/shopping_empty_view"
@@ -78,7 +78,8 @@
             android:layout_gravity="center"
             android:drawableTop="@drawable/ic_defalut_empty"
             android:gravity="center"
-            android:text="没有查询到新的内容" />
+            android:text="没有查询到相关内容"
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>

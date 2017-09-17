@@ -9,7 +9,6 @@
         android:id="@+id/ptrlv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="5dp"
         android:divider="@color/default_layoutxml_bg"/>
 
     <LinearLayout

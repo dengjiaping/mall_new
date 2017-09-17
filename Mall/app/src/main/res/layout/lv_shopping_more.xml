@@ -14,8 +14,8 @@
             android:id="@+id/ll_phone_recharge"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="@dimen/default_layout_screen_gap"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
             android:layout_weight="1"
             android:background="@drawable/shape_commodity">
 
@@ -57,9 +57,9 @@
             android:id="@+id/iv_category_more"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginRight="@dimen/default_layout_screen_gap"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/shape_commodity"
             android:src="@drawable/ic_more_category" />
     </LinearLayout>
