@@ -47,6 +47,7 @@ import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -315,6 +316,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
+       
         if (lists != null && lists.size() > 0) {
             cardList = lists;
 
@@ -368,14 +370,14 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             if (StringUtils.isNotNull(skuInfoBean.salePrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoPrice, "¥ ", StringUtils.format2(skuInfoBean.salePrice), "",
-                        15, 13, R.color.black, R.color.black);
+                        19, 13, R.color.black, R.color.black);
             }
 
             tvSkuInfoQuantity.setText("X  " + skuInfoBean.quantity);
 
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
-                        15, 13, R.color.red, R.color.black);
+                        19, 13, R.color.red, R.color.black);
 
                 totalPrice = skuInfoBean.totalPrice;
                 setTotalPrice();
@@ -383,13 +385,13 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         }
     }
-
+    
     private void setTotalPrice() {
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(cardPrice);
         double result = Math.max(tPrice - cPrice, 0);
         CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥ ", StringUtils.format2(result + ""), "",
-                15, 13, R.color.title_color, R.color.black);
+                16, 11, R.color.title_color, R.color.black);
     }
 
     private void updateAddress(CreateOrderResponse.ReceiverJoBean bean) {

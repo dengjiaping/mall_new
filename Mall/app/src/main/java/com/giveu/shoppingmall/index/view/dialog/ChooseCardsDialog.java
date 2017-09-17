@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
@@ -25,7 +26,7 @@ public class ChooseCardsDialog {
     public int checkIndex;
     private OnChooseTypeListener listener;
     private LvCommonAdapter mAdpter;
-    private ImageView ivBack;
+    private TextView tvBack;
 
     public ChooseCardsDialog(Activity mActivity, List datas, OnChooseTypeListener listener) {
         this.mActivity = mActivity;
@@ -65,8 +66,8 @@ public class ChooseCardsDialog {
             }
         });
 
-        ivBack = (ImageView) contentView.findViewById(R.id.dialog_choose_back);
-        ivBack.setOnClickListener(new View.OnClickListener() {
+        tvBack = (TextView) contentView.findViewById(R.id.dialog_choose_title);
+        tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
