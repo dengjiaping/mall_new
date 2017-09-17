@@ -189,8 +189,8 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textSize">@dimen/ts_18</item>
-        <item name="android:textColor">@color/color_4a4a4a</item>
+        <item name="android:textSize">@dimen/ts_17</item>
+        <item name="android:textColor">@color/color_767876</item>
         <item name="android:gravity">center</item>
     </style>
 

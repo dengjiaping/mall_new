@@ -277,6 +277,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         if (response != null && response.status == 1) {
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
         } else {
+            onRefresh();
             ToastUtils.showLongToast("订单已失效");
         }
     }

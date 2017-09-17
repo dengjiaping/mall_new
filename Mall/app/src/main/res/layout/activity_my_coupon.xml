@@ -8,12 +8,10 @@
         android:id="@+id/lv_my_coupon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
         android:background="@color/default_layoutxml_bg"
-        android:paddingTop="10dp"
         android:cacheColorHint="@null"
         android:divider="@color/default_layoutxml_bg"
-        android:dividerHeight="10dp" />
+        android:dividerHeight="1dp" />
 
 
 
