@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="取消"
-            android:textColor="@color/color_00adb2"
+            android:textColor="@color/color_00BBC0"
             android:textSize="@dimen/ts_16" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_marginLeft="20dp"
             android:padding="10dp"
             android:text="更新"
-            android:textColor="@color/color_00adb2"
+            android:textColor="@color/color_00BBC0"
             android:textSize="@dimen/ts_16" />
 
     </LinearLayout>

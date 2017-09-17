@@ -87,7 +87,7 @@ public class DealPwdDialog {
     }
 
     public void setPrice(String price) {
-        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "", 28, 25, R.color.color_00adb2, R.color.color_4a4a4a);
+        CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "", 28, 25, R.color.color_00BBC0, R.color.color_4a4a4a);
     }
 
     //密码验证错误时显示错误弹框

@@ -37,6 +37,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
@@ -77,7 +78,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private HeaderViewHolder viewHolder;
     private int pageIndex = 1;
     private final int pageSize = 20;
-    private String contentCode ;
+    private String contentCode;
     private View headerView;
 
     @Override
@@ -176,13 +177,16 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 //                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
                 break;
             case 1:
-                ShoppingListActivity.startIt(mBaseContext,decorationsBean.code);
+                ShoppingListActivity.startIt(mBaseContext, decorationsBean.code);
                 break;
             case 2:
                 CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);
                 break;
             case 3:
-                ShoppingClassifyActivity.startIt(mBaseContext);
+                ShoppingClassifyActivity.startIt(mBaseContext, StringUtils.string2Int(decorationsBean.code));
+                break;
+            case 4:
+                RechargeActivity.startIt(mBaseContext);
                 break;
         }
     }
@@ -287,7 +291,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
      *
      * @param indexResponse
      */
-    private void initMore(IndexResponse indexResponse) {
+    private void initMore(final IndexResponse indexResponse) {
         if (indexResponse == null || CommonUtils.isNullOrEmpty(indexResponse.decorations)) {
             viewHolder.llCategoryMore.setVisibility(View.GONE);
             return;
@@ -296,7 +300,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RechargeActivity.startIt(mBaseContext);
+                skipToActivity(indexResponse.srcIp, indexResponse.decorations.get(0));
             }
         });
         viewHolder.ivCategoryMore.setOnClickListener(new View.OnClickListener() {
@@ -565,7 +569,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         }
     }
 
-    private void resetView(){
+    private void resetView() {
         pageIndex = 1;
         hideLoding();
         initBanner(null);

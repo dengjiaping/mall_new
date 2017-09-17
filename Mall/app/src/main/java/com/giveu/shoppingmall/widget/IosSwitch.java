@@ -31,7 +31,7 @@ public class IosSwitch extends View implements Checkable {
     private static final int DEFAULT_WIDTH = dp2pxInt(58);
     private static final int DEFAULT_HEIGHT = dp2pxInt(36);
     private int mBasePlaneColor = Color.parseColor("#a7a7a7");//底盘颜色,布局描边颜色
-    private int mOpenSlotColor = Color.parseColor("#00adb2");//开启时手柄滑动槽的颜色
+    private int mOpenSlotColor = Color.parseColor("#00BBC0");//开启时手柄滑动槽的颜色
     /**
      * 动画状态：
      * 1.静止

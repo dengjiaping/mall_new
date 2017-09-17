@@ -56,7 +56,7 @@ public class PwdErrorDialog {
                 String endStr = "次";
             SpannableString msp = new SpannableString(startStr + times + endStr);
             msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_4a4a4a)), 0, startStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_00adb2)), startStr.length(), startStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_00BBC0)), startStr.length(), startStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mActivity, R.color.color_4a4a4a)), startStr.length() + 1, startStr.length() + endStr.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_error_text.setText(msp);
         }

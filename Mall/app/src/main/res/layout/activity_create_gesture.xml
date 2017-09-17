@@ -22,9 +22,9 @@
             android:layout_marginTop="16dp"
             app:aspectRatio="square"
             app:aspectRatioEnabled="true"
-            app:correctStateColor="@color/color_00adb2"
+            app:correctStateColor="@color/color_00BBC0"
             app:wrongStateColor="@color/red_f3323b"
-            app:normalStateColor="@color/color_00adb2"
+            app:normalStateColor="@color/color_00BBC0"
             app:dotCount="3"/>
 
         <TextView

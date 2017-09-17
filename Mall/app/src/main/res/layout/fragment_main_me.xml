@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
                         android:text="查看"
-                        android:textColor="@color/color_00adb2"
+                        android:textColor="@color/color_00BBC0"
                         android:textSize="@dimen/ts_14"
                         android:visibility="gone" />
 

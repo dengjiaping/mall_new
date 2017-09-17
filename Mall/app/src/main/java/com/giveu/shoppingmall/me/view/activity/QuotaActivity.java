@@ -14,6 +14,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
+import com.giveu.shoppingmall.index.view.activity.MainActivity;
 import com.giveu.shoppingmall.me.presenter.QuotaPresenter;
 import com.giveu.shoppingmall.me.view.agent.IQuotaView;
 import com.giveu.shoppingmall.utils.LoginHelper;
@@ -100,7 +101,7 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
                 tvWithdrawals.setText("可用额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getTotalCost()) + "\n总授信额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getGlobleLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
                 tvHint.setVisibility(View.GONE);
-                tvKnow.setText("知道了");
+                tvKnow.setText("去商城");
                 break;
 
             case 2:
@@ -117,8 +118,8 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
                 tvWithdrawals.setText("消费可用额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getAvailablePoslimit())
                         + "\n消费总额度：" + "¥" + StringUtils.format2(LoginHelper.getInstance().getPosLimit()));
                 tvLargeWithdrawals.setVisibility(View.GONE);
-                tvHint.setVisibility(View.VISIBLE);
-                tvKnow.setText("知道了");
+                tvHint.setVisibility(View.GONE);
+                tvKnow.setText("去商城");
                 break;
         }
         tvKnow.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +133,9 @@ public class QuotaActivity extends BaseActivity implements IQuotaView {
                     } else {
                         CashTypeActivity.startIt(mBaseContext);
                     }
+                }else{
+                    //去商城
+                    MainActivity.startIt(mBaseContext);
                 }
                 totalDialog.dismiss();
             }

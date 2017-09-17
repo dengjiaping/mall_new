@@ -145,7 +145,7 @@ public class MainMeFragment extends BaseFragment {
                     } else {
                         SpannableString msp = new SpannableString("剩余" + remainDays + "天");
                         msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00adb2)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_00BBC0)), 2, remainDays.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         msp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mBaseContext, R.color.color_4a4a4a)), remainDays.length() + 2, remainDays.length() + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tvDays.setText(msp);
                     }

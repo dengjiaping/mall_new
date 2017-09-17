@@ -62,7 +62,7 @@ public class GestureLoginActivity extends BaseActivity {
             baseLayout.setTitle(titleText);
             baseLayout.hideBack();
             baseLayout.setTopBarBackgroundColor(R.color.white);
-            SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
+            SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00BBC0, R.color.color_00BBC0);
             baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,7 +70,7 @@ public class GestureLoginActivity extends BaseActivity {
                 }
             });
         } else {
-            baseLayout.setRightTextColor(R.color.color_00adb2);
+            baseLayout.setRightTextColor(R.color.color_00BBC0);
             baseLayout.setRightTextAndListener("关闭", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

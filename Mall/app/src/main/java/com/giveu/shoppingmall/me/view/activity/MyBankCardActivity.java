@@ -192,7 +192,7 @@ public class MyBankCardActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //删除银行卡
-                showDeleteBankCardDialog(bankListAdapter, id, position);
+                showDeleteBankCardDialog(id, position);
             }
         }, new View.OnClickListener() {
             @Override
@@ -308,25 +308,24 @@ public class MyBankCardActivity extends BaseActivity {
      */
     public void showsetDefaultCardDialog(final String id) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否替换默认代扣卡？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogModeOneHint("是否替换默认代扣卡？", "取消", "确定", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //设置默认卡
                 setDefaultCard(id);
             }
-        }, null).show();
+        }).show();
     }
 
     /**
      * 显示删除银行卡的Dialog
      *
-     * @param bankListAdapter
      * @param id
      * @param position
      */
-    public void showDeleteBankCardDialog(final LvCommonAdapter<BankCardListResponse.BankInfoListBean> bankListAdapter, final String id, final int position) {
+    public void showDeleteBankCardDialog(final String id, final int position) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否要删除该银行卡？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogModeOneHint("是否要删除该银行卡？", "取消", "确定", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //验证交易密码
@@ -339,7 +338,7 @@ public class MyBankCardActivity extends BaseActivity {
                 }
 
             }
-        }, null).show();
+        }).show();
     }
 
     /**

@@ -165,7 +165,7 @@ public class AccountManagementActivity extends BaseActivity {
 
     private void logout() {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否要退出登录？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogModeOneHint("是否要退出登录？", "取消", "确定",null , new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LoginHelper.getInstance().logout();
@@ -182,7 +182,7 @@ public class AccountManagementActivity extends BaseActivity {
                     }
                 });
             }
-        }, null).show();
+        }).show();
     }
 
     /**
