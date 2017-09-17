@@ -37,6 +37,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollGridView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
@@ -182,7 +183,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);
                 break;
             case 3:
-                ShoppingClassifyActivity.startIt(mBaseContext);
+                ShoppingClassifyActivity.startIt(mBaseContext, StringUtils.string2Int(decorationsBean.code));
                 break;
             case 4:
                 RechargeActivity.startIt(mBaseContext);
