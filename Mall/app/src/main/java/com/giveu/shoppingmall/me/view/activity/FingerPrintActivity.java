@@ -58,7 +58,7 @@ public class FingerPrintActivity extends BaseActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_finger_print);
-        baseLayout.setRightTextColor(R.color.color_00adb2);
+        baseLayout.setRightTextColor(R.color.color_00BBC0);
         baseLayout.hideBack();
         isForSetting = getIntent().getBooleanExtra("isForSetting", false);
         //设置指纹是没有切换账号按钮的
@@ -175,7 +175,7 @@ public class FingerPrintActivity extends BaseActivity {
         fingerHelper.setOnFingerMathchListener(new FingerPrintHelper.OnFingerMathchListener() {
             @Override
             public void onSuccess() {
-                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
+                tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00BBC0));
                 BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
                 if (isForSetting) {
                     tvMessage.setText("指纹设置成功");

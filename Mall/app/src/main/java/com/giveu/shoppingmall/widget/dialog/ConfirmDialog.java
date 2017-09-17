@@ -73,7 +73,7 @@ public class ConfirmDialog extends CustomDialog implements View.OnClickListener 
         }
     }
 
-    public void setContent(String content) {
+    public void setContent(CharSequence content) {
         if (content == null) {
             return;
         }
@@ -98,11 +98,11 @@ public class ConfirmDialog extends CustomDialog implements View.OnClickListener 
         return editText.getText().toString();
     }
 
-    public void setConfirmStr(String str) {
+    public void setConfirmStr(CharSequence str) {
         tvConfirm.setText(str);
     }
 
-    public void setCancleStr(String str) {
+    public void setCancleStr(CharSequence str) {
         tvCancle.setText(str);
     }
 

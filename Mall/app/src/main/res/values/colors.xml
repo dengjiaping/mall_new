@@ -41,7 +41,7 @@
     <color name="color_fe2851">#fe2851</color>
     <color name="e7e7e7">#E7E7E7</color>
 
-    <color name="title_color">#00ADB2</color>
+    <color name="title_color">#00BBC0</color>
     <color name="default_top_title_text">#333333</color>
     <color name="gray">#c8c8c8</color>
     <color name="green">#009933</color>
@@ -79,8 +79,8 @@
     <color name="color_f4b800">#f4b800</color>
     <color name="color_a17b06">#a17b06</color>
     <color name="color_6c6c6c">#6c6c6c</color>
-    <color name="color_00adb2">#00adb2</color>
     <color name="color_00bbc0">#00bbc0</color>
+    <color name="color_00BBC0">@color/color_00bbc0</color>
     <color name="transparent_color_00adb2">#8000adb2</color>
     <color name="color_4a4a4a">#4a4a4a</color>
     <color name="color_474747">#474747</color>

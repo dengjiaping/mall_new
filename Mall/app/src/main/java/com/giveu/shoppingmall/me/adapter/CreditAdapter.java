@@ -29,7 +29,7 @@ public class CreditAdapter extends LvCommonAdapter<ListInstalmentResponse.Instal
             holder.setTextColor(R.id.tv_instalment, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
             holder.setTextColor(R.id.tv_amount, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
             holder.setTextColor(R.id.tv_date, ContextCompat.getColor(mContext, R.color.color_4a4a4a));
-            holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_00adb2));
+            holder.setTextColor(R.id.tv_status, ContextCompat.getColor(mContext, R.color.color_00BBC0));
         } else {
             holder.setTextColor(R.id.tv_instalment, ContextCompat.getColor(mContext, R.color.color_9b9b9b));
             holder.setTextColor(R.id.tv_amount, ContextCompat.getColor(mContext, R.color.color_9b9b9b));

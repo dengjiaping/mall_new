@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="38dp"
         android:layout_marginRight="38dp"
-        android:text="即有商城即将上线，敬请期待"
+        android:visibility="gone"
         android:textColor="#4d000000"
         android:textSize="@dimen/ts_12" />
 

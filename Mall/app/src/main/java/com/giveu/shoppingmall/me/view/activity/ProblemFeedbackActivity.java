@@ -150,7 +150,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
     private void setTextCustomerPhone() {
         final String customer_phone = "4001868888";
         CommonUtils.setTextWithSpan(tvPhone, true, "业务咨询联系客服：", customer_phone,
-                R.color.black, R.color.color_00adb2, new View.OnClickListener() {
+                R.color.black, R.color.color_00BBC0, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         CommonUtils.callPhone(mBaseContext, customer_phone);

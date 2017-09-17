@@ -52,7 +52,7 @@
         android:layout_marginBottom="15dp"
         android:gravity="center"
         android:textSize="@dimen/ts_28"
-        android:textColor="@color/color_00adb2"/>
+        android:textColor="@color/color_00BBC0"/>
 
     <View
         android:layout_width="match_parent"
