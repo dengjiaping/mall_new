@@ -38,7 +38,7 @@ public class NoScrollViewPager extends ViewPager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.dispatchTouchEvent(ev);
+        return false;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class NoScrollViewPager extends ViewPager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.onTouchEvent(arg0);
+        return false;
     }
 
     @Override
@@ -66,6 +66,6 @@ public class NoScrollViewPager extends ViewPager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.onInterceptTouchEvent(arg0);
+        return false;
     }
 }
