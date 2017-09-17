@@ -126,13 +126,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (StringUtils.isNotNull(item.timeLeft)) {
-                            Double finalPayment = StringUtils.string2Double(item.totalPrice);
-                            onPay(item.orderNo, item.payType, finalPayment);
-                        } else {
-                            ToastUtils.showLongToast("订单已失效");
-                        }
-
+                        //当在订单列表点击支付时，需调接口判断该订单是否有效
+                        presenter.getOrderDetail(item.orderNo);
                     }
                 });
                 if (item.orderType != 0) {
@@ -268,7 +263,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //点击去支付、去首付后的流程处理
-    private void onPay(final String order, final String payType, final double finalPayment) {
+    public void onPay(final String order, final String payType, final double finalPayment) {
         //是否登录且激活钱包
         if (LoginHelper.getInstance().hasLoginAndActivation((Activity) mContext)) {
             //是否设置了交易密码

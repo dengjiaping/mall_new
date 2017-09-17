@@ -268,11 +268,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         }
     }
 
-
-    //不需要做处理
+    /**
+     * 此回调在于判断点击支付的订单是否有效
+     * @param response
+     */
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
-        if (response != null && response.status != 1) {
+        if (response != null && response.status == 1) {
+            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
+        } else {
             ToastUtils.showLongToast("订单已失效");
         }
     }
