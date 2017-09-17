@@ -20,7 +20,6 @@ import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -78,7 +77,7 @@ public class PayChannelActivity extends BaseActivity {
         alipayStr = getIntent().getStringExtra("alipayStr");
         payId = getIntent().getStringExtra("payId");
         paymentNum = StringUtils.format2(getIntent().getStringExtra("paymentNum"));
-        CommonUtils.setTextWithSpanSizeAndColor(tvMoney, "¥ ", paymentNum, "", 14, 12, R.color.color_00bbc0, R.color.color_00bbc0);
+        CommonUtils.setTextWithSpanSizeAndColor(tvMoney, "¥ ", paymentNum, "", 14, 10, R.color.color_00bbc0, R.color.color_00bbc0);
         getRestTime();
         cancelDialog = new ConfirmDialog(mBaseContext);
         cancelDialog.setContent("是否放弃支付?");

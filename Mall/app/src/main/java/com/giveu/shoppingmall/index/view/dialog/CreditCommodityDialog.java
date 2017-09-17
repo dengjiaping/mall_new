@@ -149,7 +149,7 @@ public class CreditCommodityDialog extends CustomDialog {
     private void initdownPayMonthPay(String initPay, String annuity) {
         tvDownPayment.setText("首付 " + StringUtils.format2(initPay) + "元");
         CommonUtils.setTextWithSpanSizeAndColor(tvMonthSupply, "¥", StringUtils.format2(annuity), "起",
-                15, 13, R.color.color_00bbc0, R.color.color_4a4a4a);
+                15, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
     }
 
     @Override
@@ -279,10 +279,10 @@ public class CreditCommodityDialog extends CustomDialog {
         tvCommodityName.setText(commodityName);
         tvCommodityAmounts.setText("x " + commodityAmounts + "");
         CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "",
-                19, 17, R.color.color_ff2a2a, R.color.color_999999);
+                19, 13, R.color.color_ff2a2a, R.color.color_999999);
         totalPrice = StringUtils.string2Double(price) * commodityAmounts;
         CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(totalPrice + ""), "",
-                19, 17, R.color.color_ff2a2a, R.color.color_999999);
+                19, 13, R.color.color_ff2a2a, R.color.color_999999);
     }
 
     private OnConfirmListener listener;

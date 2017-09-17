@@ -26,7 +26,6 @@ import com.giveu.shoppingmall.me.relative.OrderStatus;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -260,7 +259,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品单价
             if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvSalePrice, "¥", StringUtils.format2(response.skuInfo.salePrice), "", 19, 16, R.color.color_474747, R.color.color_474747);
+                CommonUtils.setTextWithSpanSizeAndColor(tvSalePrice, "¥", StringUtils.format2(response.skuInfo.salePrice), "", 19, 13, R.color.color_474747, R.color.color_474747);
             }
             //商品数量
             if (StringUtils.isNotNull(response.skuInfo.quantity)) {
@@ -271,7 +270,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品合计
             if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 15, 13, R.color.color_ff2a2a, R.color.color_ff2a2a);
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 15, 11, R.color.color_ff2a2a, R.color.color_ff2a2a);
             }
             //skuCode
             if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
@@ -308,7 +307,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
             rlMonthPayment.setVisibility(View.GONE);
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthPayment, "¥ ", StringUtils.format2(response.monthPayment), "", 15, 13, R.color.color_00bbc0, R.color.color_00bbc0);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthPayment, "¥ ", StringUtils.format2(response.monthPayment), "", 15, 11, R.color.color_00bbc0, R.color.color_00bbc0);
         } else {
             rlMonthPayment.setVisibility(View.GONE);
             isCredit = false;
@@ -363,12 +362,12 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //支付金额
         if (response.status == 1) {
             if (StringUtils.isNotNull(response.totalPrice)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.totalPrice), "", 16, 14, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.totalPrice), "", 16, 11, R.color.color_00bbc0, R.color.color_00bbc0);
                 finalPayment = StringUtils.string2Double(response.totalPrice);
             }
         } else if (response.status == 2) {
             if (StringUtils.isNotNull(response.downPayment)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.downPayment), "", 16, 14, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotal, "¥", StringUtils.format2(response.downPayment), "", 16, 11, R.color.color_00bbc0, R.color.color_00bbc0);
                 finalPayment = StringUtils.string2Double(response.downPayment);
             }
         } else {

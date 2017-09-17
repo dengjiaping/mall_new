@@ -275,7 +275,7 @@ public class CommonUtils {
     //str1 :售价/月供：¥  , str2:300.00 , str3:起/"没有"
     public static void setTextWithSpanSizeAndColor(final TextView tv, String str1, final String str2, final String str3, int str1Dip, final int str2Dip, int str1ColorId, final int str2ColorId) {
         String text = StringUtils.format2(str2);
-        if (text.indexOf(".") == -1) {
+        if (!text.contains(".")) {
             tv.setText(str1 + StringUtils.nullToEmptyString(str2));
             return;
         }

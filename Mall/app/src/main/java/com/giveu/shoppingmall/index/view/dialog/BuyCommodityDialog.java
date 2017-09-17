@@ -119,7 +119,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         if (isCredit) {
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥",
                     StringUtils.format2(response.skuInfo.monthAmount), " 起",
-                    13, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
+                    13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
         //显示商品信息，图片，名称，价格
         updateInfo(response.skuInfo.srcIp + ImageUtils.ImageSize.img_size_200_200 + response.skuInfo.src, response.skuInfo.name, response.skuInfo.salePrice);

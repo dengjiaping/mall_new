@@ -59,11 +59,11 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         TextView tvPrice = holder.getView(R.id.item_right_price);
         //true就不显示月供,实际上隐藏售价view，月供view变成售价
         if (StringUtils.isNotNull(item.monthAmount)) {
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 14, 11, R.color.red, R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 14, 10, R.color.red, R.color.color_999999);
             holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
             tvPrice.setVisibility(View.VISIBLE);
         } else {
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 11, R.color.red, R.color.color_999999);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 10, R.color.red, R.color.color_999999);
             tvPrice.setVisibility(View.INVISIBLE);
         }
 

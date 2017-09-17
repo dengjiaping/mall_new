@@ -59,10 +59,10 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
         if (StringUtils.isNotNull(item.salePrice)) {
             if (item.orderType == 0) {
-                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
                 viewHolder.setText(R.id.tv_quantity, " × " + item.quantity);
             } else {
-                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
             }
         }
 
@@ -83,12 +83,12 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             if (StringUtils.isNotNull(item.monthPayment) && StringUtils.isNotNull(item.periods)) {
                 viewHolder.setVisible(R.id.ll_payment, true);
                 viewHolder.setVisible(R.id.ll_total, false);
-                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_down_payment), "¥ ", StringUtils.format2(item.downPayment), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
-                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_month_payment), "¥ ", StringUtils.format2(item.monthPayment), " * " + item.periods, 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_down_payment), "¥ ", StringUtils.format2(item.downPayment), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_month_payment), "¥ ", StringUtils.format2(item.monthPayment), " * " + item.periods, 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
             } else {
                 viewHolder.setVisible(R.id.ll_payment, false);
                 viewHolder.setVisible(R.id.ll_total, true);
-                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_total), "¥ ", StringUtils.format2(item.payPrice), "", 13, 11, R.color.color_00bbc0, R.color.color_00bbc0);
+                CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_total), "¥ ", StringUtils.format2(item.payPrice), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
             }
 
         } else {

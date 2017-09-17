@@ -192,7 +192,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         setCollectStatus(collectStatus);
         if (isCredit) {
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
-                    13, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
+                    13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
         presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
