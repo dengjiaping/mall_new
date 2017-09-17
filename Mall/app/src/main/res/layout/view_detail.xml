@@ -12,6 +12,7 @@
         style="@style/fragment_newbuild_tv_style1"
         android:layout_marginLeft="@dimen/default_layout_screen_gap"
         android:layout_marginRight="@dimen/default_layout_screen_gap"
+        android:textSize="@dimen/ts_14"
         android:textColor="@color/color_4a4a4a" />
 
     <TextView

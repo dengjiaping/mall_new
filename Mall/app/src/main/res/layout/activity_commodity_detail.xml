@@ -63,6 +63,7 @@
         android:id="@+id/ll_choose_address"
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:visibility="gone"
         android:orientation="vertical">
 
 
