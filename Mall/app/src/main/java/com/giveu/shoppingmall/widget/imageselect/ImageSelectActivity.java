@@ -292,7 +292,7 @@ public class ImageSelectActivity extends BaseActivity implements OnClickListener
             txt_preview.setTextColor(getResources().getColor(R.color.color_999999));
         } else {
             txt_preview.setEnabled(true);
-            txt_preview.setTextColor(getResources().getColor(R.color.color_00adb2));
+            txt_preview.setTextColor(getResources().getColor(R.color.color_00BBC0));
         }
     }
 

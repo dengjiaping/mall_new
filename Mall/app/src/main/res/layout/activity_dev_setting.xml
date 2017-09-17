@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="确定输入"
-            android:background="@color/color_00adb2"
+            android:background="@color/color_00BBC0"
             android:padding="10dp"/>
 
         <TextView
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="访问"
-            android:background="@color/color_00adb2"
+            android:background="@color/color_00BBC0"
             android:padding="10dp"/>
 
     </LinearLayout>

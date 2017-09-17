@@ -54,12 +54,15 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:overScrollMode="never" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
     <LinearLayout
         android:id="@+id/ll_choose_address"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:visibility="gone"
         android:orientation="vertical">
 
 
@@ -71,8 +74,7 @@
             app:text_middle_color="@color/color_364343"
             app:text_right="更换地址" />
     </LinearLayout>
-
-  <!--  <View
+    <!--  <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/default_layoutxml_bg" />-->
@@ -116,7 +118,7 @@
             android:id="@+id/ll_collect"
             android:layout_width="140dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@drawable/shape_black_frame"
             android:orientation="vertical">
 
             <ImageView
@@ -152,5 +154,9 @@
             android:text="立即购买"
             android:textColor="@color/white" />
     </LinearLayout>
+
+</LinearLayout>
+
+
 
 </LinearLayout>

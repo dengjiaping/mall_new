@@ -56,7 +56,7 @@
         android:layout_height="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:src="@color/color_00adb2" />
+        android:src="@color/color_00BBC0" />
 
     <com.giveu.shoppingmall.widget.ClickEnabledTextView
         android:id="@+id/tv_login"
@@ -73,7 +73,7 @@
         android:layout_gravity="end"
         android:padding="@dimen/default_layout_screen_gap"
         android:text="切换账号"
-        android:textColor="@color/color_00adb2"
+        android:textColor="@color/color_00BBC0"
         android:textSize="@dimen/ts_14" />
 
 

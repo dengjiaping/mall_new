@@ -402,7 +402,7 @@ public class ImageUtils {
         TextView tv = new TextView(context);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 12);
         TextPaint paint = tv.getPaint();
-        paint.setColor(ContextCompat.getColor(context, R.color.color_00adb2));
+        paint.setColor(ContextCompat.getColor(context, R.color.color_00bbc0));
         // 得到使用该paint写上text的时候,像素为多少
 //        float textLength = paint.measureText(timeText);
 //        paint.setTextSize(textLength / timeText.length());

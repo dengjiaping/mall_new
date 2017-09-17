@@ -50,7 +50,7 @@ public class CreateGestureActivity extends BaseActivity {
         setContentView(R.layout.activity_create_gesture);
         baseLayout.setTitle("设置");
         baseLayout.hideBack();
-        SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00adb2, R.color.color_00adb2);
+        SpannableString cancleText = StringUtils.getColorSpannable("", "取消", R.color.color_00BBC0, R.color.color_00BBC0);
         baseLayout.setRightTextAndListener(cancleText, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

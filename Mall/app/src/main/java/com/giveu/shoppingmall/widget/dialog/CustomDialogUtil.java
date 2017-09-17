@@ -27,7 +27,70 @@ public class CustomDialogUtil {
 	public CustomDialogUtil(Activity context) {
 		this.mActivity = context;
 	}
-	
+
+	/**
+	 * 标准的一段提示的dialog
+	 * @param content
+	 * @param leftText
+	 * @param rightText
+	 * @param leftListener
+	 * @param rightListener
+     * @return
+     */
+	public CustomDialog getDialogModeOneHint( CharSequence content, CharSequence leftText, CharSequence rightText, final OnClickListener leftListener, final OnClickListener rightListener) {
+		View view = View.inflate(mActivity, R.layout.custom_dialog_view_mode_one_hint, null);
+		tv_content = (TextView) view.findViewById(R.id.tv_content);
+		tv_right = (TextView) view.findViewById(R.id.tv_right);
+		tv_left = (TextView) view.findViewById(R.id.tv_left);
+
+		tv_left.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				dismissDialog();
+
+				if (leftListener != null) {
+					leftListener.onClick(v);
+				}
+			}
+		});
+
+		tv_right.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				dismissDialog();
+
+				if (rightListener != null) {
+					rightListener.onClick(v);
+				}
+			}
+		});
+
+		customDialog = new CustomDialog(mActivity, view, R.style.date_dialog_style, Gravity.CENTER, false);
+		if (TextUtils.isEmpty(content)) {
+			tv_content.setVisibility(View.GONE);
+		}else {
+			tv_content.setVisibility(View.VISIBLE);
+			tv_content.setText(content);
+		}
+
+		if (TextUtils.isEmpty(rightText)) {
+			tv_right.setVisibility(View.GONE);
+		}else {
+			tv_right.setVisibility(View.VISIBLE);
+			tv_right.setText(rightText);
+		}
+
+		if (TextUtils.isEmpty(leftText)) {
+			tv_left.setVisibility(View.GONE);
+		}else {
+			tv_left.setVisibility(View.VISIBLE);
+			tv_left.setText(leftText);
+		}
+
+		customDialog.setCancelable(true);
+		customDialog.setCanceledOnTouchOutside(true);
+		return customDialog;
+	}
 	/**
 	 * 类似登录被挤下来的dialog样式,详情请看custom_dialog_view_mode1.xml
 	 * @param title

@@ -35,7 +35,6 @@ import com.giveu.shoppingmall.event.OrderDialogEvent;
 import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.event.RechargePayEvent;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
@@ -610,7 +609,7 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
         } else {
             tvMessage.setText(data.city + data.isp);
         }
-        tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00adb2));
+        tvMessage.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_00BBC0));
         currentOperator = data.code;
         showContentData();
         phoneArea = data.city + data.isp;

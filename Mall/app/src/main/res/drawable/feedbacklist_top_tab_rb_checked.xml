@@ -7,7 +7,7 @@
 
             <stroke
                 android:width="@dimen/feedbacklist_top_tab_rb_checked_bottom"
-                android:color="@color/color_00adb2" />
+                android:color="@color/color_00BBC0" />
         </shape>
     </item>
     <item

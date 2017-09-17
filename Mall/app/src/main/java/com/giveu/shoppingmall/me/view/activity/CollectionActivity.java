@@ -29,7 +29,6 @@ import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,11 +129,8 @@ public class CollectionActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 //PullToRefreshListView从1开始
-                if( position < collectionAdapter.getCount()){
-                    //下拉刷新底部没有更多数据这行也能触发点击事件，需排除
-                    showDeleteGoodsDialog(collectionAdapter, position - 1, DELETEONE);
-                }
-                return false;
+                showDeleteGoodsDialog(collectionAdapter, position - 1, DELETEONE);
+                return true;
             }
         });
 
@@ -166,7 +162,7 @@ public class CollectionActivity extends BaseActivity {
                             OfftheShelfActivity.startIt(mBaseContext);
                         } else {
                             //跳转商品介绍
-                            CommodityDetailActivity.startItForResult(mBaseContext, item.isInstallments == 1, item.skuCode, Const.COLLECTION,true);
+                            CommodityDetailActivity.startItForResult(mBaseContext, item.isInstallments == 1, item.skuCode, Const.COLLECTION, true);
                         }
                     }
                 }
@@ -317,17 +313,17 @@ public class CollectionActivity extends BaseActivity {
      */
     public void showDeleteGoodsDialog(final CollectionAdapter collectionAdapter, final int position, final String type) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogMode1("提示", "是否要删除该收藏商品？", "确定", "取消", new View.OnClickListener() {
+        customDialogUtil.getDialogModeOneHint("是否要删除该收藏商品？", "取消", "确定", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (collectionAdapter != null && !CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     //满足条件
                     List<String> skuCodes = new ArrayList<>();
                     if (DELETEONE.equals(type)) {
-                        if (position > 0 && position < collectionAdapter.getCount()&& (collectionAdapter.getItem(position) != null)) {
+                        if (position >= 0 && position < collectionAdapter.getCount() && (collectionAdapter.getItem(position) != null)) {
                             //长按删除
                             skuCodes.add(collectionAdapter.getItem(position).skuCode);
-                            deleteGoods(skuCodes, position, null);
+                            deleteGoods(skuCodes, position, null,type);
                         }
                     } else {
                         //全选或选择删除
@@ -339,12 +335,12 @@ public class CollectionActivity extends BaseActivity {
                                 skuCodes.add(collectionAdapter.getItem(i).skuCode);
                             }
                         }
-                        deleteGoods(skuCodes, -1, removeList);
+                        deleteGoods(skuCodes, -1, removeList,type);
 
                     }
                 }
             }
-        }, null).show();
+        }).show();
     }
 
     /**
@@ -354,7 +350,7 @@ public class CollectionActivity extends BaseActivity {
      * @param position
      * @param removeList 1 为删除
      */
-    public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList) {
+    public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList,final String type) {
         ApiImpl.deleteCollection(mBaseContext, LoginHelper.getInstance().getIdPerson(), skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
@@ -409,10 +405,11 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setLayoutParams(layoutParams);
         llBottomDelete.setVisibility(View.GONE);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(Const.COLLECTION == requestCode && RESULT_OK == resultCode){
+        if (Const.COLLECTION == requestCode && RESULT_OK == resultCode) {
             pageIndex = 1;
             setData();
         }
