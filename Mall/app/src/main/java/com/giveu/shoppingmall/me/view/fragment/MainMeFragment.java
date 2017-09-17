@@ -309,13 +309,13 @@ public class MainMeFragment extends BaseFragment {
 
             case R.id.ll_finished:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, OrderState.Finished_RESPONSE);
+                    MyOrderActivity.startIt(mBaseContext, "3");
                 }
                 break;
 
             case R.id.ll_waiting_receive:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, OrderState.WAITING_RECEIVE);
+                    MyOrderActivity.startIt(mBaseContext, "2");
                 }
                 break;
 
