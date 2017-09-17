@@ -22,6 +22,7 @@ import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
+import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -44,7 +45,7 @@ import butterknife.ButterKnife;
  * Created by 101912 on 2017/8/25.
  */
 
-public class OrderListFragment extends BaseFragment implements IOrderInfoView {
+public class OrderListFragment extends BaseFragment implements IOrderInfoView<OrderDetailResponse> {
 
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
@@ -271,7 +272,9 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView {
 
     //不需要做处理
     @Override
-    public void showOrderDetail(BaseBean response) {
-
+    public void showOrderDetail(OrderDetailResponse response) {
+        if (response != null && response.status != 1) {
+            ToastUtils.showLongToast("订单已失效");
+        }
     }
 }

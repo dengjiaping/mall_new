@@ -36,7 +36,6 @@ public class MyCouponActivity extends BaseActivity {
     ListView lvMyCoupon;
     CouponAdapter couponAdapter;
     ArrayList<CouponListResponse> couponList;
-    int index = -1;
 
 
     public static void startIt(Activity activity) {
@@ -75,18 +74,7 @@ public class MyCouponActivity extends BaseActivity {
                         Gson gson = new Gson();
                         CouponListResponse response = gson.fromJson(originalStr, CouponListResponse.class);
                         if (CommonUtils.isNotNullOrEmpty(response.data)) {
-                            for (int i = 0; i < response.data.size(); i++) {
-                                CouponListResponse couponResponse = response.data.get(i);
-                                if (("2".equals(couponResponse.status) || "3".equals(couponResponse.status) && index == -1)) {
-                                    CouponListResponse divderResponse = new CouponListResponse();
-                                    divderResponse.isDivider = true;
-                                    couponList.add(divderResponse);
-                                    couponList.add(couponResponse);
-                                    index = i;
-                                } else {
-                                    couponList.add(couponResponse);
-                                }
-                            }
+                            sortByStatus(response.data);
                             couponAdapter.notifyDataSetChanged();
                         } else {
                             baseLayout.showEmpty("您暂时还没有优惠\n" +
@@ -105,6 +93,43 @@ public class MyCouponActivity extends BaseActivity {
     private void initAdapter() {
         couponAdapter = new CouponAdapter(mBaseContext, couponList);
         lvMyCoupon.setAdapter(couponAdapter);
+    }
+
+
+    private void sortByStatus(ArrayList<CouponListResponse> mDatas) {
+        int index = -1;
+        for (CouponListResponse response : mDatas) {
+            if ("0".equals(response.status)) {
+                couponList.add(response);
+            }
+        }
+        for (CouponListResponse response : mDatas) {
+            if ("1".equals(response.status)) {
+                couponList.add(response);
+            }
+        }
+        for (CouponListResponse response : mDatas) {
+            if ("2".equals(response.status)) {
+                if (index == -1) {
+                    CouponListResponse dividerResponse = new CouponListResponse();
+                    dividerResponse.isDivider = true;
+                    couponList.add(dividerResponse);
+                    index = 0;
+                }
+                couponList.add(response);
+            }
+        }
+        for (CouponListResponse response : mDatas) {
+            if ("3".equals(response.status)) {
+                if (index == -1) {
+                    CouponListResponse dividerResponse = new CouponListResponse();
+                    dividerResponse.isDivider = true;
+                    couponList.add(dividerResponse);
+                    index = 0;
+                }
+                couponList.add(response);
+            }
+        }
     }
 
     @Override
