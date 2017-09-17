@@ -35,7 +35,7 @@
             android:drawableRight="@drawable/ic_more"
             android:gravity="center"
             android:paddingLeft="@dimen/default_layout_screen_gap"
-            android:paddingRight="12dp"
+            android:paddingRight="10dp"
             android:text="更多"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_12" />
@@ -50,10 +50,10 @@
         android:id="@+id/gv_hot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:horizontalSpacing="12dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:horizontalSpacing="10dp"
         android:numColumns="2"
-        android:verticalSpacing="12dp" />
+        android:verticalSpacing="10dp" />
 
 </LinearLayout>
