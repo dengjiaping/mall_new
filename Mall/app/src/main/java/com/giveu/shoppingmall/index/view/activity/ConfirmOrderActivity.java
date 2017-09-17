@@ -42,7 +42,6 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.utils.explosionfield.Utils;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
@@ -260,7 +259,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         confirmDialog = new ConfirmDialog(this);
         confirmDialog.setContent(StringUtils.getSizeAndColorSpannable("确定离开吗？好货不等人哦~", R.color.color_767876, 14));
         confirmDialog.setCancleStr(StringUtils.getSizeAndColorSpannable("去意已决", R.color.color_9b9b9b, 14));
-        confirmDialog.setConfirmStr(StringUtils.getSizeAndColorSpannable("我再看看", R.color.color_00adb2, 14));
+        confirmDialog.setConfirmStr(StringUtils.getSizeAndColorSpannable("我再看看", R.color.color_00bbc0, 14));
         confirmDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
