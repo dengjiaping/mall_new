@@ -274,7 +274,7 @@ public class ImageUtils {
                 .showImageForEmptyUri(placeholderDrawableId)
                 .showImageOnFail(errorDrawableId);
         if (showAnim) {
-            builder.displayer(new FadeInBitmapDisplayer(200));
+            builder.displayer(new FadeInBitmapDisplayer(1000));
         }
         if (displayer != null) {
             builder.displayer(displayer);
