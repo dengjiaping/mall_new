@@ -39,10 +39,10 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
     public TitleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (viewType == 0) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_shopping_classify_title_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_shopping_classify_title_item, parent, false);
             return new TitleHolder(view);
         } else if (viewType == 1) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_shopping_classify_content_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_shopping_classify_content_item, parent, false);
             return new ContentHolder(view);
         }
         return null;

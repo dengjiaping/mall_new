@@ -73,7 +73,6 @@ public class ShoppingListFragment extends BaseFragment {
     private int pageSize = 10;
     private int shopTypeId = 0;
     private String code;
-    private int pageIndex = 1;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,7 +99,7 @@ public class ShoppingListFragment extends BaseFragment {
         this.keyword = keyword;
         this.code = null;
         this.shopTypeId = 0;
-        initDataForFragment();
+        refresh();
     }
 
     /**
@@ -113,7 +112,7 @@ public class ShoppingListFragment extends BaseFragment {
         this.shopTypeId = shopTypeId;
         this.keyword = null;
         this.code = null;
-        initDataForFragment();
+        refresh();
     }
 
     /**
@@ -126,7 +125,7 @@ public class ShoppingListFragment extends BaseFragment {
         this.code = code;
         this.keyword = null;
         this.shopTypeId = 0;
-        initDataForFragment();
+        refresh();
     }
 
     @Override
@@ -136,13 +135,13 @@ public class ShoppingListFragment extends BaseFragment {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 mRefreshView.setPullLoadEnable(false);
-                initDataForFragment();
+                refresh();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                initDataForFragment();
                 mRefreshView.setPullRefreshEnable(false);
+                initDataForFragment();
             }
         });
 
@@ -155,14 +154,14 @@ public class ShoppingListFragment extends BaseFragment {
                             setPriceButtonStatus(STATUS_UNCHECK);
                         }
                         orderSort = SORT_BY_SIZE;
-                        initDataForFragment();
+                        refresh();
                         break;
                     case R.id.shopping_list_radio_sale:
                         if (!STATUS_UNCHECK.equals(rbPrice.getTag().toString())) {
                             setPriceButtonStatus(STATUS_UNCHECK);
                         }
                         orderSort = SORT_BY_VOLUME;
-                        initDataForFragment();
+                        refresh();
                         break;
                     case R.id.shopping_list_radio_price:
                         break;
@@ -183,7 +182,7 @@ public class ShoppingListFragment extends BaseFragment {
                     setPriceButtonStatus(STATUS_CHECK_DOWN);
                     orderSort = SORT_PRICE_DESC;
                 }
-                initDataForFragment();
+                refresh();
             }
         });
 
@@ -218,15 +217,18 @@ public class ShoppingListFragment extends BaseFragment {
     }
 
     private void initDataForFragment() {
-        pageIndex = 1;
         ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override
                     public void onSuccess(GoodsSearchResponse response) {
                         mRefreshView.setPullRefreshEnable(true);
+                        
+                        if (emptyView.getVisibility() != View.GONE) {
+                            emptyView.setVisibility(View.GONE);
+                        }
 
                         if (response.data != null && CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
 
-                            if (pageIndex == 1) {
+                            if (pageNum == 1) {
                                 shoppingList.clear();
                                 if (response.data.resultList.size() >= pageSize) {
                                     mRefreshView.setPullLoadEnable(true);
@@ -235,39 +237,57 @@ public class ShoppingListFragment extends BaseFragment {
                                     mRefreshView.showEnd("没有更多数据");
                                 }
 
-                                emptyView.setVisibility(View.GONE);
                                 mRefreshView.onRefreshComplete();
                             }
 
-                            pageIndex++;
+                            pageNum++;
                             shoppingList.addAll(response.data.resultList);
                             mAdapter.setSrcIp(response.data.srcIp);
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            if (pageIndex == 1) {
+                            if (pageNum == 1) {
                                 mRefreshView.onRefreshComplete();
                                 mRefreshView.setPullLoadEnable(false);
-                                emptyView.setVisibility(View.VISIBLE);
                                 shoppingList.clear();
                                 mAdapter.notifyDataSetChanged();
+                                if (emptyView.getVisibility() != View.VISIBLE) {
+                                    emptyView.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 mRefreshView.setPullLoadEnable(false);
                                 mRefreshView.showEnd("没有更多数据");
                             }
                         }
+
                     }
 
                     @Override
                     public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
+                        if (emptyView.getVisibility() != View.VISIBLE) {
+                            emptyView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
         );
     }
 
+    public void refresh() {
+        pageNum = 1;
+        if (shoppingList != null && shoppingList.size() > 0) {
+            //刷新数据前清空缓存
+            shoppingList.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+
+        if (emptyView != null && emptyView.getVisibility() != View.GONE) {
+            emptyView.setVisibility(View.GONE);
+        }
+        initDataForFragment();
+    }
+
     @Override
     public void initDataDelay() {
-        initDataForFragment();
     }
 }

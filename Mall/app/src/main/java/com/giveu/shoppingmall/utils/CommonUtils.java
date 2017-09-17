@@ -198,12 +198,12 @@ public class CommonUtils {
      * 调用系统拨打电话
      */
     public static void callPhone(Context mcontext, String phoneStr) {
-        try{
+        try {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             Uri data = Uri.parse("tel:" + phoneStr);
             intent.setData(data);
             mcontext.startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -267,20 +267,21 @@ public class CommonUtils {
     public static void setTextWithSpan(final TextView tv, String str1, final String str2, int str1ColorId, final int str2ColorId) {
         tv.setText(StringUtils.getColorSpannable(str1, str2, str1ColorId, str2ColorId));
     }
+
     public static void setTextWithSpanSize(final TextView tv, String str1, final String str2, int str1Dip, final int str2Dip) {
         tv.setText(StringUtils.getSizeSpannable(str1, str2, str1Dip, str2Dip));
     }
 
     //str1 :售价/月供：¥  , str2:300.00 , str3:起/"没有"
-    public static void setTextWithSpanSizeAndColor(final TextView tv, String str1, final String str2,final String str3,int str1Dip, final int str2Dip,int str1ColorId, final int str2ColorId) {
+    public static void setTextWithSpanSizeAndColor(final TextView tv, String str1, final String str2, final String str3, int str1Dip, final int str2Dip, int str1ColorId, final int str2ColorId) {
         String text = StringUtils.format2(str2);
         if (text.indexOf(".") == -1) {
-            tv.setText(str1+ StringUtils.nullToEmptyString(str2));
+            tv.setText(str1 + StringUtils.nullToEmptyString(str2));
             return;
         }
         String startStr = text.substring(0, text.indexOf("."));
         String endStr = text.substring(text.indexOf("."), text.length());
-        tv.setText(StringUtils.getSizeAndColorSpannable(str1, startStr,endStr,str3, str1Dip, str2Dip,str1ColorId,str2ColorId));
+        tv.setText(StringUtils.getSizeAndColorSpannable(str1, startStr, endStr, str3, str1Dip, str2Dip, str1ColorId, str2ColorId));
     }
 
     private static boolean isFastDoubleClick() {

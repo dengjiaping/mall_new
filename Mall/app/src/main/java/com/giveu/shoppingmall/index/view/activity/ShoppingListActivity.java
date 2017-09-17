@@ -20,6 +20,7 @@ public class ShoppingListActivity extends BaseActivity {
     private TitleBarFragment titleFragment;
     private int shopTypeId;
     private String code;
+    private boolean isFragmentInit = false;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -37,12 +38,23 @@ public class ShoppingListActivity extends BaseActivity {
                 .replace(R.id.activity_shopping_list_title, titleFragment)
                 .commit();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isFragmentInit) {
+            return;
+        }
+
         //首页过来的商品列表是需要code的
         if (StringUtils.isNotNull(code)) {
             contentFragment.searchByCode(code);
-        }else {
+        } else {
             contentFragment.searchByShopTypeId(shopTypeId);
         }
+        isFragmentInit = true;
     }
 
     @Override

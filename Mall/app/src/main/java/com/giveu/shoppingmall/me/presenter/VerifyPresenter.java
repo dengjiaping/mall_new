@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.me.presenter;
 
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
@@ -48,10 +50,8 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
 
             @Override
             public void onError(BaseBean errorBean) {
-                if (getView() != null) {
-                    CommonLoadingView.showErrorToast(errorBean);
-                }
-
+                CommonLoadingView.showErrorToast(errorBean);
+                BaseApplication.getInstance().finishActivity(VerifyActivity.class);
             }
         });
     }

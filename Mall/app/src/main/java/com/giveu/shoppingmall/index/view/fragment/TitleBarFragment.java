@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -28,8 +29,8 @@ import butterknife.OnClick;
 
 public class TitleBarFragment extends Fragment implements View.OnClickListener, ClearEditText.OnClearListener {
 
-    @BindView(R.id.fragment_left_image)
-    ImageView leftImage;
+    @BindView(R.id.fragment_left_image_layout)
+    RelativeLayout rlLeftImageLayout;
     @BindView(R.id.fragment_center_text)
     MiddleRadioButton centerText;
     @BindView(R.id.fragment_center_edit)
@@ -88,12 +89,12 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener, 
         centerEdit.setText(text);
     }
 
-    @OnClick({R.id.fragment_left_image, R.id.fragment_center_text,
+    @OnClick({R.id.fragment_left_image_layout, R.id.fragment_center_text,
             R.id.fragment_right_image, R.id.fragment_right_text})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fragment_left_image:
+            case R.id.fragment_left_image_layout:
                 getActivity().finish();
                 break;
             case R.id.fragment_center_text:

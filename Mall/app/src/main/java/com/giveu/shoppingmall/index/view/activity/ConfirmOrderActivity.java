@@ -387,7 +387,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private void setTotalPrice() {
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(cardPrice);
-        double result = tPrice - cPrice;
+        double result = Math.max(tPrice - cPrice, 0);
         CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥ ", StringUtils.format2(result + ""), "",
                 15, 13, R.color.title_color, R.color.black);
     }
@@ -506,7 +506,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                         pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
-                        tvOK.setBackgroundColor(getResources().getColor(R.color.red));
                         isConfirm = true;
                         //订单确认后以下功能不可修改
                         flAddresslayout.setEnabled(false);
