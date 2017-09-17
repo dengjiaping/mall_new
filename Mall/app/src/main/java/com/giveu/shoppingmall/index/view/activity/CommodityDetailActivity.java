@@ -173,6 +173,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             ivCollect.setTag(true);
             ivCollect.setImageResource(R.drawable.ic_collect_select);
             tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_ff2a2a));
+            tvCollect.setText("已收藏");
         } else {
             ivCollect.setTag(false);
             cancelCollect();
@@ -202,6 +203,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private void cancelCollect() {
         tvCollect.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_9b9b9b));
         ivCollect.setImageResource(R.drawable.ic_collect_unselect);
+        tvCollect.setText("收藏");
     }
 
 
