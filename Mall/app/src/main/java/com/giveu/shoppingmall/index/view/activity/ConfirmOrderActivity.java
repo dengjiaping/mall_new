@@ -375,7 +375,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         19, 13, R.color.black, R.color.black);
             }
 
-            tvSkuInfoQuantity.setText("X  " + skuInfoBean.quantity);
+            tvSkuInfoQuantity.setText("× " + skuInfoBean.quantity);
 
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
