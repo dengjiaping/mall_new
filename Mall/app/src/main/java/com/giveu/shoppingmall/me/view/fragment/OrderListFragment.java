@@ -91,6 +91,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setScrollingWhileRefreshingEnabled(true);
+        ptrlv.getFooter().setOnClickListener(null);
         registerEventBus();
         return fragmentView;
 
@@ -113,9 +114,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                String orderNo = adapter.getData().get(position - 1).orderNo;
-                if (StringUtils.isNotNull(orderNo))
-                    OrderInfoActivity.startIt(mBaseContext, orderNo);
+                if (position - 1 < adapter.getData().size()) {
+                    String orderNo = adapter.getData().get(position - 1).orderNo;
+                    if (StringUtils.isNotNull(orderNo))
+                        OrderInfoActivity.startIt(mBaseContext, orderNo);
+                }
             }
         });
 
@@ -264,6 +267,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //申请退款成功
     @Override
     public void applyToRefundSuccess() {
+        onRefresh();
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 

@@ -147,7 +147,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
+                        presenter.onTrace(item.orderNo, item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -179,7 +179,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
+                        presenter.onTrace(item.orderNo, item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src);
                     }
                 });
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -198,7 +198,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        presenter.onTrace(item.orderNo, item.srcIp + item.src);
+                        presenter.onTrace(item.orderNo, item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src);
                     }
                 });
                 break;
@@ -213,7 +213,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                     viewHolder.setOnClickListener(R.id.tv_button_left, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            presenter.onTrace(item.orderNo, item.srcIp + item.src);
+                            presenter.onTrace(item.orderNo, item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src);
                         }
                     });
                     viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
@@ -255,7 +255,13 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showRefundDialog(item.orderNo);
+                        if (StringUtils.isNotNull(item.refundApplying)) {
+                            if ("0".equals(item.refundApplying)) {
+                                showRefundDialog(item.orderNo);
+                            } else {
+                                ToastUtils.showLongToast("您已经申请过了,请耐心等待处理结果");
+                            }
+                        }
                     }
                 });
                 break;

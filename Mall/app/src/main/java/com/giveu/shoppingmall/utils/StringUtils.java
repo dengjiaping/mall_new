@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.web.BaseWebViewActivity;
 
@@ -129,7 +128,7 @@ public class StringUtils {
             while ((line = reader.readLine()) != null) {
                 content.append(line);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (reader != null) {
