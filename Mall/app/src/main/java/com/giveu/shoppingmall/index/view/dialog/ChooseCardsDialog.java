@@ -23,7 +23,7 @@ public class ChooseCardsDialog {
     private Activity mActivity;
     private ListView listView;
     private List<CreateOrderResponse.CardListBean> datas;
-    public int checkIndex;
+    public long checkIndex;
     private OnChooseTypeListener listener;
     private LvCommonAdapter mAdpter;
     private TextView tvBack;
@@ -43,7 +43,7 @@ public class ChooseCardsDialog {
         show(0);
     }
 
-    public void show(int index) {
+    public void show(long index) {
         checkIndex = index;
         mDialog.show();
         mAdpter.notifyDataSetChanged();
@@ -76,7 +76,7 @@ public class ChooseCardsDialog {
     }
 
     public interface OnChooseTypeListener {
-        void onChooseType(int id, String price, String name);
+        void onChooseType(long id, String price, String name);
     }
 
 

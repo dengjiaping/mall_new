@@ -23,51 +23,6 @@ public class TypeUtlis {
     public static final String MONEY_PRODUCT = "v";//豪有钱
     public static final String STUDENT_PRODUCT = "s";//学生贷
     public static final String COMMODITY_PRODUCT = "g";//商品贷
-    /**
-     * accessToken : fc6b196780757656d4b248c753848982
-     * activeDate : 2017/6/23
-     * availableCyLimit : 50000
-     * availablePosLimit : 50000
-     * availableRechargeLimit : 500
-     * creditCount : null
-     * cyLimit : 50000
-     * endDate : 2020/6/1
-     * globleLimit : 100000
-     * idPerson : 10000923
-     * ident : 371082199201058672
-     * name : 唐兴
-     * nickName : 佳文
-     * phone : 18109491314
-     * posLimit : 0
-     * repayAmount : null
-     * repayDate : null
-     * status : 1
-     * userId : 12
-     * userName : 1856989654
-     * userPic : user_09.jpg
-     */
-
-    public String accessToken;
-    public String activeDate;
-    public int availableCyLimit;
-    public int availablePosLimit;
-    public int availableRechargeLimit;
-    public Object creditCount;
-    public int cyLimit;
-    public String endDate;
-    public int globleLimit;
-    public int idPerson;
-    public String ident;
-    public String name;
-    public String nickName;
-    public String phone;
-    public int posLimit;
-    public String repayAmount;
-    public String repayDate;
-    public int status;
-    public String userId;
-    public String userName;
-    public String userPic;
 
     public static String getCreditStatusValue(String text) {
         String value = "";

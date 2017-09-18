@@ -94,7 +94,7 @@ public class WebCommodityFragment extends BaseFragment {
         });
     }
 
-    private void initWebView(){
+    private void initWebView() {
         wvCommodity = new CommodityWebView(getContext());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         wvCommodity.setLayoutParams(layoutParams);
@@ -134,23 +134,16 @@ public class WebCommodityFragment extends BaseFragment {
         this.fromCommodityDetail = fromCommodityDetail;
     }
 
-
+    /**
+     * 刷新商品详情
+     * @param url
+     */
     public void refreshCommodityDetail(String url) {
         htmlUrl = url;
-        if (wvCommodity != null) {
-            wvCommodity.removeAllViews();
-            wvCommodity.destroy();
-            if (wvCommodity.getParent() != null) {
-                ((ViewGroup) wvCommodity.getParent()).removeView(wvCommodity);
-            }
-            wvCommodity = null;
-        }
-        initWebView();
         if (wvCommodity != null) {
             wvCommodity.loadUrl(htmlUrl);
         }
     }
-
 
 
     @Override

@@ -54,7 +54,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
         public static class PaymentListBean {
             /**
              * monthPay : 319.0
-             * paymentNum : 1
+             * paymentNum : 1   分期顺序
              * repayDate : 2017/09/28
              */
 
@@ -125,19 +125,19 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
 
         public long serviceId;
         public String serviceName;
-        public int servicePrice;
+        public long servicePrice;
         public String serviceUrl;
 
     }
 
     public static class CardListBean {
         /**
-         * id : 74064
-         * name : 测试内容0x3l
-         * price : 测试内容840n
+         * id : 74064 优惠券id
+         * name : 优惠券名称
+         * price : 优惠价格
          */
 
-        public int id;
+        public long id;
         public String name;
         public String price;
 
@@ -145,18 +145,20 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
 
     public static class FsListBean {
         /**
-         * annuity : 606
-         * idProduct : 31311
-         * paymentNum : 3
+         * 金融分期
+         * annuity : 606 月供
+         * idProduct : 31311 产品id
+         * paymentNum : 3 分期数
          */
 
-        public int annuity;
-        public int idProduct;
+        public long annuity;
+        public long idProduct;
         public int paymentNum;
     }
 
     public static class InitListBean {
         /**
+         * 首付信息
          * id : 0
          * name : 零首付
          * price : 0
@@ -175,7 +177,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
          */
 
         public String date;
-        public long id;
+        public int id;
         public String week;
 
     }
