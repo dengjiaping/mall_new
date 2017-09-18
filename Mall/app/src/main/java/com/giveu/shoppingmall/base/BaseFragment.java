@@ -99,6 +99,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         initDataDelay();
     }
 
+    public void setDataInit(boolean dataInit) {
+        isDataInit = dataInit;
+    }
+
     /**
      * 当使用mvp模式时实现这个方法
      */
