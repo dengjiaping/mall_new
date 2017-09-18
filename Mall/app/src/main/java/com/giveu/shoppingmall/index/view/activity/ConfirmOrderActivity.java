@@ -133,7 +133,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private DealPwdDialog pwdDialog;
 
     private int payType = 2; //支付方式,暂时默认用支付宝
-    private int cardId = 0; //优惠券Id
+    private long cardId = 0; //优惠券Id
     private String cardPrice = "0";
     private String totalPrice = "0";
 
@@ -340,7 +340,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             setTotalPrice();
             chooseCardsDialog = new ChooseCardsDialog(this, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
                 @Override
-                public void onChooseType(int id, String price, String name) {
+                public void onChooseType(long id, String price, String name) {
                     dvCardsView.setText(name);
                     cardPrice = price;
                     cardId = id;
