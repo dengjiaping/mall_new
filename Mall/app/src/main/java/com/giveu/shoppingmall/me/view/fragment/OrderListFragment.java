@@ -15,17 +15,18 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.me.adapter.OrderListAdapter;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.OrderInfoActivity;
 import com.giveu.shoppingmall.me.view.agent.IOrderInfoView;
-import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -34,6 +35,9 @@ import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +91,19 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setScrollingWhileRefreshingEnabled(true);
+        registerEventBus();
         return fragmentView;
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(RefreshEvent refreshEvent) {
+        //接受到通知时，如果是当前页立即做刷新，否则重置加载的标识，在页面可见时做刷新
+        if (getUserVisibleHint() && orderState == refreshEvent.orderState) {
+            onRefresh();
+        } else if (orderState == refreshEvent.orderState) {
+            setDataInit(true);
+        }
     }
 
 
@@ -205,28 +220,44 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     @Override
     public void deleteOrderSuccess(String orderNo) {
         removeData(orderNo);
+        switch (orderState) {
+            case OrderState.ALLRESPONSE:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
+                break;
+            case OrderState.CLOSED:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                break;
+        }
         ToastUtils.showLongToast("订单删除成功");
     }
 
     //取消订单成功
     @Override
     public void cancelOrderSuccess(String orderNo) {
-        if (orderState == 0) {
-            onRefresh();
+        if (orderState == OrderState.ALLRESPONSE) {
+            //刷新待支付状态列表
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
         } else {
             removeData(orderNo);
         }
+        //刷新所有，已关闭订单列表
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
         ToastUtils.showLongToast("订单取消成功");
     }
 
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        if (orderState == 0) {
-            onRefresh();
+        if (orderState == OrderState.ALLRESPONSE) {
+            //刷新待支付
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
         } else {
             removeData(orderNo);
         }
+        //刷新所有，已完成
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.FINISHED));
         ToastUtils.showLongToast("确认收货成功");
     }
 
@@ -270,6 +301,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
 
     /**
      * 此回调在于判断点击支付的订单是否有效
+     *
      * @param response
      */
     @Override
@@ -277,7 +309,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         if (response != null && response.status == 1) {
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
         } else {
-            onRefresh();
+            if (orderState == OrderState.ALLRESPONSE) {
+                //刷新待支付
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+            } else {
+                removeData(response.orderNo);
+            }
+            //刷新所有，已关闭
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
             ToastUtils.showLongToast("订单已失效");
         }
     }

@@ -59,9 +59,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
 
         if (StringUtils.isNotNull(item.salePrice)) {
             if (item.orderType == 0) {
+                viewHolder.setVisible(R.id.tv_quantity, true);
                 CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
                 viewHolder.setText(R.id.tv_quantity, " × " + item.quantity);
             } else {
+                viewHolder.setVisible(R.id.tv_quantity, false);
                 CommonUtils.setTextWithSpanSizeAndColor((TextView) viewHolder.getView(R.id.tv_sale_price), "¥ ", StringUtils.format2(item.salePrice), "", 13, 9, R.color.color_00bbc0, R.color.color_00bbc0);
             }
         }
@@ -162,11 +164,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 break;
 
             //待发货
-            case OrderState.WAITINGDELIVERY:
-                /*viewHolder.setText(R.id.tv_status, "订单待付款");
+            /*case OrderState.WAITINGDELIVERY:
+                viewHolder.setText(R.id.tv_status, "订单待付款");
                 viewHolder.setText(R.id.tv_button_left, "订单取消");
-                viewHolder.setText(R.id.tv_button_right, "去支付");*/
-                break;
+                viewHolder.setText(R.id.tv_button_right, "去支付");
+                break;*/
 
             //待收货
             case OrderState.WAITINGRECEIVE:

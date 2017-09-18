@@ -12,6 +12,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -20,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.PayUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -172,6 +174,9 @@ public class PayChannelActivity extends BaseActivity {
         //如果支付成功的话，关闭除首页的所有activity；失败的话不关闭当前activity
         if (isSuccess) {
             BaseApplication.getInstance().finishAllExceptMainActivity();
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
         }
         OrderPayResultActivity.startIt(mBaseContext, confirmPayResponse, orderNo, isSuccess);
     }

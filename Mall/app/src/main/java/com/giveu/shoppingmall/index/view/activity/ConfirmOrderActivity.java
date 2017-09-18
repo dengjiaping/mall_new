@@ -24,9 +24,11 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -38,6 +40,7 @@ import com.giveu.shoppingmall.model.bean.response.SkuInfo;
 import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -47,7 +50,6 @@ import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -155,7 +157,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String orderNo;
     private String paymentNum;
 
-    //订单是否出入确认状态，如果是则不可修改
+    //订单是否处于确认状态，如果是则不可修改
     private boolean isConfirm = false;
     //界面初始化成功的标志
     private boolean isInitSuccess = false;
@@ -504,6 +506,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
+                        //刷新订单列表的所有和待付款状态
+                        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                        EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
                         pwdDialog.setPrice(response.data.payMoney);
                         pwdDialog.showDialog();
                         orderNo = response.data.orderNo;
