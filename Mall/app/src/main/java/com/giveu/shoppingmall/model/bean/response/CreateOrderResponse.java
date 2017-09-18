@@ -123,7 +123,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
          * serviceUrl : http://wx.dafycredit.cn/h5/sales/index.html#/XFFQ/XFFQInsuredNotice
          */
 
-        public int serviceId;
+        public long serviceId;
         public String serviceName;
         public int servicePrice;
         public String serviceUrl;
@@ -175,7 +175,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
          */
 
         public String date;
-        public int id;
+        public long id;
         public String week;
 
     }
