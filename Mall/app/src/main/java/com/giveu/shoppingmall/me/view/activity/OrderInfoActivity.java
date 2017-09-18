@@ -428,9 +428,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     @Override
     public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
+        dealPwdDialog.dissmissDialog();
         if (isWalletPay) {
 //            VerifyActivity.startItForRecharge(mBaseContext, mobile, 0, orderNo, 0, payment);
         } else {
+
             VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
         }
     }

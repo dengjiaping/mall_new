@@ -207,7 +207,6 @@
             android:layout_height="30dp"
             android:background="@drawable/shape_grey_line"
             android:gravity="center"
-            android:text="取消订单"
             android:textColor="@color/color_4a4a4a"
             android:textSize="@dimen/ts_13" />
 

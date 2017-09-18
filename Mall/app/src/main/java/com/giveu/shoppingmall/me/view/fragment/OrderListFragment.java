@@ -91,6 +91,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setScrollingWhileRefreshingEnabled(true);
+        ptrlv.getFooter().setOnClickListener(null);
         registerEventBus();
         return fragmentView;
 
@@ -113,9 +114,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                String orderNo = adapter.getData().get(position - 1).orderNo;
-                if (StringUtils.isNotNull(orderNo))
-                    OrderInfoActivity.startIt(mBaseContext, orderNo);
+                if (position - 1 < adapter.getData().size()) {
+                    String orderNo = adapter.getData().get(position - 1).orderNo;
+                    if (StringUtils.isNotNull(orderNo))
+                        OrderInfoActivity.startIt(mBaseContext, orderNo);
+                }
             }
         });
 

@@ -156,6 +156,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private ConfirmDialog confirmDialog;
     private String orderNo;
     private String paymentNum;
+    private boolean canPay = true;
 
     //订单是否处于确认状态，如果是则不可修改
     private boolean isConfirm = false;
@@ -318,7 +319,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
-       
+
         if (lists != null && lists.size() > 0) {
             cardList = lists;
 
@@ -387,7 +388,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         }
     }
-    
+
     private void setTotalPrice() {
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(cardPrice);
@@ -483,7 +484,11 @@ public class ConfirmOrderActivity extends BaseActivity {
                 if (isConfirm) {
                     pwdDialog.showDialog();
                 } else {
-                    confirmOrderSc();
+                    //在下单时canPay置为false，当服务器未返回结果时，不会重复创建订单，返回错误时，可再次下单
+                    if (canPay) {
+                        canPay = false;
+                        confirmOrderSc();
+                    }
                 }
                 break;
             case R.id.confirm_order_empty:
@@ -523,6 +528,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
                     @Override
                     public void onError(BaseBean errorBean) {
+                        canPay = true;
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
