@@ -19,8 +19,6 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
-import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
-import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +31,10 @@ import butterknife.BindView;
 
 public class CaseRecordActivity extends BaseActivity {
 
-    @BindView(R.id.ptrlv)
-    PullToRefreshListView ptrlv;
+    @BindView(R.id.lv)
+    ListView lv;
     private LvCommonAdapter<CashRecordsResponse> caseRecordAdapter;
     private List<CashRecordsResponse> caseRecordList;
-    private int pageIndex = 1;
-    private final int pageSize = 10;
 
     public static void startIt(Activity activity) {
         Intent intent = new Intent(activity, CaseRecordActivity.class);
@@ -73,9 +69,7 @@ public class CaseRecordActivity extends BaseActivity {
                 }
             }
         };
-        ptrlv.setAdapter(caseRecordAdapter);
-        ptrlv.setMode(PullToRefreshBase.Mode.DISABLED);
-        ptrlv.setPullLoadEnable(false);
+        lv.setAdapter(caseRecordAdapter);
     }
 
     @Override
@@ -85,12 +79,11 @@ public class CaseRecordActivity extends BaseActivity {
             public void onSuccess(CashRecordsResponse response) {
                 if (response != null) {
                     caseRecordList = response.data;
-                    ptrlv.onRefreshComplete();
                     if(CommonUtils.isNullOrEmpty(caseRecordList)){
                         baseLayout.showEmpty("暂无取现记录");
-                        ptrlv.setVisibility(View.GONE);
+                        lv.setVisibility(View.GONE);
                     }else{
-                        ptrlv.setVisibility(View.VISIBLE);
+                        lv.setVisibility(View.VISIBLE);
                         caseRecordAdapter.setData(caseRecordList);
                         caseRecordAdapter.notifyDataSetChanged();
                     }
@@ -107,21 +100,5 @@ public class CaseRecordActivity extends BaseActivity {
 
     @Override
     public void setListener() {
-        super.setListener();
-        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                pageIndex = 1;
-                setData();
-                ptrlv.setPullLoadEnable(false);
-
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                setData();
-                ptrlv.setPullRefreshEnable(true);
-            }
-        });
     }
 }

@@ -131,7 +131,7 @@ public class CashFinishStatusActivity extends BaseActivity {
                 tvHintMid.setVisibility(View.VISIBLE);
                 tvHintMid.setText(hintMid);
                 tvBtnTop.setText("返回");
-                tvBtnTop.setBackgroundResource(R.drawable.shape_back_btn_blue);
+                tvBtnTop.setBackgroundResource(R.drawable.shape_cash_btn_blue);
                 tvBack.setVisibility(View.GONE);
                 break;
         }
@@ -151,13 +151,13 @@ public class CashFinishStatusActivity extends BaseActivity {
                         finish();
                         break;
                     case "fail":
-                        MainActivity.startIt(mBaseContext);
+                        MainActivity.startItSelectFragment(1,mBaseContext);
                         break;
                 }
                 break;
             case R.id.tv_back:
                 //返回
-                MainActivity.startIt(mBaseContext);
+                MainActivity.startItSelectFragment(1,mBaseContext);
                 break;
         }
     }

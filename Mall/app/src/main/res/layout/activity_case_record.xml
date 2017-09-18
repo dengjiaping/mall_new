@@ -5,12 +5,11 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
-        android:id="@+id/ptrlv"
+    <ListView
+        android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-       />
+        android:divider="@color/line_bg"
+        android:dividerHeight="@dimen/default_line_height"/>
 
 </LinearLayout>

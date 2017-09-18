@@ -29,7 +29,6 @@ import com.giveu.shoppingmall.recharge.view.activity.RechargeStatusActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.EventBusUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -37,7 +36,6 @@ import com.giveu.shoppingmall.widget.PassWordInputView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -300,6 +298,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                     @Override
                     public void onError(BaseBean errorBean) {
                         CashFinishStatusActivity.startIt(mBaseContext, "fail", errorBean.message);
+                        BaseApplication.getInstance().finishActivity(CashTypeActivity.class);
+                        finish();
                     }
                 });
                 break;
@@ -359,10 +359,4 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         super.onNewIntent(intent);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }
