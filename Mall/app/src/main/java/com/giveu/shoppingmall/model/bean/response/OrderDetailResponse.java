@@ -31,9 +31,8 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
      * userComments : 尽快发货
      */
 
-    public CourtesyCardJoBean courtesyCardJo;
     public String downPayment;
-    public int giftPackPrice;
+    public String giftPackPrice;
     public String monthPayment;
     public String orderNo;
     public int orderType;
@@ -54,17 +53,6 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
     public List<ValueServiceBean> addValueService;
     public String courtesyCardName;
 
-    public static class CourtesyCardJoBean {
-        /**
-         * courtesyCardId : 1
-         * courtesyCardName : 满699减30元全品类
-         * isSelected : 1
-         */
-
-        public int courtesyCardId;
-        public String courtesyCardName;
-        public int isSelected;
-    }
 
     public static class ValueServiceBean {
         public int isSelected;
