@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
@@ -28,6 +29,7 @@ import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -153,6 +155,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     int orderType;//商品类型
     String skuCode = "";
     boolean isCredit = false;
+    String refundApplying = "";//退款申请中:0-未申请,1-申请中
 
     public static void startIt(Activity activity, String orderNo) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
@@ -212,6 +215,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                     llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     tvTimeLeft.setText("订单已失效，请重新下单");
                     tvPay.setClickable(false);
+                    //刷新全部、待付款、已关闭
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
                 }
             });
         }
@@ -270,11 +277,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品合计
             if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 15, 11, R.color.color_ff2a2a, R.color.color_ff2a2a);
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 19, 13, R.color.color_ff2a2a, R.color.color_ff2a2a);
             }
             //skuCode
             if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
                 skuCode = response.skuInfo.skuCode;
+            }
+            //是否申请退款
+            if (StringUtils.isNotNull(response.skuInfo.refundApplying)) {
+                refundApplying = response.skuInfo.refundApplying;
             }
         }
         //支付方式
@@ -389,6 +400,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         } else {
             llContract.setVisibility(View.GONE);
         }
+
         baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
     }
 
@@ -398,11 +410,17 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         ToastUtils.showLongToast("确认收货成功");
         //再次调取接口更新数据
         presenter.getOrderDetail(orderNo);
+        //发送事件刷新订单列表的全部、待收货、已完成
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.FINISHED));
     }
 
     //申请退款成功
     @Override
     public void applyToRefundSuccess() {
+        presenter.getOrderDetail(orderNo);
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
@@ -482,7 +500,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //申请退款
             case R.id.tv_apply_refund:
-                showRefundDialog();
+                if ("0".equals(refundApplying)) {
+                    showRefundDialog();
+                } else {
+                    ToastUtils.showLongToast("您已经申请过了,请耐心等待处理结果");
+                }
                 break;
 
             //服务详情

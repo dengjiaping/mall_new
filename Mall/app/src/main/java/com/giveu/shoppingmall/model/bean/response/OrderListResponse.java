@@ -8,7 +8,7 @@ import java.util.List;
  * Created by 101912 on 2017/9/2.
  */
 
-public class OrderListResponse extends BaseBean<OrderListResponse>{
+public class OrderListResponse extends BaseBean<OrderListResponse> {
 
 
     /**
@@ -61,5 +61,6 @@ public class OrderListResponse extends BaseBean<OrderListResponse>{
         public int status;
         public String timeLeft;
         public String payType;
+        public String refundApplying;
     }
 }

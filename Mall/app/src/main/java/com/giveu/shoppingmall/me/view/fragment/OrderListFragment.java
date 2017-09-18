@@ -91,6 +91,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setScrollingWhileRefreshingEnabled(true);
+        ptrlv.getFooter().setOnClickListener(null);
         registerEventBus();
         return fragmentView;
 
@@ -101,7 +102,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         //接受到通知时，如果是当前页立即做刷新，否则重置加载的标识，在页面可见时做刷新
         if (getUserVisibleHint() && orderState == refreshEvent.orderState) {
             onRefresh();
-        } else if(orderState == refreshEvent.orderState){
+        } else if (orderState == refreshEvent.orderState) {
             setDataInit(true);
         }
     }
@@ -113,9 +114,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                String orderNo = adapter.getData().get(position - 1).orderNo;
-                if (StringUtils.isNotNull(orderNo))
-                    OrderInfoActivity.startIt(mBaseContext, orderNo);
+                if (position - 1 < adapter.getData().size()) {
+                    String orderNo = adapter.getData().get(position - 1).orderNo;
+                    if (StringUtils.isNotNull(orderNo))
+                        OrderInfoActivity.startIt(mBaseContext, orderNo);
+                }
             }
         });
 
@@ -220,13 +223,21 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     @Override
     public void deleteOrderSuccess(String orderNo) {
         removeData(orderNo);
+        switch (orderState) {
+            case OrderState.ALLRESPONSE:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
+                break;
+            case OrderState.CLOSED:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                break;
+        }
         ToastUtils.showLongToast("订单删除成功");
     }
 
     //取消订单成功
     @Override
     public void cancelOrderSuccess(String orderNo) {
-        if (orderState == 0) {
+        if (orderState == OrderState.ALLRESPONSE) {
             //刷新待支付状态列表
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
         } else {
@@ -241,7 +252,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        if (orderState == 0) {
+        if (orderState == OrderState.ALLRESPONSE) {
             //刷新待支付
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
         } else {
@@ -256,6 +267,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //申请退款成功
     @Override
     public void applyToRefundSuccess() {
+        onRefresh();
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
@@ -301,7 +313,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         if (response != null && response.status == 1) {
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
         } else {
-            onRefresh();
+            if (orderState == OrderState.ALLRESPONSE) {
+                //刷新待支付
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+            } else {
+                removeData(response.orderNo);
+            }
+            //刷新所有，已关闭
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
             ToastUtils.showLongToast("订单已失效");
         }
     }
