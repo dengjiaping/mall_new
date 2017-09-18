@@ -156,7 +156,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     private ConfirmDialog confirmDialog;
     private String orderNo;
     private String paymentNum;
-    private boolean canPay = true;
 
     //订单是否处于确认状态，如果是则不可修改
     private boolean isConfirm = false;
@@ -482,13 +481,14 @@ public class ConfirmOrderActivity extends BaseActivity {
                 break;
             case R.id.tv_ok:
                 if (isConfirm) {
-                    pwdDialog.showDialog();
-                } else {
-                    //在下单时canPay置为false，当服务器未返回结果时，不会重复创建订单，返回错误时，可再次下单
-                    if (canPay) {
-                        canPay = false;
-                        confirmOrderSc();
+                    if (LoginHelper.getInstance().hasSetPwd()) {
+                        //设置了交易密码)
+                        pwdDialog.showDialog();
+                    } else {
+                        TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                     }
+                } else {
+                    confirmOrderSc();
                 }
                 break;
             case R.id.confirm_order_empty:
@@ -515,7 +515,12 @@ public class ConfirmOrderActivity extends BaseActivity {
                         EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
                         EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
                         pwdDialog.setPrice(response.data.payMoney);
-                        pwdDialog.showDialog();
+                        if (LoginHelper.getInstance().hasSetPwd()) {
+                            //设置了交易密码)
+                            pwdDialog.showDialog();
+                        } else {
+                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                        }
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
                         isConfirm = true;
@@ -528,7 +533,6 @@ public class ConfirmOrderActivity extends BaseActivity {
 
                     @Override
                     public void onError(BaseBean errorBean) {
-                        canPay = true;
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
