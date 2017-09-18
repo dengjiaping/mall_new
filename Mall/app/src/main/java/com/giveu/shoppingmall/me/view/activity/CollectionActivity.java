@@ -246,7 +246,6 @@ public class CollectionActivity extends BaseActivity {
                         collectionAdapter.notifyDataSetChanged();
                         pageIndex++;
                     } else {
-                        baseLayout.setRightText("");
                         if (pageIndex == 1) {
                             goodsList.clear();
                             collectionAdapter.notifyDataSetChanged();
