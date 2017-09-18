@@ -155,6 +155,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     int orderType;//商品类型
     String skuCode = "";
     boolean isCredit = false;
+    String refundApplying = "";//退款申请中:0-未申请,1-申请中
 
     public static void startIt(Activity activity, String orderNo) {
         Intent intent = new Intent(activity, OrderInfoActivity.class);
@@ -282,6 +283,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
                 skuCode = response.skuInfo.skuCode;
             }
+            //是否申请退款
+            if (StringUtils.isNotNull(response.skuInfo.refundApplying)) {
+                refundApplying = response.skuInfo.refundApplying;
+            }
         }
         //支付方式
         orderPayType = response.payType;
@@ -395,6 +400,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         } else {
             llContract.setVisibility(View.GONE);
         }
+
         baseLayout.ll_baselayout_content.setVisibility(View.VISIBLE);
     }
 
@@ -413,6 +419,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     //申请退款成功
     @Override
     public void applyToRefundSuccess() {
+        presenter.getOrderDetail(orderNo);
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
@@ -492,7 +500,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
             //申请退款
             case R.id.tv_apply_refund:
-                showRefundDialog();
+                if ("0".equals(refundApplying)) {
+                    showRefundDialog();
+                } else {
+                    ToastUtils.showLongToast("您已经申请过了,请耐心等待处理结果");
+                }
                 break;
 
             //服务详情

@@ -109,5 +109,7 @@ public class OrderDetailResponse extends BaseBean<OrderDetailResponse> {
         public String src;
         public String srcIp;
         public String totalPrice;
+        public String refundApplying;
+
     }
 }

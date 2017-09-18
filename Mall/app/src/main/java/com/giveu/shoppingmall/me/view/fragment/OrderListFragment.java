@@ -264,6 +264,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //申请退款成功
     @Override
     public void applyToRefundSuccess() {
+        onRefresh();
         ToastUtils.showLongToast("申请成功！会在1~3个工作日处理。如果使用钱包额度支付，我们会将合同取消并恢复您的额度；如果使用其他支付方式，将会退款到您原支付账户，请注意查收");
     }
 
