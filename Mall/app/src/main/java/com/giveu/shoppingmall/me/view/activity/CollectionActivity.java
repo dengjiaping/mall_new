@@ -70,9 +70,8 @@ public class CollectionActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_collection);
         baseLayout.setTitle("我的收藏");
-        baseLayout.setRightText("编辑");
         baseLayout.setRightTextColor(R.color.title_color);
-
+        goodsList = new ArrayList<>();
         baseLayout.setRightTextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +98,36 @@ public class CollectionActivity extends BaseActivity {
                 rightTextClick = !rightTextClick;
             }
         });
+        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
+            @Override
+            public void itemClick() {
+                itemNotClickList = new ArrayList<>();
+                int count = 0;
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+                    return;
+                }
+                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
+                    if (collectionAdapter.getData().get(i) == null) {
+                        return;
+                    }
+                    if (collectionAdapter.getData().get(i).isCheck) {
+                        //记录选中项
+                        count++;
+                    } else {
+                        itemNotClickList.add(i);
+                    }
+                }
+                deleteColorAndCanClick(count);
+            }
+        });
+        ptrlv.setAdapter(collectionAdapter);
+        deleteColorAndCanClick(0);
+        ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         ptrlv.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setPullRefreshEnable(false);
@@ -174,38 +202,7 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ptrlv.setPullLoadEnable(false);
-        goodsList = new ArrayList<>();
-        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
-            @Override
-            public void itemClick() {
-                itemNotClickList = new ArrayList<>();
-                int count = 0;
-                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
-                    return;
-                }
-                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
-                    if (collectionAdapter.getData().get(i) == null) {
-                        return;
-                    }
-                    if (collectionAdapter.getData().get(i).isCheck) {
-                        //记录选中项
-                        count++;
-                    } else {
-                        itemNotClickList.add(i);
-                    }
-                }
-                deleteColorAndCanClick(count);
-            }
-        });
-        ptrlv.setAdapter(collectionAdapter);
-        deleteColorAndCanClick(0);
-        ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         ApiImpl.getCollectionList(mBaseContext, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
@@ -216,6 +213,7 @@ public class CollectionActivity extends BaseActivity {
                     CollectionResponse collectionResponse = response.data;
 
                     if (CommonUtils.isNotNullOrEmpty(collectionResponse.resultList)) {
+                        baseLayout.setRightText("编辑");
                         if (pageIndex == 1) {
                             goodsList.clear();
                             if (collectionResponse.resultList.size() >= pageSize) {
@@ -248,6 +246,7 @@ public class CollectionActivity extends BaseActivity {
                         collectionAdapter.notifyDataSetChanged();
                         pageIndex++;
                     } else {
+                        baseLayout.setRightText("");
                         if (pageIndex == 1) {
                             goodsList.clear();
                             collectionAdapter.notifyDataSetChanged();
