@@ -17,6 +17,7 @@ import com.android.volley.mynet.BaseBean;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BaseFragment;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.activity.WalletActivationFirstActivity;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
@@ -212,6 +213,15 @@ public class MainMeFragment extends BaseFragment {
         CommonLoadingView.showErrorToast(response);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(RefreshEvent refreshEvent) {
+        //接受到通知时，调用个人信息接口已刷新订单红点
+        if (refreshEvent.orderState == OrderState.ALLRESPONSE) {
+            BaseApplication.getInstance().fetchUserInfo();
+        }
+    }
+
     @Override
     protected void setListener() {
         ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
@@ -309,13 +319,13 @@ public class MainMeFragment extends BaseFragment {
 
             case R.id.ll_finished:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, "3");
+                    MyOrderActivity.startIt(mBaseContext, OrderState.Finished_RESPONSE);
                 }
                 break;
 
             case R.id.ll_waiting_receive:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, "2");
+                    MyOrderActivity.startIt(mBaseContext, OrderState.WAITING_RECEIVE);
                 }
                 break;
 

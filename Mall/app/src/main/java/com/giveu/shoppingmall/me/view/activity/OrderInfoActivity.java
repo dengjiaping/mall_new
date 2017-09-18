@@ -18,6 +18,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.TransactionPwdActivity;
 import com.giveu.shoppingmall.me.presenter.OrderHandlePresenter;
@@ -28,6 +29,7 @@ import com.giveu.shoppingmall.me.view.dialog.BalanceDeficientDialog;
 import com.giveu.shoppingmall.me.view.dialog.DealPwdDialog;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.EventBusUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
@@ -212,6 +214,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                     llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     tvTimeLeft.setText("订单已失效，请重新下单");
                     tvPay.setClickable(false);
+                    //刷新全部、待付款、已关闭
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
                 }
             });
         }
@@ -398,6 +404,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         ToastUtils.showLongToast("确认收货成功");
         //再次调取接口更新数据
         presenter.getOrderDetail(orderNo);
+        //发送事件刷新订单列表的全部、待收货、已完成
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
+        EventBusUtils.poseEvent(new RefreshEvent(OrderState.FINISHED));
     }
 
     //申请退款成功

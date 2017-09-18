@@ -101,7 +101,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         //接受到通知时，如果是当前页立即做刷新，否则重置加载的标识，在页面可见时做刷新
         if (getUserVisibleHint() && orderState == refreshEvent.orderState) {
             onRefresh();
-        } else if(orderState == refreshEvent.orderState){
+        } else if (orderState == refreshEvent.orderState) {
             setDataInit(true);
         }
     }
@@ -220,13 +220,21 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     @Override
     public void deleteOrderSuccess(String orderNo) {
         removeData(orderNo);
+        switch (orderState) {
+            case OrderState.ALLRESPONSE:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
+                break;
+            case OrderState.CLOSED:
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+                break;
+        }
         ToastUtils.showLongToast("订单删除成功");
     }
 
     //取消订单成功
     @Override
     public void cancelOrderSuccess(String orderNo) {
-        if (orderState == 0) {
+        if (orderState == OrderState.ALLRESPONSE) {
             //刷新待支付状态列表
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
         } else {
@@ -241,7 +249,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     //确认收货成功
     @Override
     public void confirmReceiveSuccess(String orderNo) {
-        if (orderState == 0) {
+        if (orderState == OrderState.ALLRESPONSE) {
             //刷新待支付
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGRECEIVE));
         } else {
@@ -301,7 +309,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         if (response != null && response.status == 1) {
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
         } else {
-            onRefresh();
+            if (orderState == OrderState.ALLRESPONSE) {
+                //刷新待支付
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+            } else {
+                removeData(response.orderNo);
+            }
+            //刷新所有，已关闭
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
             ToastUtils.showLongToast("订单已失效");
         }
     }
