@@ -20,11 +20,13 @@
 
     <com.giveu.shoppingmall.index.widget.MiddleRadioButton
         android:id="@+id/fragment_center_text"
-        android:layout_width="268dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/fragment_left_image_layout"
         android:background="@drawable/shape_title_background"
         android:button="@null"
+        android:layout_marginRight="16dp"
         android:drawableLeft="@drawable/shopping_search"
         android:text="搜索"
         android:textColor="#9b9b9b"
@@ -33,7 +35,7 @@
     <com.giveu.shoppingmall.index.widget.ClearEditText
         android:id="@+id/fragment_center_edit"
         android:layout_width="268dp"
-        android:layout_height="30dp"
+        android:layout_height="32dp"
         android:layout_centerInParent="true"
         android:background="@drawable/shape_title_background"
         android:hint="搜索商品"
