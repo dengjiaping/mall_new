@@ -157,7 +157,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String orderNo;
     private String paymentNum;
 
-    //订单是否出入确认状态，如果是则不可修改
+    //订单是否处于确认状态，如果是则不可修改
     private boolean isConfirm = false;
     //界面初始化成功的标志
     private boolean isInitSuccess = false;

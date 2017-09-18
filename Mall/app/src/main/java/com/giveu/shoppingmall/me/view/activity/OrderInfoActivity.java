@@ -270,7 +270,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
             //商品合计
             if (StringUtils.isNotNull(response.skuInfo.totalPrice)) {
-                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 15, 11, R.color.color_ff2a2a, R.color.color_ff2a2a);
+                CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥", StringUtils.format2(response.skuInfo.totalPrice), "", 19, 13, R.color.color_ff2a2a, R.color.color_ff2a2a);
             }
             //skuCode
             if (StringUtils.isNotNull(response.skuInfo.skuCode)) {
