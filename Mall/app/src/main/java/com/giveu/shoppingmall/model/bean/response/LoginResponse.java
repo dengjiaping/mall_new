@@ -115,7 +115,7 @@ public class LoginResponse extends BaseBean<LoginResponse> {
             public String city;
             public int cityCode;
             public String custName;
-            public int idPerson;
+            public long idPerson;
             public String phone;
             public String province;
             public int provinceCode;

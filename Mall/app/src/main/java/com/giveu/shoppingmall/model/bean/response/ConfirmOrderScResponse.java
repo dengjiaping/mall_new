@@ -15,7 +15,7 @@ public class ConfirmOrderScResponse extends BaseBean<ConfirmOrderScResponse> {
      * payMoney : 4399.0
      */
 
-    public int idPerson;
+    public long idPerson;
     public String orderNo;
     public String payMoney;
     public String payType;
