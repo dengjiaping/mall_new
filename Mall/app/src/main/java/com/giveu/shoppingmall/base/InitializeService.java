@@ -119,7 +119,7 @@ public class InitializeService extends IntentService {
                 CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
                 strategy.setUploadProcess(processName == null || processName.equals(packageName));
                 // 初始化Bugly//建议在测试阶段建议设置成true，发布时设置为false。
-                Bugly.init(BaseApplication.getInstance(),  Const.BUGLY_APPID, true);
+                Bugly.init(BaseApplication.getInstance(),  Const.BUGLY_APPID, DebugConfig.isDebug);
 //                CrashReportUtil.setUserIdTobugly(LoginHelper.getInstance().loginPersonInfo);
             }
         } catch (Exception e) {
