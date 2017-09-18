@@ -16,7 +16,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="1000.00"
             android:textColor="@color/color_282828"
             android:textSize="@dimen/ts_18" />
 
@@ -25,7 +24,6 @@
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="放款中"
             android:textColor="@color/color_00bbc0"
             android:textSize="@dimen/ts_14" />
 
@@ -42,7 +40,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="大额取现分期"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_14" />
 
@@ -51,7 +48,6 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017-06-04 17:23"
             android:textColor="@color/color_9b9b9b"
             android:textSize="@dimen/ts_14" />
 

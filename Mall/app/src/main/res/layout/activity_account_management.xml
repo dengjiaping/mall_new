@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_layoutxml_bg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -89,16 +90,13 @@
         <ImageView style="@style/arrow_common_problem_style" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/line_bg" />
 
     <LinearLayout
         android:id="@+id/ll_bank_card"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:background="@color/white"
+        android:layout_marginTop="1dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -112,16 +110,14 @@
         <ImageView style="@style/arrow_common_problem_style" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/line_bg" />
+
 
     <LinearLayout
         android:id="@+id/ll_security_center"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:background="@color/white"
+        android:layout_marginTop="1dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -135,16 +131,14 @@
         <ImageView style="@style/arrow_common_problem_style" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/line_bg" />
+
 
     <LinearLayout
         android:id="@+id/ll_version_update"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:background="@color/white"
+        android:layout_marginTop="1dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -163,6 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="1dp"
             android:src="@drawable/ic_update_flag"
             android:visibility="gone" />
 
