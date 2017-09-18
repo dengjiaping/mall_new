@@ -161,7 +161,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private boolean isConfirm = false;
     //界面初始化成功的标志
     private boolean isInitSuccess = false;
-
+    private boolean canPay = true;//是否可以下单支付
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         context.startActivity(intent);
@@ -375,7 +375,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         19, 13, R.color.black, R.color.black);
             }
 
-            tvSkuInfoQuantity.setText("X  " + skuInfoBean.quantity);
+            tvSkuInfoQuantity.setText("× " + skuInfoBean.quantity);
 
             if (StringUtils.isNotNull(skuInfoBean.totalPrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSkuInfoTotalPrice, "¥ ", StringUtils.format2(skuInfoBean.totalPrice), "",
@@ -488,7 +488,11 @@ public class ConfirmOrderActivity extends BaseActivity {
                         TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                     }
                 } else {
-                    confirmOrderSc();
+                    //在下单时canPay置为false，当服务器未返回结果时，不会重复创建订单，返回错误时，可再次下单
+                    if (canPay) {
+                        canPay = false;
+                        confirmOrderSc();
+                    }
                 }
                 break;
             case R.id.confirm_order_empty:
@@ -533,6 +537,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
                     @Override
                     public void onError(BaseBean errorBean) {
+                        canPay = true;
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
