@@ -32,7 +32,7 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
             @Override
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
-                    getView().confirmOrderFail();
+                    getView().confirmOrderFail(errorBean.message);
                 }
             }
         });

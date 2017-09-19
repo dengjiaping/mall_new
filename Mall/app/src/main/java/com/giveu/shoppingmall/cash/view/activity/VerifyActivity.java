@@ -212,7 +212,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                             if (isWalletPay) {
 
                             } else {
-                                presenter.confirmPayForShop(Const.CHANNEL,orderNo, LoginHelper.getInstance().getIdPerson(), smsCode, LoginHelper.getInstance().getPhone());
+                                presenter.confirmPayForShop(Const.CHANNEL, orderNo, LoginHelper.getInstance().getIdPerson(), smsCode, LoginHelper.getInstance().getPhone());
                             }
                             break;
                     }
@@ -331,8 +331,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     }
 
     @Override
-    public void confirmOrderFail() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
+    public void confirmOrderFail(String message) {
+        RechargeStatusActivity.startIt(mBaseContext, "fail", StringUtils.isNotNull(message) ? message : "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
         finish();
     }
 
@@ -349,7 +349,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
-            PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum,data.alipay,data.payId);
+            PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum, data.alipay, data.payId);
         }
         finish();
     }
