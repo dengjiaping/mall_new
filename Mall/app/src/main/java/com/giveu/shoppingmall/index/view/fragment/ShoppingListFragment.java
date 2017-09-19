@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView;
 
@@ -259,6 +260,7 @@ public class ShoppingListFragment extends BaseFragment {
                     @Override
                     public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
+                        CommonLoadingView.showErrorToast(errorBean);
                         //加载更多失败，如果有数据的话，不显示默认空白图标
                         if (CommonUtils.isNullOrEmpty(shoppingList) && emptyView.getVisibility() != View.VISIBLE) {
                             emptyView.setVisibility(View.VISIBLE);
@@ -279,6 +281,10 @@ public class ShoppingListFragment extends BaseFragment {
 
         if (emptyView != null && emptyView.getVisibility() != View.GONE) {
             emptyView.setVisibility(View.GONE);
+        }
+
+        if (mRefreshView != null){
+            mRefreshView.setPullLoadEnable(false);
         }
         initDataForFragment();
     }
