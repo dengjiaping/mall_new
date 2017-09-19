@@ -189,7 +189,7 @@ public class ShoppingListFragment extends BaseFragment {
         mRefreshView.getFooter().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //空方法，使下拉刷新控件尾部不限时点击效果
+                //空方法，使下拉刷新控件尾部不显示点击效果
             }
         });
     }
@@ -220,24 +220,22 @@ public class ShoppingListFragment extends BaseFragment {
         ApiImpl.getGoodsSearch(mBaseContext, channel, idPerson, keyword, orderSort, pageNum, pageSize, shopTypeId, code, new BaseRequestAgent.ResponseListener<GoodsSearchResponse>() {
                     @Override
                     public void onSuccess(GoodsSearchResponse response) {
+                        mRefreshView.onRefreshComplete();
                         mRefreshView.setPullRefreshEnable(true);
-                        
+                        mRefreshView.setPullLoadEnable(false);
+
                         if (emptyView.getVisibility() != View.GONE) {
                             emptyView.setVisibility(View.GONE);
                         }
 
                         if (response.data != null && CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
-
                             if (pageNum == 1) {
                                 shoppingList.clear();
-                                if (response.data.resultList.size() >= pageSize) {
-                                    mRefreshView.setPullLoadEnable(true);
-                                } else {
-                                    mRefreshView.setPullLoadEnable(false);
-                                    mRefreshView.showEnd("没有更多数据");
-                                }
-
-                                mRefreshView.onRefreshComplete();
+                            }
+                            if (response.data.resultList.size() >= pageSize) {
+                                mRefreshView.setPullLoadEnable(true);
+                            } else {
+                                mRefreshView.showEnd("没有更多数据");
                             }
 
                             pageNum++;
@@ -246,15 +244,12 @@ public class ShoppingListFragment extends BaseFragment {
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (pageNum == 1) {
-                                mRefreshView.onRefreshComplete();
-                                mRefreshView.setPullLoadEnable(false);
                                 shoppingList.clear();
                                 mAdapter.notifyDataSetChanged();
                                 if (emptyView.getVisibility() != View.VISIBLE) {
                                     emptyView.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                mRefreshView.setPullLoadEnable(false);
                                 mRefreshView.showEnd("没有更多数据");
                             }
                         }
@@ -264,7 +259,8 @@ public class ShoppingListFragment extends BaseFragment {
                     @Override
                     public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
-                        if (emptyView.getVisibility() != View.VISIBLE) {
+                        //加载更多失败，如果有数据的话，不显示默认空白图标
+                        if (CommonUtils.isNullOrEmpty(shoppingList) && emptyView.getVisibility() != View.VISIBLE) {
                             emptyView.setVisibility(View.VISIBLE);
                         }
                     }
