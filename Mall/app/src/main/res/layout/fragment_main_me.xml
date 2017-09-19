@@ -295,7 +295,6 @@
                                     android:layout_marginTop="3dp"
                                     android:background="@drawable/shape_red_circle"
                                     android:gravity="center"
-                                    android:text="11"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/ts_11" />
                             </FrameLayout>
@@ -380,7 +379,6 @@
                                     android:layout_marginTop="3dp"
                                     android:background="@drawable/shape_red_circle"
                                     android:gravity="center"
-                                    android:text="11"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/ts_11" />
                             </FrameLayout>
@@ -423,7 +421,6 @@
                                     android:layout_marginTop="3dp"
                                     android:background="@drawable/shape_red_circle"
                                     android:gravity="center"
-                                    android:text="11"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/ts_11" />
                             </FrameLayout>
