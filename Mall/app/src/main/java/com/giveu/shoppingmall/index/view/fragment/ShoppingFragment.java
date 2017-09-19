@@ -218,6 +218,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
+                int picSize = llHot.getLayoutParams().height-DensityUtils.dip2px(31);
+                ivCommodity.getLayoutParams().height = picSize;
+                ivCommodity.getLayoutParams().width = picSize;
+
                 ImageView ivSmall = holder.getView(R.id.iv_small);
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
@@ -268,8 +272,12 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             protected void convert(ViewHolder holder, final IndexResponse.DecorationsBean item, int position) {
                 LinearLayout llHot = holder.getView(R.id.ll_category);
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 5) / 4;
-                llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
+//                llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
+                int picSize = llHot.getLayoutParams().width-DensityUtils.dip2px(24);
+                ivCommodity.getLayoutParams().height = picSize;
+                ivCommodity.getLayoutParams().width = picSize;
+
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
                         + item.picSrc, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {

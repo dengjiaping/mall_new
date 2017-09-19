@@ -46,9 +46,8 @@
 
             <ImageView
                 android:id="@+id/iv_commodity"
-                android:layout_width="0dp"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:padding="5dp"
                  />
         </LinearLayout>
