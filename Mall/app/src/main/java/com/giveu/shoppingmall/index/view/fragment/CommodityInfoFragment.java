@@ -465,11 +465,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     public void rejectGpsPermission() {
         if (llChooseAddress != null) {
-            //GPS定位失败，直接设置为北京市
-            llChooseAddress.setMiddleText("北京市");
-            provinceStr = "北京市";
-            cityStr = "";
-            regionStr = "";
+            //GPS定位失败，直接设置为广东 深圳市 福田区
+            llChooseAddress.setMiddleText("广东 深圳市 福田区");
+            provinceStr = "广东";
+            cityStr = "深圳市";
+            regionStr = "福田区";
             //GPS获取省市区后查询该商品是否有货
             presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
         }
@@ -498,7 +498,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
                 @Override
                 public void onFail(Object o) {
-                    //GPS定位失败，直接设置为北京市
+                    //GPS定位失败，直接设置为广东 深圳市 福田区
                     llChooseAddress.setMiddleText("广东 深圳市 福田区");
                     provinceStr = "广东";
                     cityStr = "深圳市";
