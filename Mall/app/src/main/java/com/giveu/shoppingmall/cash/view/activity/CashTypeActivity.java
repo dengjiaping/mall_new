@@ -272,8 +272,10 @@ public class CashTypeActivity extends BaseActivity {
                             if (StringUtils.isNotNull(input)) {
                                 chooseQuota = Double.parseDouble(input);
                                 if (ensureBtnCanclick(chooseQuota)) {//满足条件
-                                    rulerView.smoothScrollTo((int) chooseQuota);
-                                    RefreshData();
+                                    if (lastEditTextValue != chooseQuota) {
+                                        rulerView.smoothScrollTo((int) chooseQuota);
+                                        RefreshData();
+                                    }
                                 }
                             }
                         } else {
@@ -432,7 +434,9 @@ public class CashTypeActivity extends BaseActivity {
                         ToastUtils.showShortToast("取现不少于100元");
                         rulerView.smoothScrollTo(100);//低于100滑到100，并提示
                     }
-                    RefreshData();
+                    if (lastEditTextValue != chooseQuota) {
+                        RefreshData();
+                    }
                 }
             }
         });
