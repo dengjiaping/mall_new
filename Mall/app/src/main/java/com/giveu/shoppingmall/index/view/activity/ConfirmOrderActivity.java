@@ -507,6 +507,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private void confirmOrderSc() {
 
         if (addressJoBean == null) {
+            canPay = true;
             ToastUtils.showShortToast("请添加收货地址");
             return;
         }
