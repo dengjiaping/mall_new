@@ -162,6 +162,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     //界面初始化成功的标志
     private boolean isInitSuccess = false;
     private boolean canPay = true;//是否可以下单支付
+
     public static void startIt(Context context) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         context.startActivity(intent);
@@ -508,6 +509,11 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (addressJoBean == null) {
             ToastUtils.showShortToast("请添加收货地址");
             return;
+        }
+
+        if (StringUtils.isNotNull(addressJoBean.phone)) {
+            //清除收货人电话的空格
+            addressJoBean.phone = addressJoBean.phone.trim().replaceAll(" ","");
         }
 
         ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
