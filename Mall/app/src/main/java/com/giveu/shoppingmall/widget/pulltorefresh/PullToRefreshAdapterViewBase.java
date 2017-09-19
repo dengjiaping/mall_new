@@ -270,6 +270,15 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
     }
 
     @Override
+    public void dispatchWindowFocusChanged(boolean hasFocus) {
+        try {
+            super.dispatchWindowFocusChanged(hasFocus);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onReleaseToRefresh() {
         super.onReleaseToRefresh();
 
