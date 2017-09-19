@@ -513,7 +513,16 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         if (StringUtils.isNotNull(addressJoBean.phone)) {
             //清除收货人电话的空格
-            addressJoBean.phone = addressJoBean.phone.trim().replaceAll(" ","");
+            addressJoBean.phone = addressJoBean.phone.trim().replaceAll(" ", "");
+            if (addressJoBean.phone.length() != 11) {
+                canPay = true;
+                ToastUtils.showShortToast("收货人联系电话格式不正确");
+                return;
+            }
+        } else {
+            canPay = true;
+            ToastUtils.showShortToast("收货人联系电话格式不正确");
+            return;
         }
 
         ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
