@@ -143,11 +143,11 @@ public class AddAddressActivity extends BasePermissionActivity {
                         switch (type) {
                             case ADD:
                                 //添加地址
-                                ApiImpl.addAddress(mBaseContext, building, "5", city, name, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                ApiImpl.addAddress(mBaseContext, building, "5", city, name, LoginHelper.getInstance().getIdPerson(), isDefault, phone.replace(" ","").trim(), province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                     @Override
                                     public void onSuccess(BaseBean response) {
                                         ToastUtils.showShortToast("添加地址成功");
-                                        addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
+                                        addressResponse = new AddressListResponse(building, city, name, isDefault, phone.replace(" ",""), province, region, street);
                                         Intent intent = new Intent();
                                         intent.putExtra("addressResponse", addressResponse);
                                         setResult(RESULT_OK, intent);
@@ -167,11 +167,11 @@ public class AddAddressActivity extends BasePermissionActivity {
                                     province = StringUtils.isNull(province) ? item.province : province;
                                     region = StringUtils.isNull(region) ? item.region : region;
                                     street = StringUtils.isNull(street) ? item.street : street;
-                                    ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone, province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
+                                    ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone.replace(" ",""), province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                         @Override
                                         public void onSuccess(BaseBean response) {
                                             ToastUtils.showShortToast("修改地址成功");
-                                            addressResponse = new AddressListResponse(building, city, name, isDefault, phone, province, region, street);
+                                            addressResponse = new AddressListResponse(building, city, name, isDefault, phone.replace(" ",""), province, region, street);
                                             Intent intent = new Intent();
                                             intent.putExtra("addressResponse", addressResponse);
                                             setResult(RESULT_OK, intent);
@@ -290,10 +290,7 @@ public class AddAddressActivity extends BasePermissionActivity {
         if (!StringUtils.checkUserNameAndTipError(etReceivingName.getText().toString(), showToast)) {
             return false;
         }
-        if (etReceivingPhone.getText().toString().length() != 11) {
-            if (showToast) {
-                ToastUtils.showShortToast("请输入11位的手机号");
-            }
+        if (!StringUtils.checkPhoneNumberAndTipError(etReceivingPhone.getText().toString(),showToast)){
             return false;
         }
 

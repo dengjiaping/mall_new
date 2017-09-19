@@ -48,6 +48,7 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -111,6 +112,8 @@ public class CashTypeActivity extends BaseActivity {
     TextView tvAgreementTop;
     @BindView(R.id.cb_desc_top)
     CheckBox cbDescTop;
+    @BindView(R.id.ll_agreement_top)
+    LinearLayout llAgreementTop;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000目前最大额
@@ -417,7 +420,7 @@ public class CashTypeActivity extends BaseActivity {
         cbDescTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLoanAmount(localIdProduct,(int)chooseQuota);
+                showLoanAmount(localIdProduct, (int) chooseQuota);
             }
         });
         rulerView.setOnAdjustIndicateListener(new RulerView.OnAdjustIndicateListener() {
@@ -449,7 +452,19 @@ public class CashTypeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int checkId, long id) {
                 if (stagingTypeAdapter != null) {
                     if (stagingTypeAdapter.getCount() > 0) {
+                        if (stagingTypeAdapter.getItem(checkId) == null) {
+                            return;
+                        }
+                        if (0 == stagingTypeAdapter.getItem(checkId).idProduct) {
+                            //随借随还则隐藏保险
+                            llAgreementTop.setVisibility(View.GONE);
+                        } else {
+                            llAgreementTop.setVisibility(View.VISIBLE);
+                        }
                         for (int i = 0; i < stagingTypeAdapter.getCount(); i++) {
+                            if (stagingTypeAdapter.getItem(i) == null) {
+                                return;
+                            }
                             if (checkId == i) {
                                 stagingTypeAdapter.getItem(i).isChecked = true;
                                 idProduct = stagingTypeAdapter.getItem(i).idProduct;
@@ -477,7 +492,7 @@ public class CashTypeActivity extends BaseActivity {
         if (idProduct != 0) {
             llShowData.setVisibility(View.VISIBLE);
             String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
-            ApiImpl.repayCost(mBaseContext, idProduct,insuranceFee, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
+            ApiImpl.repayCost(mBaseContext, idProduct, insuranceFee, chooseQuota, new BaseRequestAgent.ResponseListener<RepayCostResponse>() {
                 @Override
                 public void onSuccess(RepayCostResponse response) {
                     if (response.data != null) {
@@ -548,10 +563,12 @@ public class CashTypeActivity extends BaseActivity {
 
     public void RefreshData() {
         //选中不同金额调取本地数据，不请求接口
-        if (lastEditTextValue != chooseQuota) {
-            lastEditTextValue = chooseQuota;
-            setStageNumberData(chooseQuota);
-        }
+//        if (lastEditTextValue != chooseQuota) {
+//            lastEditTextValue = chooseQuota;
+//            setStageNumberData(chooseQuota);
+//        }
+        lastEditTextValue = chooseQuota;
+        setStageNumberData(chooseQuota);
     }
 
     //获取按日计息费率
@@ -594,7 +611,7 @@ public class CashTypeActivity extends BaseActivity {
             case R.id.tv_monthly_payment:
                 //查看月供
                 String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
-                ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(),insuranceFee, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
+                ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(), insuranceFee, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {
                     @Override
                     public void onSuccess(RpmDetailResponse response) {
                         MonthlyDetailsDialog monthlyDetailsDialog = new MonthlyDetailsDialog(mBaseContext, response.data);
@@ -695,7 +712,13 @@ public class CashTypeActivity extends BaseActivity {
                                         if (StringUtils.isNull(chooseBankNo)) {
                                             chooseBankNo = LoginHelper.getInstance().getDefaultCard();
                                         }
-                                        String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
+                                        String insuranceFee;
+                                        if (localIdProduct == 0) {
+                                            //localIdProduct = 0，是随借随还状态
+                                            insuranceFee = "0";
+                                        } else {
+                                            insuranceFee = cbDescTop.isChecked() ? "1" : "0";
+                                        }
                                         VerifyActivity.startIt(mBaseContext, insuranceFee, VerifyActivity.CASH, String.valueOf((int) chooseQuota), creditType, String.valueOf(localIdProduct), response.data.code, chooseBankName, chooseBankNo);
                                     } else {
                                         //remainTimes: 1-3 重试密码 0 冻结密码需要找回密码
@@ -752,6 +775,8 @@ public class CashTypeActivity extends BaseActivity {
         //默认显示分期gridView，和费率
         gvStagingType.setVisibility(View.VISIBLE);
         tvCostFee.setVisibility(View.VISIBLE);
+        //默认把保险显示出来，只有随借随还（按日计息）不显示
+        llAgreementTop.setVisibility(View.VISIBLE);
         if (chooseQuota > MAXAMOUNT) {
             //仅支持取现分期(>3000)
             llShowData.setVisibility(View.VISIBLE);
@@ -787,7 +812,6 @@ public class CashTypeActivity extends BaseActivity {
                 llShowData.setVisibility(View.GONE);
                 isChooseProduct = true;//默认选择按日计息
                 tvCostFee.setVisibility(View.VISIBLE);
-
             } else {
                 data.add(noStageProduct);
                 if (data.size() > 2) {
@@ -812,6 +836,8 @@ public class CashTypeActivity extends BaseActivity {
             tvCostFee.setVisibility(View.VISIBLE);
             tvCostFee.setLayoutParams(getCostFeeLayoutParams(data));
             localIdProduct = 0;
+            //隐藏保险
+            llAgreementTop.setVisibility(View.GONE);
         }
         //更新显示哪个协议
         setTvAgreement(localIdProduct);
