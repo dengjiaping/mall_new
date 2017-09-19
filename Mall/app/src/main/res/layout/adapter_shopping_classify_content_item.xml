@@ -6,10 +6,9 @@
 
     <ImageView
         android:id="@+id/item_content_image"
-        android:layout_width="wrap_content"
+        android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/item_content_text"
