@@ -116,6 +116,7 @@ public class MainActivity extends BasePermissionActivity {
 //        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
         baseLayout.setTitleBarAndStatusBar(false, false);
         manager = getSupportFragmentManager();
+        baseLayout.setTopBarBackgroundColor(R.color.white);
 
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
