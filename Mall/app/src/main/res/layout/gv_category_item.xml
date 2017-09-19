@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="12dp"
-        android:maxLines="1"
+        android:singleLine="true"
         android:ellipsize="end"
         android:textColor="@color/black"
         android:textSize="@dimen/ts_16" />
@@ -23,8 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/color_9b9b9b"
         android:textSize="@dimen/ts_12" />
 

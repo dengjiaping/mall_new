@@ -258,7 +258,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             //商品icon
             if (StringUtils.isNotNull(response.skuInfo.src) && StringUtils.isNotNull(response.skuInfo.srcIp)) {
                 src = response.skuInfo.srcIp + ImageUtils.ImageSize.img_size_200_200 + response.skuInfo.src;
-                ImageUtils.loadImage(src, ivPicture);
+                if (orderType == 0) {
+                    ImageUtils.loadImage(src, ivPicture);
+                } else {
+                    ImageUtils.loadImage(response.skuInfo.srcIp + "/" + response.skuInfo.src, ivPicture);
+                }
             }
             //商品标题
             if (StringUtils.isNotNull(response.skuInfo.name)) {

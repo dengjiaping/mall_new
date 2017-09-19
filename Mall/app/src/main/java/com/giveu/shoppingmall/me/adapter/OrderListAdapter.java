@@ -73,7 +73,11 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
         if (StringUtils.isNotNull(item.srcIp)) {
             if (StringUtils.isNotNull(item.src)) {
                 ImageView imageView = viewHolder.getView(R.id.iv_icon);
-                ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src, imageView);
+                if (item.orderType == 0) {
+                    ImageUtils.loadImage(item.srcIp + ImageUtils.ImageSize.img_size_200_200 + item.src, imageView);
+                } else {
+                    ImageUtils.loadImage(item.srcIp + "/" + item.src, imageView);
+                }
             }
         }
         /**

@@ -7,7 +7,6 @@ import com.giveu.shoppingmall.index.view.agent.IShoppingView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
-import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
 /**
@@ -47,7 +46,7 @@ public class ShoppingPresenter extends BasePresenter<IShoppingView> {
             @Override
             public void onSuccess(GoodsSearchResponse response) {
                 if (getView() != null) {
-                    if (response.data != null && CommonUtils.isNotNullOrEmpty(response.data.resultList)) {
+                    if (response.data != null) {
                         getView().getIndexContent(response.data.resultList, response.data.srcIp);
                     } else {
                         getView().getDataFail(false);

@@ -51,7 +51,6 @@ public class VerifyPresenter extends SendSmsPresenter<IVerifyView> {
             @Override
             public void onError(BaseBean errorBean) {
                 CommonLoadingView.showErrorToast(errorBean);
-                BaseApplication.getInstance().finishActivity(VerifyActivity.class);
             }
         });
     }
