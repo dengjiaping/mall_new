@@ -202,6 +202,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
             viewHolder.gvHot.setVisibility(View.GONE);
             return;
         }
+        viewHolder.tvTitle1.setText(indexResponse.modelName);
         viewHolder.rlHot.setVisibility(View.VISIBLE);
         viewHolder.gvHot.setVisibility(View.VISIBLE);
         viewHolder.tvMore.setOnClickListener(new View.OnClickListener() {
@@ -542,6 +543,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         break;
                     case 4 + "":
                         //头部数据加载完成后再加载单品数据
+                        viewHolder.tvTitle2.setText(indexResponse.modelName);
                         if (CommonUtils.isNotNullOrEmpty(indexResponse.decorations)) {
                             contentCode = indexResponse.decorations.get(0).code;
                             GoodsSearchResponse.GoodsBean goodsBean = new GoodsSearchResponse.GoodsBean();
@@ -611,6 +613,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         LinearLayout llPhoneRecharge;
         @BindView(R.id.shopping_hot_more)
         TextView tvMore;
+        @BindView(R.id.tv_title1)
+        TextView tvTitle1;
+        @BindView(R.id.tv_title2)
+        TextView tvTitle2;
 
         public HeaderViewHolder(View headerView) {
             ButterKnife.bind(this, headerView);
