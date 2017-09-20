@@ -78,12 +78,14 @@ public class CollectionActivity extends BaseActivity {
                 if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
+                //清除选项
+                clearChoose();
                 if (rightTextClick) {
                     baseLayout.setRightText("取消");
                     llBottomDelete.setVisibility(View.VISIBLE);
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT - DensityUtils.dip2px(57));
                     ptrlv.setLayoutParams(layoutParams);
-                    clearChoose();
+
                     cbChoose.setChecked(false);
                 } else {
                     baseLayout.setRightText("编辑");
@@ -106,6 +108,10 @@ public class CollectionActivity extends BaseActivity {
                 if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
+//                //全选状态下，取消任意一项，全选按钮和下方删除数据变化
+//                if(collectionAdapter.get){
+//
+//                }
                 for (int i = 0; i < collectionAdapter.getData().size(); i++) {
                     if (collectionAdapter.getData().get(i) == null) {
                         return;
@@ -139,10 +145,15 @@ public class CollectionActivity extends BaseActivity {
         cbChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (collectionAdapter == null) {
+                    return;
+                }
                 if (cbChoose.isChecked()) {
                     //全选
                     for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
-                        collectionResponse.isCheck = true;
+                        if (collectionResponse != null) {
+                            collectionResponse.isCheck = true;
+                        }
                     }
                     deleteColorAndCanClick(collectionAdapter.getCount());
                 } else {
@@ -211,7 +222,6 @@ public class CollectionActivity extends BaseActivity {
                 }
                 if (response != null && response.data != null) {
                     CollectionResponse collectionResponse = response.data;
-
                     if (CommonUtils.isNotNullOrEmpty(collectionResponse.resultList)) {
                         baseLayout.setRightText("编辑");
                         if (pageIndex == 1) {
@@ -224,24 +234,39 @@ public class CollectionActivity extends BaseActivity {
                             }
                             baseLayout.hideEmpty();
                         }
+                        //获取上一次刷新的数据个数
+                        int oldCount = goodsList.size();
                         goodsList.addAll(collectionResponse.resultList);
+                        //下拉加载更多，新数据如果是编辑状态，显示前面checkbox
                         if (llBottomDelete.getVisibility() == View.VISIBLE) {
+                            for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
+                                collectionResponse1.isShowCb = true;
+                            }
                             if (cbChoose.isChecked()) {
-                                for (int i = 0; i < goodsList.size(); i++) {
-                                    goodsList.get(i).isShowCb = true;
-                                    if (itemNotClickList.contains(i)) {
-                                        goodsList.get(i).isCheck = false;
-                                    } else {
+                                //如果选中了全选按钮，之前数据不变，新加数据全部选中
+                                for (int i = oldCount; i < goodsList.size(); i++) {
+                                    if (i >= 0) {
                                         goodsList.get(i).isCheck = true;
                                     }
                                 }
                             } else {
-                                for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
-                                    collectionResponse1.isShowCb = true;
-                                    collectionResponse1.isCheck = false;
+                                for (int i = oldCount - 1; i < goodsList.size(); i++) {
+                                    if (i >= 0) {
+                                        goodsList.get(i).isCheck = false;
+                                    }
                                 }
                             }
-
+                            int newCheckCount = 0;//编辑状态下，上拉加载更多，统计选中总个数
+                            for (CollectionResponse.ResultListBean resultListBean : goodsList) {
+                                if (resultListBean.isCheck) {
+                                    newCheckCount++;
+                                }
+                            }
+                            deleteColorAndCanClick(newCheckCount);
+                        } else {
+                            for (CollectionResponse.ResultListBean collectionResponse1 : goodsList) {
+                                collectionResponse1.isShowCb = false;
+                            }
                         }
                         collectionAdapter.notifyDataSetChanged();
                         pageIndex++;
@@ -321,7 +346,7 @@ public class CollectionActivity extends BaseActivity {
                         if (position >= 0 && position < collectionAdapter.getCount() && (collectionAdapter.getItem(position) != null)) {
                             //长按删除
                             skuCodes.add(collectionAdapter.getItem(position).skuCode);
-                            deleteGoods(skuCodes, position, null,type);
+                            deleteGoods(skuCodes, position, null, type);
                         }
                     } else {
                         //全选或选择删除
@@ -333,7 +358,7 @@ public class CollectionActivity extends BaseActivity {
                                 skuCodes.add(collectionAdapter.getItem(i).skuCode);
                             }
                         }
-                        deleteGoods(skuCodes, -1, removeList,type);
+                        deleteGoods(skuCodes, -1, removeList, type);
 
                     }
                 }
@@ -348,12 +373,15 @@ public class CollectionActivity extends BaseActivity {
      * @param position
      * @param removeList 1 为删除
      */
-    public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList,final String type) {
+    public void deleteGoods(final List<String> skuCodes, final int position, final List<CollectionResponse.ResultListBean> removeList, final String type) {
         ApiImpl.deleteCollection(mBaseContext, LoginHelper.getInstance().getIdPerson(), skuCodes, 1, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (DELETEONE.equals(type)) {
-                    if (position < collectionAdapter.getCount()) {
+                    if (collectionAdapter == null) {
+                        return;
+                    }
+                    if (position >= 0 && position < collectionAdapter.getCount()) {
                         collectionAdapter.getData().remove(position);
                     }
                 } else {
@@ -361,18 +389,26 @@ public class CollectionActivity extends BaseActivity {
                     if (CommonUtils.isNullOrEmpty(removeList)) {
                         return;
                     }
+                    if (collectionAdapter.getData() == null) {
+                        return;
+                    }
                     collectionAdapter.getData().removeAll(removeList);
                 }
                 collectionAdapter.notifyDataSetChanged();
                 if (CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     baseLayout.showEmpty("暂无收藏");
-                    ptrlv.setVisibility(View.GONE);
+                    ptrlv.getFooter().hide();
                 } else {
                     baseLayout.hideEmpty();
-                    ptrlv.setVisibility(View.VISIBLE);
                 }
                 ToastUtils.showShortToast("删除成功");
                 deleteReset(collectionAdapter.getData());
+
+                if (collectionAdapter.getCount() < 10) {
+                    //如果删除商品后小于10个，刷新界面重新排版
+                    pageIndex = 1;
+                    setData();
+                }
             }
 
             @Override
