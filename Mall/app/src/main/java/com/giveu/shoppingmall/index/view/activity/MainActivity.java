@@ -113,11 +113,35 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
         baseLayout.setTitleBarAndStatusBar(false, false);
-        manager = getSupportFragmentManager();
         baseLayout.setTopBarBackgroundColor(R.color.white);
 
+        initViewPagerFragment();
+        registerEventBus();
+        //跳转至消息列表
+        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
+//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
+//            startActivity(intent);
+        }
+        fetchUserInfo();
+        initNotActiveDialog();
+        initPermissionDialog();
+        initLotteryDialog();
+
+        UITest.test(mBaseContext);
+    }
+
+    private void fetchUserInfo() {
+        BaseApplication.getInstance().fetchUserInfo();
+    }
+
+    private void initNotActiveDialog() {
+        notActiveDialog = new NotActiveDialog(mBaseContext);
+    }
+
+    private void initViewPagerFragment() {
+//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
+        manager = getSupportFragmentManager();
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
 //        rechargeFragment = new RechargeActivity();
@@ -131,37 +155,12 @@ public class MainActivity extends BasePermissionActivity {
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
-        registerEventBus();
-        //跳转至消息列表
-        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
-//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
-//            startActivity(intent);
-        }
-        notActiveDialog = new NotActiveDialog(mBaseContext);
-        UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
         mViewPager.setCurrentItem(0);
-        BaseApplication.getInstance().fetchUserInfo();
-        permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
-        permissionDialog.setConfirmStr("去开启");
-        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
-            @Override
-            public void confirm() {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-                //进入设置了，下次onResume时继续判断申请权限
-                permissionDialog.dismiss();
-            }
+    }
 
-            @Override
-            public void cancle() {
-                permissionDialog.dismiss();
-            }
-        });
+    private void initLotteryDialog() {
         lotteryDialog = new LotteryDialog(mBaseContext);
         lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
             @Override
@@ -181,6 +180,28 @@ public class MainActivity extends BasePermissionActivity {
             @Override
             public void cancel() {
                 ivSmallLottery.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                //进入设置了，下次onResume时继续判断申请权限
+                permissionDialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
             }
         });
     }
