@@ -245,7 +245,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     }
 
     /**
-     * 6.0以上系统申请通讯录权限
+     * 6.0以上系统申请地理位置权限
      */
     public void applyGpsPermission() {
         if (!PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {

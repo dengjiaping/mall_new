@@ -271,17 +271,20 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * 处理图案锁的逻辑
      */
     private void dealLockPattern() {
+        
         if (this.getClass() == MainActivity.class) {
             String className = getIntent().getStringExtra(MainActivity.lockPatternKey);
-            if (SplashActivity.class.getName().equals(className) && LoginHelper.getInstance().hasLogin()) {
-                //从splash页面过来的
-                if (SharePrefUtil.hasFingerPrint()) {
-                    FingerPrintActivity.startIt(mBaseContext, false);
-                } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
-                    //如果设置过密码
-                    GestureLoginActivity.startIt(this);
-                } else {
-                    VerifyPwdActivity.startIt(mBaseContext, false, true);
+            if (SplashActivity.class.getName().equals(className)) {
+                if (LoginHelper.getInstance().hasLogin()) {
+                    //从splash页面过来的
+                    if (SharePrefUtil.hasFingerPrint()) {
+                        FingerPrintActivity.startIt(mBaseContext, false);
+                    } else if (!TextUtils.isEmpty(SharePrefUtil.getPatternPwd())) {
+                        //如果设置过密码
+                        GestureLoginActivity.startIt(this);
+                    } else {
+                        VerifyPwdActivity.startIt(mBaseContext, false, true);
+                    }
                 }
                 clearLockPatternExtraIntent();
                 return;
