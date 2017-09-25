@@ -76,6 +76,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private boolean isCredit;//是否分期产品
     private String skuCode;
     private CommodityPresenter presenter;
+    private boolean isCollectionFlag;//取消收藏的标记
 
     public static void startIt(Context context, boolean isCredit, String skuCode) {
         Intent intent = new Intent(context, CommodityDetailActivity.class);
@@ -216,6 +217,12 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                 if (vpContent.getCurrentItem() == 1) {
                     vpContent.setCurrentItem(0);
                 } else if (!commodityInfoFragment.needCloseDetail()) {
+                    boolean isCollection = getIntent().getBooleanExtra("isCollection", false);
+                    if (isCollection) {
+                        Intent data = new Intent();
+                        data.putExtra("isCollectionFlag", isCollectionFlag);
+                        setResult(RESULT_OK, data);
+                    }
                     finish();
                 }
                 break;
@@ -232,6 +239,8 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                     if (isCheck) {
                         //取消收藏
                         presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 1);
+                        //只要对商品取消了收藏，在收藏列表都刷新界面
+                        isCollectionFlag = true;
                     } else {
                         //收藏
                         presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
@@ -393,7 +402,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             boolean isCollection = getIntent().getBooleanExtra("isCollection", false);
             if (isCollection) {
-                setResult(RESULT_OK);
+                Intent data = new Intent();
+                data.putExtra("isCollectionFlag", isCollectionFlag);
+                setResult(RESULT_OK, data);
             }
         }
         return super.onKeyDown(keyCode, event);

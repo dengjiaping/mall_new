@@ -13,7 +13,6 @@ import com.giveu.shoppingmall.base.BaseFragment;
 import com.giveu.shoppingmall.cash.view.activity.CaseRecordActivity;
 import com.giveu.shoppingmall.cash.view.activity.CashTypeActivity;
 import com.giveu.shoppingmall.cash.view.dialog.QuotaDialog;
-import com.giveu.shoppingmall.me.view.dialog.NotActiveDialog;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 
@@ -74,22 +73,14 @@ public class MainCashFragment extends BaseFragment {
 
     @Override
     public void initDataDelay() {
-//        ivBgTop.setLayoutParams(layoutParams1);
-        llDate.post(new Runnable() {
-            @Override
-            public void run() {
-                LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) llTop.getLayoutParams();
-
-                int width = DensityUtils.getWidth() - DensityUtils.dip2px(30);
-                LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
-                layoutParams1.height = (208 * width / 708);
-                layoutParams2.height = ivBgTop.getHeight() + llDate.getHeight() + DensityUtils.dip2px(15);
-                layoutParams2.setMargins(DensityUtils.dip2px(10), DensityUtils.dip2px(6), DensityUtils.dip2px(10), 0);
-                llDate.setLayoutParams(layoutParams2);
-            }
-        });
-
-
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int width = DensityUtils.getWidth();
+        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
+        layoutParams1.height = (208 * width / 708);
+        layoutParams1.width = width;
+        ivBgTop.setLayoutParams(layoutParams1);
+        llTop.setLayoutParams(layoutParams2);
+        layoutParams2.setMargins(DensityUtils.dip2px(11),DensityUtils.dip2px(8),DensityUtils.dip2px(10),0);
     }
 
     /**
