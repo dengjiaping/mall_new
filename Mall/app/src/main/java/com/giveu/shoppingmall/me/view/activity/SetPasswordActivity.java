@@ -105,7 +105,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPasswordVie
                             presenter.register(mobile, MD5.MD5Encode(etPwd.getText().toString()), randomCode);
                         } else {
                             //重置密码
-                            presenter.resetPassword(mobile, MD5.MD5Encode(etPwd.getText().toString()), randCode, LoginHelper.getInstance().getPhone());
+                            presenter.resetPassword(mobile, MD5.MD5Encode(etPwd.getText().toString()), randCode, "");
                         }
                     }
                 }
