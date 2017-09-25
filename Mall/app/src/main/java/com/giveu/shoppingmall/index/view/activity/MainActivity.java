@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -96,9 +98,7 @@ public class MainActivity extends BasePermissionActivity {
     private LotteryDialog lotteryDialog;
 
     private PermissionDialog permissionDialog;
-
     private FragmentManager manager;
-    //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
 
@@ -113,8 +113,26 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
         baseLayout.setTitleBarAndStatusBar(false, false);
+        notActiveDialog = new NotActiveDialog(mBaseContext);
+    }
+
+
+
+    @Override
+    public void setData() {
+//        doLottery();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initFragment();
+                doApkUpgrade();
+                return false; //false 表示只监听一次IDLE事件,之后就不会再执行这个函数了.
+            }
+        });
+    }
+
+    private void initFragment() {
         manager = getSupportFragmentManager();
         baseLayout.setTopBarBackgroundColor(R.color.white);
 
@@ -137,7 +155,6 @@ public class MainActivity extends BasePermissionActivity {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
 //            startActivity(intent);
         }
-        notActiveDialog = new NotActiveDialog(mBaseContext);
         UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
@@ -184,6 +201,7 @@ public class MainActivity extends BasePermissionActivity {
             }
         });
     }
+
 
     /**
      * 退出登录，登录成功都应该重新获取周年庆活动状态
@@ -352,12 +370,6 @@ public class MainActivity extends BasePermissionActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void setData() {
-//        doLottery();
-        doApkUpgrade();
     }
 
     private void doLottery() {
