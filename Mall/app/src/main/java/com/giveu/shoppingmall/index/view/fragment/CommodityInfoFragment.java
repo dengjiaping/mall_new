@@ -2,8 +2,6 @@ package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
-import android.os.MessageQueue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -268,14 +266,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void initDataDelay() {
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                initAndLoadData();
-                return false;
-            }
-        });
-
+        initAndLoadData();
     }
 
     private void initAndLoadData() {

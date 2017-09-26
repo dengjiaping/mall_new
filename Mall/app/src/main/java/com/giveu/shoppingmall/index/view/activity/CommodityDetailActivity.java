@@ -5,9 +5,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
+import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -69,6 +71,12 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     TextView tvCommodityDetail;
     @BindView(R.id.ll_choose_address)
     LinearLayout llChooseAddress;
+    @BindView(R.id.iv_photo)
+    ImageView ivPhoto;
+    @BindView(R.id.tv_commodit_name)
+    TextView tvCommodityName;
+    @BindView(R.id.ll_root)
+    LinearLayout llRoot;
     private List<Fragment> fragmentList = new ArrayList<>();
     private CommodityInfoFragment commodityInfoFragment;
     private WebCommodityFragment commodityDetailFragment;
@@ -78,19 +86,18 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private CommodityPresenter presenter;
     private boolean isCollectionFlag;//取消收藏的标记
 
-    public static void startIt(Context context, boolean isCredit, String skuCode) {
-        Intent intent = new Intent(context, CommodityDetailActivity.class);
+    public static void startIt(Activity activity, boolean isCredit, String skuCode,String picUrl, String commodityName,int resultCode, boolean isCollection) {
+        Intent intent = new Intent(activity, CommodityDetailActivity.class);
         intent.putExtra("isCredit", isCredit);
         intent.putExtra("skuCode", skuCode);
-        context.startActivity(intent);
-    }
-
-    public static void startItForResult(Activity context, boolean isCredit, String skuCode, int resultCode, boolean isCollection) {
-        Intent intent = new Intent(context, CommodityDetailActivity.class);
-        intent.putExtra("isCredit", isCredit);
-        intent.putExtra("skuCode", skuCode);
+        intent.putExtra("picUrl", picUrl);
+        intent.putExtra("commodityName", commodityName);
         intent.putExtra("isCollection", isCollection);
-        context.startActivityForResult(intent, resultCode);
+        if(isCollection) {
+            activity.startActivityForResult(intent, resultCode);
+        }else {
+            activity.startActivity(intent);
+        }
     }
 
     @Override
@@ -102,6 +109,11 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         presenter = new CommodityPresenter(this);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
+        String picUrl = getIntent().getStringExtra("picUrl");
+        String commodityName = getIntent().getStringExtra("commodityName");
+        ivPhoto.getLayoutParams().height = DensityUtils.getWidth();
+        ImageUtils.loadImage(picUrl, 0, ivPhoto);
+        tvCommodityName.setText(commodityName);
         ivCollect.setTag(false);//设置tag标识是否已收藏
         tvCommodityDetail.setAlpha(0);
         //目前只有一次性产品
@@ -116,11 +128,20 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             llCredit.setVisibility(View.GONE);
             viewDivider.setVisibility(View.GONE);
         }
+        tabLayout.addTab(tabLayout.newTab().setText("商品"));
+        tabLayout.addTab(tabLayout.newTab().setText("详情"));
         //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
-        initFragment();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initFragment();
+                return false;
+            }
+        });
 //        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
+
 
     private void initFragment() {
         //商品介绍
@@ -198,6 +219,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
                     13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
+        llRoot.setVisibility(View.GONE);
         presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 

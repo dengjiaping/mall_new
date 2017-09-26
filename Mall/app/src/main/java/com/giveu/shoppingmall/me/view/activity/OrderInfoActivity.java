@@ -154,6 +154,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     double finalPayment;//最终支付金额
     int orderType;//商品类型
     String skuCode = "";
+    String commodityName;
+    String commodityUrl;
     boolean isCredit = false;
     String refundApplying = "";//退款申请中:0-未申请,1-申请中
 
@@ -272,6 +274,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             if (StringUtils.isNotNull(response.skuInfo.salePrice)) {
                 CommonUtils.setTextWithSpanSizeAndColor(tvSalePrice, "¥", StringUtils.format2(response.skuInfo.salePrice), "", 19, 13, R.color.color_474747, R.color.color_474747);
             }
+
+            //商品名称
+            commodityName = response.skuInfo.name;
+            //商品url
+            commodityUrl = response.skuInfo.srcIp + "/" + response.skuInfo.src;
             //商品数量
             if (StringUtils.isNotNull(response.skuInfo.quantity)) {
                 tvQuantity.setVisibility(View.VISIBLE);
@@ -520,7 +527,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             //跳转商品详情
             case R.id.ll_order_info:
                 if (orderType == 0) {
-                    CommodityDetailActivity.startIt(mBaseContext, isCredit, skuCode);
+                    CommodityDetailActivity.startIt(mBaseContext, isCredit, skuCode, commodityUrl, commodityName, 0, false);
                 }
                 break;
             default:

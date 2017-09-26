@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,9 +43,9 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             public void onClick(View v) {
                 //K00002691可以分期   K00002713可以一次
                 if (item.isInstallments == 1) {
-                    CommodityDetailActivity.startIt(mContext, true, item.skuCode);
+                    CommodityDetailActivity.startIt((Activity) mContext, true, item.skuCode,srcIp + "/" +item.src,item.name,0,false);
                 } else {
-                    CommodityDetailActivity.startIt(mContext, false, item.skuCode);
+                    CommodityDetailActivity.startIt((Activity) mContext, false, item.skuCode,srcIp + "/" +item.src,item.name,0,false);
                 }
             }
         });
