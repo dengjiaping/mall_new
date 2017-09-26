@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.giveu.shoppingmall.R;
@@ -43,8 +44,8 @@ public class WelcomeActivity extends BaseActivity{
 			@Override
 			public void clickInto() {
 				SharePrefUtil.setNeedWelcome(false);
+				getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				MainActivity.startIt(mBaseContext);
-
 				finish();
 			}
 		},getLayoutInflater(), ll_dot);

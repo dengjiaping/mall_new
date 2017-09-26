@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.os.MessageQueue;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -122,14 +120,8 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     public void setData() {
 //        doLottery();
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                initFragment();
-                doApkUpgrade();
-                return false; //false 表示只监听一次IDLE事件,之后就不会再执行这个函数了.
-            }
-        });
+        initFragment();
+        doApkUpgrade();
     }
 
     private void initFragment() {
@@ -517,8 +509,6 @@ public class MainActivity extends BasePermissionActivity {
             //上传设备号至服务器
 //            ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
         }
-
-
     }
 
     DownloadApkUtils downloadApkUtils = null;

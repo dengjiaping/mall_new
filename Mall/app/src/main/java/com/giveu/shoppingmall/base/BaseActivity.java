@@ -232,7 +232,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     protected void onResume() {
-        MobclickAgent.onResume(this);
+        //正式环境才做统计
+        if (DebugConfig.isOnline) {
+            MobclickAgent.onResume(this);
+        }
         BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onResume, mAllPresenters);
         super.onResume();
     }
@@ -271,7 +274,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * 处理图案锁的逻辑
      */
     private void dealLockPattern() {
-        
+
         if (this.getClass() == MainActivity.class) {
             String className = getIntent().getStringExtra(MainActivity.lockPatternKey);
             if (SplashActivity.class.getName().equals(className)) {
