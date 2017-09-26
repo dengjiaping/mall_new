@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -51,9 +52,7 @@ import butterknife.ButterKnife;
 
 public class OrderListFragment extends BaseFragment implements IOrderInfoView<OrderDetailResponse> {
 
-    @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
-    @BindView(R.id.ll_emptyView)
     LinearLayout ll_emptyView;
 
     private View fragmentView;
@@ -66,6 +65,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     private OrderHandlePresenter presenter;
     private OrderListAdapter adapter;
     private List<OrderListResponse.SkuInfoBean> mDatas;
+    FrameLayout emptyFrameLayout;
 
     @Override
     protected BasePresenter[] initPresenters() {
@@ -79,8 +79,20 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             orderState = bundle.getInt(OrderState.ORDER_TYPE);
         }
         baseLayout.setTitleBarAndStatusBar(false, false);
+        View empty = View.inflate(mBaseContext, R.layout.fragment_order_list_empty, null);
+        emptyFrameLayout = (FrameLayout) empty.findViewById(R.id.frame);
+
+        return empty;
+
+    }
+
+    private void initFragmentView() {
         fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
-        ButterKnife.bind(this, fragmentView);
+        emptyFrameLayout.removeAllViews();
+        emptyFrameLayout.addView(fragmentView);
+
+        ll_emptyView = (LinearLayout) fragmentView.findViewById(R.id.ll_emptyView);
+        ptrlv = (PullToRefreshListView) fragmentView.findViewById(R.id.ptrlv);
         mDatas = new ArrayList<>();
 
         presenter = new OrderHandlePresenter(this);
@@ -93,8 +105,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ptrlv.setScrollingWhileRefreshingEnabled(true);
         ptrlv.getFooter().setOnClickListener(null);
         registerEventBus();
-        return fragmentView;
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -110,51 +120,51 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
 
     @Override
     protected void setListener() {
-        ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                if (position - 1 < adapter.getData().size()) {
-                    String orderNo = adapter.getData().get(position - 1).orderNo;
-                    if (StringUtils.isNotNull(orderNo))
-                        OrderInfoActivity.startIt(mBaseContext, orderNo);
-                }
-            }
-        });
-
-        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                ptrlv.setPullLoadEnable(false);
-                onRefresh();
-                if (!NetWorkUtils.isNetWorkConnected()) {
-                    ptrlv.onRefreshComplete();
-                }
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                ptrlv.setPullRefreshEnable(false);
-                initData();
-            }
-        });
-
-        ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //滑动时停止图片加载，滑动停止时恢复
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    ImageLoader.getInstance().resume();
-                } else {
-                    ImageLoader.getInstance().pause();
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
+//        ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
+//                if (position - 1 < adapter.getData().size()) {
+//                    String orderNo = adapter.getData().get(position - 1).orderNo;
+//                    if (StringUtils.isNotNull(orderNo))
+//                        OrderInfoActivity.startIt(mBaseContext, orderNo);
+//                }
+//            }
+//        });
+//
+//        ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                ptrlv.setPullLoadEnable(false);
+//                onRefresh();
+//                if (!NetWorkUtils.isNetWorkConnected()) {
+//                    ptrlv.onRefreshComplete();
+//                }
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                ptrlv.setPullRefreshEnable(false);
+//                initData();
+//            }
+//        });
+//
+//        ptrlv.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                //滑动时停止图片加载，滑动停止时恢复
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    ImageLoader.getInstance().resume();
+//                } else {
+//                    ImageLoader.getInstance().pause();
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
 
     }
 
@@ -174,6 +184,10 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
+                if (pageNum == 1){
+                    initFragmentView();
+                }
+
                 ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
