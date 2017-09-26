@@ -108,10 +108,6 @@ public class CollectionActivity extends BaseActivity {
                 if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
                     return;
                 }
-//                //全选状态下，取消任意一项，全选按钮和下方删除数据变化
-//                if(collectionAdapter.get){
-//
-//                }
                 for (int i = 0; i < collectionAdapter.getData().size(); i++) {
                     if (collectionAdapter.getData().get(i) == null) {
                         return;
@@ -122,6 +118,14 @@ public class CollectionActivity extends BaseActivity {
                     } else {
                         itemNotClickList.add(i);
                     }
+                }
+                //全选状态下，取消任意一项，全选按钮取消选中
+                if(cbChoose.isChecked() && itemNotClickList.size() != 0){
+                    cbChoose.setChecked(false);
+                }
+                //非全选状态下，全部选中，全选按钮选中
+                if(!cbChoose.isChecked() && itemNotClickList.size() == 0){
+                    cbChoose.setChecked(true);
                 }
                 deleteColorAndCanClick(count);
             }
@@ -137,6 +141,7 @@ public class CollectionActivity extends BaseActivity {
         ptrlv.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         ptrlv.setPullLoadEnable(false);
         ptrlv.setPullRefreshEnable(false);
+        ptrlv.getFooter().setConHeight(57);
     }
 
     @Override
@@ -208,7 +213,6 @@ public class CollectionActivity extends BaseActivity {
 
             }
         });
-
     }
 
     @Override
@@ -250,7 +254,7 @@ public class CollectionActivity extends BaseActivity {
                                     }
                                 }
                             } else {
-                                for (int i = oldCount - 1; i < goodsList.size(); i++) {
+                                for (int i = oldCount; i < goodsList.size(); i++) {
                                     if (i >= 0) {
                                         goodsList.get(i).isCheck = false;
                                     }
@@ -320,6 +324,7 @@ public class CollectionActivity extends BaseActivity {
             tvDeleteText.setText("删除(0)");
             tvDeleteText.setBackgroundColor(getResources().getColor(R.color.color_edittext));
             tvDeleteText.setEnabled(false);
+            cbChoose.setChecked(false);
         } else {
             tvDeleteText.setText("删除(" + count + ")");
             tvDeleteText.setBackgroundColor(getResources().getColor(R.color.title_color));
@@ -336,7 +341,7 @@ public class CollectionActivity extends BaseActivity {
      */
     public void showDeleteGoodsDialog(final CollectionAdapter collectionAdapter, final int position, final String type) {
         CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
-        customDialogUtil.getDialogModeOneHint("是否要删除该收藏商品？", "取消", "确定", null, new View.OnClickListener() {
+        customDialogUtil.getDialogModeOneHint("是否要删除选中的收藏商品？", "取消", "确定", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (collectionAdapter != null && !CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
@@ -444,8 +449,17 @@ public class CollectionActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (Const.COLLECTION == requestCode && RESULT_OK == resultCode) {
-            pageIndex = 1;
-            setData();
+            //商品详情是否取消了收藏
+            if(data.getBooleanExtra("isCollectionFlag",false)){
+                //刷新界面
+                pageIndex = 1;
+                setData();
+                ListView mlist = ptrlv.getRefreshableView();
+                if (!(mlist).isStackFromBottom()) {
+                    mlist.setStackFromBottom(true);
+                }
+                mlist.setStackFromBottom(false);
+            }
         }
     }
 }

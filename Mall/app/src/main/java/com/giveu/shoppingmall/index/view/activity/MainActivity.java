@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -96,9 +98,7 @@ public class MainActivity extends BasePermissionActivity {
     private LotteryDialog lotteryDialog;
 
     private PermissionDialog permissionDialog;
-
     private FragmentManager manager;
-    //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
 
@@ -114,34 +114,28 @@ public class MainActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         baseLayout.setTitleBarAndStatusBar(false, false);
-        baseLayout.setTopBarBackgroundColor(R.color.white);
-
-        initViewPagerFragment();
-        registerEventBus();
-        //跳转至消息列表
-        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
-//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
-//            startActivity(intent);
-        }
-        fetchUserInfo();
-        initNotActiveDialog();
-        initPermissionDialog();
-        initLotteryDialog();
-
-        UITest.test(mBaseContext);
-    }
-
-    private void fetchUserInfo() {
-        BaseApplication.getInstance().fetchUserInfo();
-    }
-
-    private void initNotActiveDialog() {
         notActiveDialog = new NotActiveDialog(mBaseContext);
     }
 
-    private void initViewPagerFragment() {
-//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
+
+
+    @Override
+    public void setData() {
+//        doLottery();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initFragment();
+                doApkUpgrade();
+                return false; //false 表示只监听一次IDLE事件,之后就不会再执行这个函数了.
+            }
+        });
+    }
+
+    private void initFragment() {
         manager = getSupportFragmentManager();
+        baseLayout.setTopBarBackgroundColor(R.color.white);
+
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
 //        rechargeFragment = new RechargeActivity();
@@ -155,12 +149,36 @@ public class MainActivity extends BasePermissionActivity {
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        registerEventBus();
+        //跳转至消息列表
+        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
+//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
+//            startActivity(intent);
+        }
+        UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
         mViewPager.setCurrentItem(0);
-    }
+        BaseApplication.getInstance().fetchUserInfo();
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                //进入设置了，下次onResume时继续判断申请权限
+                permissionDialog.dismiss();
+            }
 
-    private void initLotteryDialog() {
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
+            }
+        });
         lotteryDialog = new LotteryDialog(mBaseContext);
         lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
             @Override
@@ -184,27 +202,6 @@ public class MainActivity extends BasePermissionActivity {
         });
     }
 
-    private void initPermissionDialog() {
-        permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
-        permissionDialog.setConfirmStr("去开启");
-        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
-            @Override
-            public void confirm() {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-                //进入设置了，下次onResume时继续判断申请权限
-                permissionDialog.dismiss();
-            }
-
-            @Override
-            public void cancle() {
-                permissionDialog.dismiss();
-            }
-        });
-    }
 
     /**
      * 退出登录，登录成功都应该重新获取周年庆活动状态
@@ -373,12 +370,6 @@ public class MainActivity extends BasePermissionActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void setData() {
-//        doLottery();
-        doApkUpgrade();
     }
 
     private void doLottery() {

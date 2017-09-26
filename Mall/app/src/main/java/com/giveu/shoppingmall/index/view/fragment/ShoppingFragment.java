@@ -571,6 +571,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                         break;
                 }
             }
+            llEmptyView.setVisibility(View.GONE);
         } else {
             resetView();
             shoppingAdapter.getData().clear();

@@ -2,6 +2,8 @@ package com.giveu.shoppingmall.index.view.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,36 +115,11 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         view = inflater.inflate(R.layout.fragment_commodity_info, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         ButterKnife.bind(this, view);
-
+        initBanner();
         activity = (CommodityDetailActivity) mBaseContext;
         presenter = new CommodityInfoPresenter(this);
-        isCredit = getArguments().getBoolean("isCredit", false);
-        skuCode = getArguments().getString("skuCode");
-        //购买对话框
-        buyDialog = new BuyCommodityDialog(mBaseContext);
-        //地址选择对话框
-        chooseCityDialog = new ChooseCityDialog(mBaseContext);
-        creditDialog = new CreditCommodityDialog(mBaseContext);
-        //不用选择街道，只选择省市区即可
-        chooseCityDialog.setNeedStreet(false);
-        initBanner();
-        //服务承诺的流式布局对应的adapter
-        serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
-            @Override
-            public View getView(FlowLayout parent, int position, String s) {
-                TextView tvTag = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.flowlayout_server_item, flServer, false);
-                tvTag.setText(s);
-                return tvTag;
-            }
-        };
-        flServer.setAdapter(serverAdapter);
-        //上拉对应的view
-        commodityDetailFragment = new WebCommodityFragment();
-        Bundle detailBundle = new Bundle();
-        detailBundle.putString("skuCode", skuCode);
-        commodityDetailFragment.setArguments(detailBundle);
-        commodityDetailFragment.setFromCommodityDetail(false);
-        getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
+
+
         return view;
     }
 
@@ -154,7 +131,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     protected void setListener() {
-        initListener();
     }
 
 
@@ -162,7 +138,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 初始化商品轮播图
      */
     private void initBanner() {
-        banner = (Banner) view.findViewById(R.id.banner);
         banner.getLayoutParams().height = DensityUtils.getWidth();
         //设置banner样式
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
@@ -279,6 +254,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     /**
      * 关闭详情回到顶部
+     *
      * @return
      */
     public boolean needCloseDetail() {
@@ -292,6 +268,44 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void initDataDelay() {
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initAndLoadData();
+                return false;
+            }
+        });
+
+    }
+
+    private void initAndLoadData() {
+        isCredit = getArguments().getBoolean("isCredit", false);
+        skuCode = getArguments().getString("skuCode");
+        //购买对话框
+        buyDialog = new BuyCommodityDialog(mBaseContext);
+        //地址选择对话框
+        chooseCityDialog = new ChooseCityDialog(mBaseContext);
+        creditDialog = new CreditCommodityDialog(mBaseContext);
+        //不用选择街道，只选择省市区即可
+        chooseCityDialog.setNeedStreet(false);
+        //服务承诺的流式布局对应的adapter
+        serverAdapter = new TagAdapter<String>(new ArrayList<String>()) {
+            @Override
+            public View getView(FlowLayout parent, int position, String s) {
+                TextView tvTag = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.flowlayout_server_item, flServer, false);
+                tvTag.setText(s);
+                return tvTag;
+            }
+        };
+        flServer.setAdapter(serverAdapter);
+        //上拉对应的view
+        commodityDetailFragment = new WebCommodityFragment();
+        Bundle detailBundle = new Bundle();
+        detailBundle.putString("skuCode", skuCode);
+        commodityDetailFragment.setArguments(detailBundle);
+        commodityDetailFragment.setFromCommodityDetail(false);
+        getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
+        initListener();
         getCommodityInfo();
         //获取默认的地址，没有的话获取收货地址的第一个，或定位的位置
         if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
@@ -315,6 +329,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
         }
     }
+
 
     /**
      * 获取商品信息

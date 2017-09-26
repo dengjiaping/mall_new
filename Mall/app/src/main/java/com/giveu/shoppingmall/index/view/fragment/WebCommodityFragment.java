@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
-import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.CommodityWebView;
 
 
@@ -39,10 +38,6 @@ public class WebCommodityFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_web_commodity, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
-        initView();
-        if (StringUtils.isNotNull(htmlUrl)) {
-            wvCommodity.loadUrl(htmlUrl);
-        }
         return view;
     }
 
@@ -136,11 +131,15 @@ public class WebCommodityFragment extends BaseFragment {
 
     /**
      * 刷新商品详情
+     *
      * @param url
      */
     public void refreshCommodityDetail(String url) {
         htmlUrl = url;
-        if (wvCommodity != null) {
+        if (wvCommodity == null) {
+            initView();
+            wvCommodity.loadUrl(htmlUrl);
+        } else {
             wvCommodity.loadUrl(htmlUrl);
         }
     }

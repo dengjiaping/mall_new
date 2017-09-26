@@ -76,6 +76,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private boolean isCredit;//是否分期产品
     private String skuCode;
     private CommodityPresenter presenter;
+    private boolean isCollectionFlag;//取消收藏的标记
 
     public static void startIt(Context context, boolean isCredit, String skuCode) {
         Intent intent = new Intent(context, CommodityDetailActivity.class);
@@ -98,30 +99,11 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         isCredit = getIntent().getBooleanExtra("isCredit", false);
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
+        presenter = new CommodityPresenter(this);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
-        //商品介绍
-        commodityInfoFragment = new CommodityInfoFragment();
-        Bundle infoBundle = new Bundle();
-        infoBundle.putBoolean("isCredit", isCredit);
-        infoBundle.putString("skuCode", skuCode);
-        commodityInfoFragment.setArguments(infoBundle);
-        tvCommodityDetail.setAlpha(0);
-        //商品详情
-        commodityDetailFragment = new WebCommodityFragment();
-        Bundle detailBundle = new Bundle();
-        detailBundle.putString("skuCode", skuCode);
-        commodityDetailFragment.setArguments(detailBundle);
-        //为了解决滑动冲突，在商品详情页时（是左右滑动的详情页而不是上下滑动产生的详情页），webview左右滑动禁止，以便让viewpager能够滑动
-        commodityDetailFragment.setFromCommodityDetail(true);
-        fragmentList.add(commodityInfoFragment);
-        fragmentList.add(commodityDetailFragment);
-        tabLayout.setupWithViewPager(vpContent);
-        vpContent.setOffscreenPageLimit(2);
-        //vpContent设置为可滑动
-        vpContent.setScrollDisabled(false);
-        vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
         ivCollect.setTag(false);//设置tag标识是否已收藏
+        tvCommodityDetail.setAlpha(0);
         //目前只有一次性产品
         isCredit = false;
         //是否分期产品，分期产品显示月供
@@ -136,8 +118,31 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         }
         //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
-        presenter = new CommodityPresenter(this);
+        initFragment();
 //        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
+    }
+
+    private void initFragment() {
+        //商品介绍
+        commodityInfoFragment = new CommodityInfoFragment();
+        Bundle infoBundle = new Bundle();
+        infoBundle.putBoolean("isCredit", isCredit);
+        infoBundle.putString("skuCode", skuCode);
+        commodityInfoFragment.setArguments(infoBundle);
+        //商品详情
+        commodityDetailFragment = new WebCommodityFragment();
+        Bundle detailBundle = new Bundle();
+        detailBundle.putString("skuCode", skuCode);
+        commodityDetailFragment.setArguments(detailBundle);
+        //为了解决滑动冲突，在商品详情页时（是左右滑动的详情页而不是上下滑动产生的详情页），webview左右滑动禁止，以便让viewpager能够滑动
+        commodityDetailFragment.setFromCommodityDetail(true);
+        fragmentList.add(commodityInfoFragment);
+        fragmentList.add(commodityDetailFragment);
+        tabLayout.setupWithViewPager(vpContent);
+        vpContent.setOffscreenPageLimit(2);
+        //vpContent设置为可滑动
+        vpContent.setScrollDisabled(false);
+        vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
     }
 
     @Override
@@ -147,7 +152,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
 
     @Override
     public void setData() {
-
     }
 
     /**
@@ -216,6 +220,12 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                 if (vpContent.getCurrentItem() == 1) {
                     vpContent.setCurrentItem(0);
                 } else if (!commodityInfoFragment.needCloseDetail()) {
+                    boolean isCollection = getIntent().getBooleanExtra("isCollection", false);
+                    if (isCollection) {
+                        Intent data = new Intent();
+                        data.putExtra("isCollectionFlag", isCollectionFlag);
+                        setResult(RESULT_OK, data);
+                    }
                     finish();
                 }
                 break;
@@ -232,6 +242,8 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
                     if (isCheck) {
                         //取消收藏
                         presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 1);
+                        //只要对商品取消了收藏，在收藏列表都刷新界面
+                        isCollectionFlag = true;
                     } else {
                         //收藏
                         presenter.collectCommodity(LoginHelper.getInstance().getIdPerson(), collectSkuCode, 0);
@@ -245,7 +257,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     }
 
     /**
-     * 6.0以上系统申请通讯录权限
+     * 6.0以上系统申请地理位置权限
      */
     public void applyGpsPermission() {
         if (!PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -393,7 +405,9 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             boolean isCollection = getIntent().getBooleanExtra("isCollection", false);
             if (isCollection) {
-                setResult(RESULT_OK);
+                Intent data = new Intent();
+                data.putExtra("isCollectionFlag", isCollectionFlag);
+                setResult(RESULT_OK, data);
             }
         }
         return super.onKeyDown(keyCode, event);
