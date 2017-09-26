@@ -153,7 +153,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                skipToActivity(indexResponse.decorations.get(position));
+                skipToActivity(indexResponse.srcIp + "/", indexResponse.decorations.get(position));
             }
         });
         //设置标题集合（当banner样式有显示title时）
@@ -168,9 +168,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     /**
      * 0跳转至h5,1跳转商品列表，2跳转商品详情，3跳转分类
      *
+     * @param srcIp
      * @param decorationsBean
      */
-    private void skipToActivity(IndexResponse.DecorationsBean decorationsBean) {
+    private void skipToActivity(String srcIp, IndexResponse.DecorationsBean decorationsBean) {
         switch (decorationsBean.urlTypeValue) {
             case 0:
                 CustomWebViewActivity.startIt(mBaseContext, decorationsBean.url, "");
@@ -180,7 +181,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ShoppingListActivity.startIt(mBaseContext, decorationsBean.code);
                 break;
             case 2:
-                CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);
+                CommodityDetailActivity.startIt(mBaseContext, false,
+                        decorationsBean.code, srcIp + decorationsBean.picSrc, decorationsBean.name, 0, false);
                 break;
             case 3:
                 ShoppingClassifyActivity.startIt(mBaseContext, StringUtils.string2Int(decorationsBean.code));
@@ -218,7 +220,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                int picSize = llHot.getLayoutParams().height-DensityUtils.dip2px(31);
+                int picSize = llHot.getLayoutParams().height - DensityUtils.dip2px(31);
                 ivCommodity.getLayoutParams().height = picSize;
                 ivCommodity.getLayoutParams().width = picSize;
 
@@ -230,7 +232,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp + "/", item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -274,7 +276,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 5) / 4;
 //                llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                int picSize = llHot.getLayoutParams().width-DensityUtils.dip2px(24);
+                int picSize = llHot.getLayoutParams().width - DensityUtils.dip2px(24);
                 ivCommodity.getLayoutParams().height = picSize;
                 ivCommodity.getLayoutParams().width = picSize;
 
@@ -283,7 +285,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp + "/", item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -309,7 +311,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                skipToActivity(indexResponse.decorations.get(0));
+                skipToActivity(indexResponse.srcIp + "/", indexResponse.decorations.get(0));
             }
         });
         viewHolder.ivCategoryMore.setOnClickListener(new View.OnClickListener() {
