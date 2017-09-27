@@ -4,70 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
-        android:id="@+id/ptrlv"
+    <ViewStub
+        android:id="@+id/vs_ptlv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:layout="@layout/view_stup_ptlv" />
 
-    <LinearLayout
-        android:id="@+id/ll_search"
+    <ViewStub
+        android:id="@+id/vs_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
-
-        <View
-            android:id="@+id/statusView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_marginLeft="@dimen/default_layout_screen_gap"
-            android:layout_marginRight="@dimen/default_layout_screen_gap">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_commodity_search">
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="11dp"
-                    android:src="@drawable/ic_search" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="6dp"
-                    android:gravity="center_vertical"
-                    android:text="搜索商品"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/ts_15" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/iv_message"
-                android:layout_width="51dp"
-                android:layout_height="match_parent"
-                android:paddingBottom="5.5dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="5.5dp"
-                android:src="@drawable/ic_message"
-                android:visibility="gone" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout="@layout/view_stub_search" />
 
     <ImageView
         android:id="@+id/fab_up_slide"
@@ -78,39 +25,10 @@
         android:src="@drawable/ic_top"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/ll_emptyView"
+    <ViewStub
+        android:id="@+id/vs_empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:layout="@layout/view_stub_empty" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_defalut_empty" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="没有获取到数据"
-            android:textColor="@color/color_9b9b9b"
-            android:textSize="@dimen/ts_15"
-            android:id="@+id/textView2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:text="点击重新获取"
-            android:background="@drawable/selector_login"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_15" />
-    </LinearLayout>
 </FrameLayout>

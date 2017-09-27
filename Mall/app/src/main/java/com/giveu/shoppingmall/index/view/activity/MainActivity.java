@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -113,7 +115,6 @@ public class MainActivity extends BasePermissionActivity {
         setContentView(R.layout.activity_main);
         baseLayout.setTitleBarAndStatusBar(false, false);
         baseLayout.setTopBarBackgroundColor(R.color.white);
-
         initViewPagerFragment();
         registerEventBus();
         //跳转至消息列表
@@ -122,10 +123,6 @@ public class MainActivity extends BasePermissionActivity {
 //            startActivity(intent);
         }
         fetchUserInfo();
-        initNotActiveDialog();
-        initPermissionDialog();
-        initLotteryDialog();
-
         UITest.test(mBaseContext);
     }
 
@@ -360,6 +357,10 @@ public class MainActivity extends BasePermissionActivity {
 
     @Override
     public void setListener() {
+
+    }
+
+    private void initListener() {
         notActiveDialog.setdismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -376,7 +377,17 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     public void setData() {
 //        doLottery();
-        doApkUpgrade();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initNotActiveDialog();
+                initPermissionDialog();
+                initLotteryDialog();
+                initListener();
+                doApkUpgrade();
+                return false;
+            }
+        });
     }
 
     private void doLottery() {

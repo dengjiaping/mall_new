@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,11 +39,23 @@ public class MainCashFragment extends BaseFragment {
     LinearLayout llTop;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
+    ViewStub vsCash;
+    private View view;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = View.inflate(mBaseContext, R.layout.fragment_main_cash, null);
+        view = View.inflate(mBaseContext, R.layout.fragment_main_cash, null);
         baseLayout.setTitle("我要取现");
+        return view;
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    public void initDataDelay() {
         baseLayout.setRightTextColor(R.color.title_color);
         baseLayout.hideBack();
         baseLayout.setRightTextAndListener("取现记录", new View.OnClickListener() {
@@ -53,13 +66,18 @@ public class MainCashFragment extends BaseFragment {
                 }
             }
         });
-        quotaDialog = new QuotaDialog(mBaseContext);
+        vsCash = (ViewStub) view.findViewById(R.id.vs_cash);
+        vsCash.setVisibility(View.VISIBLE);
         ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    protected void setListener() {
+        quotaDialog = new QuotaDialog(mBaseContext);
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int width = DensityUtils.getWidth();
+        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
+        layoutParams1.height = (208 * width / 708);
+        layoutParams1.width = width;
+        ivBgTop.setLayoutParams(layoutParams1);
+        llTop.setLayoutParams(layoutParams2);
+        layoutParams2.setMargins(DensityUtils.dip2px(11), DensityUtils.dip2px(8), DensityUtils.dip2px(10), 0);
         llTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,18 +87,6 @@ public class MainCashFragment extends BaseFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void initDataDelay() {
-        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int width = DensityUtils.getWidth();
-        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) ivBgTop.getLayoutParams();
-        layoutParams1.height = (208 * width / 708);
-        layoutParams1.width = width;
-        ivBgTop.setLayoutParams(layoutParams1);
-        llTop.setLayoutParams(layoutParams2);
-        layoutParams2.setMargins(DensityUtils.dip2px(11),DensityUtils.dip2px(8),DensityUtils.dip2px(10),0);
     }
 
     /**
@@ -105,6 +111,4 @@ public class MainCashFragment extends BaseFragment {
     protected boolean translateStatusBar() {
         return true;
     }
-
-
 }

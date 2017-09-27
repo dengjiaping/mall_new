@@ -1,6 +1,8 @@
 package com.giveu.shoppingmall.me.view.fragment;
 
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -8,9 +10,9 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.mynet.BaseBean;
@@ -31,9 +33,7 @@ import com.giveu.shoppingmall.model.bean.response.LoginResponse;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
-import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshBase;
 import com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView;
 
@@ -85,8 +85,6 @@ public class MainMeFragment extends BaseFragment {
     View viewDivider;
     @BindView(R.id.ll_my_collection)
     LinearLayout llMyCollection;
-    @BindView(R.id.ll_order_module)
-    LinearLayout llOrderModule;
     @BindView(R.id.tv_waiting_pay)
     TextView tvWaitingPay;
     @BindView(R.id.tv_finished)
@@ -95,11 +93,16 @@ public class MainMeFragment extends BaseFragment {
     TextView tvWaitingReceive;
     @BindView(R.id.ptrsv)
     PullToRefreshScrollView ptrsv;
+    ViewStub vsMe;
+    ViewStub vsHeader;
+    ViewStub vsContent;
+    ViewStub vsFooter;
+    private View view;
 
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = View.inflate(mBaseContext, R.layout.fragment_main_me, null);
+        view = View.inflate(mBaseContext, R.layout.fragment_main_me, null);
         baseLayout.setTitle("个人中心");
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
@@ -111,16 +114,19 @@ public class MainMeFragment extends BaseFragment {
 //            }
 //        });
         registerEventBus();
-        ButterKnife.bind(this, view);
-        ptrsv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        ptrsv.setScrollingWhileRefreshingEnabled(true);
+        vsMe = (ViewStub) view.findViewById(R.id.vs_me);
+        vsMe.setVisibility(View.VISIBLE);
+        vsHeader = (ViewStub) view.findViewById(R.id.vs_header);
+        vsHeader.inflate();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateUserUi();
+        if (vsFooter != null) {
+            updateUserUi();
+        }
     }
 
     /**
@@ -202,15 +208,18 @@ public class MainMeFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUserInfo(LoginResponse response) {
         //调用个人信息接口后，收到通知，更新个人信息的显示
-        updateUserUi();
-        ptrsv.onRefreshComplete();
+        if (ptrsv != null) {
+            updateUserUi();
+            ptrsv.onRefreshComplete();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stopRefresh(BaseBean response) {
         //调用个人信息接口失败后，收到通知，完成刷新
-        ptrsv.onRefreshComplete();
-        CommonLoadingView.showErrorToast(response);
+        if (ptrsv != null) {
+            ptrsv.onRefreshComplete();
+        }
     }
 
 
@@ -224,7 +233,7 @@ public class MainMeFragment extends BaseFragment {
 
     @Override
     protected void setListener() {
-        ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
+      /*  ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 if (LoginHelper.getInstance().loginPersonInfo != null) {
@@ -236,7 +245,7 @@ public class MainMeFragment extends BaseFragment {
                     ptrsv.onRefreshComplete();
                 }
             }
-        });
+        });*/
 
     }
 
@@ -247,9 +256,21 @@ public class MainMeFragment extends BaseFragment {
 
     @Override
     public void initDataDelay() {
-
+        vsContent = (ViewStub) view.findViewById(R.id.vs_content);
+        vsFooter = (ViewStub) view.findViewById(R.id.vs_footer);
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                vsContent.inflate();
+                vsFooter.inflate();
+                ButterKnife.bind(MainMeFragment.this, view);
+                ptrsv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                ptrsv.setScrollingWhileRefreshingEnabled(true);
+                updateUserUi();
+                return false;
+            }
+        });
     }
-
 
     @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_finished})
     @Override
