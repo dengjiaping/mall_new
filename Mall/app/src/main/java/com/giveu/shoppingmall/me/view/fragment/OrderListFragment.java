@@ -56,7 +56,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     private String channelName = "";//渠道名称
 
     private int pageNum = 1;//当前页数
-    private final int pageSize = 10;//每页的item数
+    private final int pageSize = 20;//每页的item数
     private int orderState;
 
     private OrderHandlePresenter presenter;
@@ -119,7 +119,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //下拉刷新的时候相当于在ListView的最上方又添加一个item，所以对应item的点击事件需position-1
-                if (position - 1 < adapter.getData().size()) {
+                if (position - 1 >= 0 && position - 1 < adapter.getData().size()) {
                     String orderNo = adapter.getData().get(position - 1).orderNo;
                     if (StringUtils.isNotNull(orderNo))
                         OrderInfoActivity.startIt(mBaseContext, orderNo);
