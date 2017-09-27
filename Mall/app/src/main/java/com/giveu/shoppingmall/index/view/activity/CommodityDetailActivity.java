@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -86,16 +87,16 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private CommodityPresenter presenter;
     private boolean isCollectionFlag;//取消收藏的标记
 
-    public static void startIt(Activity activity, boolean isCredit, String skuCode,String picUrl, String commodityName,int resultCode, boolean isCollection) {
+    public static void startIt(Activity activity, boolean isCredit, String skuCode, String picUrl, String commodityName, int resultCode, boolean isCollection) {
         Intent intent = new Intent(activity, CommodityDetailActivity.class);
         intent.putExtra("isCredit", isCredit);
         intent.putExtra("skuCode", skuCode);
         intent.putExtra("picUrl", picUrl);
         intent.putExtra("commodityName", commodityName);
         intent.putExtra("isCollection", isCollection);
-        if(isCollection) {
+        if (isCollection) {
             activity.startActivityForResult(intent, resultCode);
-        }else {
+        } else {
             activity.startActivity(intent);
         }
     }
@@ -164,6 +165,30 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         //vpContent设置为可滑动
         vpContent.setScrollDisabled(false);
         vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
+        vpContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //接口未返回数据时vpContent是不可见的，而vpContent是可以由tab切换的，所以要切换llRoot的可见状态
+                if (vpContent.getVisibility() == View.INVISIBLE) {
+                    if (position == 1) {
+                        llRoot.setVisibility(View.GONE);
+                    } else {
+                        llRoot.setVisibility(View.VISIBLE);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -219,7 +244,14 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
                     13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
         }
-        llRoot.setVisibility(View.GONE);
+        //获取数据后要隐藏activity的图片，显示真正的商品详情
+        if (llRoot.getVisibility() == View.VISIBLE) {
+            llRoot.setVisibility(View.GONE);
+        }
+        if (vpContent.getVisibility() != View.VISIBLE) {
+            vpContent.setVisibility(View.VISIBLE);
+        }
+        //设置tab为可点击状态
         presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
