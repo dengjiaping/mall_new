@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -42,18 +43,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by 101912 on 2017/8/25.
  */
 
 public class OrderListFragment extends BaseFragment implements IOrderInfoView<OrderDetailResponse> {
 
-    @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
-    @BindView(R.id.ll_emptyView)
     LinearLayout ll_emptyView;
 
     private View fragmentView;
@@ -66,6 +62,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     private OrderHandlePresenter presenter;
     private OrderListAdapter adapter;
     private List<OrderListResponse.SkuInfoBean> mDatas;
+    FrameLayout emptyFrameLayout;
+    boolean isFragmentViewInit = false;
 
     @Override
     protected BasePresenter[] initPresenters() {
@@ -79,37 +77,44 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             orderState = bundle.getInt(OrderState.ORDER_TYPE);
         }
         baseLayout.setTitleBarAndStatusBar(false, false);
-        fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
-        ButterKnife.bind(this, fragmentView);
-        mDatas = new ArrayList<>();
+        View fragment_empty = View.inflate(mBaseContext, R.layout.fragment_empty, null);
+        emptyFrameLayout = (FrameLayout) fragment_empty.findViewById(R.id.frame);
 
-        presenter = new OrderHandlePresenter(this);
-
-        adapter = new OrderListAdapter(mBaseContext, mDatas, presenter);
-        ptrlv.setAdapter(adapter);
-        ptrlv.setPullRefreshEnable(true);
-        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
-        ptrlv.setPullLoadEnable(false);
-        ptrlv.setScrollingWhileRefreshingEnabled(true);
-        ptrlv.getFooter().setOnClickListener(null);
-        registerEventBus();
-        return fragmentView;
+        return fragment_empty;
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRefreshEvent(RefreshEvent refreshEvent) {
-        //接受到通知时，如果是当前页立即做刷新，否则重置加载的标识，在页面可见时做刷新
-        if (getUserVisibleHint() && orderState == refreshEvent.orderState) {
-            onRefresh();
-        } else if (orderState == refreshEvent.orderState) {
-            setDataInit(true);
+    @Override
+    protected void setListener() {}
+
+    private synchronized void initFragmentView() {
+        if (!isFragmentViewInit){
+            fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
+            emptyFrameLayout.removeAllViews();
+            emptyFrameLayout.addView(fragmentView);
+
+            ll_emptyView = (LinearLayout) fragmentView.findViewById(R.id.ll_emptyView);
+            ptrlv = (PullToRefreshListView) fragmentView.findViewById(R.id.ptrlv);
+            mDatas = new ArrayList<>();
+
+            presenter = new OrderHandlePresenter(this);
+
+            adapter = new OrderListAdapter(mBaseContext, mDatas, presenter);
+            ptrlv.setAdapter(adapter);
+            ptrlv.setPullRefreshEnable(true);
+            ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
+            ptrlv.setPullLoadEnable(false);
+            ptrlv.setScrollingWhileRefreshingEnabled(true);
+            ptrlv.getFooter().setOnClickListener(null);
+
+            registerEventBus();
+            setViewListener();
+
+            isFragmentViewInit = true;
         }
     }
 
-
-    @Override
-    protected void setListener() {
+    private void setViewListener() {
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -155,7 +160,16 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
 
             }
         });
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(RefreshEvent refreshEvent) {
+        //接受到通知时，如果是当前页立即做刷新，否则重置加载的标识，在页面可见时做刷新
+        if (getUserVisibleHint() && orderState == refreshEvent.orderState) {
+            onRefresh();
+        } else if (orderState == refreshEvent.orderState) {
+            setDataInit(true);
+        }
     }
 
     //下拉刷新
@@ -174,6 +188,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
             @Override
             public void onSuccess(OrderListResponse response) {
+                initFragmentView();
+
                 ll_emptyView.setVisibility(View.GONE);
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
@@ -211,6 +227,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
 
             @Override
             public void onError(BaseBean errorBean) {
+                initFragmentView();
+                
                 ptrlv.onRefreshComplete();
                 ptrlv.setPullRefreshEnable(false);
                 CommonLoadingView.showErrorToast(errorBean);
