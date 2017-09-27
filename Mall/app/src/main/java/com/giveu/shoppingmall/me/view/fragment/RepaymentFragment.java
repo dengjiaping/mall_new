@@ -6,6 +6,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
+    ViewStub vsRepayment;
     private RepaymentAdapter repaymentAdapter;
     private ArrayList<RepaymentBean> billList;
     @BindView(R.id.tv_money)
@@ -71,16 +73,27 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     private OnlyConfirmDialog resultDialog;//错误信息提示框
     private String productType;
     private String payId;
+    private View view;
 
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bill_list, null);
-        ButterKnife.bind(this, view);
+        view = inflater.inflate(R.layout.fragment_bill_list, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         mActivity = (RepaymentActivity) mBaseContext;
+        vsRepayment = (ViewStub) view.findViewById(R.id.vs_repayment);
+
+        return view;
+    }
+
+    private void initView() {
+        if (ptrlv != null) {
+            return;
+        }
+        vsRepayment.inflate();
+        ButterKnife.bind(this, view);
         //当月应还款的headerview
-        View headerView = inflater.inflate(R.layout.lv_bill_header, null);
+        View headerView = View.inflate(mBaseContext, R.layout.lv_bill_header, null);
         headerHolder = new ViewHolder(headerView);
         isCurrentMonth = getArguments().getBoolean("isCurrentMonth", true);
         //根据是否当前月份，显示状态
@@ -108,7 +121,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         repaymentDialog = new RepaymentDialog(mBaseContext);
         repaymentDetailDialog = new RepaymentDetailDialog(mBaseContext);
         resultDialog = new OnlyConfirmDialog(mBaseContext);
-        return view;
+        initListener();
     }
 
 
@@ -180,6 +193,9 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
     @Override
     protected void setListener() {
 
+    }
+
+    private void initListener(){
         repaymentDialog.setOnConfirmListener(new RepaymentDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String money) {
@@ -230,10 +246,10 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
             }
         });
-
     }
 
     public void notifyDataSetChange(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> billBeenList) {
+        initView();
         //这里的数据是有RepaymentActivity传过来的，用于初始化数据
         tvMoney.setText("还款金额：¥" + StringUtils.format2(0 + ""));
         payMoney = 0;
@@ -322,7 +338,6 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         BaseApplication.getInstance().fetchUserInfo();
         mActivity.setData();
     }
-
 
     static class ViewHolder {
         @BindView(R.id.tv_total)

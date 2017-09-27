@@ -73,7 +73,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     ImageView fabUpSlide;
     @BindView(R.id.ll_emptyView)
     LinearLayout llEmptyView;
-    ViewStub vsPtlv;
+    ViewStub vsPtlv;//占位布局，内存开销很小，用于布局优化
     ViewStub vsSearch;
     ViewStub vsEmpty;
     private ShoppingAdapter shoppingAdapter;
@@ -91,20 +91,23 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         view = View.inflate(mBaseContext, R.layout.fragment_shopping, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         baseLayout.setTopBarBackgroundColor(R.color.red);
-//        ptrlv.setVisibility(View.GONE);
         return view;
     }
 
     private void initListView() {
-        vsPtlv = (ViewStub) view.findViewById(R.id.vs_ptlv);
-        vsEmpty = (ViewStub) view.findViewById(R.id.vs_empty);
-        vsSearch = (ViewStub) view.findViewById(R.id.vs_search);
+
+        //初始化过了直接return
         if (ptrlv != null) {
             return;
         }
-        vsPtlv.setVisibility(View.VISIBLE);
-        vsEmpty.setVisibility(View.VISIBLE);
-        vsSearch.setVisibility(View.VISIBLE);
+        vsPtlv = (ViewStub) view.findViewById(R.id.vs_ptlv);
+        vsEmpty = (ViewStub) view.findViewById(R.id.vs_empty);
+        vsSearch = (ViewStub) view.findViewById(R.id.vs_search);
+        vsPtlv.inflate();
+        vsEmpty.inflate();
+        vsSearch.inflate();
+        //initView()是不初始化其他view的，占空布局渲染后才初始化，如果在其他位置还有ButterKnife.bind
+        //由于占空布局未渲染，会报空指针异常
         ButterKnife.bind(this, view);
         ptrlv = (PullToRefreshListView) view.findViewById(R.id.ptrlv);
         headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
@@ -118,6 +121,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             statusView.setVisibility(View.GONE);
         }
+        //这里是避免布局有下移的效果
         ptrlv.post(new Runnable() {
             @Override
             public void run() {
