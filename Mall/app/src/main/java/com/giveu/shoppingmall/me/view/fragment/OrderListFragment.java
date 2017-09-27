@@ -77,6 +77,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             orderState = bundle.getInt(OrderState.ORDER_TYPE);
         }
         baseLayout.setTitleBarAndStatusBar(false, false);
+        registerEventBus();
         View fragment_empty = View.inflate(mBaseContext, R.layout.fragment_empty, null);
         emptyFrameLayout = (FrameLayout) fragment_empty.findViewById(R.id.frame);
 
@@ -107,7 +108,6 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             ptrlv.setScrollingWhileRefreshingEnabled(true);
             ptrlv.getFooter().setOnClickListener(null);
 
-            registerEventBus();
             setViewListener();
 
             isFragmentViewInit = true;
