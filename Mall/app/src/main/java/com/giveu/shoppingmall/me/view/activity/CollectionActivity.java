@@ -75,6 +75,59 @@ public class CollectionActivity extends BaseActivity {
             public void onClick(View v) {
                 //右上角文字编辑或是取消状态
                 editOrCancel();
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+                    return;
+                }
+                //清除选项
+                clearChoose();
+                if (rightTextClick) {
+                    baseLayout.setRightText("取消");
+                    llBottomDelete.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT - DensityUtils.dip2px(57));
+                    ptrlv.setLayoutParams(layoutParams);
+
+                    cbChoose.setChecked(false);
+                } else {
+                    baseLayout.setRightText("编辑");
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ptrlv.setLayoutParams(layoutParams);
+                    llBottomDelete.setVisibility(View.GONE);
+                }
+                for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
+                    collectionResponse.isShowCb = rightTextClick;
+                }
+                collectionAdapter.notifyDataSetChanged();
+                rightTextClick = !rightTextClick;
+            }
+        });
+        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
+            @Override
+            public void itemClick() {
+                itemNotClickList = new ArrayList<>();
+                int count = 0;
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+                    return;
+                }
+                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
+                    if (collectionAdapter.getData().get(i) == null) {
+                        return;
+                    }
+                    if (collectionAdapter.getData().get(i).isCheck) {
+                        //记录选中项
+                        count++;
+                    } else {
+                        itemNotClickList.add(i);
+                    }
+                }
+                //全选状态下，取消任意一项，全选按钮取消选中
+                if (cbChoose.isChecked() && itemNotClickList.size() != 0) {
+                    cbChoose.setChecked(false);
+                }
+                //非全选状态下，全部选中，全选按钮选中
+                if (!cbChoose.isChecked() && itemNotClickList.size() == 0) {
+                    cbChoose.setChecked(true);
+                }
+                deleteColorAndCanClick(count);
             }
         });
         initAdapter();
@@ -156,7 +209,8 @@ public class CollectionActivity extends BaseActivity {
                             OfftheShelfActivity.startIt(mBaseContext);
                         } else {
                             //跳转商品介绍
-                            CommodityDetailActivity.startItForResult(mBaseContext, item.isInstallments == 1, item.skuCode, Const.COLLECTION, true);
+                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1,
+                                    item.skuCode, item.srcIp + "/" + item.src, item.name, Const.COLLECTION, true);
                         }
                     }
                 }

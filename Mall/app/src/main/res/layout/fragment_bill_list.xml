@@ -4,77 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
-        android:id="@+id/ptrlv"
+    <ViewStub
+        android:id="@+id/vs_repayment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_layoutxml_bg" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="@color/white"
-        android:paddingLeft="@dimen/default_layout_screen_gap">
-
-        <LinearLayout
-            android:id="@+id/ll_change_money"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_money"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="还款金额：¥0.00"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_18" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
-                android:text="点击可修改还款金额"
-                android:textColor="@color/color_d8d8d8"
-                android:textSize="@dimen/ts_11" />
-        </LinearLayout>
-
-
-        <ImageView
-            android:id="@+id/iv_change_money"
-            android:layout_width="65dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="24dp"
-            android:paddingLeft="21dp"
-            android:paddingRight="21dp"
-            android:paddingTop="24dp"
-            android:src="@drawable/ic_change_pay" />
-
-        <TextView
-            android:id="@+id/tv_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/ts_18"
-            android:background="@drawable/shape_grey_without_corner"
-            android:gravity="center"
-            android:paddingLeft="@dimen/default_layout_screen_gap"
-            android:paddingRight="@dimen/default_layout_screen_gap"
-            android:text="确定还款" />
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout="@layout/view_stub_repayment" />
 </LinearLayout>

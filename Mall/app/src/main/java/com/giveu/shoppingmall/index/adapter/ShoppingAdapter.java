@@ -1,5 +1,6 @@
 package com.giveu.shoppingmall.index.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBean> {
     private String srcIp;
+    private String orginalSrcIp;
 
     public ShoppingAdapter(Context context, List<GoodsSearchResponse.GoodsBean> datas) {
         super(context, R.layout.lv_shopping_item, datas);
@@ -43,7 +45,7 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommodityDetailActivity.startIt(mContext, false, item.skuCode);
+                CommodityDetailActivity.startIt((Activity) mContext, false, item.skuCode, orginalSrcIp + item.src, StringUtils.ToAllFullWidthString(item.name), 0, false);
             }
         });
         holder.setText(R.id.tv_commodity_name, StringUtils.ToAllFullWidthString(item.name));
@@ -67,5 +69,6 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         mDatas.addAll(data);
         notifyDataSetChanged();
         this.srcIp = srcIp + ImageUtils.ImageSize.img_size_200_200;
+        this.orginalSrcIp = srcIp + "/";
     }
 }

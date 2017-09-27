@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ptrsv"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent">
+
+    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ViewStub
+            android:id="@+id/vs_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/view_stub_me_header" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:drawableLeft="@drawable/ic_voice"
+            android:drawablePadding="10dp"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:text="你还未开通钱包，立即开通获取信用额度 >"
+            android:textColor="@color/color_ff5900"
+            android:textSize="@dimen/ts_12" />
+
+        <ViewStub
+            android:id="@+id/vs_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/view_stub_me_content" />
+
+
+        <ViewStub
+            android:id="@+id/vs_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/view_stub_me_footer" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+    </LinearLayout>
+
+
+    <!--</ScrollView>-->
+</com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshScrollView>

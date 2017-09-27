@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_bg_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_cash_main" />
+
+    <LinearLayout
+        android:id="@+id/ll_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/default_layout_screen_gap"
+        android:paddingRight="@dimen/default_layout_screen_gap">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_layout_screen_gap"
+            android:text="最高可借（元）"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_14" />
+
+        <TextView
+            android:id="@+id/tv_available_credit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3000.00"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_34" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="22dp"
+                android:background="@color/color_20d8d8d8"
+                android:text="随借随还"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_12" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="22dp"
+                android:background="@color/color_20d8d8d8"
+                android:text="分期取现"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_12" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_20d8d8d8"
+                android:text="立等可取"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_12" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="15dp"
+            android:background="@color/line_bg" />
+
+        <TextView
+            android:id="@+id/tv_loan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:text="立即借款"
+            android:textColor="@color/color_00bbc0"
+            android:textSize="@dimen/ts_18" />
+    </LinearLayout>
+
+
+</LinearLayout>

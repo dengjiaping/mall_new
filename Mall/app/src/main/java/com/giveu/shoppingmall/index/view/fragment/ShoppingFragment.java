@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,6 +73,9 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     ImageView fabUpSlide;
     @BindView(R.id.ll_emptyView)
     LinearLayout llEmptyView;
+    ViewStub vsPtlv;//占位布局，内存开销很小，用于布局优化
+    ViewStub vsSearch;
+    ViewStub vsEmpty;
     private ShoppingAdapter shoppingAdapter;
     private ShoppingPresenter presenter;
     private int bannerHeight;
@@ -80,15 +84,35 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     private final int pageSize = 20;
     private String contentCode;
     private View headerView;
+    private View view;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = View.inflate(mBaseContext, R.layout.fragment_shopping, null);
+        view = View.inflate(mBaseContext, R.layout.fragment_shopping, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
         baseLayout.setTopBarBackgroundColor(R.color.red);
+        return view;
+    }
+
+    private void initListView() {
+
+        //初始化过了直接return
+        if (ptrlv != null) {
+            return;
+        }
+        vsPtlv = (ViewStub) view.findViewById(R.id.vs_ptlv);
+        vsEmpty = (ViewStub) view.findViewById(R.id.vs_empty);
+        vsSearch = (ViewStub) view.findViewById(R.id.vs_search);
+        vsPtlv.inflate();
+        vsEmpty.inflate();
+        vsSearch.inflate();
+        //initView()是不初始化其他view的，占空布局渲染后才初始化，如果在其他位置还有ButterKnife.bind
+        //由于占空布局未渲染，会报空指针异常
         ButterKnife.bind(this, view);
+        ptrlv = (PullToRefreshListView) view.findViewById(R.id.ptrlv);
         headerView = View.inflate(mBaseContext, R.layout.lv_shopping_header_view, null);
         viewHolder = new HeaderViewHolder(headerView);
+        ptrlv.getRefreshableView().addHeaderView(headerView);
         shoppingAdapter = new ShoppingAdapter(mBaseContext, new ArrayList<GoodsSearchResponse.GoodsBean>());
 
         ViewGroup.LayoutParams layoutParams = statusView.getLayoutParams();
@@ -97,24 +121,18 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             statusView.setVisibility(View.GONE);
         }
-        ptrlv.setAdapter(shoppingAdapter);
-        ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
-        ptrlv.setPullLoadEnable(false);
-        ptrlv.getRefreshableView().addHeaderView(headerView);
-        ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
+        //这里是避免布局有下移的效果
+        ptrlv.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-
+            public void run() {
+                ptrlv.setAdapter(shoppingAdapter);
+                ptrlv.setMode(PullToRefreshBase.Mode.BOTH);
+                ptrlv.setPullLoadEnable(false);
+                ptrlv.getFooter().setOnClickListener(null);
             }
         });
-//        ptrlv.setVisibility(View.GONE);
-        presenter = new ShoppingPresenter(this);
-        //刚开始隐藏头布局的所有内容
-        resetView();
-//        skipToActivity(0,null);
-        showLoading();
-        presenter.getHeadContent();
-        return view;
+
+        initListener();
     }
 
 
@@ -153,7 +171,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                skipToActivity(indexResponse.decorations.get(position));
+                skipToActivity(indexResponse.srcIp + "/", indexResponse.decorations.get(position));
             }
         });
         //设置标题集合（当banner样式有显示title时）
@@ -168,9 +186,10 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     /**
      * 0跳转至h5,1跳转商品列表，2跳转商品详情，3跳转分类
      *
+     * @param srcIp
      * @param decorationsBean
      */
-    private void skipToActivity(IndexResponse.DecorationsBean decorationsBean) {
+    private void skipToActivity(String srcIp, IndexResponse.DecorationsBean decorationsBean) {
         switch (decorationsBean.urlTypeValue) {
             case 0:
                 CustomWebViewActivity.startIt(mBaseContext, decorationsBean.url, "");
@@ -180,7 +199,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ShoppingListActivity.startIt(mBaseContext, decorationsBean.code);
                 break;
             case 2:
-                CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code);
+                CommodityDetailActivity.startIt(mBaseContext, false,
+                        decorationsBean.code, srcIp + decorationsBean.picSrc, decorationsBean.name, 0, false);
                 break;
             case 3:
                 ShoppingClassifyActivity.startIt(mBaseContext, StringUtils.string2Int(decorationsBean.code));
@@ -218,7 +238,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 3) / 2;
                 llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (120 / 169f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                int picSize = llHot.getLayoutParams().height-DensityUtils.dip2px(31);
+                int picSize = llHot.getLayoutParams().height - DensityUtils.dip2px(31);
                 ivCommodity.getLayoutParams().height = picSize;
                 ivCommodity.getLayoutParams().width = picSize;
 
@@ -230,7 +250,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp + "/", item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -274,7 +294,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 llHot.getLayoutParams().width = (DensityUtils.getWidth() - DensityUtils.dip2px(10) * 5) / 4;
 //                llHot.getLayoutParams().height = (int) (llHot.getLayoutParams().width * (240 / 159f));
                 ImageView ivCommodity = holder.getView(R.id.iv_commodity);
-                int picSize = llHot.getLayoutParams().width-DensityUtils.dip2px(24);
+                int picSize = llHot.getLayoutParams().width - DensityUtils.dip2px(24);
                 ivCommodity.getLayoutParams().height = picSize;
                 ivCommodity.getLayoutParams().width = picSize;
 
@@ -283,7 +303,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        skipToActivity(item);
+                        skipToActivity(indexResponse.srcIp + "/", item);
 //                        ShoppingListActivity.startIt(mContext);
                     }
                 });
@@ -309,7 +329,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.llPhoneRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                skipToActivity(indexResponse.decorations.get(0));
+                skipToActivity(indexResponse.srcIp + "/", indexResponse.decorations.get(0));
             }
         });
         viewHolder.ivCategoryMore.setOnClickListener(new View.OnClickListener() {
@@ -331,13 +351,17 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
     @Override
     public void onStart() {
         super.onStart();
-        viewHolder.banner.startAutoPlay();
+        if (viewHolder != null) {
+            viewHolder.banner.startAutoPlay();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        viewHolder.banner.stopAutoPlay();
+        if (viewHolder != null) {
+            viewHolder.banner.stopAutoPlay();
+        }
     }
 
     @OnClick({R.id.ll_search, R.id.fab_up_slide, R.id.ll_emptyView})
@@ -362,6 +386,9 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     protected void setListener() {
+    }
+
+    private void initListener() {
 
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -467,7 +494,11 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void initDataDelay() {
-
+        presenter = new ShoppingPresenter(this);
+        //刚开始隐藏头布局的所有内容
+//        skipToActivity(0,null);
+        showLoading();
+        presenter.getHeadContent();
     }
 
     @Override
@@ -512,6 +543,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getDataFail(boolean isHeader) {
+        initListView();
         //头部返回数据错误，那么显示空布局
         if (isHeader) {
             resetView();
@@ -533,6 +565,8 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
     @Override
     public void getHeadContent(ArrayList<IndexResponse> data) {
+        //只会初始化一次
+        initListView();
         pageIndex = 1;
         if (CommonUtils.isNotNullOrEmpty(data)) {
             for (IndexResponse indexResponse : data) {
@@ -589,13 +623,6 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         initCategory(null);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
 
     public static class HeaderViewHolder {
         @BindView(R.id.banner)

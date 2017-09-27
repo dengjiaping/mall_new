@@ -1,11 +1,9 @@
 package com.giveu.shoppingmall.index.view.activity;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
@@ -98,7 +96,9 @@ public class MainActivity extends BasePermissionActivity {
     private LotteryDialog lotteryDialog;
 
     private PermissionDialog permissionDialog;
+
     private FragmentManager manager;
+    //    private RadioGroup buttomBar;
     long exitTime;
     private ArrayList<Fragment> fragmentList;
 
@@ -114,28 +114,29 @@ public class MainActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         baseLayout.setTitleBarAndStatusBar(false, false);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
+        initViewPagerFragment();
+        registerEventBus();
+        //跳转至消息列表
+        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
+//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
+//            startActivity(intent);
+        }
+        fetchUserInfo();
+        UITest.test(mBaseContext);
+    }
+
+    private void fetchUserInfo() {
+        BaseApplication.getInstance().fetchUserInfo();
+    }
+
+    private void initNotActiveDialog() {
         notActiveDialog = new NotActiveDialog(mBaseContext);
     }
 
-
-
-    @Override
-    public void setData() {
-//        doLottery();
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                initFragment();
-                doApkUpgrade();
-                return false; //false 表示只监听一次IDLE事件,之后就不会再执行这个函数了.
-            }
-        });
-    }
-
-    private void initFragment() {
+    private void initViewPagerFragment() {
+//        buttomBar = (RadioGroup) findViewById(R.id.buttomBar);
         manager = getSupportFragmentManager();
-        baseLayout.setTopBarBackgroundColor(R.color.white);
-
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
 //        rechargeFragment = new RechargeActivity();
@@ -149,36 +150,12 @@ public class MainActivity extends BasePermissionActivity {
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
-        registerEventBus();
-        //跳转至消息列表
-        if (getIntent().getBooleanExtra(needTurnToMessageActivity, false)) {
-//            Intent intent = new Intent(mBaseContext, MessageActivity.class);
-//            startActivity(intent);
-        }
-        UITest.test(mBaseContext);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
         mViewPager.setCurrentItem(0);
-        BaseApplication.getInstance().fetchUserInfo();
-        permissionDialog = new PermissionDialog(mBaseContext);
-        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
-        permissionDialog.setConfirmStr("去开启");
-        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
-            @Override
-            public void confirm() {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-                //进入设置了，下次onResume时继续判断申请权限
-                permissionDialog.dismiss();
-            }
+    }
 
-            @Override
-            public void cancle() {
-                permissionDialog.dismiss();
-            }
-        });
+    private void initLotteryDialog() {
         lotteryDialog = new LotteryDialog(mBaseContext);
         lotteryDialog.setOnJoinLitener(new LotteryDialog.OnJoinListener() {
             @Override
@@ -202,6 +179,27 @@ public class MainActivity extends BasePermissionActivity {
         });
     }
 
+    private void initPermissionDialog() {
+        permissionDialog = new PermissionDialog(mBaseContext);
+        permissionDialog.setPermissionStr("需要通讯录权限才可正常使用");
+        permissionDialog.setConfirmStr("去开启");
+        permissionDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+            @Override
+            public void confirm() {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                //进入设置了，下次onResume时继续判断申请权限
+                permissionDialog.dismiss();
+            }
+
+            @Override
+            public void cancle() {
+                permissionDialog.dismiss();
+            }
+        });
+    }
 
     /**
      * 退出登录，登录成功都应该重新获取周年庆活动状态
@@ -359,6 +357,10 @@ public class MainActivity extends BasePermissionActivity {
 
     @Override
     public void setListener() {
+
+    }
+
+    private void initListener() {
         notActiveDialog.setdismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -368,6 +370,22 @@ public class MainActivity extends BasePermissionActivity {
                 } else {
                     selectIconAndTextColor(mViewPager.getCurrentItem());
                 }
+            }
+        });
+    }
+
+    @Override
+    public void setData() {
+//        doLottery();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initNotActiveDialog();
+                initPermissionDialog();
+                initLotteryDialog();
+                initListener();
+                doApkUpgrade();
+                return false;
             }
         });
     }
@@ -609,59 +627,5 @@ public class MainActivity extends BasePermissionActivity {
         int whichFragmentInActMain = intent.getIntExtra(Const.whichFragmentInActMain, 0);
         mViewPager.setCurrentItem(whichFragmentInActMain);
         setIntent(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            try {
-                if (true) {
-                    // ContentProvider展示数据类似一个单个数据库表
-                    // ContentResolver实例带的方法可实现找到指定的ContentProvider并获取到ContentProvider的数据
-                    ContentResolver reContentResolverol = getContentResolver();
-                    // URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
-                    Uri contactData = data.getData();
-                    // 查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
-                    Cursor cursor = mBaseContext.managedQuery(contactData, null, null, null, null);
-                    //线上发现cursor有可能为空，如果为空不作任何处理
-                    if (cursor == null) {
-                        ToastUtils.showShortToast("获取通讯录失败");
-                        return;
-                    }
-                    if (cursor.getCount() == 0) {
-                        permissionDialog.show();
-                        return;
-                    }
-                    cursor.moveToFirst();
-                    // 条件为联系人ID
-                    String contactId = cursor.getString(cursor
-                            .getColumnIndex(ContactsContract.Contacts._ID));
-                    // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
-                    Cursor phone = reContentResolverol.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
-                                    + contactId, null, null);
-                    while (phone != null && phone.moveToNext()) {
-                        //填入号码
-                        String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        final StringBuilder sb = new StringBuilder(usernumber.replaceAll(" ", ""));
-                        if (sb.toString().length() != 11) {
-                            ToastUtils.showShortToast("手机号码格式有误");
-                        } else {
-                            sb.insert(3, " ");
-                            sb.insert(8, " ");
-//                            rechargeFragment.setPhoneText(sb.toString());
-                        }
-                    }
-                    if (phone != null) {
-                        phone.close();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

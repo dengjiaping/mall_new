@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
+
+    <View
+        android:id="@+id/statusView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginLeft="@dimen/default_layout_screen_gap"
+        android:layout_marginRight="@dimen/default_layout_screen_gap">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_commodity_search">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="11dp"
+                android:src="@drawable/ic_search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical"
+                android:text="搜索商品"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_15" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_message"
+            android:layout_width="51dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="5.5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5.5dp"
+            android:src="@drawable/ic_message"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

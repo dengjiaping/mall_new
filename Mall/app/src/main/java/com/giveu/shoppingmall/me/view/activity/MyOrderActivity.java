@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
@@ -64,6 +65,7 @@ public class MyOrderActivity extends BaseActivity {
             @Override
             public boolean queueIdle() {
                 initFragment();
+                mTabLayout.setVisibility(View.VISIBLE);
                 return false; //false 表示只监听一次IDLE事件,之后就不会再执行这个函数了.
             }
         });

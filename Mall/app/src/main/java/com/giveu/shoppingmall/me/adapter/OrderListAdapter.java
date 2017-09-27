@@ -270,6 +270,8 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 });
                 break;
             default:
+                viewHolder.setVisible(R.id.tv_button_left, false);
+                viewHolder.setVisible(R.id.tv_button_right, false);
                 break;
         }
     }
