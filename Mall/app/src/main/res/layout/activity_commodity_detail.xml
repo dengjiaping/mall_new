@@ -57,6 +57,7 @@
             android:id="@+id/vp_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="invisible"
             android:overScrollMode="never" />
             <include layout="@layout/include_commodity_detail" />
     </FrameLayout>

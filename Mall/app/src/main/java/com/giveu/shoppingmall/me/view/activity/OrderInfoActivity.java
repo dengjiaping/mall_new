@@ -373,7 +373,6 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
         //买家留言（文字前景色不一样）
         if (StringUtils.isNotNull(response.userComments)) {
-            tvUserComments.setText(response.userComments);
             SpannableString userComments = new SpannableString("买家留言：" + response.userComments);
             ForegroundColorSpan blueSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_00bbc0));
             ForegroundColorSpan blackSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a));

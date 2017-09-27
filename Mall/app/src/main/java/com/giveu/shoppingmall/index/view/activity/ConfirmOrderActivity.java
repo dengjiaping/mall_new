@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -243,18 +244,22 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private void initMsgEditText() {
         //第一次进入界面EditText未获取焦点,设置显示内容
-        SpannableString desc = new SpannableString("买家留言（选填）：对本次交易的说明");
+        final String stableText = "买家留言（选填）：";
+        String hintText = "对本次交易的说明";
+        SpannableString desc = new SpannableString(stableText + hintText);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 0, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_color)), 4, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 8, 9, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_cccccc)), 9, desc.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         msgEditText.setText(desc);
+        //限制输入字符长度为100
+        msgEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100 + stableText.length())});
         //第一次点击EditText获取焦点，重置显示内容
         msgEditText.setOnFirstFocusedListener(new StableEditText.OnFirstFocusedListener() {
             @Override
             public void firstFocused() {
-                msgEditText.setSpannerStableText("买家留言（选填）：", 4, 8, getResources().getColor(R.color.title_color));
+                msgEditText.setSpannerStableText(stableText, 4, 8, getResources().getColor(R.color.title_color));
             }
         });
     }
@@ -526,8 +531,15 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
+        String message = msgEditText.getFinalText();
+        if (StringUtils.isNotNull(message) && StringUtils.contailEmoji(message)) {
+            ToastUtils.showShortToast("买家留言暂不支持表情或特殊符号");
+            canPay = true;
+            return;
+        }
+
         ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
-                payType, addressJoBean, 0, new SkuInfo(quantity, skuCode), msgEditText.getFinalText(),
+                payType, addressJoBean, 0, new SkuInfo(quantity, skuCode), message,
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
@@ -557,7 +569,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                         CommonLoadingView.showErrorToast(errorBean);
                     }
                 });
+
     }
+
 
     @Override
     public void setListener() {
