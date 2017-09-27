@@ -227,6 +227,8 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
 
             @Override
             public void onError(BaseBean errorBean) {
+                initFragmentView();
+                
                 ptrlv.onRefreshComplete();
                 ptrlv.setPullRefreshEnable(false);
                 CommonLoadingView.showErrorToast(errorBean);
