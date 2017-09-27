@@ -185,13 +185,17 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     }
 
     private void initData() {
-        ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ResponseListener<OrderListResponse>() {
+        ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ExpandResponseListener<OrderListResponse>() {
+            @Override
+            public void beforeSuccessAndError() {
+                initFragmentView();
+                ptrlv.setPullRefreshEnable(true);
+                ptrlv.onRefreshComplete();
+            }
+
             @Override
             public void onSuccess(OrderListResponse response) {
-                initFragmentView();
-
                 ll_emptyView.setVisibility(View.GONE);
-                ptrlv.setPullRefreshEnable(true);
                 ptrlv.setPullLoadEnable(false);
                 //onRefresh时数据为空，显示空界面
                 if (pageNum == 1 && (response.data == null || CommonUtils.isNullOrEmpty(response.data.skuInfo))) {
@@ -222,15 +226,10 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
                     }
                 }
                 adapter.notifyDataSetChanged();
-                ptrlv.onRefreshComplete();
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                initFragmentView();
-                
-                ptrlv.onRefreshComplete();
-                ptrlv.setPullRefreshEnable(false);
                 CommonLoadingView.showErrorToast(errorBean);
             }
         });
