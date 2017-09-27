@@ -45,17 +45,15 @@ public class CollectionActivity extends BaseActivity {
     @BindView(R.id.ptrlv)
     PullToRefreshListView ptrlv;
     CollectionAdapter collectionAdapter;
-    boolean rightTextClick = true;//true 编辑 false 取消
+    boolean rightTextClick = true;//控制右上角的文字：true 编辑 false 取消
     @BindView(R.id.ll_bottom_delete)
     LinearLayout llBottomDelete;
     @BindView(R.id.cb_choose)
     CheckBox cbChoose;
     @BindView(R.id.tv_delete_text)
     TextView tvDeleteText;
-
     private int pageIndex = 1;
     private final int pageSize = 10;
-    String type;//DELETEMORE 全选删除多项; DELETEONE 长按删除某一项
     List<CollectionResponse.ResultListBean> goodsList;
     private static final String DELETEONE = "1";//长按删除某一项
     private static final String DELETEMORE = "2";//全选删除多项
@@ -75,67 +73,18 @@ public class CollectionActivity extends BaseActivity {
         baseLayout.setRightTextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
-                    return;
-                }
-                //清除选项
-                clearChoose();
-                if (rightTextClick) {
-                    baseLayout.setRightText("取消");
-                    llBottomDelete.setVisibility(View.VISIBLE);
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT - DensityUtils.dip2px(57));
-                    ptrlv.setLayoutParams(layoutParams);
-
-                    cbChoose.setChecked(false);
-                } else {
-                    baseLayout.setRightText("编辑");
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    ptrlv.setLayoutParams(layoutParams);
-                    llBottomDelete.setVisibility(View.GONE);
-                }
-                for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
-                    collectionResponse.isShowCb = rightTextClick;
-                }
-                collectionAdapter.notifyDataSetChanged();
-                rightTextClick = !rightTextClick;
+                //右上角文字编辑或是取消状态
+                editOrCancel();
             }
         });
-        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
-            @Override
-            public void itemClick() {
-                itemNotClickList = new ArrayList<>();
-                int count = 0;
-                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
-                    return;
-                }
-                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
-                    if (collectionAdapter.getData().get(i) == null) {
-                        return;
-                    }
-                    if (collectionAdapter.getData().get(i).isCheck) {
-                        //记录选中项
-                        count++;
-                    } else {
-                        itemNotClickList.add(i);
-                    }
-                }
-                //全选状态下，取消任意一项，全选按钮取消选中
-                if(cbChoose.isChecked() && itemNotClickList.size() != 0){
-                    cbChoose.setChecked(false);
-                }
-                //非全选状态下，全部选中，全选按钮选中
-                if(!cbChoose.isChecked() && itemNotClickList.size() == 0){
-                    cbChoose.setChecked(true);
-                }
-                deleteColorAndCanClick(count);
-            }
-        });
+        initAdapter();
         ptrlv.setAdapter(collectionAdapter);
+        //初始化底部删除按钮和全选状态
         deleteColorAndCanClick(0);
+        //底部没有更多数据不可点击
         ptrlv.getFooter().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
         ptrlv.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -181,6 +130,7 @@ public class CollectionActivity extends BaseActivity {
         tvDeleteText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //-1 表示不传position 多项删除
                 showDeleteGoodsDialog(collectionAdapter, -1, DELETEMORE);
             }
         });
@@ -210,14 +160,75 @@ public class CollectionActivity extends BaseActivity {
                         }
                     }
                 }
+            }
+        });
+    }
 
+    /**
+     * 右上角文字编辑或是取消状态
+     */
+    public void editOrCancel() {
+        if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+            return;
+        }
+        //清除选项
+        clearChoose();
+        if (rightTextClick) {
+            baseLayout.setRightText("取消");
+            llBottomDelete.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT - DensityUtils.dip2px(57));
+            ptrlv.setLayoutParams(layoutParams);
+            cbChoose.setChecked(false);
+        } else {
+            baseLayout.setRightText("编辑");
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ptrlv.setLayoutParams(layoutParams);
+            llBottomDelete.setVisibility(View.GONE);
+        }
+        for (CollectionResponse.ResultListBean collectionResponse : collectionAdapter.getData()) {
+            collectionResponse.isShowCb = rightTextClick;
+        }
+        collectionAdapter.notifyDataSetChanged();
+        rightTextClick = !rightTextClick;
+    }
+
+    /**
+     * 初始化adapter
+     */
+    public void initAdapter() {
+        collectionAdapter = new CollectionAdapter(mBaseContext, goodsList, new CollectionAdapter.CbItemCheckListener() {
+            @Override
+            public void itemClick() {
+                itemNotClickList = new ArrayList<>();
+                int count = 0; //记录选中项
+                if (collectionAdapter == null || CommonUtils.isNullOrEmpty(collectionAdapter.getData())) {
+                    return;
+                }
+                for (int i = 0; i < collectionAdapter.getData().size(); i++) {
+                    if (collectionAdapter.getData().get(i) == null) {
+                        return;
+                    }
+                    if (collectionAdapter.getData().get(i).isCheck) {
+                        count++;
+                    } else {
+                        itemNotClickList.add(i);
+                    }
+                }
+                //全选状态下，取消任意一项，全选按钮取消选中
+                if (cbChoose.isChecked() && itemNotClickList.size() != 0) {
+                    cbChoose.setChecked(false);
+                }
+                //非全选状态下，全部选中，全选按钮选中
+                if (!cbChoose.isChecked() && itemNotClickList.size() == 0) {
+                    cbChoose.setChecked(true);
+                }
+                deleteColorAndCanClick(count);
             }
         });
     }
 
     @Override
     public void setData() {
-
         ApiImpl.getCollectionList(mBaseContext, LoginHelper.getInstance().getIdPerson(), pageIndex, pageSize, new BaseRequestAgent.ResponseListener<CollectionResponse>() {
             @Override
             public void onSuccess(CollectionResponse response) {
@@ -364,7 +375,6 @@ public class CollectionActivity extends BaseActivity {
                             }
                         }
                         deleteGoods(skuCodes, -1, removeList, type);
-
                     }
                 }
             }
@@ -449,8 +459,8 @@ public class CollectionActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (Const.COLLECTION == requestCode && RESULT_OK == resultCode) {
-            //商品详情是否取消了收藏
-            if(data.getBooleanExtra("isCollectionFlag",false)){
+            //商品详情是否取消了收藏,回来后显示第一页并刷新数据，否则回到原来位置。
+            if (data.getBooleanExtra("isCollectionFlag", false)) {
                 //刷新界面
                 pageIndex = 1;
                 setData();
