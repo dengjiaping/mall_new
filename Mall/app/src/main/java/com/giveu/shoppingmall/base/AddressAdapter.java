@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 
 /**
- * Created by liuzaijun on 2017/8/17.
+ * Created by 513419 on 2017/8/17.
  */
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHolder> {

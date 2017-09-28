@@ -101,6 +101,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         ivCollect.setTag(false);//设置tag标识是否已收藏
         tvCommodityDetail.setAlpha(0);
         //是否分期产品，分期产品显示月供
+        //TODO:为调试方便isCredit默认为true，真正调试时注释就行
         isCredit = true;
         if (isCredit) {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);

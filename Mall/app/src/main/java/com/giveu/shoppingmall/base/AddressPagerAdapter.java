@@ -15,7 +15,7 @@ import com.giveu.shoppingmall.model.bean.response.Province;
 import java.util.ArrayList;
 
 /**
- * Created by liuzaijun on 2017/8/17.
+ * Created by 513419 on 2017/8/17.
  */
 public class AddressPagerAdapter extends PagerAdapter {
 

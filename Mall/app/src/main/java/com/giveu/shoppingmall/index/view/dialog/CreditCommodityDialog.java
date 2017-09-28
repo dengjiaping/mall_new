@@ -69,7 +69,9 @@ public class CreditCommodityDialog extends CustomDialog {
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.confirm();
+                if (paymentNum != -1 && downPayRate != -1) {
+                    listener.confirm(downPayRate, paymentNum);
+                }
             }
         });
         ivCommodity = (ImageView) contentView.findViewById(R.id.iv_commodity);
@@ -97,6 +99,7 @@ public class CreditCommodityDialog extends CustomDialog {
 
     /**
      * 设置是否可点击分期，服务器未返回数据前是不可点击的
+     *
      * @param enable
      */
     public void setConfirmEnable(boolean enable) {
@@ -311,7 +314,7 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     public interface OnConfirmListener {
-        void confirm();
+        void confirm(int downPayRate, int paymentNum);
 
         void cancle();
     }
