@@ -185,10 +185,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     }
 
     private void initData() {
+        initFragmentView();
+
         ApiImpl.getOrderList(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), pageNum + "", pageSize + "", orderState + "", new BaseRequestAgent.ExpandResponseListener<OrderListResponse>() {
             @Override
             public void beforeSuccessAndError() {
-                initFragmentView();
                 ptrlv.setPullRefreshEnable(true);
                 ptrlv.onRefreshComplete();
             }
