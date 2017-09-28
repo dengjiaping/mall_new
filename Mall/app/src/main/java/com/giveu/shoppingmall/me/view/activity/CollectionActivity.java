@@ -120,11 +120,11 @@ public class CollectionActivity extends BaseActivity {
                     }
                 }
                 //全选状态下，取消任意一项，全选按钮取消选中
-                if (cbChoose.isChecked() && itemNotClickList.size() != 0) {
+                if(cbChoose.isChecked() && itemNotClickList.size() != 0){
                     cbChoose.setChecked(false);
                 }
                 //非全选状态下，全部选中，全选按钮选中
-                if (!cbChoose.isChecked() && itemNotClickList.size() == 0) {
+                if(!cbChoose.isChecked() && itemNotClickList.size() == 0){
                     cbChoose.setChecked(true);
                 }
                 deleteColorAndCanClick(count);
@@ -206,8 +206,7 @@ public class CollectionActivity extends BaseActivity {
                             OfftheShelfActivity.startIt(mBaseContext);
                         } else {
                             //跳转商品介绍
-                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1,
-                                    item.skuCode, item.srcIp + "/" + item.src, item.name, Const.COLLECTION, true);
+                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1,item.skuCode, item.srcIp + "/" + item.src, item.name, Const.COLLECTION, true);
                         }
                     }
                 }
@@ -451,7 +450,7 @@ public class CollectionActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (Const.COLLECTION == requestCode && RESULT_OK == resultCode) {
             //商品详情是否取消了收藏
-            if (data.getBooleanExtra("isCollectionFlag", false)) {
+            if(data.getBooleanExtra("isCollectionFlag",false)){
                 //刷新界面
                 pageIndex = 1;
                 setData();
