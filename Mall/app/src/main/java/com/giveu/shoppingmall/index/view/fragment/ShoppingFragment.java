@@ -199,8 +199,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ShoppingListActivity.startIt(mBaseContext, decorationsBean.code);
                 break;
             case 2:
-                CommodityDetailActivity.startIt(mBaseContext, false,
-                        decorationsBean.code, srcIp + decorationsBean.picSrc, decorationsBean.name, 0, false);
+                CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code, 0, false);
                 break;
             case 3:
                 ShoppingClassifyActivity.startIt(mBaseContext, StringUtils.string2Int(decorationsBean.code));
@@ -244,9 +243,9 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 
                 ImageView ivSmall = holder.getView(R.id.iv_small);
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
-                        + item.picSrc, R.drawable.ic_default_pic,R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
+                        + item.picSrc, R.drawable.ic_default_pic, R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
-                        + item.iconSrc, R.drawable.ic_default_pic,R.drawable.ic_default_pic, ivSmall, DensityUtils.dip2px(4));
+                        + item.iconSrc, R.drawable.ic_default_pic, R.drawable.ic_default_pic, ivSmall, DensityUtils.dip2px(4));
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -299,7 +298,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ivCommodity.getLayoutParams().width = picSize;
 
                 ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
-                        + item.picSrc, R.drawable.ic_default_pic,R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
+                        + item.picSrc, R.drawable.ic_default_pic, R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -342,7 +341,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
         viewHolder.ivCategoryMore.getLayoutParams().height = (int) (viewHolder.ivCategoryMore.getLayoutParams().width * (240 / 159f));
         IndexResponse.DecorationsBean decorationsBean = indexResponse.decorations.get(0);
         ImageUtils.loadImageWithCorner(indexResponse.srcIp + ImageUtils.ImageSize.img_size_200_200
-                + decorationsBean.picSrc, R.drawable.ic_default_pic,R.drawable.ic_default_pic, viewHolder.ivCommodity, DensityUtils.dip2px(4));
+                + decorationsBean.picSrc, R.drawable.ic_default_pic, R.drawable.ic_default_pic, viewHolder.ivCommodity, DensityUtils.dip2px(4));
         viewHolder.tvTitle.setText(decorationsBean.name);
         viewHolder.tvIntroduction.setText(decorationsBean.title);
     }

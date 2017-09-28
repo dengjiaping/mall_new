@@ -79,6 +79,7 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         fragmentAdapter = new RepaymentFragmentAdapter(getSupportFragmentManager(), fragmentList);
         vpBill.setAdapter(fragmentAdapter);
         presenter = new RepaymentPresenter(this);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
     }
 
     @Override

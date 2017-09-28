@@ -276,6 +276,7 @@ public class CommonUtils {
     public static void setTextWithSpanSizeAndColor(final TextView tv, String str1, final String str2, final String str3, int str1Dip, final int str2Dip, int str1ColorId, final int str2ColorId) {
         String text = StringUtils.format2(str2);
         if (!text.contains(".")) {
+            tv.setTextColor(BaseApplication.getInstance().getResources().getColor(str1ColorId));
             tv.setText(str1 + StringUtils.nullToEmptyString(str2));
             return;
         }

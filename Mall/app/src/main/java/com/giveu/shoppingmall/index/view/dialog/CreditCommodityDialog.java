@@ -1,6 +1,7 @@
 package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,7 +96,21 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     /**
+     * 设置是否可点击分期，服务器未返回数据前是不可点击的
+     * @param enable
+     */
+    public void setConfirmEnable(boolean enable) {
+        tvConfirm.setEnabled(enable);
+        if (enable) {
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
+        } else {
+            tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
+        }
+    }
+
+    /**
      * 初始化数据
+     *
      * @param commodityAmounts
      * @param smallIconStr
      * @param commodityName
@@ -107,8 +122,8 @@ public class CreditCommodityDialog extends CustomDialog {
             downPayRate = 0;
         }
         this.commodityAmounts = commodityAmounts;
+        updateInfo(smallIconStr, commodityName, commodityPrice, commodityAmounts);
         if (CommonUtils.isNotNullOrEmpty(data)) {
-            updateInfo(smallIconStr, commodityName, commodityPrice, commodityAmounts);
             //之前没选过期数
             if (paymentNum == -1) {
                 monthPayAdapter.setSelectedList(0);
@@ -138,17 +153,19 @@ public class CreditCommodityDialog extends CustomDialog {
 
             }
             monthPayAdapter.setDatas(data);
+            setConfirmEnable(true);
         }
     }
 
     /**
      * 显示首付信息和月供信息
+     *
      * @param initPay
      * @param annuity
      */
     private void initdownPayMonthPay(String initPay, String annuity) {
         tvDownPayment.setText("首付 " + StringUtils.format2(initPay) + "元");
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthSupply, "¥", StringUtils.format2(annuity), "起",
+        CommonUtils.setTextWithSpanSizeAndColor(tvMonthSupply, "¥", StringUtils.format2(annuity), "",
                 15, 11, R.color.color_00bbc0, R.color.color_4a4a4a);
     }
 
@@ -160,7 +177,7 @@ public class CreditCommodityDialog extends CustomDialog {
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             // 设置对话框宽高
             lp.width = DensityUtils.getWidth();
-            lp.height = (int) (DensityUtils.getHeight() * (0.66));
+            lp.height = (int) (DensityUtils.getHeight() * (0.76));
             dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.BOTTOM);
             dialogWindow.setWindowAnimations(R.style.dialogWindowAnim); // 添加动画
@@ -169,6 +186,7 @@ public class CreditCommodityDialog extends CustomDialog {
 
     /**
      * 首付比例流式布局
+     *
      * @param paramsStr
      * @param paramsList
      */
@@ -226,6 +244,7 @@ public class CreditCommodityDialog extends CustomDialog {
 
     /**
      * 分期数流式布局
+     *
      * @param paramsStr
      * @param paramsList
      */

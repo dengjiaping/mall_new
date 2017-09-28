@@ -179,15 +179,17 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             public void confirm(int amounts) {
                 commodityAmounts = amounts;
                 if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
-                    ConfirmOrderActivity.startIt(mBaseContext, 0, amounts, skuCode);
+                    //如果是分期产品，那么需要选择分期数，首付等
+                    if (isCredit) {
+                        creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, null);
+                        creditDialog.show();
+                        creditDialog.setConfirmEnable(false);
+                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
+                    } else {
+                        ConfirmOrderActivity.startIt(mBaseContext);
+                    }
                 }
-/*                //如果是分期产品，那么需要选择分期数，首付等
-                if (isCredit) {
-                    commodityAmounts = amounts;
-                    presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
-                } else {
-                    ConfirmOrderActivity.startIt(mBaseContext);
-                }*/
+
             }
 
             @Override
@@ -467,7 +469,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         if (success) {
             if (CommonUtils.isNotNullOrEmpty(data)) {
                 creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, data);
-                creditDialog.show();
             }
         }
     }

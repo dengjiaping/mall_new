@@ -79,13 +79,10 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     private CommodityPresenter presenter;
     private boolean isCollectionFlag;//取消收藏的标记
 
-    public static void startIt(Activity activity, boolean isCredit, String skuCode, String picUrl, String commodityName, int resultCode, boolean isCollection) {
+    public static void startIt(Activity activity, boolean isCredit, String skuCode, int resultCode, boolean isCollection) {
         Intent intent = new Intent(activity, CommodityDetailActivity.class);
         intent.putExtra("isCredit", isCredit);
         intent.putExtra("skuCode", skuCode);
-        intent.putExtra("picUrl", picUrl);
-        intent.putExtra("commodityName", commodityName);
-        intent.putExtra("isCollection", isCollection);
         if (isCollection) {
             activity.startActivityForResult(intent, resultCode);
         } else {
@@ -100,13 +97,11 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         baseLayout.setTitleBarAndStatusBar(false, true);
         baseLayout.setTopBarBackgroundColor(R.color.white);
         presenter = new CommodityPresenter(this);
-        isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
         ivCollect.setTag(false);//设置tag标识是否已收藏
         tvCommodityDetail.setAlpha(0);
-        //目前只有一次性产品
-        isCredit = false;
         //是否分期产品，分期产品显示月供
+        isCredit = true;
         if (isCredit) {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
             llCredit.setVisibility(View.VISIBLE);

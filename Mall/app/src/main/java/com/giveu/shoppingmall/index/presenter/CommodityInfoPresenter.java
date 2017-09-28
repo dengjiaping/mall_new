@@ -98,6 +98,7 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
                     getView().showDownPayMonthPay(true, null);
+                    CommonLoadingView.showErrorToast(errorBean);
                 }
             }
         });
