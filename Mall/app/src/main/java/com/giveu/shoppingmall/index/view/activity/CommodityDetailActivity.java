@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,7 +32,6 @@ import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
-import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.NoScrollViewPager;
@@ -72,12 +70,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     TextView tvCommodityDetail;
     @BindView(R.id.ll_choose_address)
     LinearLayout llChooseAddress;
-    @BindView(R.id.iv_photo)
-    ImageView ivPhoto;
-    @BindView(R.id.tv_commodit_name)
-    TextView tvCommodityName;
-    @BindView(R.id.ll_root)
-    LinearLayout llRoot;
     private List<Fragment> fragmentList = new ArrayList<>();
     private CommodityInfoFragment commodityInfoFragment;
     private WebCommodityFragment commodityDetailFragment;
@@ -110,11 +102,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         presenter = new CommodityPresenter(this);
         isCredit = false;
         skuCode = getIntent().getStringExtra("skuCode");
-        String picUrl = getIntent().getStringExtra("picUrl");
-        String commodityName = getIntent().getStringExtra("commodityName");
-        ivPhoto.getLayoutParams().height = DensityUtils.getWidth();
-        ImageUtils.loadImage(picUrl, 0, ivPhoto);
-        tvCommodityName.setText(commodityName);
         ivCollect.setTag(false);//设置tag标识是否已收藏
         tvCommodityDetail.setAlpha(0);
         //目前只有一次性产品
@@ -133,13 +120,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         tabLayout.addTab(tabLayout.newTab().setText("详情"));
         //接口返回是否有货前购买按钮都不能点击
         setBuyEnable(false);
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                initFragment();
-                return false;
-            }
-        });
+        initFragment();
 //        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
@@ -164,31 +145,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         vpContent.setOffscreenPageLimit(2);
         //vpContent设置为可滑动
         vpContent.setScrollDisabled(false);
-        vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
-        vpContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                //接口未返回数据时vpContent是不可见的，而vpContent是可以由tab切换的，所以要切换llRoot的可见状态
-                if (vpContent.getVisibility() == View.INVISIBLE) {
-                    if (position == 1) {
-                        llRoot.setVisibility(View.GONE);
-                    } else {
-                        llRoot.setVisibility(View.VISIBLE);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override
@@ -198,6 +154,13 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
 
     @Override
     public void setData() {
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                vpContent.setAdapter(new CommodityFragmentAdapter(getSupportFragmentManager(), fragmentList, tabTitles));
+                return false;
+            }
+        });
     }
 
     /**
@@ -243,10 +206,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         if (isCredit) {
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", StringUtils.format2(monthAmount), " 起",
                     13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
-        }
-        //获取数据后要隐藏activity的图片，显示真正的商品详情
-        if (llRoot.getVisibility() == View.VISIBLE) {
-            llRoot.setVisibility(View.GONE);
         }
         if (vpContent.getVisibility() != View.VISIBLE) {
             vpContent.setVisibility(View.VISIBLE);

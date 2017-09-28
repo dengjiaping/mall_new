@@ -60,7 +60,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 
@@ -109,6 +108,7 @@ public class MainActivity extends BasePermissionActivity {
     private LotteryResponse lotteryResponse;
     private boolean needRefreshLottery;
     private boolean needSkip2H5;
+    private int currentItem;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -122,7 +122,6 @@ public class MainActivity extends BasePermissionActivity {
 //            Intent intent = new Intent(mBaseContext, MessageActivity.class);
 //            startActivity(intent);
         }
-        fetchUserInfo();
         UITest.test(mBaseContext);
     }
 
@@ -139,20 +138,12 @@ public class MainActivity extends BasePermissionActivity {
         manager = getSupportFragmentManager();
         fragmentList = new ArrayList<>();
         shoppingFragment = new ShoppingFragment();
-//        rechargeFragment = new RechargeActivity();
-        mainCashFragment = new MainCashFragment();
-//        mainRepayFragment = new MainRepayFragment();
-        mainMeFragment = new MainMeFragment();
         fragmentList.add(shoppingFragment);
-        fragmentList.add(mainCashFragment);
-//        fragmentList.add(mainRepayFragment);
-        fragmentList.add(mainMeFragment);
         mainAdapter = new MainActivityAdapter(manager, fragmentList);
         mViewPager.setAdapter(mainAdapter);
         mViewPager.setOffscreenPageLimit(2);
         resetIconAndTextColor();
         selectIconAndTextColor(0);
-        mViewPager.setCurrentItem(0);
     }
 
     private void initLotteryDialog() {
@@ -323,11 +314,13 @@ public class MainActivity extends BasePermissionActivity {
                 }
                 break;
             case R.id.ll_recharge:
+                currentItem = 0;
                 mViewPager.setCurrentItem(0, false);
                 selectIconAndTextColor(0);
                 break;
 
             case R.id.ll_cash:
+                currentItem = 1;
                 mViewPager.setCurrentItem(1, false);
                 selectIconAndTextColor(1);
                 break;
@@ -346,6 +339,7 @@ public class MainActivity extends BasePermissionActivity {
                 break;
 
             case R.id.ll_me:
+                currentItem = 2;
                 mViewPager.setCurrentItem(2, false);
                 selectIconAndTextColor(3);
                 break;
@@ -380,14 +374,25 @@ public class MainActivity extends BasePermissionActivity {
         Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
             @Override
             public boolean queueIdle() {
+                addFragment();
                 initNotActiveDialog();
                 initPermissionDialog();
                 initLotteryDialog();
                 initListener();
                 doApkUpgrade();
+                fetchUserInfo();
                 return false;
             }
         });
+    }
+
+    private void addFragment() {
+        mainCashFragment = new MainCashFragment();
+        mainMeFragment = new MainMeFragment();
+        fragmentList.add(mainCashFragment);
+        fragmentList.add(mainMeFragment);
+        mainAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(currentItem, false);
     }
 
     private void doLottery() {
@@ -466,16 +471,6 @@ public class MainActivity extends BasePermissionActivity {
         needSkip2H5 = false;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     private class MainActivityAdapter extends FragmentPagerAdapter {
         private ArrayList<Fragment> fragments;
@@ -516,24 +511,27 @@ public class MainActivity extends BasePermissionActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //从账单返回主界面时需刷新tab的图标和字体颜色
-        resetIconAndTextColor();
-        if (mViewPager.getCurrentItem() == 2) {
-            selectIconAndTextColor(3);
-        } else {
-            selectIconAndTextColor(mViewPager.getCurrentItem());
-        }
+        //初始化时只有购物一个fragment，不需要做这些操作
+        if (fragmentList.size() > 1) {
+            //从账单返回主界面时需刷新tab的图标和字体颜色
+            resetIconAndTextColor();
+            if (mViewPager.getCurrentItem() == 2) {
+                selectIconAndTextColor(3);
+            } else {
+                selectIconAndTextColor(mViewPager.getCurrentItem());
+            }
 
-        if (downloadApkUtils != null) {
-            downloadApkUtils.onActivityResume();
-        }
-        if (needRefreshLottery) {
+            if (downloadApkUtils != null) {
+                downloadApkUtils.onActivityResume();
+            }
+            if (needRefreshLottery) {
 //            doLottery();
-        }
+            }
 
-        if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {
-            //上传设备号至服务器
+            if (!LoginHelper.getInstance().hasUploadDeviceNumber() && StringUtils.isNotNull(JPushInterface.getRegistrationID(BaseApplication.getInstance()))) {
+                //上传设备号至服务器
 //            ApiImpl.saveDeviceNumber(JPushInterface.getRegistrationID(BaseApplication.getInstance()));
+            }
         }
 
 
@@ -625,7 +623,7 @@ public class MainActivity extends BasePermissionActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         int whichFragmentInActMain = intent.getIntExtra(Const.whichFragmentInActMain, 0);
-        mViewPager.setCurrentItem(whichFragmentInActMain);
+        mViewPager.setCurrentItem(whichFragmentInActMain, false);
         setIntent(intent);
     }
 }
