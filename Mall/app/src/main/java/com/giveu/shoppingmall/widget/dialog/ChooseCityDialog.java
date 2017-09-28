@@ -85,9 +85,6 @@ public class ChooseCityDialog extends CustomDialog {
             public void onSuccess(ArrayList<Province> addressList) {
                 mAddressList = addressList;
                 setData(addressList);
-                if (completeListener != null) {
-                    completeListener.onComplete(addressList);
-                }
             }
 
             @Override
@@ -218,16 +215,6 @@ public class ChooseCityDialog extends CustomDialog {
 
     public void setOnConfirmListener(OnConfirmListener listener) {
         this.listener = listener;
-    }
-
-    private OnInitCompleteListener completeListener;
-
-    public void setOnInitCompleteListener(OnInitCompleteListener completeListener) {
-        this.completeListener = completeListener;
-    }
-
-    public interface OnInitCompleteListener {
-        void onComplete(ArrayList<Province> addressList);
     }
 
 }
