@@ -6,7 +6,7 @@ import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -45,9 +45,9 @@ public class LivingAddressPresenter extends BasePresenter<ILivingAddressView> {
     }
 
     public void getAddListJson() {
-        ApiImpl.getAddListJson(getView().getAct(), new BaseRequestAgent.ResponseListener<AddressBean>() {
+        ApiImpl.getAddListJson(getView().getAct(), new BaseRequestAgent.ResponseListener<Province>() {
             @Override
-            public void onSuccess(final AddressBean response) {
+            public void onSuccess(final Province response) {
                 if (getView() != null && CommonUtils.isNotNullOrEmpty(response.data)) {
                     getView().getAddListJsonSuccess(response.data);
 

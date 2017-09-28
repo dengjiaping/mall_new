@@ -492,18 +492,10 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 @Override
                 public void onSuccess(AMapLocation location) {
                     provinceStr = location.getProvince();
-                    if (StringUtils.isNotNull(provinceStr)) {
-                        //去除省字样
-                        if (provinceStr.endsWith("省")) {
-                            provinceStr = provinceStr.substring(0, provinceStr.length() - 1);
-                        }
-                    }
                     cityStr = location.getCity();
                     regionStr = location.getDistrict();
-                    llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-                    //GPS获取省市区后查询该商品是否有货
-                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
                     locationUtils.stopLocation();
+                    chooseCityDialog.setOriginalAddress(provinceStr, cityStr, regionStr, "");
                 }
 
                 @Override

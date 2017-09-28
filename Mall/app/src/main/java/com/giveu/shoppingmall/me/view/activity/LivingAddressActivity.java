@@ -17,7 +17,7 @@ import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.event.PwdDialogEvent;
 import com.giveu.shoppingmall.me.presenter.LivingAddressPresenter;
 import com.giveu.shoppingmall.me.view.agent.ILivingAddressView;
-import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DateUtil;
@@ -142,8 +142,8 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                         try {
                             final String addressJson = StringUtils.loadAddress(mBaseContext);
                             Gson gson = new Gson();
-                            final ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
-                                    new TypeToken<List<AddressBean>>() {
+                            final ArrayList<Province> addressList = gson.fromJson(addressJson,
+                                    new TypeToken<List<Province>>() {
                                     }.getType());
                             if (mBaseContext != null && !mBaseContext.isFinishing()) {
                                 runOnUiThread(new Runnable() {
@@ -284,9 +284,9 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
     }
 
     @Override
-    public void getAddListJsonSuccess(ArrayList<AddressBean> addressList) {
+    public void getAddListJsonSuccess(ArrayList<Province> addressList) {
         //获取地址成功
-        chooseCityDialog.initProvince(addressList);
+        chooseCityDialog.setData(addressList);
     }
 
     @Override

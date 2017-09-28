@@ -6,7 +6,7 @@ import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.model.ApiImpl;
-import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,8 +32,8 @@ public class AddressUtils {
                         final String addressJson = StringUtils.loadAddress(BaseApplication.getInstance());
                         Gson gson = new Gson();
                         //解析json
-                        final ArrayList<AddressBean> addressList = gson.fromJson(addressJson,
-                                new TypeToken<List<AddressBean>>() {
+                        final ArrayList<Province> addressList = gson.fromJson(addressJson,
+                                new TypeToken<List<Province>>() {
                                 }.getType());
                         //在主线程回调
                         if (listener != null && activity != null && !activity.isFinishing()) {
@@ -61,9 +61,9 @@ public class AddressUtils {
 
 
     private static void getAddListFromInternet(final OnAddressLitener litener) {
-        ApiImpl.getAddListJson(null, new BaseRequestAgent.ResponseListener<AddressBean>() {
+        ApiImpl.getAddListJson(null, new BaseRequestAgent.ResponseListener<Province>() {
             @Override
-            public void onSuccess(final AddressBean response) {
+            public void onSuccess(final Province response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     if (litener != null) {
                         litener.onSuccess(response.data);
@@ -92,7 +92,7 @@ public class AddressUtils {
     }
 
     public interface OnAddressLitener {
-        void onSuccess(ArrayList<AddressBean> addressList);
+        void onSuccess(ArrayList<Province> addressList);
 
         void onFail();
     }
