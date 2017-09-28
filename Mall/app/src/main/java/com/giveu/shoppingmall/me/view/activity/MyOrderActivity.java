@@ -16,7 +16,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.fragment.OrderListFragment;
-import com.giveu.shoppingmall.utils.LogUtil;
 
 import java.util.ArrayList;
 
@@ -124,7 +123,6 @@ public class MyOrderActivity extends BaseActivity {
         mTabLayout.setTabTextColors(getResources().getColor(R.color.black), getResources().getColor(R.color.color_00bbc0));
         //显示特定的tab，viewpager和tablayout需同步
         mViewPager.setCurrentItem(currentTab);
-        mTabLayout.getTabAt(currentTab).select();
     }
 
     private class OrderFragmentAdapter extends FragmentPagerAdapter {

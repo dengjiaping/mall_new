@@ -12,4 +12,5 @@ import java.util.ArrayList;
 
 public interface IRepaymentView extends IView {
     void showRepayment(RepaymentResponse.HeaderBean headerBean, ArrayList<RepaymentBean> currentMonthList, ArrayList<RepaymentBean> nextMonthList);
+    void showEmpty();
 }

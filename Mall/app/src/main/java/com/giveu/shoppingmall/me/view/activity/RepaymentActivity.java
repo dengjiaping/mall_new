@@ -108,6 +108,12 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         nextMonthFragment.notifyDataSetChange(headerBean, nextMonthList);
     }
 
+    @Override
+    public void showEmpty() {
+        currentMonthFragment.initView();
+        nextMonthFragment.initView();
+    }
+
 
     private class RepaymentFragmentAdapter extends FragmentStatePagerAdapter {
         private ArrayList<Fragment> fragments;

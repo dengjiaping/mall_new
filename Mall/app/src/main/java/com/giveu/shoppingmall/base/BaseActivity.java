@@ -232,12 +232,16 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     @Override
     protected void onResume() {
-        //正式环境才做统计
-        if (DebugConfig.isOnline) {
-            MobclickAgent.onResume(this);
+        try {
+            //正式环境才做统计
+            if (DebugConfig.isOnline) {
+                MobclickAgent.onResume(this);
+            }
+            BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onResume, mAllPresenters);
+            super.onResume();
+        } catch (Exception e) {
+
         }
-        BasePresenter.notifyIPresenter(BasePresenter.LifeStyle.onResume, mAllPresenters);
-        super.onResume();
     }
 
     @Override

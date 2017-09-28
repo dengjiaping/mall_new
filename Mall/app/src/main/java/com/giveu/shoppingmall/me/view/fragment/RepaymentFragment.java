@@ -1,6 +1,8 @@
 package com.giveu.shoppingmall.me.view.fragment;
 
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -86,7 +88,8 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         return view;
     }
 
-    private void initView() {
+
+    public void initView() {
         if (ptrlv != null) {
             return;
         }
@@ -172,7 +175,15 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     @Override
     public void initDataDelay() {
-
+        if (LoginHelper.getInstance().hasAverageUser()) {
+            Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                @Override
+                public boolean queueIdle() {
+                    initView();
+                    return false;
+                }
+            });
+        }
     }
 
     public boolean canClick() {
@@ -195,7 +206,7 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
 
     }
 
-    private void initListener(){
+    private void initListener() {
         repaymentDialog.setOnConfirmListener(new RepaymentDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String money) {
