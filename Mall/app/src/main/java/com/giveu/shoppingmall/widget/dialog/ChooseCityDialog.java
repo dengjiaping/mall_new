@@ -123,7 +123,7 @@ public class ChooseCityDialog extends CustomDialog {
     }
 
     private void findProvice(ArrayList<Province> provinces) {
-        if(StringUtils.isNull(originalProvince)){
+        if (StringUtils.isNull(originalProvince)) {
             return;
         }
         if (CommonUtils.isNotNullOrEmpty(provinces)) {
@@ -143,6 +143,9 @@ public class ChooseCityDialog extends CustomDialog {
     }
 
     private void findCity(List<Province.ArrayCity> cities) {
+        if (StringUtils.isNull(originalCity)) {
+            return;
+        }
         if (CommonUtils.isNotNullOrEmpty(cities)) {
             for (Province.ArrayCity arrayCity : cities) {
                 if (originalCity.length() >= 2) {
@@ -160,6 +163,9 @@ public class ChooseCityDialog extends CustomDialog {
     }
 
     private void findRegion(List<Province.ArrayRegion> regions) {
+        if (StringUtils.isNull(originalRegion)) {
+            return;
+        }
         if (CommonUtils.isNotNullOrEmpty(regions)) {
             for (Province.ArrayRegion arrayRegion : regions) {
                 if (originalRegion.length() >= 2) {
@@ -178,6 +184,9 @@ public class ChooseCityDialog extends CustomDialog {
 
     private void findSteets(List<String> streets) {
         if (CommonUtils.isNotNullOrEmpty(streets) && needStreet) {
+            if (StringUtils.isNull(originalStreet)) {
+                return;
+            }
             for (String s : streets) {
                 if (s.startsWith(originalStreet.substring(0, 1))) {
                     originalStreet = s;
@@ -196,68 +205,6 @@ public class ChooseCityDialog extends CustomDialog {
         }
     }
 
-
-    private void changeStr(ArrayList<Province> provinces) {
-        if (StringUtils.isNull(originalProvince)) {
-            return;
-        }
-        if (CommonUtils.isNotNullOrEmpty(provinces)) {
-            for (Province province : provinces) {
-                if (originalProvince.length() >= 2) {
-                    if (province.name.startsWith(originalProvince.substring(0, 1))) {
-                        originalProvince = province.name;
-                        if (CommonUtils.isNullOrEmpty(province.array)) {
-                            break;
-                        }
-                        for (Province.ArrayCity arrayCity : province.array) {
-                            if (originalCity.length() >= 2) {
-                                if (arrayCity.name.startsWith(originalCity.substring(0, 1))) {
-                                    originalCity = arrayCity.name;
-                                    if (CommonUtils.isNullOrEmpty(arrayCity.array)) {
-                                        break;
-                                    }
-                                    for (Province.ArrayRegion arrayRegion : arrayCity.array) {
-                                        if (originalRegion.length() >= 2) {
-                                            if (arrayRegion.name.startsWith(originalRegion.substring(0, 1))) {
-                                                originalRegion = arrayRegion.name;
-                                                if (needStreet) {
-                                                    if (CommonUtils.isNullOrEmpty(arrayRegion.array)) {
-                                                        if (listener != null) {
-                                                            //dialog的回调
-                                                            listener.onConfirm(originalProvince, originalCity, originalRegion, originalStreet);
-                                                        }
-                                                        break;
-                                                    }
-                                                    for (String s : arrayRegion.array) {
-                                                        if (s.startsWith(originalStreet.substring(0, 1))) {
-                                                            originalStreet = s;
-                                                            if (listener != null) {
-                                                                //dialog的回调
-                                                                listener.onConfirm(originalProvince, originalCity, originalRegion, originalStreet);
-                                                            }
-                                                            break;
-                                                        }
-                                                    }
-                                                } else {
-                                                    if (listener != null) {
-                                                        //dialog的回调
-                                                        listener.onConfirm(originalProvince, originalCity, originalRegion, originalStreet);
-                                                    }
-                                                }
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     public void setOriginalAddress(String originalProvince, String originalCity, String originalRegion, String originalStreet) {
         this.originalProvince = originalProvince;
