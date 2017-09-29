@@ -6,6 +6,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.listener.LocationListener;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -39,7 +40,7 @@ public class LocationUtils implements AMapLocationListener {
         mLocationOption.setMockEnable(false);
         mLocationOption.setLocationCacheEnable(false);
         //设置定位间隔,单位毫秒,5分钟定位一次
-     //   mLocationOption.setInterval(300000);
+        //   mLocationOption.setInterval(300000);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
     }
@@ -53,10 +54,20 @@ public class LocationUtils implements AMapLocationListener {
         mLocationClient.startLocation();
     }
 
+    public void startLocation(BaseActivity activity) {
+        //如果已经开始定位了，应先停止定位
+        stopLocation();
+        mLocationClient.startLocation();
+        activity.showLoading();
+    }
+
     public void stopLocation() {
-        if (mLocationClient.isStarted()) {
-            mLocationClient.stopLocation();
-        }
+        mLocationClient.stopLocation();
+    }
+
+    public void stopLocation(BaseActivity activity) {
+        mLocationClient.stopLocation();
+        activity.hideLoding();
     }
 
     public void setOnLocationListener(LocationListener listener) {
