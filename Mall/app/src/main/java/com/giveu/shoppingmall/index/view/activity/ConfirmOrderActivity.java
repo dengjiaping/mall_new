@@ -9,7 +9,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -21,12 +20,15 @@ import android.widget.TextView;
 import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
+import com.giveu.shoppingmall.index.view.dialog.ChooseDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -36,6 +38,8 @@ import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderScResponse;
 import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuInfo;
 import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
@@ -48,10 +52,8 @@ import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.DetailView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
-import com.giveu.shoppingmall.widget.dialog.CustomListDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,10 +77,14 @@ public class ConfirmOrderActivity extends BaseActivity {
     RelativeLayout rlCardsViewLayout;
     //首付
     @BindView(R.id.confirm_order_first_pay)
-    DetailView dvFirstPayView;
+    DetailView dvPaymentRateView;
+    @BindView(R.id.confirm_order_support_installment)
+    LinearLayout paymentLayout;
     //分期数
     @BindView(R.id.confirm_order_month)
-    DetailView dvMonthView;
+    DetailView dvPaymentView;
+    @BindView(R.id.confirm_order_annuity)
+    DetailView dvAnnuityView;
     //大家电配送
     @BindView(R.id.confirm_order_household)
     LinearLayout llHouseHold;
@@ -129,19 +135,23 @@ public class ConfirmOrderActivity extends BaseActivity {
     private List<CreateOrderResponse.CardListBean> cardList;
     private ChooseCardsDialog chooseCardsDialog;
     private PaymentTypeDialog paymentTypeDialog;
-    private CustomListDialog firstPayDialog;
-    private CustomListDialog monthDialog;
     private DealPwdDialog pwdDialog;
 
     private int payType = 2; //支付方式,暂时默认用支付宝
     private long cardId = 0; //优惠券Id
+    private long paymentRateId = 0;//首付Id
+    private long paymentNumId = 0;//分期Id
     private String cardPrice = "0";
     private String totalPrice = "0";
 
-    //首付列表,暂时不用
-    private List<CharSequence> firstPayList;
+    //首付列表
+    private List<CreateOrderResponse.InitListBean> paymentRateList = null;
+    //首付选择对话框
+    private ChooseDialog<CreateOrderResponse.InitListBean> paymentRateDlg = null;
     //分期列表,暂时不用
-    private List<CharSequence> monthList;
+    private List<DownPayMonthPayResponse> paymentList = null;
+    //分期选择对话框
+    private ChooseDialog<DownPayMonthPayResponse> paymentDlg = null;
     //送货时间,暂时不用
     private String sendTime;
     //安装时间,暂时不用
@@ -149,6 +159,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private String channel;
     private String skuCode;
+    private long idProduct;
     private int downPaymentRate;
     private int quantity;
     private String idPerson = LoginHelper.getInstance().getIdPerson();
@@ -196,6 +207,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         downPaymentRate = getIntent().getIntExtra("downPaymentRate", 0);
         quantity = getIntent().getIntExtra("quantity", 0);
         skuCode = getIntent().getStringExtra("skuCode");
+        skuCode = "K00003129";
         channel = Const.CHANNEL;
         idPerson = LoginHelper.getInstance().getIdPerson();
 
@@ -210,21 +222,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
 
-        firstPayDialog = new CustomListDialog(this, new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dvFirstPayView.setRightText(firstPayList.get(position).toString());
-            }
-        });
-        firstPayDialog.setData(firstPayList = Arrays.asList(new CharSequence[]{"零首付", "首付5%", "首付15%", "首付25%", "首付35%"}));
 
-        monthDialog = new CustomListDialog(this, new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dvMonthView.setRightText(monthList.get(position).toString());
-            }
-        });
-        monthDialog.setData(monthList = Arrays.asList(new CharSequence[]{"3个月", "6个月", "9个月", "12个月", "18个月", "24个月",}));
         pwdDialog = new DealPwdDialog(mBaseContext);
 
         CommonUtils.setTextWithSpan(tvAgreement, false, "已阅读并同意", "消费分期合同", R.color.black, R.color.title_color, new View.OnClickListener() {
@@ -285,31 +283,20 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, new SkuInfo(quantity, skuCode), new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
+        ApiImpl.getAppDownPayAndMonthPay(this, channel, idPerson, downPaymentRate, skuCode, quantity, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
             @Override
-            public void onSuccess(CreateOrderResponse response) {
-                if (response.data != null) {
-                    if (rlEmptyView.getVisibility() != View.GONE) {
-                        rlEmptyView.setVisibility(View.GONE);
-                    }
-                    updateUI(response);
-                    isInitSuccess = true;
+            public void onSuccess(DownPayMonthPayResponse response) {
+                if (CommonUtils.isNotNullOrEmpty(response.data)) {
+                    paymentList = response.data;
+                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
+                    createOrderSc();
                 }
-                hideLoding();
             }
 
             @Override
             public void onError(BaseBean errorBean) {
-                CommonLoadingView.showErrorToast(errorBean);
-                if (rlEmptyView.getVisibility() != View.VISIBLE) {
-                    rlEmptyView.setVisibility(View.VISIBLE);
-                }
-                if (tvEmptyTextView.getVisibility() != View.VISIBLE) {
-                    tvEmptyTextView.setVisibility(View.VISIBLE);
-                }
-                hideLoding();
-            }
 
+            }
         });
     }
 
@@ -320,7 +307,93 @@ public class ConfirmOrderActivity extends BaseActivity {
         updateSku(result);
         //更新优惠券界面
         updateCard(result.data.cardList);
+        //更新首付比例界面
+        updatePaymentRate(result.data.initList);
+        //更新分期
+        updatePaymentList();
+        //更新月供金额
+        updateAnnuity();
+    }
 
+    //更新首付
+    private void updatePaymentRate(final List<CreateOrderResponse.InitListBean> list) {
+        if (list != null && list.size() > 0) {
+            paymentRateList = list;
+            if (paymentLayout.getVisibility() != View.VISIBLE) {
+                paymentLayout.setVisibility(View.VISIBLE);
+            }
+            String text = list.get(0).name;
+            downPaymentRate = list.get(0).id;
+            dvPaymentRateView.setRightText(text);
+            paymentRateDlg = new ChooseDialog<CreateOrderResponse.InitListBean>(this, paymentRateList) {
+                @Override
+                public void convertView(ViewHolder holder, final CreateOrderResponse.InitListBean item, int position, long checkIndex) {
+                    holder.setText(R.id.dialog_choose_item_text, item.name);
+                    holder.setChecked(R.id.dialog_choose_item_text, item.id == checkIndex);
+                    holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String text = item.name;
+                            if (item.id != 0) {
+                                text = text + "(¥" + item.price + ")";
+                            }
+                            downPaymentRate = item.id;
+                            dvPaymentRateView.setRightText(text);
+                            paymentRateId = item.id;
+                            paymentRateDlg.dismiss();
+                            updateAnnuity();
+                        }
+                    });
+                }
+            };
+        }
+    }
+
+    //更新分期
+    private void updatePaymentList() {
+        if (CommonUtils.isNotNullOrEmpty(paymentList)) {
+            dvPaymentView.setRightText(paymentList.get(0).paymentNum + "个月");
+            idProduct = StringUtils.string2Long(paymentList.get(0).idProduct);
+            paymentNumId = paymentList.get(0).paymentNum;
+            paymentDlg = new ChooseDialog<DownPayMonthPayResponse>(this, paymentList) {
+                @Override
+                public void convertView(ViewHolder holder, final DownPayMonthPayResponse item, int position, long checkIndex) {
+                    holder.setText(R.id.dialog_choose_item_text, item.paymentNum + "个月");
+                    holder.setChecked(R.id.dialog_choose_item_text, item.paymentNum == checkIndex);
+                    holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            paymentDlg.dismiss();
+                            paymentNumId = item.paymentNum;
+                            dvPaymentView.setRightText(item.paymentNum + "个月");
+                            idProduct = StringUtils.string2Long(item.idProduct);
+                            updateAnnuity();
+                        }
+                    });
+                }
+            };
+        }
+    }
+
+    //更新月供
+    private void updateAnnuity() {
+        ApiImpl.getAppMonthlySupply(this, channel, idPerson, downPaymentRate, idProduct, 1, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
+            @Override
+            public void onSuccess(MonthSupplyResponse response) {
+                updateAnnuityUI(response);
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+
+            }
+        });
+    }
+
+    private void updateAnnuityUI(MonthSupplyResponse response) {
+        if (CommonUtils.isNotNullOrEmpty(response.data.paymentList)) {
+            dvAnnuityView.setRightText("¥" + response.data.paymentList.get(0).monthPay);
+        }
     }
 
     private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
@@ -474,10 +547,14 @@ public class ConfirmOrderActivity extends BaseActivity {
                 }
                 break;
             case R.id.confirm_order_first_pay:
-                firstPayDialog.show();
+                if (paymentRateList != null && paymentRateList.size() > 0) {
+                    paymentRateDlg.show(paymentRateId);
+                }
                 break;
             case R.id.confirm_order_month:
-                monthDialog.show();
+                if (paymentList != null && paymentList.size() > 0) {
+                    paymentDlg.show();
+                }
                 break;
             case R.id.confirm_order_household:
                 ConfirmHouseHoldActivity.startItForResult(this, 0, installTime, sendTime);
@@ -509,6 +586,37 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    //创建订单
+    private void createOrderSc() {
+        ApiImpl.createOrderSc(this, channel, idPerson, downPaymentRate, idProduct, new SkuInfo(quantity, skuCode), new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
+            @Override
+            public void onSuccess(CreateOrderResponse response) {
+                if (response.data != null) {
+                    if (rlEmptyView.getVisibility() != View.GONE) {
+                        rlEmptyView.setVisibility(View.GONE);
+                    }
+                    updateUI(response);
+                    isInitSuccess = true;
+                }
+                hideLoding();
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                CommonLoadingView.showErrorToast(errorBean);
+                if (rlEmptyView.getVisibility() != View.VISIBLE) {
+                    rlEmptyView.setVisibility(View.VISIBLE);
+                }
+                if (tvEmptyTextView.getVisibility() != View.VISIBLE) {
+                    tvEmptyTextView.setVisibility(View.VISIBLE);
+                }
+                hideLoding();
+            }
+
+        });
+    }
+
+    //订单确认
     private void confirmOrderSc() {
 
         if (addressJoBean == null) {

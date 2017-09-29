@@ -9,6 +9,7 @@ import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
@@ -648,8 +649,8 @@ public class ApiImpl {
     }
 
     //创建订单
-    public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, skuInfo});
+    public static void createOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "idProduct", "skuInfo"}, new Object[]{channel, StringUtils.string2Long(idPerson), downPaymentRate, idProduct, skuInfo});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_createOrderSc, CreateOrderResponse.class, context, responseListener);
     }
 
@@ -665,6 +666,17 @@ public class ApiImpl {
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.pay_query, PayResultResponse.class, context, listener);
     }
 
+    //首付分期查询
+    public static void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, int quantity, BaseRequestAgent.ResponseListener<DownPayMonthPayResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuCode", "quantity"}, new Object[]{channel, idPerson, downPaymentRate, skuCode, quantity});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_getAppDownPayAndMonthPay, DownPayMonthPayResponse.class, context, responseListener);
+    }
+
+    //查询月供
+    public static void getAppMonthlySupply(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, int quantity, String skuCode, BaseRequestAgent.ResponseListener<MonthSupplyResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "idProduct", "insuranceFee", "skuCode", "quantity"}, new Object[]{channel, idPerson, downPaymentRate, idProduct, insuranceFee, skuCode, quantity});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_appMonthlySupply, MonthSupplyResponse.class, context, responseListener);
+    }
 
 }
 

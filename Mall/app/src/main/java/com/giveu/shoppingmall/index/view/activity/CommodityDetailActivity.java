@@ -102,7 +102,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         tvCommodityDetail.setAlpha(0);
         //是否分期产品，分期产品显示月供
         //TODO:为调试方便isCredit默认为true，真正调试时注释就行
-        isCredit = true;
+//        isCredit = true;
         if (isCredit) {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
             llCredit.setVisibility(View.VISIBLE);

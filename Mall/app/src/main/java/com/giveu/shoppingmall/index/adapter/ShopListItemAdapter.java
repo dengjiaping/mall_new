@@ -10,6 +10,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
+import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -43,6 +44,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
             public void onClick(View v) {
                 //K00002691可以分期   K00002713可以一次
                 CommodityDetailActivity.startIt((Activity) mContext, item.hasShowMonthAmount(), item.skuCode, 0, false);
+//                ConfirmOrderActivity.startIt(mContext, 20, 1, "K00003030");
             }
         });
 

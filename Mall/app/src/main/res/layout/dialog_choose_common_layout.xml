@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_choose_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/color_f2f3f8"
+        android:gravity="right|center_vertical"
+        android:paddingRight="15dp"
+        android:text="取消"
+        android:textColor="@color/color_666666"
+        android:textSize="@dimen/ts_15" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray" />
+
+    <ListView
+        android:id="@+id/dialog_choose_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="300dp" />
+</LinearLayout>
