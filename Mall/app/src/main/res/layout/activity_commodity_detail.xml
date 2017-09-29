@@ -48,19 +48,12 @@
 
     </RelativeLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
         <com.giveu.shoppingmall.widget.NoScrollViewPager
             android:id="@+id/vp_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:overScrollMode="never" />
-            <include layout="@layout/include_commodity_detail" />
-    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

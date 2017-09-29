@@ -1,7 +1,7 @@
 package com.giveu.shoppingmall.me.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
-import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 
 import java.util.ArrayList;
@@ -12,6 +12,6 @@ import java.util.ArrayList;
 
 public interface ILivingAddressView extends IView {
     void addSuccess();
-    void getAddListJsonSuccess(ArrayList<AddressBean> addressList);
+    void getAddListJsonSuccess(ArrayList<Province> addressList);
     void getLiveAddressSuccess(LivingAddressBean data);
 }

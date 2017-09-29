@@ -3,6 +3,7 @@ package com.giveu.shoppingmall.me.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 import com.android.volley.mynet.BaseBean;
@@ -77,6 +78,7 @@ public class MyCouponActivity extends BaseActivity {
                             sortByStatus(response.data);
                             couponAdapter.notifyDataSetChanged();
                         } else {
+                            baseLayout.ll_baselayout_content.setVisibility(View.GONE);
                             baseLayout.showEmpty("您暂时还没有优惠\n" +
                                     "敬请关注即有钱包其他活动");
                         }

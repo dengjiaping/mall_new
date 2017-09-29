@@ -79,6 +79,7 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         fragmentAdapter = new RepaymentFragmentAdapter(getSupportFragmentManager(), fragmentList);
         vpBill.setAdapter(fragmentAdapter);
         presenter = new RepaymentPresenter(this);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
     }
 
     @Override
@@ -106,6 +107,12 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         //获取账单列表后刷新fragment数据
         currentMonthFragment.notifyDataSetChange(headerBean, currentMonthList);
         nextMonthFragment.notifyDataSetChange(headerBean, nextMonthList);
+    }
+
+    @Override
+    public void showEmpty() {
+        currentMonthFragment.initView();
+        nextMonthFragment.initView();
     }
 
 

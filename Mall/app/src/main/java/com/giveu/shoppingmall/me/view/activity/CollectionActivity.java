@@ -206,7 +206,7 @@ public class CollectionActivity extends BaseActivity {
                             OfftheShelfActivity.startIt(mBaseContext);
                         } else {
                             //跳转商品介绍
-                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1,item.skuCode, item.srcIp + "/" + item.src, item.name, Const.COLLECTION, true);
+                            CommodityDetailActivity.startIt(mBaseContext, item.isInstallments == 1,item.skuCode, Const.COLLECTION, true);
                         }
                     }
                 }

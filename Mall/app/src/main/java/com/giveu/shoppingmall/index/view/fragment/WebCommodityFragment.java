@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -11,7 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseFragment;
@@ -29,9 +29,9 @@ public class WebCommodityFragment extends BaseFragment {
     private WebSettings webSettings;
     private boolean fromCommodityDetail;
     private ImageView fab_up_slide;
-    private LinearLayout mScrollView;
-    private RelativeLayout mContainer;
+    private LinearLayout mContainer;
     private ProgressBar pBar;
+    private ViewStub vsDetail;
     private String htmlUrl;
 
     @Override
@@ -46,31 +46,16 @@ public class WebCommodityFragment extends BaseFragment {
 
     }
 
-/*    @Override
-    protected void onVisible() {
-        super.onVisible();
-        if (wvCommodity != null) {
-            wvCommodity.onResume();
-        }
-    }
-
-    @Override
-    protected void onInvisible() {
-        super.onInvisible();
-        if (wvCommodity != null) {
-            wvCommodity.onPause();
-        }
-    }*/
-
     @Override
     public void initDataDelay() {
 
     }
 
     private void initView() {
-        mContainer = (RelativeLayout) view.findViewById(R.id.mContainer);
+        vsDetail = (ViewStub) view.findViewById(R.id.vs_detail);
+        vsDetail.inflate();
         fab_up_slide = (ImageView) view.findViewById(R.id.fab_up_slide);
-        mScrollView = (LinearLayout) view.findViewById(R.id.mScrollView);
+        mContainer = (LinearLayout) view.findViewById(R.id.mContainer);
         pBar = (ProgressBar) view.findViewById(R.id.pb_web);
 //        wvCommodity = (CommodityWebView) view.findViewById(R.id.wv_commodity);
         initWebView();
@@ -93,7 +78,7 @@ public class WebCommodityFragment extends BaseFragment {
         wvCommodity = new CommodityWebView(getContext());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         wvCommodity.setLayoutParams(layoutParams);
-        mScrollView.addView(wvCommodity);
+        mContainer.addView(wvCommodity);
         wvCommodity.fromCommodityDetail(fromCommodityDetail);
         wvCommodity.setFocusable(false);
         webSettings = wvCommodity.getSettings();

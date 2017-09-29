@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.giveu.shoppingmall.widget.PullDetailLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sv_switch"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/sv_goods_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:indicator_drawable_selected="@drawable/shape_dot_blue"
+                app:indicator_drawable_unselected="@drawable/shape_dot_grey"
+                app:is_auto_play="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_layoutxml_bg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/default_layout_screen_gap"
+                android:paddingTop="7dp">
+
+                <TextView
+                    android:id="@+id/tv_commodit_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="22dp"
+                    android:textColor="@color/color_666666"
+                    android:textSize="@dimen/ts_15" />
+
+                <TextView
+                    android:id="@+id/tv_introduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="2.5dp"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_12" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingRight="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:textColor="@color/color_ff2a2a"
+                        android:textSize="@dimen/ts_19" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:descendantFocusability="afterDescendants"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:alpha="0.4"
+                        android:background="#dddddd" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.giveu.shoppingmall.widget.DetailView
+                android:id="@+id/ll_choose_attr"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="5dp"
+                app:text_left="已选"
+                app:text_left_color="@color/color_9b9b9b"
+                app:text_middle_color="@color/color_364343" />
+
+            <com.giveu.shoppingmall.widget.DetailView
+                android:id="@+id/dv_supply"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="1dp"
+                app:iv_right_visible="GONE"
+                app:text_left="货源"
+                app:text_left_color="@color/color_9b9b9b"
+                app:text_middle_color="@color/color_364343" />
+
+            <com.giveu.shoppingmall.widget.DetailView
+                android:id="@+id/ll_choose_address"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="1dp"
+                app:text_left="送至"
+                app:text_left_color="@color/color_9b9b9b"
+                app:text_middle_color="@color/color_364343" />
+
+            <com.giveu.shoppingmall.widget.DetailView
+                android:id="@+id/dv_stock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iv_right_visible="GONE"
+                app:text_left="送至"
+                app:text_left_color="@color/color_9b9b9b"
+                app:text_middle_color="@color/color_00bbc0"
+                app:tv_left_visible="INVISIBLE" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:background="@color/white" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white">
+
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="@dimen/default_layout_screen_gap"
+                    android:layout_marginRight="7dp"
+                    android:gravity="center_vertical"
+                    android:text="服务"
+                    android:textColor="@color/color_9b9b9b"
+                    android:textSize="@dimen/ts_14" />
+
+                <com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout
+                    android:id="@+id/fl_server"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <!-- 上拉查看图文详情 -->
+            <LinearLayout
+                android:id="@+id/ll_pull_up"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_up" />
+
+                <TextView
+                    android:id="@+id/tv_pull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:background="@color/default_layoutxml_bg"
+                    android:text="上拉查看商品详情"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_14" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/mContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.giveu.shoppingmall.widget.PullDetailLayout>

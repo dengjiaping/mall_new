@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -73,8 +74,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     RelativeLayout mContainer;
     @BindView(R.id.sv_switch)
     PullDetailLayout svSwitch;
-    @BindView(R.id.fab_up_slide)
-    ImageView fabUpSlide;
     @BindView(R.id.tv_commodit_name)
     TextView tvCommoditName;
     @BindView(R.id.tv_introduction)
@@ -89,6 +88,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     TagFlowLayout flServer;
     @BindView(R.id.ll_server)
     LinearLayout llServer;
+    ViewStub vsCommodityInfo;
     private View view;
     private WebCommodityFragment commodityDetailFragment;
     private CommodityDetailActivity activity;
@@ -112,12 +112,10 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_commodity_info, null);
         baseLayout.setTitleBarAndStatusBar(false, false);
-        ButterKnife.bind(this, view);
-        initBanner();
         activity = (CommodityDetailActivity) mBaseContext;
         presenter = new CommodityInfoPresenter(this);
-
-
+        isCredit = getArguments().getBoolean("isCredit", false);
+        skuCode = getArguments().getString("skuCode");
         return view;
     }
 
@@ -150,7 +148,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     private void initListener() {
-        fabUpSlide.setOnClickListener(this);
         svSwitch.setOnSlideDetailsListener(this);
         llPullUp.setOnClickListener(this);
         chooseCityDialog.setOnConfirmListener(new ChooseCityDialog.OnConfirmListener() {
@@ -182,15 +179,17 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             public void confirm(int amounts) {
                 commodityAmounts = amounts;
                 if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
-                    ConfirmOrderActivity.startIt(mBaseContext, 0, amounts, skuCode);
+                    //如果是分期产品，那么需要选择分期数，首付等
+                    if (isCredit) {
+                        creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, null);
+                        creditDialog.show();
+                        creditDialog.setConfirmEnable(false);
+                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
+                    } else {
+                        ConfirmOrderActivity.startIt(mBaseContext,0,0,skuCode);
+                    }
                 }
-/*                //如果是分期产品，那么需要选择分期数，首付等
-                if (isCredit) {
-                    commodityAmounts = amounts;
-                    presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
-                } else {
-                    ConfirmOrderActivity.startIt(mBaseContext);
-                }*/
+
             }
 
             @Override
@@ -207,8 +206,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm() {
-                ConfirmOrderActivity.startIt(mBaseContext);
+            public void confirm(int downPayRate, int paymentNum) {
+                ConfirmOrderActivity.startIt(mBaseContext,downPayRate,paymentNum,skuCode);
             }
 
             @Override
@@ -225,7 +224,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         }
     }
 
-    @OnClick({R.id.ll_pull_up, R.id.fab_up_slide, R.id.ll_choose_address, R.id.ll_choose_attr})
+    @OnClick({R.id.ll_pull_up, R.id.ll_choose_address, R.id.ll_choose_attr})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_choose_attr:
@@ -266,12 +265,18 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void initDataDelay() {
-        initAndLoadData();
+        getCommodityInfo();
     }
 
     private void initAndLoadData() {
-        isCredit = getArguments().getBoolean("isCredit", false);
-        skuCode = getArguments().getString("skuCode");
+        if (svSwitch != null) {
+            return;
+        }
+        vsCommodityInfo = (ViewStub) view.findViewById(R.id.vs_commodity_info);
+        vsCommodityInfo.inflate();
+        ButterKnife.bind(this, view);
+        initBanner();
+
         //购买对话框
         buyDialog = new BuyCommodityDialog(mBaseContext);
         //地址选择对话框
@@ -297,7 +302,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         commodityDetailFragment.setFromCommodityDetail(false);
         getChildFragmentManager().beginTransaction().replace(R.id.mContainer, commodityDetailFragment).commitAllowingStateLoss();
         initListener();
-        getCommodityInfo();
         //获取默认的地址，没有的话获取收货地址的第一个，或定位的位置
         if (StringUtils.isNotNull(LoginHelper.getInstance().getReceiveProvince())) {
             provinceStr = LoginHelper.getInstance().getReceiveProvince();
@@ -333,14 +337,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     public void onStatucChanged(PullDetailLayout.Status status) {
         if (status == PullDetailLayout.Status.OPEN) {
             //当前为图文详情页
-            fabUpSlide.setVisibility(View.VISIBLE);
             activity.vpContent.setScrollDisabled(true);
             tvPull.setText("下拉收起商品详情");
             activity.hideTabLayout();
             ivArrow.setImageResource(R.drawable.ic_arrow_down);
         } else {
             //当前为商品详情页
-            fabUpSlide.setVisibility(View.GONE);
             activity.vpContent.setScrollDisabled(false);
             ivArrow.setImageResource(R.drawable.ic_arrow_up);
             tvPull.setText("上拉查看商品详情");
@@ -356,6 +358,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     @Override
     public void showSkuIntroduction(final SkuIntroductionResponse skuResponse) {
+        initAndLoadData();
         if (skuResponse.skuInfo != null) {
             //图片放大
             final ArrayList<String> imageList = new ArrayList<>();
@@ -407,12 +410,14 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     public void refreshCommodityDetail(String url) {
+        initAndLoadData();
         commodityDetailFragment.refreshCommodityDetail(url);
     }
 
 
     @Override
     public void showStockState(int state) {
+        initAndLoadData();
         switch (state) {
             case 0:
                 dvStock.setMiddleText("有货");
@@ -464,7 +469,6 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         if (success) {
             if (CommonUtils.isNotNullOrEmpty(data)) {
                 creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, data);
-                creditDialog.show();
             }
         }
     }
@@ -488,18 +492,10 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 @Override
                 public void onSuccess(AMapLocation location) {
                     provinceStr = location.getProvince();
-                    if (StringUtils.isNotNull(provinceStr)) {
-                        //去除省字样
-                        if (provinceStr.endsWith("省")) {
-                            provinceStr = provinceStr.substring(0, provinceStr.length() - 1);
-                        }
-                    }
                     cityStr = location.getCity();
                     regionStr = location.getDistrict();
-                    llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-                    //GPS获取省市区后查询该商品是否有货
-                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
                     locationUtils.stopLocation();
+                    chooseCityDialog.setOriginalAddress(provinceStr, cityStr, regionStr, "");
                 }
 
                 @Override

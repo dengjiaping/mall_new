@@ -24,7 +24,7 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
     }
 
     public void getRepayment(String idPerson) {
-        if(!LoginHelper.getInstance().hasAverageUser()){
+        if (!LoginHelper.getInstance().hasAverageUser()) {
             //不是假数据的激活用户，才去调还款数据
             ApiImpl.getRepayment(getView().getAct(), idPerson, new BaseRequestAgent.ResponseListener<RepaymentResponse>() {
                         @Override
@@ -117,7 +117,10 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
 
                         @Override
                         public void onError(BaseBean errorBean) {
-                            CommonLoadingView.showErrorToast(errorBean);
+                            if (getView() != null) {
+                                getView().showEmpty();
+                                CommonLoadingView.showErrorToast(errorBean);
+                            }
                         }
                     }
             );

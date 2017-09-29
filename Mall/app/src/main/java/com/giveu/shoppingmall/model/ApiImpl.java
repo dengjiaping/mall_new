@@ -9,7 +9,7 @@ import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
-import com.giveu.shoppingmall.model.bean.response.AddressBean;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
@@ -438,9 +438,9 @@ public class ApiImpl {
     }
 
     //获取省市区
-    public static void getAddListJson(Activity context, BaseRequestAgent.ResponseListener<AddressBean> responseListener) {
+    public static void getAddListJson(Activity context, BaseRequestAgent.ResponseListener<Province> responseListener) {
         Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{}, new Object[]{});
-        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getAddListJson, AddressBean.class, context, responseListener);
+        RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_address_getAddListJson, Province.class, context, responseListener);
     }
 
     //获取居住地址信息

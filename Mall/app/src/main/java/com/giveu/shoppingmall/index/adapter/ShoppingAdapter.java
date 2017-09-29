@@ -24,7 +24,6 @@ import java.util.List;
 
 public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBean> {
     private String srcIp;
-    private String orginalSrcIp;
 
     public ShoppingAdapter(Context context, List<GoodsSearchResponse.GoodsBean> datas) {
         super(context, R.layout.lv_shopping_item, datas);
@@ -41,26 +40,23 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         } else {
             holder.getConvertView().setVisibility(View.VISIBLE);
         }
-        ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_defalut_pic_corner, ivCommodity, DensityUtils.dip2px(4));
+        ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_default_pic,R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommodityDetailActivity.startIt((Activity) mContext, false, item.skuCode, orginalSrcIp + item.src, StringUtils.ToAllFullWidthString(item.name), 0, false);
+                CommodityDetailActivity.startIt((Activity) mContext, item.hasShowMonthAmount(), item.skuCode, 0, false);
             }
         });
         holder.setText(R.id.tv_commodity_name, StringUtils.ToAllFullWidthString(item.name));
-
-        CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 16, 11, R.color.red, R.color.color_4a4a4a);
-//        if (item.hasShowMonthAmount()) {
-//            //true就不显示月供,实际上隐藏售价view，月供view变成售价
-//            holder.setVisible(R.id.tv_price, false);
-//            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "售价:¥", item.salePrice, "", 16, 13, R.color.red, R.color.color_4a4a4a);
-//        } else {
-//            holder.setVisible(R.id.tv_price, true);
-//            //textView,str1,str2,str3,tvSize1,tvSize2,tvColor1,tvColor2
-//            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 16, 13, R.color.red, R.color.color_4a4a4a);
-//            tvPrice.setText("¥" + StringUtils.format2(item.salePrice));
-//        }
+        if (item.hasShowMonthAmount()) {
+            //true就显示月供
+            holder.setVisible(R.id.tv_price, true);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 16, 11, R.color.red, R.color.color_4a4a4a);
+            tvPrice.setText("¥" + StringUtils.format2(item.salePrice));
+        } else {
+            holder.setVisible(R.id.tv_price, false);
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 16, 11, R.color.red, R.color.color_4a4a4a);
+        }
 
     }
 
@@ -69,6 +65,5 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         mDatas.addAll(data);
         notifyDataSetChanged();
         this.srcIp = srcIp + ImageUtils.ImageSize.img_size_200_200;
-        this.orginalSrcIp = srcIp + "/";
     }
 }

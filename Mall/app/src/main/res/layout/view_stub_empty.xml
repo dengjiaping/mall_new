@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/ll_emptyView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:visibility="gone"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    >
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_emptyView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/ic_defalut_empty" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="没有获取到数据"
-        android:textColor="@color/color_9b9b9b"
-        android:textSize="@dimen/ts_15" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/selector_login"
         android:padding="10dp"
-        android:text="点击重新获取"
-        android:textColor="@color/white"
-        android:textSize="@dimen/ts_15" />
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_defalut_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="没有获取到数据"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/selector_login"
+            android:padding="10dp"
+            android:text="点击重新获取"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_15" />
+    </LinearLayout>
 </LinearLayout>

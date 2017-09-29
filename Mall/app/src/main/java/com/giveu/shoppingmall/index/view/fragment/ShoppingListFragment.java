@@ -260,6 +260,7 @@ public class ShoppingListFragment extends BaseFragment {
                     @Override
                     public void onError(BaseBean errorBean) {
                         mRefreshView.onRefreshComplete();
+                        mRefreshView.setPullRefreshEnable(true);
                         CommonLoadingView.showErrorToast(errorBean);
                         //加载更多失败，如果有数据的话，不显示默认空白图标
                         if (CommonUtils.isNullOrEmpty(shoppingList) && emptyView.getVisibility() != View.VISIBLE) {
@@ -283,7 +284,7 @@ public class ShoppingListFragment extends BaseFragment {
             emptyView.setVisibility(View.GONE);
         }
 
-        if (mRefreshView != null){
+        if (mRefreshView != null) {
             mRefreshView.setPullLoadEnable(false);
         }
         initDataForFragment();
