@@ -172,7 +172,6 @@
                             android:layout_marginTop="20dp"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="主题主题主题主题主题主题"
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_15" />
 
@@ -185,7 +184,6 @@
                                 android:id="@+id/tv_sale_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="¥3999元"
                                 android:textColor="@color/color_474747"
                                 android:textSize="@dimen/ts_19" />
 
@@ -289,7 +287,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="10%(¥599.90)"
                                 android:textColor="@color/color_00bbc0"
                                 android:textSize="@dimen/ts_15" />
                         </RelativeLayout>
@@ -637,25 +634,30 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <RelativeLayout
+                    <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginTop="1dp"
                         android:background="@color/white"
+                        android:scrollbars="none"
+                        android:overScrollMode="never"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp">
+
+
 
                         <TextView
                             android:id="@+id/tv_user_comments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingTop="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
                             android:text="买家留言："
                             android:textColor="@color/color_4a4a4a"
                             android:textSize="@dimen/ts_15" />
 
 
-                    </RelativeLayout>
+                    </ScrollView>
 
                     <LinearLayout
                         android:id="@+id/ll_contract"
@@ -674,7 +676,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@drawable/selector_checkbox"
-                            android:clickable="true"
+                            android:clickable="false"
                             android:checked="true" />
 
                         <TextView
