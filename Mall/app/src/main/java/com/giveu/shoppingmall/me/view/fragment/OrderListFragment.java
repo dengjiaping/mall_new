@@ -249,7 +249,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
                 EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
                 break;
         }
-        ToastUtils.showLongToast("订单删除成功");
+        ToastUtils.showShortToast("订单删除成功");
     }
 
     //取消订单成功
@@ -264,7 +264,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         //刷新所有，已关闭订单列表
         EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
         EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
-        ToastUtils.showLongToast("订单取消成功");
+        ToastUtils.showShortToast("订单取消成功");
     }
 
     //确认收货成功
@@ -279,7 +279,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
         //刷新所有，已完成
         EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
         EventBusUtils.poseEvent(new RefreshEvent(OrderState.FINISHED));
-        ToastUtils.showLongToast("确认收货成功");
+        ToastUtils.showShortToast("确认收货成功");
     }
 
     //申请退款成功
@@ -339,7 +339,7 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
             //刷新所有，已关闭
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
             EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
-            ToastUtils.showLongToast("订单已失效");
+            ToastUtils.showShortToast("订单已失效");
         }
     }
 }

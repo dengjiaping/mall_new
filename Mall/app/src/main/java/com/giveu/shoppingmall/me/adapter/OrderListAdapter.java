@@ -263,7 +263,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                             if ("0".equals(item.refundApplying)) {
                                 showRefundDialog(item.orderNo);
                             } else {
-                                ToastUtils.showLongToast("您已经申请过了,请耐心等待处理结果");
+                                ToastUtils.showShortToast("您已经申请过了,请耐心等待处理结果");
                             }
                         }
                     }

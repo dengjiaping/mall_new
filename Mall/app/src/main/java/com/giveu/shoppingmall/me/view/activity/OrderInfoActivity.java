@@ -478,7 +478,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                         }
                     }
                 } else {
-                    ToastUtils.showLongToast("请阅读并勾选消费分期合同");
+                    ToastUtils.showShortToast("请阅读并勾选消费分期合同");
                 }
                 break;
 
@@ -507,7 +507,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                 if ("0".equals(refundApplying)) {
                     showRefundDialog();
                 } else {
-                    ToastUtils.showLongToast("您已经申请过了,请耐心等待处理结果");
+                    ToastUtils.showShortToast("您已经申请过了,请耐心等待处理结果");
                 }
                 break;
 
