@@ -2,7 +2,11 @@ package com.giveu.shoppingmall.index.view.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +33,7 @@ import com.fastaccess.permission.base.PermissionHelper;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.me.view.activity.BankActivity;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
@@ -47,6 +52,7 @@ import com.giveu.shoppingmall.widget.ClickEnabledTextView;
 import com.giveu.shoppingmall.widget.EditView;
 import com.giveu.shoppingmall.widget.SendCodeTextView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
+import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.giveu.shoppingmall.widget.dialog.NormalHintDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -100,8 +106,11 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     LocationUtils locationUtils;//定位方法
     NormalHintDialog walletActivationDialog;
     private PermissionDialog permissionDialog;
-    private int hasLocationTimes = 0;
     private boolean isPermissionReallyDeclined;//该boolean的意义参考SplashActivity
+    boolean isGPSConfirm = false;//GPS权限弹窗确认按钮标记，true 点击去开启回来继续弹窗
+    boolean isGPS = false;//是否是GPS权限弹窗去开启回来的标记
+    CustomDialog dialog;
+    LocationManager locationManager;
 
     public static void startIt(Activity mActivity, String name, String ident, String idPerson, String bankNo, String phone) {
         Intent intent = new Intent(mActivity, WalletActivationSecondActivity.class);
@@ -123,7 +132,8 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         name = getIntent().getStringExtra("name");
         bankNo = getIntent().getStringExtra("bankNo");
         phone = getIntent().getStringExtra("phone");
-
+        initGPS();
+        locationManager = (LocationManager) mBaseContext.getSystemService(Context.LOCATION_SERVICE);
         //查看支持银行列表
         CommonUtils.setTextWithSpan(tvBanklist, false, "查看", "支持银行", R.color.color_9b9b9b, R.color.title_color, new View.OnClickListener() {
             @Override
@@ -148,7 +158,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
         initPermissionDialog();
         //6.0以下直接调取位置信息，6.0以上先申请权限
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            locationUtils.startLocation();
+          //  locationUtils.startLocation(mBaseContext);
         }
     }
 
@@ -203,14 +213,26 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (isGPS) {
+            //是否是gps没开，去开启回来的状态
+            if (StringUtils.isNull(longitude) || StringUtils.isNull(latitude)) {
+                //没有获取到经纬度
+                if (permissionDialog.isConfirm() || isGPSConfirm) {
+                    //位置权限点击去开启或GPS权限点击去开启回来继续定位
+                    locationUtils.startLocation(mBaseContext);
+                }
+            }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //6.0以上
             if (!isPermissionReallyDeclined) {
                 if (!PermissionHelper.getInstance(this).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
-                } else {
-                    locationUtils.startLocation();
                 }
             }
+        } else {
+            //6.0以下
         }
     }
 
@@ -225,7 +247,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
     @Override
     public void onPermissionGranted(@NonNull String[] permissionName) {
         super.onPermissionGranted(permissionName);
-        locationUtils.startLocation();
+     //   locationUtils.startLocation(mBaseContext);
     }
 
     private void initPermissionDialog() {
@@ -246,7 +268,6 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
             @Override
             public void cancle() {
                 permissionDialog.dismiss();
-                finish();
             }
         });
     }
@@ -275,29 +296,61 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
             public void onSuccess(AMapLocation locationResult) {
                 latitude = locationResult.getLatitude() + "";
                 longitude = locationResult.getLongitude() + "";
+                locationUtils.stopLocation(mBaseContext);
             }
 
             @Override
             public void onFail(Object o) {
-                hasLocationTimes++;
-                if (hasLocationTimes == 2) {
-                    int errorCode = ((AMapLocation) o).getErrorCode();
-                    switch (errorCode) {
-                        case 10:
-                        case 12:
-                        case 13:
-                            permissionDialog.setPermissionStr("钱包激活需要开启网络和定位权限，是否开启？");
-                            permissionDialog.show();
-                            break;
-                        default:
-                            break;
-                    }
-                    locationUtils.stopLocation();
+                hideLoding();
+                if (!isNetworkConnected(mBaseContext)) {
+                    ToastUtils.showShortToast("网络不可用");
+                    return;
+                }
+                if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                    //没有GPS权限，显示弹窗，并附上标记
+                    isGPS = true;
+                    dialog.show();
                 } else {
-                    locationUtils.startLocation();
+                    isGPSConfirm = false;
+                    if (!PermissionHelper.getInstance(mBaseContext).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                    }
                 }
             }
         });
+    }
+
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    private void initGPS() {
+        // 判断GPS模块是否开启，如果没有则开启
+        CustomDialogUtil customDialogUtil = new CustomDialogUtil(mBaseContext);
+        dialog = customDialogUtil.getDialogModeOneHint("钱包激活需要开启GPS，是否开启？", "取消", "去开启", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }
+                , new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 转到手机设置界面，用户设置GPS
+                        isGPSConfirm = true;
+                        Intent intent = new Intent(
+                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
+                    }
+                });
+        dialog.setCancelable(false);
     }
 
     @Override
@@ -393,39 +446,46 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                 break;
             case R.id.tv_activation:
                 //点击激活
-                if (tvActivation.isClickEnabled()) {
-                    ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
-                        @Override
-                        public void onSuccess(final WalletActivationResponse response) {
-                            if (response != null) {
-                                if (response.data != null) {
-                                    WalletActivationResponse wallResponse = response.data;
-                                    if (wallResponse.isPhoneChage) {
-                                        //修改了手机号
-                                        walletActivationDialog.showDialog();
-                                        walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
-                                            @Override
-                                            public void onDismiss() {
-                                                //显示成功页
-                                                activationSuccess(mBaseContext, response, idPerson, "success");
-                                            }
-                                        });
-                                    } else {
-                                        //显示成功页
-                                        activationSuccess(mBaseContext, response, idPerson, "success");
+                //没有经纬度，并开启定位
+                if (StringUtils.isNull(latitude) || StringUtils.isNull(longitude)) {
+                    locationUtils.startLocation(mBaseContext);
+                }
+                if (StringUtils.isNotNull(latitude) && StringUtils.isNotNull(longitude)) {
+                    if (tvActivation.isClickEnabled()) {
+                        ApiImpl.activateWallet(mBaseContext, bankNo, idPerson, ident, latitude, longitude, orderNo, phone, name, sendSouce, code, smsSeq, new BaseRequestAgent.ResponseListener<WalletActivationResponse>() {
+                            @Override
+                            public void onSuccess(final WalletActivationResponse response) {
+                                if (response != null) {
+                                    if (response.data != null) {
+                                        WalletActivationResponse wallResponse = response.data;
+                                        if (wallResponse.isPhoneChage) {
+                                            //修改了手机号
+                                            walletActivationDialog.showDialog();
+                                            walletActivationDialog.setOnDialogDismissListener(new NormalHintDialog.OnDialogDismissListener() {
+                                                @Override
+                                                public void onDismiss() {
+                                                    //显示成功页
+                                                    activationSuccess(mBaseContext, response, idPerson, "success");
+                                                }
+                                            });
+                                        } else {
+                                            //显示成功页
+                                            activationSuccess(mBaseContext, response, idPerson, "success");
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onError(BaseBean errorBean) {
-                            ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, "fail");
-                        }
-                    });
-                } else {
-                    buttonCanClick(true);
+                            @Override
+                            public void onError(BaseBean errorBean) {
+                                ActivationStatusActivity.startShowResultFail(mBaseContext, errorBean, "fail");
+                            }
+                        });
+                    } else {
+                        buttonCanClick(true);
+                    }
                 }
+
                 break;
         }
     }
@@ -434,7 +494,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
      * 激活成功显示状态页面
      */
     public void activationSuccess(Activity activity, WalletActivationResponse wallResponse, String idPerson, String status) {
-        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson, status,wallResponse.data.coupon,wallResponse.data.hasShowCouponDialog());
+        ActivationStatusActivity.startShowResultSuccess(activity, wallResponse, idPerson, status, wallResponse.data.coupon, wallResponse.data.hasShowCouponDialog());
         setResult(RESULT_OK);
         finish();
         LoginHelper.getInstance().setIdPerson(idPerson);
@@ -473,6 +533,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
             }
             return;
         }
+
         if (!cbCheck.isChecked()) {
             if (showToast) {
                 ToastUtils.showShortToast("请勾选即有钱包激活协议和代扣服务授权书！");

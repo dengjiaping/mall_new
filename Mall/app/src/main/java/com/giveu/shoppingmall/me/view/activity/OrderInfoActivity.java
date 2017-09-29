@@ -303,25 +303,24 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvPayType.setText(OrderStatus.getOrderPayType(response.payType));
         }
         //首付
-//        if (StringUtils.isNotNull(response.downPayment)) {
-        /*    if (StringUtils.isNotNull(response.selDownPaymentRate)) {
-                rlDownPayment.setVisibility(View.GONE);
+        if (StringUtils.isNotNull(response.downPayment)) {
+            if (StringUtils.isNotNull(response.selDownPaymentRate)) {
                 tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
-            } else {*/
-        rlDownPayment.setVisibility(View.GONE);
-//            }
-//        }
+            } else {
+                rlDownPayment.setVisibility(View.GONE);
+            }
+        } else {
+            rlDownPayment.setVisibility(View.GONE);
+        }
         //分期数
         if (StringUtils.isNotNull(response.selStagingNumberRate)) {
             isCredit = true;
-            rlStagingNum.setVisibility(View.GONE);
             tvStagingNum.setText(response.selStagingNumberRate + "个月");
         } else {
             rlStagingNum.setVisibility(View.GONE);
         }
         //月供金额
         if (StringUtils.isNotNull(response.monthPayment)) {
-            rlMonthPayment.setVisibility(View.GONE);
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthPayment, "¥ ", StringUtils.format2(response.monthPayment), "", 15, 11, R.color.color_00bbc0, R.color.color_00bbc0);
         } else {
             rlMonthPayment.setVisibility(View.GONE);
@@ -398,8 +397,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvRechargeDenomination.setText(response.rechargeDenomination);
         }
         //消费分期合同
-        if (response.orderType == 0) {
-            llContract.setVisibility(View.GONE);
+        if (response.orderType == 0 && StringUtils.isNotNull(response.monthPayment)) {
+            llContract.setVisibility(View.VISIBLE);
         } else {
             llContract.setVisibility(View.GONE);
         }
@@ -453,32 +452,26 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         switch (view.getId()) {
             //去支付、去首付
             case R.id.tv_pay:
-                //是否勾选消费分期合同
-                if (cbContract.isChecked()) {
-                    //是否登录且激活钱包
-                    if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
-                        //是否设置了交易密码
-                        if (LoginHelper.getInstance().hasSetPwd()) {
-                            //如果是钱包支付的话，判断钱包余额是否足够
-                            if (Double.parseDouble(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && orderPayType == 0) {
-                                balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
-                                balanceDeficientDialog.show();
-                                return;
-                            }
-                            dealPwdDialog.setPrice(finalPayment + "");
-                            dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
-                                @Override
-                                public void checkPwd(String payPwd) {
-                                    presenter.onVerifyPayPwd(payPwd, orderNo, isWalletPay, finalPayment + "");
-                                }
-                            });
-                            dealPwdDialog.showDialog();
-                        } else {
-                            TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
+                    //是否设置了交易密码
+                    if (LoginHelper.getInstance().hasSetPwd()) {
+                        //如果是钱包支付的话，判断钱包余额是否足够
+                        if (Double.parseDouble(LoginHelper.getInstance().getAvailablePoslimit()) < finalPayment && orderPayType == 0) {
+                            balanceDeficientDialog.setBalance(LoginHelper.getInstance().getAvailablePoslimit());
+                            balanceDeficientDialog.show();
+                            return;
                         }
+                        dealPwdDialog.setPrice(finalPayment + "");
+                        dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
+                            @Override
+                            public void checkPwd(String payPwd) {
+                                presenter.onVerifyPayPwd(payPwd, orderNo, isWalletPay, finalPayment + "");
+                            }
+                        });
+                        dealPwdDialog.showDialog();
+                    } else {
+                        TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                     }
-                } else {
-                    ToastUtils.showShortToast("请阅读并勾选消费分期合同");
                 }
                 break;
 

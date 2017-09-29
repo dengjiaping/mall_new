@@ -13,6 +13,7 @@ import android.view.View;
 
 public class PermissionDialog extends ConfirmDialog {
     private boolean needFinish = true;
+    private boolean isConfirm;
 
     public PermissionDialog(Activity context) {
         super(context);
@@ -35,12 +36,14 @@ public class PermissionDialog extends ConfirmDialog {
         super.initView(contentView);
         setConfirmStr("权限设置");
         setEditEnable(false);
+        isConfirm = false;
         setOnChooseListener(new OnChooseListener() {
             @Override
             public void confirm() {
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", context.getPackageName(), null);
                 intent.setData(uri);
+                isConfirm = true;
                 context.startActivity(intent);
                 dismiss();
             }
@@ -54,6 +57,10 @@ public class PermissionDialog extends ConfirmDialog {
                 }
             }
         });
+    }
+
+    public boolean isConfirm(){
+      return isConfirm;
     }
 
     @Override

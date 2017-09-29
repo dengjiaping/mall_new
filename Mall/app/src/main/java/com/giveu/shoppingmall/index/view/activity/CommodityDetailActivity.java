@@ -84,6 +84,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         intent.putExtra("isCredit", isCredit);
         intent.putExtra("skuCode", skuCode);
         if (isCollection) {
+            intent.putExtra("isCollection", isCollection);
             activity.startActivityForResult(intent, resultCode);
         } else {
             activity.startActivity(intent);
