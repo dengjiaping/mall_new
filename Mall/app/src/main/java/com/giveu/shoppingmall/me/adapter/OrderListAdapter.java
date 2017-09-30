@@ -327,7 +327,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });
@@ -346,7 +346,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });
@@ -365,7 +365,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });
@@ -385,7 +385,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });

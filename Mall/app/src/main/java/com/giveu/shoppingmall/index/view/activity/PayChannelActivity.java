@@ -108,7 +108,7 @@ public class PayChannelActivity extends BaseActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 cancelDialog.dismiss();
                 BaseApplication.getInstance().finishAllExceptMainActivity();
                 MyOrderActivity.startIt(mBaseContext, OrderState.ALL_RESPONSE);

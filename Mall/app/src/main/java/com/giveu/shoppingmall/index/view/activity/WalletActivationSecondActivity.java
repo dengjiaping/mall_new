@@ -266,7 +266,7 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 permissionDialog.dismiss();
             }
         });

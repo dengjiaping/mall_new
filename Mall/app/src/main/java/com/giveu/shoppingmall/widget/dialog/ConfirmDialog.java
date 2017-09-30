@@ -64,7 +64,7 @@ public class ConfirmDialog extends CustomDialog implements View.OnClickListener 
 
             case R.id.tv_firstBtn:
                 if (listener != null) {
-                    listener.cancle();
+                    listener.cancel();
                 }
                 break;
 
@@ -115,7 +115,7 @@ public class ConfirmDialog extends CustomDialog implements View.OnClickListener 
     public interface OnChooseListener {
         void confirm();
 
-        void cancle();
+        void cancel();
     }
 
 }

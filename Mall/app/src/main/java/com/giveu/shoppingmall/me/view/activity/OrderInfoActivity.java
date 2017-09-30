@@ -620,7 +620,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });
@@ -639,7 +639,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dialog.dismiss();
             }
         });

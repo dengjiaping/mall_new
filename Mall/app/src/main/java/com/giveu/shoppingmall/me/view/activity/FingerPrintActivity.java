@@ -105,7 +105,7 @@ public class FingerPrintActivity extends BaseActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 settingDialog.dismiss();
             }
         });

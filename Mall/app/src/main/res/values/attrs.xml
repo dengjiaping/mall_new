@@ -93,5 +93,8 @@
     <declare-styleable name="EditView">
         <attr name="et_maxLength" format="integer" />
     </declare-styleable>
+    <declare-styleable name="MaxHeightListView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
 
 </resources>

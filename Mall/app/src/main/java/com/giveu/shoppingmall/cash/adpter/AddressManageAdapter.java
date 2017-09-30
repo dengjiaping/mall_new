@@ -64,7 +64,7 @@ public class AddressManageAdapter extends LvCommonAdapter<AddressListResponse> {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 deleteDialog.dismiss();
             }
         });

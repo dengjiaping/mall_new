@@ -187,7 +187,7 @@ public class MainActivity extends BasePermissionActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 permissionDialog.dismiss();
             }
         });

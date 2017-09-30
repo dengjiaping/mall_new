@@ -20,13 +20,14 @@ import android.widget.TextView;
 import com.android.volley.mynet.ApiUrl;
 import com.android.volley.mynet.BaseBean;
 import com.android.volley.mynet.BaseRequestAgent;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.cash.view.activity.AddressManageActivity;
 import com.giveu.shoppingmall.cash.view.activity.VerifyActivity;
 import com.giveu.shoppingmall.event.RefreshEvent;
+import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.view.dialog.ChooseDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
@@ -50,7 +51,7 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
-import com.giveu.shoppingmall.widget.DetailView;
+import com.giveu.shoppingmall.widget.NoScrollListView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -66,7 +67,7 @@ import butterknife.OnClick;
 public class ConfirmOrderActivity extends BaseActivity {
     //选择付款方式
     @BindView(R.id.confirm_order_pay_type)
-    TextView dvPayView;
+    TextView tvPayTypeView;
     //买家留言
     @BindView(R.id.confirm_order_msg_edit)
     StableEditText msgEditText;
@@ -77,14 +78,14 @@ public class ConfirmOrderActivity extends BaseActivity {
     RelativeLayout rlCardsViewLayout;
     //首付
     @BindView(R.id.confirm_order_first_pay)
-    DetailView dvPaymentRateView;
+    TextView tvPaymentRateView;
     @BindView(R.id.confirm_order_support_installment)
     LinearLayout paymentLayout;
     //分期数
     @BindView(R.id.confirm_order_month)
-    DetailView dvPaymentView;
+    TextView tvPaymentView;
     @BindView(R.id.confirm_order_annuity)
-    DetailView dvAnnuityView;
+    TextView tvAnnuityView;
     //大家电配送
     @BindView(R.id.confirm_order_household)
     LinearLayout llHouseHold;
@@ -128,6 +129,11 @@ public class ConfirmOrderActivity extends BaseActivity {
     RelativeLayout rlEmptyView;
     @BindView(R.id.confirm_order_empty_text)
     TextView tvEmptyTextView;
+    //增值服务
+    @BindView(R.id.confirm_order_increment_service)
+    LinearLayout llIncrementService;
+    @BindView(R.id.confirm_order_increment_service_list)
+    NoScrollListView inCrementListView;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -137,7 +143,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private PaymentTypeDialog paymentTypeDialog;
     private DealPwdDialog pwdDialog;
 
-    private int payType = 2; //支付方式,暂时默认用支付宝
+    private int payType = 0; //支付方式,暂时默认用支付宝
     private long cardId = 0; //优惠券Id
     private long paymentRateId = 0;//首付Id
     private long paymentNumId = 0;//分期Id
@@ -152,10 +158,16 @@ public class ConfirmOrderActivity extends BaseActivity {
     private List<DownPayMonthPayResponse> paymentList = null;
     //分期选择对话框
     private ChooseDialog<DownPayMonthPayResponse> paymentDlg = null;
+    //月供对话框
+    private AnnuityDialog annuityDialog = null;
     //送货时间,暂时不用
     private String sendTime;
     //安装时间,暂时不用
     private String installTime;
+    //增值服务
+    private List<CreateOrderResponse.AvsListBean> incrementServiceList = null;
+    private LvCommonAdapter incrementServiceAdapter = null;
+    private int insuranceFee = 1; //是否购买人身意外险,默认购买
 
     private String channel;
     private String skuCode;
@@ -211,17 +223,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         channel = Const.CHANNEL;
         idPerson = LoginHelper.getInstance().getIdPerson();
 
-        paymentTypeDialog = new PaymentTypeDialog(this);
-        paymentTypeDialog.disableWalletPay();
-        paymentTypeDialog.disableWechatPay();
-        paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
-            @Override
-            public void onChooseType(int type, String paymentTypeStr) {
-                dvPayView.setText(paymentTypeStr);
-                payType = type;
-            }
-        });
-
+        initPayTypeUI();
 
         pwdDialog = new DealPwdDialog(mBaseContext);
 
@@ -238,6 +240,37 @@ public class ConfirmOrderActivity extends BaseActivity {
         initMsgEditText();
 
         showLoading();
+    }
+
+    /**
+     * 初始化支付方式相关UI
+     */
+    private void initPayTypeUI() {
+        paymentTypeDialog = new PaymentTypeDialog(this);
+        paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
+            @Override
+            public void onChooseType(int type, String paymentTypeStr) {
+                tvPayTypeView.setText(paymentTypeStr);
+                payType = type;
+                if (payType == 0) {
+                    llIncrementService.setVisibility(View.VISIBLE);
+                    paymentLayout.setVisibility(View.VISIBLE);
+                }else {
+                    llIncrementService.setVisibility(View.GONE);
+                    paymentLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        String availableRecharge = LoginHelper.getInstance().getAvailableRechargeLimit();
+        if ("0.00".equals(availableRecharge)) {
+            //如果额度为0,隐藏钱包支付,默认选择支付宝支付
+            paymentTypeDialog.disableWalletPay();
+            tvPayTypeView.setText("支付宝");
+            payType = 2;
+        } else {
+            tvPayTypeView.setText("钱包支付");
+        }
     }
 
     private void initMsgEditText() {
@@ -274,7 +307,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 finish();
                 confirmDialog.dismiss();
             }
@@ -302,29 +335,78 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private void updateUI(CreateOrderResponse result) {
         //更新地址界面
-        updateAddress(result.data.receiverJo);
+        updateAddressUI(result.data.receiverJo);
         //更新商品界面
-        updateSku(result);
+        updateSkuUI(result);
         //更新优惠券界面
-        updateCard(result.data.cardList);
+        updateCardUI(result.data.cardList);
         //更新首付比例界面
-        updatePaymentRate(result.data.initList);
+        updatePaymentRateUI(result.data.initList);
         //更新分期
-        updatePaymentList();
+        updatePaymentListUI();
+        //更新增值服务
+        updateIncrementServiceUI(result.data.avsList);
         //更新月供金额
         updateAnnuity();
     }
 
-    //更新首付
-    private void updatePaymentRate(final List<CreateOrderResponse.InitListBean> list) {
+    /**
+     * 更新增值服务相关UI
+     *
+     * @param avsList 增值服务列表
+     */
+    private void updateIncrementServiceUI(List<CreateOrderResponse.AvsListBean> avsList) {
+        if (CommonUtils.isNotNullOrEmpty(avsList)) {
+            incrementServiceList = avsList;
+            if (llIncrementService.getVisibility() != View.VISIBLE && payType == 0) {
+                llIncrementService.setVisibility(View.VISIBLE);
+            }
+
+            if (incrementServiceAdapter == null) {
+                incrementServiceAdapter = new LvCommonAdapter<CreateOrderResponse.AvsListBean>(this, R.layout.adapter_increment_item, incrementServiceList) {
+                    @Override
+                    protected void convert(ViewHolder viewHolder, final CreateOrderResponse.AvsListBean item, final int position) {
+                        viewHolder.setText(R.id.increment_name, item.serviceName)
+                                .setText(R.id.increment_price, item.servicePrice)
+                                .setOnClickListener(R.id.increment_url, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        CustomWebViewActivity.startIt(mBaseContext, item.serviceUrl, item.serviceName);
+                                    }
+                                })
+                                .setOnCheckChangedListener(R.id.increment_name, new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        if (position == 0) { //目前只有人身意外险
+                                            insuranceFee = isChecked ? 1 : 0;
+                                            updateAnnuity();
+                                        }
+                                    }
+                                });
+                        TextView priceViw = viewHolder.getView(R.id.increment_price);
+                        CommonUtils.setTextWithSpanSizeAndColor(priceViw, "¥", StringUtils.format2(item.servicePrice), "/月",
+                                14, 11, R.color.title_color, R.color.title_color);
+                    }
+                };
+                inCrementListView.setAdapter(incrementServiceAdapter);
+            }
+        }
+    }
+
+    /**
+     * 更新首付相关UI
+     *
+     * @param list 首付列表
+     */
+    private void updatePaymentRateUI(final List<CreateOrderResponse.InitListBean> list) {
         if (list != null && list.size() > 0) {
             paymentRateList = list;
-            if (paymentLayout.getVisibility() != View.VISIBLE) {
+            if (paymentLayout.getVisibility() != View.VISIBLE && payType == 0) {
                 paymentLayout.setVisibility(View.VISIBLE);
             }
             String text = list.get(0).name;
             downPaymentRate = list.get(0).id;
-            dvPaymentRateView.setRightText(text);
+            tvPaymentRateView.setText(text);
             paymentRateDlg = new ChooseDialog<CreateOrderResponse.InitListBean>(this, paymentRateList) {
                 @Override
                 public void convertView(ViewHolder holder, final CreateOrderResponse.InitListBean item, int position, long checkIndex) {
@@ -338,7 +420,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                                 text = text + "(¥" + item.price + ")";
                             }
                             downPaymentRate = item.id;
-                            dvPaymentRateView.setRightText(text);
+                            tvPaymentRateView.setText(text);
                             paymentRateId = item.id;
                             paymentRateDlg.dismiss();
                             updateAnnuity();
@@ -349,10 +431,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    //更新分期
-    private void updatePaymentList() {
+    /**
+     * 更新分期相关UI
+     */
+    private void updatePaymentListUI() {
         if (CommonUtils.isNotNullOrEmpty(paymentList)) {
-            dvPaymentView.setRightText(paymentList.get(0).paymentNum + "个月");
+            tvPaymentView.setText(paymentList.get(0).paymentNum + "个月");
             idProduct = StringUtils.string2Long(paymentList.get(0).idProduct);
             paymentNumId = paymentList.get(0).paymentNum;
             paymentDlg = new ChooseDialog<DownPayMonthPayResponse>(this, paymentList) {
@@ -365,7 +449,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         public void onClick(View v) {
                             paymentDlg.dismiss();
                             paymentNumId = item.paymentNum;
-                            dvPaymentView.setRightText(item.paymentNum + "个月");
+                            tvPaymentView.setText(item.paymentNum + "个月");
                             idProduct = StringUtils.string2Long(item.idProduct);
                             updateAnnuity();
                         }
@@ -375,9 +459,11 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    //更新月供
+    /**
+     * 更新月供数据
+     */
     private void updateAnnuity() {
-        ApiImpl.getAppMonthlySupply(this, channel, idPerson, downPaymentRate, idProduct, 1, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
+        ApiImpl.getAppMonthlySupply(this, channel, idPerson, downPaymentRate, idProduct, insuranceFee, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
             @Override
             public void onSuccess(MonthSupplyResponse response) {
                 updateAnnuityUI(response);
@@ -390,13 +476,30 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 更新月供相关UI
+     *
+     * @param response 月供数据
+     */
     private void updateAnnuityUI(MonthSupplyResponse response) {
         if (CommonUtils.isNotNullOrEmpty(response.data.paymentList)) {
-            dvAnnuityView.setRightText("¥" + response.data.paymentList.get(0).monthPay);
+            CommonUtils.setTextWithSpanSizeAndColor(tvAnnuityView, "¥", StringUtils.format2(response.data.paymentList.get(0).monthPay), "",
+                    15, 11, R.color.title_color, R.color.title_color);
+
+            if (annuityDialog == null) {
+                annuityDialog = new AnnuityDialog(mBaseContext, response);
+            }
+            annuityDialog.refreshData(response, true);
+
         }
     }
 
-    private void updateCard(List<CreateOrderResponse.CardListBean> lists) {
+    /**
+     * 更新优惠券相关UI
+     *
+     * @param lists 优惠券列表
+     */
+    private void updateCardUI(List<CreateOrderResponse.CardListBean> lists) {
 
         if (lists != null && lists.size() > 0) {
             cardList = lists;
@@ -436,7 +539,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    private void updateSku(CreateOrderResponse result) {
+    /**
+     * 更新商品相关UI
+     *
+     * @param result 商品数据
+     */
+    private void updateSkuUI(CreateOrderResponse result) {
         if (result.data.skuInfo != null) {
             CreateOrderResponse.SkuInfoBean skuInfoBean = result.data.skuInfo;
 
@@ -475,7 +583,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 16, 11, R.color.title_color, R.color.black);
     }
 
-    private void updateAddress(CreateOrderResponse.ReceiverJoBean bean) {
+    private void updateAddressUI(CreateOrderResponse.ReceiverJoBean bean) {
         if (bean != null) {
             addressJoBean = bean;
 
@@ -532,7 +640,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_card_text,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
-            R.id.confirm_order_household,
+            R.id.confirm_order_household, R.id.confirm_order_annuity,
             R.id.tv_ok, R.id.rl_receiving_address, R.id.confirm_order_empty})
     @Override
     public void onClick(View view) {
@@ -581,6 +689,10 @@ public class ConfirmOrderActivity extends BaseActivity {
             case R.id.confirm_order_empty:
                 setData();
                 break;
+            case R.id.confirm_order_annuity:
+                if (annuityDialog != null) {
+                    annuityDialog.show();
+                }
             default:
                 break;
         }
@@ -667,7 +779,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         //订单确认后以下功能不可修改
                         flAddresslayout.setEnabled(false);
                         msgEditText.setEnabled(false);
-                        dvPayView.setEnabled(false);
+                        tvPayTypeView.setEnabled(false);
                         dvCardsView.setEnabled(false);
                     }
 
@@ -736,7 +848,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (requestCode == Const.ADDRESSMANAGE && resultCode == RESULT_OK) {//地址修改
             if (data.getSerializableExtra("address") != null) {
                 AddressListResponse address = (AddressListResponse) data.getSerializableExtra("address");
-                updateAddress(converAddressBean(address));
+                updateAddressUI(converAddressBean(address));
             }
         }
     }

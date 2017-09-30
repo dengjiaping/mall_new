@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="51dp"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/default_layout_screen_gap"
+    android:paddingRight="@dimen/default_layout_screen_gap">
+
+    <CheckBox
+        android:id="@+id/increment_name"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:button="@drawable/selector_checkbox_register"
+        android:text="手机延保："
+        android:checked="true"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_12" />
+
+    <TextView
+        android:layout_toRightOf="@id/increment_name"
+        android:id="@+id/increment_price"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="99/月"
+        android:textColor="@color/title_color"
+        android:textSize="@dimen/ts_14" />
+
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:id="@+id/increment_url"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/ic_service_detail"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"/>
+</RelativeLayout>

@@ -111,7 +111,7 @@ public class AddAddressActivity extends BasePermissionActivity {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 permissionDialog.dismiss();
             }
         });

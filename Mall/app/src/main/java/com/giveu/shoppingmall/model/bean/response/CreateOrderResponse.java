@@ -125,7 +125,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
 
         public long serviceId;
         public String serviceName;
-        public long servicePrice;
+        public String servicePrice;
         public String serviceUrl;
 
     }
@@ -151,7 +151,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
          * paymentNum : 3 分期数
          */
 
-        public long annuity;
+        public String annuity;
         public long idProduct;
         public int paymentNum;
     }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -21,9 +22,9 @@
         android:layout_height="1px"
         android:background="@color/gray" />
 
-    <ListView
+    <com.giveu.shoppingmall.widget.MaxHeightListView
         android:id="@+id/dialog_choose_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="300dp" />
+        app:maxHeight="300dp"/>
 </LinearLayout>

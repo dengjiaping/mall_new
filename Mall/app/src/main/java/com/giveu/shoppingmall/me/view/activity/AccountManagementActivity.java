@@ -237,7 +237,7 @@ public class AccountManagementActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void cancle() {
+                    public void cancel() {
                         openDebugDialog.dismiss();
                     }
                 });

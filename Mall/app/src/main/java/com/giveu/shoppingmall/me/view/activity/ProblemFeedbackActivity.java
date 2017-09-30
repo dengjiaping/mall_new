@@ -94,7 +94,7 @@ public class ProblemFeedbackActivity extends BasePermissionActivity implements I
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 permissionDialog.dismiss();
                 finish();
             }

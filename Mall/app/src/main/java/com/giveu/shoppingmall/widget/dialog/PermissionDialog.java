@@ -49,7 +49,7 @@ public class PermissionDialog extends ConfirmDialog {
             }
 
             @Override
-            public void cancle() {
+            public void cancel() {
                 dismiss();
                 //默认取消时关闭页面
                 if (needFinish) {
