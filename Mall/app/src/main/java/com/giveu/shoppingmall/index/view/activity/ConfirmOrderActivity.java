@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -119,10 +121,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvSkuInfoTotalPrice;
     @BindView(R.id.confirm_order_total_price)
     TextView tvTotalPrice;
-    @BindView(R.id.confirm_order_agreement)
-    TextView tvAgreement;
-    @BindView(R.id.confirm_order_agreement_checkbox)
-    CheckBox cbAgreement;
     @BindView(R.id.tv_ok)
     TextView tvOK;
     @BindView(R.id.confirm_order_empty)
@@ -134,6 +132,16 @@ public class ConfirmOrderActivity extends BaseActivity {
     LinearLayout llIncrementService;
     @BindView(R.id.confirm_order_increment_service_list)
     NoScrollListView inCrementListView;
+    //消费者分期合同
+    @BindView(R.id.confirm_order_agreement_layout)
+    LinearLayout llAgreementLayout;
+    @BindView(R.id.confirm_order_agreement)
+    TextView tvAgreement;
+    @BindView(R.id.confirm_order_agreement_checkbox)
+    CheckBox cbAgreement;
+    //顶层布局，用于Disable一些控件,防止订单确认后仍可点击
+    @BindView(R.id.confirm_order_outer_layout)
+    LinearLayout outerLayout;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -143,7 +151,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private PaymentTypeDialog paymentTypeDialog;
     private DealPwdDialog pwdDialog;
 
-    private int payType = 0; //支付方式,暂时默认用支付宝
+    private int payType = 0; //支付方式Id
     private long cardId = 0; //优惠券Id
     private long paymentRateId = 0;//首付Id
     private long paymentNumId = 0;//分期Id
@@ -219,7 +227,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         downPaymentRate = getIntent().getIntExtra("downPaymentRate", 0);
         quantity = getIntent().getIntExtra("quantity", 0);
         skuCode = getIntent().getStringExtra("skuCode");
-        skuCode = "K00003129";
         channel = Const.CHANNEL;
         idPerson = LoginHelper.getInstance().getIdPerson();
 
@@ -235,12 +242,26 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
 
+        //初始化退出提示对话框
         initBackNoticeDialog();
-
+        //初始化买家留言编辑框
         initMsgEditText();
 
         showLoading();
     }
+
+    /**
+     * 初始化消费者分期合同UI
+     */
+    private void initAgrementUI() {
+        cbAgreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tvOK.setEnabled(isChecked);
+            }
+        });
+    }
+
 
     /**
      * 初始化支付方式相关UI
@@ -252,13 +273,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onChooseType(int type, String paymentTypeStr) {
                 tvPayTypeView.setText(paymentTypeStr);
                 payType = type;
-                if (payType == 0) {
-                    llIncrementService.setVisibility(View.VISIBLE);
-                    paymentLayout.setVisibility(View.VISIBLE);
-                }else {
-                    llIncrementService.setVisibility(View.GONE);
-                    paymentLayout.setVisibility(View.GONE);
-                }
+                onChangePayType();
             }
         });
 
@@ -269,10 +284,15 @@ public class ConfirmOrderActivity extends BaseActivity {
             tvPayTypeView.setText("支付宝");
             payType = 2;
         } else {
-            tvPayTypeView.setText("钱包支付");
+            tvPayTypeView.setText("即有钱包");
         }
+
+        onChangePayType();
     }
 
+    /**
+     * 初始化买家留言编辑框
+     */
     private void initMsgEditText() {
         //第一次进入界面EditText未获取焦点,设置显示内容
         final String stableText = "买家留言（选填）：";
@@ -295,6 +315,9 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 初始化退出提示对话框
+     */
     private void initBackNoticeDialog() {
         confirmDialog = new ConfirmDialog(this);
         confirmDialog.setContent(StringUtils.getSizeAndColorSpannable("确定离开吗？好货不等人哦~", R.color.color_767876, 14));
@@ -416,11 +439,22 @@ public class ConfirmOrderActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             String text = item.name;
+                            SpannableString spanText = null;
                             if (item.id != 0) {
-                                text = text + "(¥" + item.price + ")";
+                                text = text + "（¥" + StringUtils.format2(item.price) + "）";
+                                spanText = new SpannableString(text);
+                                int pos1 = text.indexOf("¥");
+                                int pos2 = text.indexOf(".");
+                                int pos3 = text.indexOf("）");
+                                spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             }
                             downPaymentRate = item.id;
-                            tvPaymentRateView.setText(text);
+                            if (spanText != null) {
+                                tvPaymentRateView.setText(spanText);
+                            } else {
+                                tvPaymentRateView.setText(text);
+                            }
                             paymentRateId = item.id;
                             paymentRateDlg.dismiss();
                             updateAnnuity();
@@ -487,10 +521,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                     15, 11, R.color.title_color, R.color.title_color);
 
             if (annuityDialog == null) {
-                annuityDialog = new AnnuityDialog(mBaseContext, response);
+                annuityDialog = new AnnuityDialog(mBaseContext);
             }
             annuityDialog.refreshData(response.data, true);
-
         }
     }
 
@@ -638,6 +671,23 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    /**
+     * payType为0时为钱包支付，此时应显示分期信息、增值服务和消费者分期合同；否则不显示
+     */
+    private void onChangePayType() {
+        if (payType == 0) {
+            llIncrementService.setVisibility(View.VISIBLE);
+            paymentLayout.setVisibility(View.VISIBLE);
+            llAgreementLayout.setVisibility(View.VISIBLE);
+            tvOK.setEnabled(cbAgreement.isChecked());
+        } else {
+            llIncrementService.setVisibility(View.GONE);
+            paymentLayout.setVisibility(View.GONE);
+            llAgreementLayout.setVisibility(View.INVISIBLE);
+            tvOK.setEnabled(true);
+        }
+    }
+
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_card_text,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
             R.id.confirm_order_household, R.id.confirm_order_annuity,
@@ -777,10 +827,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         paymentNum = response.data.payMoney;
                         isConfirm = true;
                         //订单确认后以下功能不可修改
-                        flAddresslayout.setEnabled(false);
-                        msgEditText.setEnabled(false);
-                        tvPayTypeView.setEnabled(false);
-                        dvCardsView.setEnabled(false);
+                        enableViewByTag(outerLayout, "disabled", false);
                     }
 
                     @Override
@@ -848,12 +895,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (requestCode == Const.ADDRESSMANAGE && resultCode == RESULT_OK) {//地址修改
             if (data.getSerializableExtra("address") != null) {
                 AddressListResponse address = (AddressListResponse) data.getSerializableExtra("address");
-                updateAddressUI(converAddressBean(address));
+                updateAddressUI(convertAddressBean(address));
             }
         }
     }
 
-    private CreateOrderResponse.ReceiverJoBean converAddressBean(AddressListResponse response) {
+    private CreateOrderResponse.ReceiverJoBean convertAddressBean(AddressListResponse response) {
         CreateOrderResponse.ReceiverJoBean receiverJoBean = new CreateOrderResponse.ReceiverJoBean();
         receiverJoBean.custName = response.custName;
         receiverJoBean.address = response.address;
@@ -879,5 +926,18 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void enableViewByTag(View view, String tag, boolean enable) {
+        if (view instanceof ViewGroup) {
+            int childCount = ((ViewGroup) view).getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                enableViewByTag(((ViewGroup) view).getChildAt(i), tag, enable);
+            }
+
+        }
+        if (view.getTag() != null && tag.equals(view.getTag().toString())) {
+            view.setEnabled(enable);
+        }
     }
 }
