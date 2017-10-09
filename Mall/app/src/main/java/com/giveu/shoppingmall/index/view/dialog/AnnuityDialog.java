@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.MaxHeightListView;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class AnnuityDialog extends CustomDialog {
     private List<MonthSupplyResponse.PaymentListBean> lists;
     private TextView tvConfirm;
 
-    public AnnuityDialog(Activity context, MonthSupplyResponse data) {
+    public AnnuityDialog(Activity context) {
         super(context, R.layout.dialog_annuity_layout, R.style.customerDialog, Gravity.CENTER, false);
     }
 
@@ -56,7 +57,7 @@ public class AnnuityDialog extends CustomDialog {
             @Override
             protected void convert(ViewHolder viewHolder, MonthSupplyResponse.PaymentListBean item, int position) {
                 viewHolder.setText(R.id.annuity_item_1, "第" + String.format("%02d", item.paymentNum) + "期")
-                        .setText(R.id.annuity_item_2, "¥" + item.monthPay)
+                        .setText(R.id.annuity_item_2, "¥" + StringUtils.format2(item.monthPay))
                         .setText(R.id.annuity_item_3, item.repayDate);
             }
         };
@@ -64,12 +65,12 @@ public class AnnuityDialog extends CustomDialog {
     }
 
     public void refreshData(MonthSupplyResponse data, boolean isDataChange) {
-        CommonUtils.setTextWithSpan(tvPrice, "首付： ", "¥" + data.data.initPay, R.color.color_4a4a4a, R.color.red);
-        CommonUtils.setTextWithSpan(tvNum, "分期数： ", data.data.paymentNum + "期", R.color.color_4a4a4a, R.color.red);
+        CommonUtils.setTextWithSpan(tvPrice, "首付： ", "¥" + StringUtils.format2(data.initPay), R.color.color_4a4a4a, R.color.red);
+        CommonUtils.setTextWithSpan(tvNum, "分期数： ", data.paymentNum + "期", R.color.color_4a4a4a, R.color.red);
         if (isDataChange) {
             lists.clear();
-            if (data.data.paymentList != null) {
-                lists.addAll(data.data.paymentList);
+            if (data.paymentList != null) {
+                lists.addAll(data.paymentList);
             }
             mAdapter.notifyDataSetChanged();
             if (lists.size() > 0) {

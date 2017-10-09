@@ -392,7 +392,7 @@
             android:name=".index.view.activity.ConfirmOrderActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:label="订单信息确认"
-            android:windowSoftInputMode="adjustPan|stateUnspecified" />
+            android:windowSoftInputMode="adjustNothing|stateUnspecified" />
         <activity
             android:name=".index.view.activity.ShoppingListActivity"
             android:label="商品列表" />
