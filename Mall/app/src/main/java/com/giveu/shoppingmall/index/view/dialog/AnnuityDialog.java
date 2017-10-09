@@ -1,10 +1,8 @@
 package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
@@ -64,12 +62,12 @@ public class AnnuityDialog extends CustomDialog {
     }
 
     public void refreshData(MonthSupplyResponse data, boolean isDataChange) {
-        CommonUtils.setTextWithSpan(tvPrice, "首付： ", "¥" + data.data.initPay, R.color.color_4a4a4a, R.color.red);
-        CommonUtils.setTextWithSpan(tvNum, "分期数： ", data.data.paymentNum + "期", R.color.color_4a4a4a, R.color.red);
+        CommonUtils.setTextWithSpan(tvPrice, "首付： ", "¥" + data.initPay, R.color.color_4a4a4a, R.color.red);
+        CommonUtils.setTextWithSpan(tvNum, "分期数： ", data.paymentNum + "期", R.color.color_4a4a4a, R.color.red);
         if (isDataChange) {
             lists.clear();
-            if (data.data.paymentList != null) {
-                lists.addAll(data.data.paymentList);
+            if (data.paymentList != null) {
+                lists.addAll(data.paymentList);
             }
             mAdapter.notifyDataSetChanged();
             if (lists.size() > 0) {

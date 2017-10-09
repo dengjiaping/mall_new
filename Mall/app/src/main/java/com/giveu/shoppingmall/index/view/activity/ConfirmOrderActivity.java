@@ -489,7 +489,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (annuityDialog == null) {
                 annuityDialog = new AnnuityDialog(mBaseContext, response);
             }
-            annuityDialog.refreshData(response, true);
+            annuityDialog.refreshData(response.data, true);
 
         }
     }
