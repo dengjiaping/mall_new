@@ -15,8 +15,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.giveu.shoppingmall.R;
-import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.AddressPagerAdapter;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.utils.AddressUtils;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -115,10 +115,16 @@ public class ChooseCityDialog extends CustomDialog {
      * @param provinces
      */
     public void setData(ArrayList<Province> provinces) {
+        this.mAddressList = provinces;
         pagerAdapter.setData(provinces);
         findProvice(provinces);
     }
 
+    /**
+     * 根据GPS返回的省份查找服务器返回的省份
+     *
+     * @param provinces
+     */
     private void findProvice(ArrayList<Province> provinces) {
         if (StringUtils.isNull(originalProvince) || originalProvince.length() < 2) {
             return;
@@ -135,6 +141,11 @@ public class ChooseCityDialog extends CustomDialog {
 
     }
 
+    /**
+     * 根据GPS返回的城市查找服务器返回的城市
+     *
+     * @param cities
+     */
     private void findCity(List<Province.ArrayCity> cities) {
         if (StringUtils.isNull(originalCity) || originalCity.length() < 2) {
             return;
@@ -151,6 +162,11 @@ public class ChooseCityDialog extends CustomDialog {
         }
     }
 
+    /**
+     * 根据GPS返回的区查找服务器返回的区
+     *
+     * @param regions
+     */
     private void findRegion(List<Province.ArrayRegion> regions) {
         if (StringUtils.isNull(originalRegion) || originalRegion.length() < 2) {
             return;
@@ -159,7 +175,7 @@ public class ChooseCityDialog extends CustomDialog {
             for (Province.ArrayRegion arrayRegion : regions) {
                 if (arrayRegion.name.startsWith(originalRegion.substring(0, 2))) {
                     originalRegion = arrayRegion.name;
-                    findSteets(arrayRegion.array);
+                    findStreets(arrayRegion.array);
                     break;
                 }
             }
@@ -167,7 +183,12 @@ public class ChooseCityDialog extends CustomDialog {
 
     }
 
-    private void findSteets(List<String> streets) {
+    /**
+     * 根据GPS返回的街道查找服务器返回的街道
+     *
+     * @param streets
+     */
+    private void findStreets(List<String> streets) {
         if (CommonUtils.isNotNullOrEmpty(streets) && needStreet) {
             if (StringUtils.isNull(originalStreet) || originalStreet.length() < 2) {
                 return;
