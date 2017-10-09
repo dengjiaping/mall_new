@@ -7,6 +7,7 @@ import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
@@ -85,8 +86,8 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
         });
     }
 
-    public void getAppDownPayAndMonthPay(String channel, String idPerson, int downPaymentRate, String skuCode) {
-        ApiImpl.getAppDownPayAndMonthPay(getView().getAct(), channel, idPerson, downPaymentRate, skuCode, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
+    public void getAppDownPayAndMonthPay(String channel, String idPerson, int downPaymentRate, String skuCode, int quantity) {
+        ApiImpl.getAppDownPayAndMonthPay(getView().getAct(), channel, idPerson, downPaymentRate, skuCode, quantity, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
             @Override
             public void onSuccess(DownPayMonthPayResponse response) {
                 if (getView() != null) {
@@ -98,6 +99,25 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
                     getView().showDownPayMonthPay(true, null);
+                    CommonLoadingView.showErrorToast(errorBean);
+                }
+            }
+        });
+
+    }
+
+    public void getAppMonthlySupply(String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, String skuCode, int quantity) {
+        ApiImpl.getAppMonthlySupply(getView().getAct(), channel, idPerson, downPaymentRate, idProduct, insuranceFee, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
+            @Override
+            public void onSuccess(MonthSupplyResponse response) {
+                if (getView() != null) {
+                    getView().showAppMonthlySupply(response.data);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+                if (getView() != null) {
                     CommonLoadingView.showErrorToast(errorBean);
                 }
             }

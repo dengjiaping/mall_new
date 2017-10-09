@@ -9,6 +9,7 @@ import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
+import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
@@ -655,7 +656,7 @@ public class ApiImpl {
     }
 
     //订单确认
-    public static void confirmOrderSc(Activity context, String channel, long courtesyCardId, int downPaymentRate, String idPerson, String idProduct, long installDate, int insuranceFee, int payType, CreateOrderResponse.ReceiverJoBean receiverJoBean, long reservingDate, SkuInfo skuInfo, String userComments, String userMobile, String userName, BaseRequestAgent.ResponseListener<ConfirmOrderScResponse> listener) {
+    public static void confirmOrderSc(Activity context, String channel, long courtesyCardId, int downPaymentRate, String idPerson, long idProduct, long installDate, InsuranceFee insuranceFee, int payType, CreateOrderResponse.ReceiverJoBean receiverJoBean, long reservingDate, SkuInfo skuInfo, String userComments, String userMobile, String userName, BaseRequestAgent.ResponseListener<ConfirmOrderScResponse> listener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "courtesyCardId", "downPaymentRate", "idPerson", "idProduct", "installDate", "insuranceFee", "payType", "receiverJo", "reservingDate", "skuInfo", "userComments", "userMobile", "userName"}, new Object[]{channel, courtesyCardId, downPaymentRate, idPerson, idProduct, installDate, insuranceFee, payType, receiverJoBean, reservingDate, skuInfo, userComments, userMobile, userName});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_confirmOrderSc, ConfirmOrderScResponse.class, context, listener);
     }

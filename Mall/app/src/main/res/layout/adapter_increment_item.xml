@@ -9,30 +9,31 @@
 
     <CheckBox
         android:id="@+id/increment_name"
-        android:layout_width="140dp"
+        android:layout_width="160dp"
         android:layout_height="match_parent"
         android:button="@drawable/selector_checkbox_register"
-        android:text="手机延保："
         android:checked="true"
+        android:text="手机延保："
         android:textColor="@color/color_4a4a4a"
-        android:textSize="@dimen/ts_12" />
+        android:textSize="@dimen/ts_12"
+        android:tag="disabled"/>
 
     <TextView
-        android:layout_toRightOf="@id/increment_name"
         android:id="@+id/increment_price"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_toRightOf="@id/increment_name"
         android:gravity="center_vertical"
         android:text="99/月"
         android:textColor="@color/title_color"
         android:textSize="@dimen/ts_14" />
 
     <ImageView
-        android:layout_alignParentRight="true"
         android:id="@+id/increment_url"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:src="@drawable/ic_service_detail"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"/>
+        android:src="@drawable/ic_service_detail"
+        android:layout_marginRight="2dp"/>
 </RelativeLayout>

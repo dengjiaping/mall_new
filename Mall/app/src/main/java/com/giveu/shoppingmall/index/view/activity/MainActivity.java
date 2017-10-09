@@ -123,7 +123,6 @@ public class MainActivity extends BasePermissionActivity {
 //            startActivity(intent);
         }
         UITest.test(mBaseContext);
-//        CommodityDetailActivity.startIt(mBaseContext, true, "K00003129", 0, false);
     }
 
     private void fetchUserInfo() {

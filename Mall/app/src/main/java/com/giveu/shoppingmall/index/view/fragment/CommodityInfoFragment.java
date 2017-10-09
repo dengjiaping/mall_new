@@ -22,9 +22,11 @@ import com.giveu.shoppingmall.index.presenter.CommodityInfoPresenter;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
+import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -107,6 +109,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     private String commodityPrice;
     private int commodityAmounts;
     private String commodityName;
+    private AnnuityDialog annuityDialog;
 
 
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -184,9 +187,9 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, null);
                         creditDialog.show();
                         creditDialog.setConfirmEnable(false);
-                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode);
+                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
                     } else {
-                        ConfirmOrderActivity.startIt(mBaseContext,0,0,skuCode);
+                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode);
                     }
                 }
 
@@ -200,14 +203,26 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         creditDialog.setOnDownPayChangeListener(new CreditCommodityDialog.OnDownPayChangeListener() {
             @Override
             public void onChange(int downPayRate) {
-                presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPayRate, skuCode);
+                presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPayRate, skuCode, commodityAmounts);
+            }
+
+            /**
+             * 展示月供详情
+             * @param downPaymentRate
+             * @param idProduct
+             * @param quantity
+             */
+            @Override
+            public void showAppMonthlySupply(int downPaymentRate, long idProduct, int quantity) {
+                presenter.getAppMonthlySupply(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPaymentRate, idProduct, 0, skuCode, quantity);
             }
         });
 
         creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
             @Override
             public void confirm(int downPayRate, int paymentNum) {
-                ConfirmOrderActivity.startIt(mBaseContext,downPayRate,paymentNum,skuCode);
+                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, paymentNum, commodityAmounts, skuCode);
+                creditDialog.dismiss();
             }
 
             @Override
@@ -470,6 +485,22 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             if (CommonUtils.isNotNullOrEmpty(data)) {
                 creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, data);
             }
+        }
+    }
+
+    /**
+     * 更新月供相关UI
+     *
+     * @param response 月供数据
+     */
+    @Override
+    public void showAppMonthlySupply(MonthSupplyResponse response) {
+        if (CommonUtils.isNotNullOrEmpty(response.paymentList)) {
+            if (annuityDialog == null) {
+                annuityDialog = new AnnuityDialog(mBaseContext);
+            }
+            annuityDialog.refreshData(response, true);
+            annuityDialog.show();
         }
     }
 

@@ -18,7 +18,6 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
-import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
 import com.giveu.shoppingmall.widget.flowlayout.TagFlowLayout;
@@ -50,6 +49,7 @@ public class CreditCommodityDialog extends CustomDialog {
     private TagAdapter<DownPayMonthPayResponse> monthPayAdapter;
     private TagFlowLayout tfPayment;
     private double totalPrice;//商品总价格 = 单价 x 数量
+    private long idProduct;
 
     public CreditCommodityDialog(Activity context) {
         super(context, R.layout.dialog_credit_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -85,7 +85,9 @@ public class CreditCommodityDialog extends CustomDialog {
         tvDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShortToast("查看月供详情");
+                if (onDownPayChangeListener != null) {
+                    onDownPayChangeListener.showAppMonthlySupply(downPayRate, idProduct, commodityAmounts);
+                }
             }
         });
         ArrayList<String> percentList = new ArrayList<>();
@@ -132,7 +134,8 @@ public class CreditCommodityDialog extends CustomDialog {
                 monthPayAdapter.setSelectedList(0);
                 DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
                 paymentNum = downPayMonthPayResponse.paymentNum;
-                initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
+                idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
+                initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "")  + "");
             } else {
                 //已选过期数和现在服务器返回的数据是否还有这个期数的标识
                 boolean hasSamePaymentNum = false;
@@ -142,7 +145,7 @@ public class CreditCommodityDialog extends CustomDialog {
                     if (paymentNum == downPayMonthPayResponse.paymentNum) {
                         hasSamePaymentNum = true;
                         monthPayAdapter.setSelectedList(i);
-                        initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
+                        initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
                         break;
                     }
                 }
@@ -151,7 +154,8 @@ public class CreditCommodityDialog extends CustomDialog {
                     monthPayAdapter.setSelectedList(0);
                     DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
                     paymentNum = downPayMonthPayResponse.paymentNum;
-                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
+                    idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
+                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "")  + "");
                 }
 
             }
@@ -280,7 +284,8 @@ public class CreditCommodityDialog extends CustomDialog {
                 for (Integer integer : selectPosSet) {
                     //显示月供金额
                     DownPayMonthPayResponse downPayMonthPayResponse = monthPayAdapter.getDatas().get(integer);
-                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") * commodityAmounts + "");
+                    idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
+                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
                 }
             }
         });
@@ -324,6 +329,8 @@ public class CreditCommodityDialog extends CustomDialog {
 
     public interface OnDownPayChangeListener {
         void onChange(int downPayRate);
+
+        void showAppMonthlySupply(int downPaymentRate, long idProduct, int quantity);
     }
 
     public void setOnDownPayChangeListener(OnDownPayChangeListener listener) {
