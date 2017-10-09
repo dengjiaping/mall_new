@@ -48,7 +48,6 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
@@ -114,6 +113,8 @@ public class CashTypeActivity extends BaseActivity {
     CheckBox cbDescTop;
     @BindView(R.id.ll_agreement_top)
     LinearLayout llAgreementTop;
+    @BindView(R.id.ll_monthly_payment)
+    LinearLayout llMonthlyPayment;
     private LvCommonAdapter<ProductResponse> stagingTypeAdapter;
     double chooseQuota;//选择额度
     public final int MAXAMOUNT = 3000;//3000目前最大额
@@ -607,12 +608,12 @@ public class CashTypeActivity extends BaseActivity {
         pwdDialog.showDialog();
     }
 
-    @OnClick({R.id.tv_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
+    @OnClick({R.id.ll_monthly_payment, R.id.rl_add_bank_card, R.id.tv_ensure_bottom, R.id.ll_choose_bank, R.id.tv_cost})
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.tv_monthly_payment:
+            case R.id.ll_monthly_payment:
                 //查看月供
                 String insuranceFee = cbDescTop.isChecked() ? "1" : "0";
                 ApiImpl.rpmDetail(mBaseContext, LoginHelper.getInstance().getIdPerson(), insuranceFee, localIdProduct, (int) chooseQuota, new BaseRequestAgent.ResponseListener<RpmDetailResponse>() {

@@ -1,7 +1,6 @@
 package com.giveu.shoppingmall.model.bean.response;
 
 import com.android.volley.mynet.BaseBean;
-import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.List;
 
@@ -46,16 +45,17 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
         public int isInstallments;
         public boolean isCheck = false;//单项是否选中,默认未选中
         public boolean isShowCb = false;//每一项前面是否显示框，默认不显示
+
         /**
          * 是否失效
          *
          * @return
          */
-        public boolean hasInvalid(){
+        public boolean hasInvalid() {
             //0有效，1失效
-            if(1 == status){
+            if (1 == status) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -66,13 +66,11 @@ public class CollectionResponse extends BaseBean<CollectionResponse> {
          * @return
          */
         public boolean hasShowMonthAmount() {
-            //true不显示月供
-            if (StringUtils.isNotNull(monthAmount)) {
-                if ((0 != Double.parseDouble(monthAmount))) {
-                    return false;
-                }
+            //isInstallments = 1分期，显示月供
+            if (1 == isInstallments) {
+                return true;
             }
-            return true;
+            return false;
         }
     }
 

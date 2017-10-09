@@ -156,7 +156,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         chooseCityDialog.setOnConfirmListener(new ChooseCityDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String province, String city, String region, String street) {
-                chooseCityDialog.dismiss();
+             //   chooseCityDialog.dismiss();
                 provinceStr = province;
                 cityStr = city;
                 regionStr = region;
