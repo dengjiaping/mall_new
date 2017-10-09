@@ -10,7 +10,6 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
-import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -56,12 +55,13 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
         TextView tvPrice = holder.getView(R.id.item_right_price);
-        //true就不显示月供,实际上隐藏售价view，月供view变成售价
-        if (StringUtils.isNotNull(item.monthAmount)) {
+        if (1 == item.isInstallments) {
+            //true分期显示月供
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 14, 10, R.color.red, R.color.color_999999);
             holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
             tvPrice.setVisibility(View.VISIBLE);
         } else {
+            //false就不显示月供,实际上隐藏售价view，月供view变成售价
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 10, R.color.red, R.color.color_999999);
             tvPrice.setVisibility(View.INVISIBLE);
         }

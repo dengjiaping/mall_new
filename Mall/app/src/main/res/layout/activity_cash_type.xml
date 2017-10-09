@@ -178,6 +178,7 @@
                         android:background="@color/line_bg" />
 
                     <LinearLayout
+                        android:id="@+id/ll_monthly_payment"
                         android:layout_width="match_parent"
                         android:layout_height="51dp"
                         android:orientation="horizontal">
