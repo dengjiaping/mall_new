@@ -220,8 +220,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm(int downPayRate, int paymentNum) {
-                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, paymentNum, commodityAmounts, skuCode);
+            public void confirm(int downPayRate, long idProduct) {
+                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, idProduct, commodityAmounts, skuCode);
                 creditDialog.dismiss();
             }
 

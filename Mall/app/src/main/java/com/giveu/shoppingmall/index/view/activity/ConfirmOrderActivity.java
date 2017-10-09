@@ -200,10 +200,10 @@ public class ConfirmOrderActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startIt(Context context, int downPaymentRate,int paymentNum, int quantity, String skuCode) {
+    public static void startIt(Context context, int downPaymentRate,long idProduct, int quantity, String skuCode) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
-        intent.putExtra("paymentNum", paymentNum);
+        intent.putExtra("idProduct", idProduct);
         intent.putExtra("quantity", quantity);
         intent.putExtra("skuCode", skuCode);
         context.startActivity(intent);

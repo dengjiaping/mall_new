@@ -70,7 +70,7 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onClick(View v) {
                 if (paymentNum != -1 && downPayRate != -1) {
-                    listener.confirm(downPayRate, paymentNum);
+                    listener.confirm(downPayRate, idProduct);
                 }
             }
         });
@@ -319,7 +319,7 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     public interface OnConfirmListener {
-        void confirm(int downPayRate, int paymentNum);
+        void confirm(int downPayRate, long idProduct);
 
         void cancle();
     }
