@@ -42,6 +42,7 @@ import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderScResponse;
 import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuInfo;
@@ -176,6 +177,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private List<CreateOrderResponse.AvsListBean> incrementServiceList = null;
     private LvCommonAdapter incrementServiceAdapter = null;
     private int insuranceFee = 1; //是否购买人身意外险,默认购买
+    private long serviceId = 0; //人身意外险Id
 
     private String channel;
     private String skuCode;
@@ -200,7 +202,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startIt(Context context, int downPaymentRate,int paymentNum, int quantity, String skuCode) {
+    public static void startIt(Context context, int downPaymentRate, int paymentNum, int quantity, String skuCode) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
         intent.putExtra("paymentNum", paymentNum);
@@ -403,10 +405,14 @@ public class ConfirmOrderActivity extends BaseActivity {
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         if (position == 0) { //目前只有人身意外险
                                             insuranceFee = isChecked ? 1 : 0;
+                                            serviceId = item.serviceId;
                                             updateAnnuity();
                                         }
                                     }
                                 });
+                        if (position == 0) {
+                            serviceId = item.serviceId;
+                        }
                         TextView priceViw = viewHolder.getView(R.id.increment_price);
                         CommonUtils.setTextWithSpanSizeAndColor(priceViw, "¥", StringUtils.format2(item.servicePrice), "/月",
                                 14, 11, R.color.title_color, R.color.title_color);
@@ -809,8 +815,8 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
-        ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, "0", 0, 0,
-                payType, addressJoBean, 0, new SkuInfo(quantity, skuCode), message,
+        ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, idProduct, -1, new InsuranceFee(insuranceFee, serviceId),
+                payType, addressJoBean, -1, new SkuInfo(quantity, skuCode), message,
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
