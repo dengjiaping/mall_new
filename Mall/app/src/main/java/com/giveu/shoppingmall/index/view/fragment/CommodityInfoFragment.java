@@ -222,6 +222,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             @Override
             public void confirm(int downPayRate, int paymentNum) {
                 ConfirmOrderActivity.startIt(mBaseContext, downPayRate, paymentNum, skuCode);
+                creditDialog.dismiss();
             }
 
             @Override
