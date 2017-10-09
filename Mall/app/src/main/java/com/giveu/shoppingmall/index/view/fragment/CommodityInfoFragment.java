@@ -496,7 +496,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     public void showAppMonthlySupply(MonthSupplyResponse response) {
         if (CommonUtils.isNotNullOrEmpty(response.paymentList)) {
             if (annuityDialog == null) {
-                annuityDialog = new AnnuityDialog(mBaseContext, response);
+                annuityDialog = new AnnuityDialog(mBaseContext);
             }
             annuityDialog.refreshData(response, true);
             annuityDialog.show();
