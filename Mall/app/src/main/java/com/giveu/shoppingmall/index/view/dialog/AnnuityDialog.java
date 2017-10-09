@@ -1,10 +1,8 @@
 package com.giveu.shoppingmall.index.view.dialog;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;

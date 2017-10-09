@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -64,6 +66,30 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
                 TransactionSearchActivity.startIt(mBaseContext);
             }
         });
+
+        presenter = new RepaymentPresenter(this);
+        baseLayout.setTopBarBackgroundColor(R.color.white);
+    }
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        return new BasePresenter[]{presenter};
+    }
+
+    @Override
+    public void setData() {
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                initFragment();
+                //调一次接口可获取当月和下月的数据，并进行拆分
+                presenter.getRepayment(LoginHelper.getInstance().getIdPerson());
+                return false;
+            }
+        });
+    }
+
+    private void initFragment() {
         fragmentList = new ArrayList<>();
         currentMonthFragment = new RepaymentFragment();
         //传递参数,以区分当月还是下月
@@ -78,19 +104,6 @@ public class RepaymentActivity extends BaseActivity implements IRepaymentView {
         fragmentList.add(nextMonthFragment);
         fragmentAdapter = new RepaymentFragmentAdapter(getSupportFragmentManager(), fragmentList);
         vpBill.setAdapter(fragmentAdapter);
-        presenter = new RepaymentPresenter(this);
-        baseLayout.setTopBarBackgroundColor(R.color.white);
-    }
-
-    @Override
-    protected BasePresenter[] initPresenters() {
-        return new BasePresenter[]{presenter};
-    }
-
-    @Override
-    public void setData() {
-        //调一次接口可获取当月和下月的数据，并进行拆分
-        presenter.getRepayment(LoginHelper.getInstance().getIdPerson());
     }
 
     @Override

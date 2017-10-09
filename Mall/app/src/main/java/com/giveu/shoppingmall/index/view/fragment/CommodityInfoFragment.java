@@ -189,7 +189,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.setConfirmEnable(false);
                         presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
                     } else {
-                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, skuCode);
+                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode);
                     }
                 }
 
@@ -221,7 +221,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
             @Override
             public void confirm(int downPayRate, int paymentNum) {
-                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, paymentNum, skuCode);
+                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, paymentNum, commodityAmounts, skuCode);
                 creditDialog.dismiss();
             }
 
