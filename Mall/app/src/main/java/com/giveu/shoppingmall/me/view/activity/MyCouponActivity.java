@@ -23,6 +23,9 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 
@@ -98,39 +101,32 @@ public class MyCouponActivity extends BaseActivity {
     }
 
 
+    //接口返回的优惠券是乱序的，需根据status进行排序
     private void sortByStatus(ArrayList<CouponListResponse> mDatas) {
         int index = -1;
-        for (CouponListResponse response : mDatas) {
-            if ("0".equals(response.status)) {
-                couponList.add(response);
-            }
-        }
-        for (CouponListResponse response : mDatas) {
-            if ("1".equals(response.status)) {
-                couponList.add(response);
-            }
-        }
-        for (CouponListResponse response : mDatas) {
-            if ("2".equals(response.status)) {
-                if (index == -1) {
-                    CouponListResponse dividerResponse = new CouponListResponse();
-                    dividerResponse.isDivider = true;
-                    couponList.add(dividerResponse);
-                    index = 0;
+        //使用TreeMap进行排序
+        TreeMap<String, CouponListResponse> map = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (o1.equals(o2)) {
+                    return 1;
+                } else {
+                    return 0;
                 }
-                couponList.add(response);
             }
-        }
+        });
         for (CouponListResponse response : mDatas) {
-            if ("3".equals(response.status)) {
-                if (index == -1) {
-                    CouponListResponse dividerResponse = new CouponListResponse();
-                    dividerResponse.isDivider = true;
-                    couponList.add(dividerResponse);
-                    index = 0;
-                }
-                couponList.add(response);
+            map.put(response.status, response);
+        }
+        for (Map.Entry<String, CouponListResponse> entry : map.entrySet()) {
+            CouponListResponse response = entry.getValue();
+            if (("2".equals(response.status) || "3".equals(response.status)) && index != -1) {
+                CouponListResponse dividerResponse = new CouponListResponse();
+                dividerResponse.isDivider = true;
+                couponList.add(dividerResponse);
+                index = 0;
             }
+            couponList.add(response);
         }
     }
 
