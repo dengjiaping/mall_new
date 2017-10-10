@@ -148,17 +148,10 @@ public class ConfirmOrderActivity extends BaseActivity {
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
     //优惠券信息
     private List<CreateOrderResponse.CardListBean> cardList;
-    private ChooseCardsDialog chooseCardsDialog;
-    private PaymentTypeDialog paymentTypeDialog;
-    private DealPwdDialog pwdDialog;
-
-    private int payType = 0; //支付方式Id
-    private long cardId = 0; //优惠券Id
-    private int downPaymentRate = 0;//首付Id
-    private String cardPrice = "0";
-    private String totalPrice = "0";
-    private long sendTimesId = 0;//配送家电Id
-    private long installTimesId = 0; //安装家电Id
+    private ChooseCardsDialog chooseCardsDialog;    //优惠券对话框
+    private PaymentTypeDialog paymentTypeDialog; //支付方式选择对话框
+    private DealPwdDialog pwdDialog; //支付密码输入对话框
+    private ConfirmDialog confirmDialog; //退出确认对话框
 
     //首付列表
     private List<CreateOrderResponse.InitListBean> paymentRateList = null;
@@ -173,28 +166,33 @@ public class ConfirmOrderActivity extends BaseActivity {
     //送货时间
     private List<CreateOrderResponse.ReservingListBean> sendTimesList;
     //安装时间
-    private List<CreateOrderResponse.ReservingListBean> installTimesList;
+    private List<CreateOrderResponse.DateListBean> installTimesList;
     //增值服务
     private List<CreateOrderResponse.AvsListBean> incrementServiceList = null;
     private LvCommonAdapter incrementServiceAdapter = null;
     private int insuranceFee = 1; //是否购买人身意外险,默认购买
     private long serviceId = 0; //人身意外险Id
 
-    private String channel;
-    private String skuCode;
-    private long idProduct;
-    private int quantity;
+    private int payType = 0; //支付方式Id
+    private long cardId = 0; //优惠券Id
+    private int downPaymentRate = 0;//首付Id
+    private String cardPrice = "0"; //优惠券金额
+    private String totalPrice = "0"; //总支付金额
+    private long sendTimesId = -1;//配送家电Id
+    private long installTimesId = -1; //安装家电Id
+
+    private String channel; //用户身份
+    private String skuCode; //商品SkuCode
+    private long idProduct; //分期Id
+    private int quantity; //商品数量
     private String idPerson = LoginHelper.getInstance().getIdPerson();
-    private String customerName = null;
-    private String customerPhone = null;
-    private ConfirmDialog confirmDialog;
+    private String customerName = null; //客户姓名
+    private String customerPhone = null; //客户电弧
     private String orderNo;
     private String paymentNum;
 
-    //订单是否处于确认状态，如果是则不可修改
-    private boolean isConfirm = false;
-    //界面初始化成功的标志
-    private boolean isInitSuccess = false;
+    private boolean isConfirm = false;//订单是否处于确认状态，如果是则不可修改
+    private boolean isInitSuccess = false;//界面初始化成功的标志
     private boolean canPay = true;//是否可以下单支付
 
     public static void startIt(Context context) {
@@ -349,8 +347,25 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onSuccess(DownPayMonthPayResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     paymentList = response.data;
-//                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
                     createOrderSc();
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+
+            }
+        });
+    }
+
+    private void updatePaymentList() {
+        ApiImpl.getAppDownPayAndMonthPay(this, channel, idPerson, downPaymentRate, skuCode, quantity, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
+            @Override
+            public void onSuccess(DownPayMonthPayResponse response) {
+                if (CommonUtils.isNotNullOrEmpty(response.data)) {
+                    paymentList.clear();
+                    paymentList.addAll(response.data);
+                    updatePaymentListUI();
                 }
             }
 
@@ -406,13 +421,16 @@ public class ConfirmOrderActivity extends BaseActivity {
      *
      * @param list 安装时间列表
      */
-    private void updateInstallUI(List<CreateOrderResponse.ReservingListBean> list) {
+    private void updateInstallUI(List<CreateOrderResponse.DateListBean> list) {
         if (CommonUtils.isNotNullOrEmpty(list)) {
             llHouseHold.setVisibility(View.VISIBLE);
             tvInstallTimeView.setVisibility(View.VISIBLE);
             installTimesList = list;
-            installTimesId = list.get(0).id;
-            tvInstallTimeView.setText("送货:" + list.get(0).date + "[" + list.get(0).week + "]");
+            List<CreateOrderResponse.ReservingListBean> dateList = list.get(0).dateList;
+            if (CommonUtils.isNotNullOrEmpty(dateList)) {
+                installTimesId = dateList.get(0).id;
+                tvInstallTimeView.setText("安装:" + dateList.get(0).date + "[" + dateList.get(0).week + "]");
+            }
         }
     }
 
@@ -494,7 +512,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                             tvPaymentRateView.setText(text);
                             downPaymentRate = item.id;
                             paymentRateDlg.dismiss();
-                            updateAnnuity();
+//                            updateAnnuity();
+                            updatePaymentList();
                         }
                     });
                 }
@@ -524,29 +543,41 @@ public class ConfirmOrderActivity extends BaseActivity {
     private void updatePaymentListUI() {
         if (CommonUtils.isNotNullOrEmpty(paymentList)) {
             String text = "请选择";
+            boolean isFind = false;
             for (DownPayMonthPayResponse bean : paymentList) {
                 if (StringUtils.string2Long(bean.idProduct) == idProduct) {
                     text = bean.paymentNum + "个月";
+                    isFind = true;
                 }
             }
 
+            if (!isFind){
+                idProduct = StringUtils.string2Long(paymentList.get(0).idProduct);
+                text = paymentList.get(0).paymentNum+"个月";
+            }
+
             tvPaymentView.setText(text);
-            paymentDlg = new ChooseDialog<DownPayMonthPayResponse>(this, paymentList) {
-                @Override
-                public void convertView(ViewHolder holder, final DownPayMonthPayResponse item, int position, long checkIndex) {
-                    holder.setText(R.id.dialog_choose_item_text, item.paymentNum + "个月");
-                    holder.setChecked(R.id.dialog_choose_item_text, StringUtils.string2Long(item.idProduct) == checkIndex);
-                    holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            paymentDlg.dismiss();
-                            tvPaymentView.setText(item.paymentNum + "个月");
-                            idProduct = StringUtils.string2Long(item.idProduct);
-                            updateAnnuity();
-                        }
-                    });
-                }
-            };
+            if (paymentDlg == null) {
+                paymentDlg = new ChooseDialog<DownPayMonthPayResponse>(this, paymentList) {
+                    @Override
+                    public void convertView(ViewHolder holder, final DownPayMonthPayResponse item, int position, long checkIndex) {
+                        holder.setText(R.id.dialog_choose_item_text, item.paymentNum + "个月");
+                        holder.setChecked(R.id.dialog_choose_item_text, StringUtils.string2Long(item.idProduct) == checkIndex);
+                        holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                paymentDlg.dismiss();
+                                tvPaymentView.setText(item.paymentNum + "个月");
+                                idProduct = StringUtils.string2Long(item.idProduct);
+                                updateAnnuity();
+                            }
+                        });
+                    }
+                };
+            } else {
+                paymentDlg.refreshData();
+            }
+            updateAnnuity();
         }
     }
 
@@ -619,7 +650,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                     setTotalPrice();
                 }
             });
-            if (rlCardsViewLayout.getVisibility() != View.VISIBLE) {
+            if (rlCardsViewLayout.getVisibility() != View.VISIBLE && payType != 0) {
+                //钱包支付暂不支持优惠券
                 rlCardsViewLayout.setVisibility(View.VISIBLE);
             }
         } else {
@@ -729,7 +761,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     /**
-     * payType为0时为钱包支付，此时应显示分期信息、增值服务和消费者分期合同；否则不显示
+     * payType为0时为钱包支付，此时应显示分期信息、增值服务和消费者分期合同,不显示优惠券；
      */
     private void onChangePayType() {
         if (payType == 0) {
@@ -737,10 +769,14 @@ public class ConfirmOrderActivity extends BaseActivity {
             paymentLayout.setVisibility(View.VISIBLE);
             llAgreementLayout.setVisibility(View.VISIBLE);
             tvOK.setEnabled(cbAgreement.isChecked());
+            rlCardsViewLayout.setVisibility(View.GONE);
         } else {
             llIncrementService.setVisibility(View.GONE);
             paymentLayout.setVisibility(View.GONE);
             llAgreementLayout.setVisibility(View.INVISIBLE);
+            if (CommonUtils.isNotNullOrEmpty(cardList)) {
+                rlCardsViewLayout.setVisibility(View.VISIBLE);
+            }
             tvOK.setEnabled(true);
         }
     }
@@ -865,8 +901,22 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
-        ApiImpl.confirmOrderSc(this, channel, cardId, downPaymentRate, idPerson, idProduct, -1, new InsuranceFee(insuranceFee, serviceId),
-                payType, addressJoBean, -1, new SkuInfo(quantity, skuCode), message,
+        //切换支付方式时，下列变量会随之改变,为了避免下单失败后重试数据异常，所以用一些临时变量代替
+        long realCardId = cardId;
+        int realDownPaymentRate = downPaymentRate;
+        long realIdProduct = idProduct;
+        InsuranceFee feeBean = new InsuranceFee(insuranceFee, serviceId);
+
+        if (payType == 0) { //钱包支付不支持优惠券
+            realCardId = 0;
+        } else {//其它支付不支持分期和增值服务
+            realDownPaymentRate = 0;
+            realIdProduct = 0;
+            feeBean = null;
+        }
+
+        ApiImpl.confirmOrderSc(this, channel, realCardId, realDownPaymentRate, idPerson, realIdProduct, installTimesId, feeBean,
+                payType, addressJoBean, sendTimesId, new SkuInfo(quantity, skuCode), message,
                 customerPhone, customerName, new BaseRequestAgent.ResponseListener<ConfirmOrderScResponse>() {
                     @Override
                     public void onSuccess(ConfirmOrderScResponse response) {
@@ -883,8 +933,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                         orderNo = response.data.orderNo;
                         paymentNum = response.data.payMoney;
                         isConfirm = true;
-                        //订单确认后以下功能不可修改
-                        enableViewByTag(outerLayout, "disabled", false);
+                        //订单确认后tag内容为”allowDisabled“控件不可点击，防止订单被修改
+                        enableViewByTag(outerLayout, getString(R.string.view_allow_disabled), false);
                     }
 
                     @Override
@@ -949,9 +999,13 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
 
             if (CommonUtils.isNotNullOrEmpty(installTimesList)) {
-                for (CreateOrderResponse.ReservingListBean bean : installTimesList) {
-                    if (installTimesId == bean.id) {
-                        tvInstallTimeView.setText("送货:" + bean.date + "[" + bean.week + "]");
+                for (CreateOrderResponse.DateListBean bean : installTimesList) {
+                    if (sendTimesId == bean.id) {
+                        for (CreateOrderResponse.ReservingListBean bean1 : bean.dateList) {
+                            if (installTimesId == bean1.id) {
+                                tvInstallTimeView.setText("安装:" + bean1.date + "[" + bean1.week + "]");
+                            }
+                        }
                     }
                 }
             }

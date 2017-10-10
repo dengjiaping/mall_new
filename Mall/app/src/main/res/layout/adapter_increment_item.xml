@@ -16,7 +16,7 @@
         android:text="手机延保："
         android:textColor="@color/color_4a4a4a"
         android:textSize="@dimen/ts_12"
-        android:tag="disabled"/>
+        android:tag="@string/view_allow_disabled"/>
 
     <TextView
         android:id="@+id/increment_price"

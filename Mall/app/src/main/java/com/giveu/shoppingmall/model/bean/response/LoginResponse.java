@@ -86,7 +86,7 @@ public class LoginResponse extends BaseBean<LoginResponse> {
     public String receiveStreet;
     public String receiveDetailAddress;
     public int orderPayNum;
-    public int orderFinishedNum;
+    public int orderDownPaymentNum;
     public int orderReceiveNum;
 
 

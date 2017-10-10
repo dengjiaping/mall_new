@@ -89,10 +89,10 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llMyCollection;
     @BindView(R.id.tv_waiting_pay)
     TextView tvWaitingPay;
-    @BindView(R.id.tv_finished)
-    TextView tvFinished;
     @BindView(R.id.tv_waiting_receive)
     TextView tvWaitingReceive;
+    @BindView(R.id.tv_down_payment)
+    TextView tvDownPayment;
     @BindView(R.id.ptrsv)
     PullToRefreshScrollView ptrsv;
     ViewStub vsMe;
@@ -173,17 +173,17 @@ public class MainMeFragment extends BaseFragment {
             viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.VISIBLE);
             //订单数量显示个数处理逻辑
-            if (LoginHelper.getInstance().getOrderFinishedNum() > 0) {
-                tvFinished.setVisibility(View.VISIBLE);
-                tvFinished.setText(LoginHelper.getInstance().getOrderFinishedNum() + "");
-            } else {
-                tvFinished.setVisibility(View.GONE);
-            }
             if (LoginHelper.getInstance().getOrderPayNum() > 0) {
                 tvWaitingPay.setVisibility(View.VISIBLE);
                 tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum() + "");
             } else {
                 tvWaitingPay.setVisibility(View.GONE);
+            }
+            if (LoginHelper.getInstance().getOrderDownPaymentNum() > 0) {
+                tvDownPayment.setVisibility(View.VISIBLE);
+                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownPaymentNum() + "");
+            } else {
+                tvDownPayment.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderReceiveNum() > 0) {
                 tvWaitingReceive.setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class MainMeFragment extends BaseFragment {
         } else {
             //未登录状态
             tvWaitingPay.setVisibility(View.GONE);
-            tvFinished.setVisibility(View.GONE);
+            tvDownPayment.setVisibility(View.GONE);
             tvWaitingReceive.setVisibility(View.GONE);
             tvStatus.setVisibility(View.GONE);
             tvWithdrawals.setText("查看信用钱包额度");

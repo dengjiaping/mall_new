@@ -209,11 +209,13 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
                                     paymentType, result, LoginHelper.getInstance().getPhone());
                             break;
                         case SHOPPING:
+                            int payType;
                             if (isWalletPay) {
-
+                                payType = 0;
                             } else {
-                                presenter.confirmPayForShop(Const.CHANNEL, orderNo, LoginHelper.getInstance().getIdPerson(), smsCode, LoginHelper.getInstance().getPhone());
+                                payType = 2;
                             }
+                            presenter.confirmPayForShop(Const.CHANNEL, orderNo, LoginHelper.getInstance().getIdPerson(), payType, smsCode, LoginHelper.getInstance().getPhone());
                             break;
                     }
                 }
