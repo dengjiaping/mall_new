@@ -1,8 +1,11 @@
 package com.giveu.shoppingmall.model.bean.response;
 
+import android.os.Parcelable;
+
 import com.android.volley.mynet.BaseBean;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -167,9 +170,10 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
         public int id;
         public String name;
         public String price;
+        public int isSelect;
     }
 
-    public static class ReservingListBean {
+    public static class ReservingListBean implements Serializable {
         /**
          * date : 2017-09-13
          * id : 2
@@ -177,7 +181,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
          */
 
         public String date;
-        public int id;
+        public long id;
         public String week;
 
     }

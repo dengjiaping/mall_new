@@ -3,18 +3,28 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
+import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.index.view.dialog.ChooseDialog;
+import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
+import com.giveu.shoppingmall.model.bean.response.Item;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.dialog.DateSelectDialog;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,67 +35,88 @@ import butterknife.OnClick;
  */
 
 public class ConfirmHouseHoldActivity extends BaseActivity {
-    private static String[] weeks = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
-    private final static int TYPE_SEND = 0;
-    private final static int TYPE_INSTALL = 1;
-    private DateSelectDialog dialog;
-    private int type = TYPE_SEND;
+    private ChooseDialog<CreateOrderResponse.ReservingListBean> sendTimeDlg = null;
+    private ChooseDialog<CreateOrderResponse.ReservingListBean> installTimeDlg = null;
+    private long sendTimesId;
+    private long installTimesId;
 
     @BindView(R.id.house_hold_send_time)
     TextView sendTimeView;
     @BindView(R.id.house_hold_install_time)
     TextView installTimeView;
+    @BindView(R.id.house_hold_send_layout)
+    RelativeLayout rlSendTimeLayout;
+    @BindView(R.id.house_hold_install_layout)
+    RelativeLayout rlInstallTimeLayout;
 
-    private String selectSendTime;
-    private String selectInstallTime;
+    private List<CreateOrderResponse.ReservingListBean> sendTimesList;
+    private List<CreateOrderResponse.ReservingListBean> installTimesList;
 
-    private int selectYear;
-    private int selectMonth;
-    private int selectDay;
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_house_hold_layout);
 
-        selectSendTime = getIntent().getStringExtra("sendTime");
-        selectInstallTime = getIntent().getStringExtra("installTime");
-        if (selectSendTime != null){
-            sendTimeView.setText(selectSendTime);
-        }
-        if (selectInstallTime != null){
-            installTimeView.setText(selectInstallTime);
-        }
+        sendTimesList = (List<CreateOrderResponse.ReservingListBean>) getIntent().getSerializableExtra("sendTime");
+        installTimesList = (List<CreateOrderResponse.ReservingListBean>) getIntent().getSerializableExtra("installTime");
+        sendTimesId = getIntent().getLongExtra("sendTimesId", 0);
+        installTimesId = getIntent().getLongExtra("installTimesId", 0);
 
         baseLayout.setTitle("大家电预约配送");
 
-        dialog = new DateSelectDialog(this);
-        dialog.showDay();
-        dialog.setLimitSelect(false);
-        dialog.setOnDateSelectListener(new DateSelectDialog.OnDateSelectListener() {
-            @Override
-            public void onSelectDate(String year, String month, String day) {
 
-                selectYear = Integer.parseInt(year);
-                selectMonth = Integer.parseInt(month);
-                selectDay = Integer.parseInt(day);
-                String week = getWeekDay(year + "-" + month + "-" + day);
+        if (sendTimesList != null) {
 
-                StringBuilder formatTime = new StringBuilder();
-                formatTime.append(year).append("年")
-                        .append(month).append("月")
-                        .append(day).append("日")
-                        .append(" [").append(week).append("]");
-                if (type == TYPE_SEND) {
-                    selectSendTime = formatTime.toString();
-                    sendTimeView.setText(formatTime);
-                } else if (type == TYPE_INSTALL) {
-                    selectInstallTime = formatTime.toString();
-                    installTimeView.setText(formatTime);
+            sendTimeView.setText("请选择");
+            for (CreateOrderResponse.ReservingListBean bean : sendTimesList) {
+                if (sendTimesId == bean.id) {
+                    sendTimeView.setText(bean.date + "[" + bean.week + "]");
                 }
             }
-        });
 
-        dialog.setOriginalDate();
+            sendTimeDlg = new ChooseDialog<CreateOrderResponse.ReservingListBean>(this, sendTimesList) {
+                @Override
+                public void convertView(ViewHolder holder, final CreateOrderResponse.ReservingListBean item, int position, long checkIndex) {
+                    holder.setText(R.id.dialog_choose_item_text, item.date + "[" + item.week + "]");
+                    holder.setChecked(R.id.dialog_choose_item_text, item.id == checkIndex);
+                    holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendTimesId = item.id;
+                            sendTimeView.setText(item.date + "[" + item.week + "]");
+                            sendTimeDlg.dismiss();
+                        }
+                    });
+                }
+            };
+            rlSendTimeLayout.setVisibility(View.VISIBLE);
+        }
+
+        if (installTimesList != null) {
+            installTimeView.setText("请选择");
+            for (CreateOrderResponse.ReservingListBean bean : installTimesList) {
+                if (installTimesId == bean.id) {
+                    installTimeView.setText(bean.date + "[" + bean.week + "]");
+                }
+            }
+            installTimeDlg = new ChooseDialog<CreateOrderResponse.ReservingListBean>(this, installTimesList) {
+                @Override
+                public void convertView(ViewHolder holder, final CreateOrderResponse.ReservingListBean item, int position, long checkIndex) {
+                    holder.setText(R.id.dialog_choose_item_text, item.date + "[" + item.week + "]");
+                    holder.setChecked(R.id.dialog_choose_item_text, item.id == checkIndex);
+                    holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            installTimesId = item.id;
+                            installTimeView.setText(item.date + "[" + item.week + "]");
+                            installTimeDlg.dismiss();
+                        }
+                    });
+                }
+            };
+            rlInstallTimeLayout.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -98,17 +129,21 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startItForResult(Context context, int requestCode, String sendTime, String installTime) {
+    public static void startItForResult(Context context, int requestCode, List<CreateOrderResponse.ReservingListBean> sendTimesList, List<CreateOrderResponse.ReservingListBean> installTimesList, long sendTimesId, long installTimesId) {
         Intent intent = new Intent(context, ConfirmHouseHoldActivity.class);
-        if (StringUtils.isNotNull(sendTime)) {
-            intent.putExtra("sendTime", sendTime);
+        if (CommonUtils.isNotNullOrEmpty(sendTimesList)) {
+            intent.putExtra("sendTime", (Serializable) sendTimesList);
+        }
+        if (CommonUtils.isNotNullOrEmpty(installTimesList)) {
+            intent.putExtra("installTime", (Serializable) installTimesList);
         }
 
-        if (StringUtils.isNotNull(installTime)) {
-            intent.putExtra("installTime", installTime);
-        }
+        intent.putExtra("sendTimesId", sendTimesId);
+        intent.putExtra("installTimesId", installTimesId);
+
         ((Activity) context).startActivityForResult(intent, requestCode);
     }
+
 
     @OnClick({R.id.house_hold_install_layout, R.id.house_hold_send_layout, R.id.house_hold_confirm})
     @Override
@@ -116,38 +151,21 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.house_hold_send_layout:
-                type = TYPE_SEND;
-                dialog.show();
+                sendTimeDlg.show(sendTimesId);
                 break;
             case R.id.house_hold_install_layout:
-                type = TYPE_INSTALL;
-                dialog.show();
+                installTimeDlg.show(installTimesId);
                 break;
             case R.id.house_hold_confirm:
                 Intent intent = new Intent();
-                intent.putExtra("time_send", selectSendTime);
-                intent.putExtra("time_install", selectInstallTime);
+                intent.putExtra("sendTimesId", sendTimesId);
+                intent.putExtra("installTimesId", installTimesId);
                 setResult(100, intent);
                 finish();
                 break;
             default:
                 break;
         }
-    }
-
-    private String getWeekDay(String formatTime) {
-        int index;
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(format.parse(formatTime));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        index = c.get(Calendar.DAY_OF_WEEK);
-        return weeks[index - 1];
     }
 
 }

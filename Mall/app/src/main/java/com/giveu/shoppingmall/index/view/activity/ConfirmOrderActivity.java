@@ -90,7 +90,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     @BindView(R.id.confirm_order_annuity)
     TextView tvAnnuityView;
     //大家电配送
-    @BindView(R.id.confirm_order_household)
+    @BindView(R.id.confirm_order_support_household)
     LinearLayout llHouseHold;
     @BindView(R.id.confirm_order_send_time)
     TextView tvSendTimeView;
@@ -154,10 +154,11 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private int payType = 0; //支付方式Id
     private long cardId = 0; //优惠券Id
-    private long paymentRateId = 0;//首付Id
-    private long paymentNumId = 0;//分期Id
+    private int downPaymentRate = 0;//首付Id
     private String cardPrice = "0";
     private String totalPrice = "0";
+    private long sendTimesId = 0;//配送家电Id
+    private long installTimesId = 0; //安装家电Id
 
     //首付列表
     private List<CreateOrderResponse.InitListBean> paymentRateList = null;
@@ -169,10 +170,10 @@ public class ConfirmOrderActivity extends BaseActivity {
     private ChooseDialog<DownPayMonthPayResponse> paymentDlg = null;
     //月供对话框
     private AnnuityDialog annuityDialog = null;
-    //送货时间,暂时不用
-    private String sendTime;
-    //安装时间,暂时不用
-    private String installTime;
+    //送货时间
+    private List<CreateOrderResponse.ReservingListBean> sendTimesList;
+    //安装时间
+    private List<CreateOrderResponse.ReservingListBean> installTimesList;
     //增值服务
     private List<CreateOrderResponse.AvsListBean> incrementServiceList = null;
     private LvCommonAdapter incrementServiceAdapter = null;
@@ -182,7 +183,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     private String channel;
     private String skuCode;
     private long idProduct;
-    private int downPaymentRate;
     private int quantity;
     private String idPerson = LoginHelper.getInstance().getIdPerson();
     private String customerName = null;
@@ -202,7 +202,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startIt(Context context, int downPaymentRate,long idProduct, int quantity, String skuCode) {
+    public static void startIt(Context context, int downPaymentRate, long idProduct, int quantity, String skuCode) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
         intent.putExtra("idProduct", idProduct);
@@ -228,6 +228,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
 
         downPaymentRate = getIntent().getIntExtra("downPaymentRate", 0);
+        idProduct = getIntent().getLongExtra("idProduct", 0);
         quantity = getIntent().getIntExtra("quantity", 0);
         skuCode = getIntent().getStringExtra("skuCode");
         channel = Const.CHANNEL;
@@ -347,7 +348,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onSuccess(DownPayMonthPayResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     paymentList = response.data;
-                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
+//                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
                     createOrderSc();
                 }
             }
@@ -374,6 +375,44 @@ public class ConfirmOrderActivity extends BaseActivity {
         updateIncrementServiceUI(result.data.avsList);
         //更新月供金额
         updateAnnuity();
+        //更新配送时间
+        if (result.data.reserving) {
+            updateReservingUI(result.data.reservingList);
+        }
+        //更新安装时间
+        if (result.data.install) {
+            updateInstallUI(result.data.installList);
+        }
+    }
+
+    /**
+     * 更新配送时间UI
+     *
+     * @param list 配送时间列表
+     */
+    private void updateReservingUI(List<CreateOrderResponse.ReservingListBean> list) {
+        if (CommonUtils.isNotNullOrEmpty(list)) {
+            llHouseHold.setVisibility(View.VISIBLE);
+            tvSendTimeView.setVisibility(View.VISIBLE);
+            sendTimesList = list;
+            sendTimesId = list.get(0).id;
+            tvSendTimeView.setText("送货:"+list.get(0).date+"["+list.get(0).week+"]");
+        }
+    }
+
+    /**
+     * 更新安装时间UI
+     *
+     * @param list 安装时间列表
+     */
+    private void updateInstallUI(List<CreateOrderResponse.ReservingListBean> list) {
+        if (CommonUtils.isNotNullOrEmpty(list)) {
+            llHouseHold.setVisibility(View.VISIBLE);
+            tvInstallTimeView.setVisibility(View.VISIBLE);
+            installTimesList = list;
+            installTimesId = list.get(0).id;
+            tvInstallTimeView.setText("送货:"+list.get(0).date+"["+list.get(0).week+"]");
+        }
     }
 
     /**
@@ -434,8 +473,13 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (paymentLayout.getVisibility() != View.VISIBLE && payType == 0) {
                 paymentLayout.setVisibility(View.VISIBLE);
             }
-            String text = list.get(0).name;
-            downPaymentRate = list.get(0).id;
+            CharSequence text = "请选择";
+            for (CreateOrderResponse.InitListBean bean : list) {
+                if (bean.id == downPaymentRate) {
+                    text = formatPaymentRateText(bean);
+                    break;
+                }
+            }
             tvPaymentRateView.setText(text);
             paymentRateDlg = new ChooseDialog<CreateOrderResponse.InitListBean>(this, paymentRateList) {
                 @Override
@@ -445,24 +489,9 @@ public class ConfirmOrderActivity extends BaseActivity {
                     holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String text = item.name;
-                            SpannableString spanText = null;
-                            if (item.id != 0) {
-                                text = text + "（¥" + StringUtils.format2(item.price) + "）";
-                                spanText = new SpannableString(text);
-                                int pos1 = text.indexOf("¥");
-                                int pos2 = text.indexOf(".");
-                                int pos3 = text.indexOf("）");
-                                spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
+                            CharSequence text = formatPaymentRateText(item);
+                            tvPaymentRateView.setText(text);
                             downPaymentRate = item.id;
-                            if (spanText != null) {
-                                tvPaymentRateView.setText(spanText);
-                            } else {
-                                tvPaymentRateView.setText(text);
-                            }
-                            paymentRateId = item.id;
                             paymentRateDlg.dismiss();
                             updateAnnuity();
                         }
@@ -472,24 +501,44 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    private CharSequence formatPaymentRateText(CreateOrderResponse.InitListBean bean) {
+        String text = bean.name;
+        SpannableString spanText = null;
+        if (bean.id != 0) {
+            text = text + "（¥" + StringUtils.format2(bean.price) + "）";
+            spanText = new SpannableString(text);
+            int pos1 = text.indexOf("¥");
+            int pos2 = text.indexOf(".");
+            int pos3 = text.indexOf("）");
+            spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spanText;
+        }
+        return text;
+    }
+
     /**
      * 更新分期相关UI
      */
     private void updatePaymentListUI() {
         if (CommonUtils.isNotNullOrEmpty(paymentList)) {
-            tvPaymentView.setText(paymentList.get(0).paymentNum + "个月");
-            idProduct = StringUtils.string2Long(paymentList.get(0).idProduct);
-            paymentNumId = paymentList.get(0).paymentNum;
+            String text = "请选择";
+            for (DownPayMonthPayResponse bean : paymentList) {
+                if (StringUtils.string2Long(bean.idProduct) == idProduct) {
+                    text = bean.paymentNum + "个月";
+                }
+            }
+
+            tvPaymentView.setText(text);
             paymentDlg = new ChooseDialog<DownPayMonthPayResponse>(this, paymentList) {
                 @Override
                 public void convertView(ViewHolder holder, final DownPayMonthPayResponse item, int position, long checkIndex) {
                     holder.setText(R.id.dialog_choose_item_text, item.paymentNum + "个月");
-                    holder.setChecked(R.id.dialog_choose_item_text, item.paymentNum == checkIndex);
+                    holder.setChecked(R.id.dialog_choose_item_text, StringUtils.string2Long(item.idProduct) == checkIndex);
                     holder.setOnClickListener(R.id.dialog_choose_item_text, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             paymentDlg.dismiss();
-                            paymentNumId = item.paymentNum;
                             tvPaymentView.setText(item.paymentNum + "个月");
                             idProduct = StringUtils.string2Long(item.idProduct);
                             updateAnnuity();
@@ -713,16 +762,16 @@ public class ConfirmOrderActivity extends BaseActivity {
                 break;
             case R.id.confirm_order_first_pay:
                 if (paymentRateList != null && paymentRateList.size() > 0) {
-                    paymentRateDlg.show(paymentRateId);
+                    paymentRateDlg.show(downPaymentRate);
                 }
                 break;
             case R.id.confirm_order_month:
                 if (paymentList != null && paymentList.size() > 0) {
-                    paymentDlg.show();
+                    paymentDlg.show(idProduct);
                 }
                 break;
             case R.id.confirm_order_household:
-                ConfirmHouseHoldActivity.startItForResult(this, 0, installTime, sendTime);
+                ConfirmHouseHoldActivity.startItForResult(this, 0, sendTimesList, installTimesList, sendTimesId, installTimesId);
                 break;
             case R.id.rl_receiving_address:
                 AddressManageActivity.startItForResult(this, Const.ADDRESSMANAGE);
@@ -888,14 +937,22 @@ public class ConfirmOrderActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == 100) { //大家电配送
-            sendTime = data.getStringExtra("time_send");
-            installTime = data.getStringExtra("time_install");
-            if (StringUtils.isNotNull(sendTime)) {
-                tvSendTimeView.setText("送货：" + sendTime);
+            sendTimesId = data.getLongExtra("sendTimesId", 0);
+            installTimesId = data.getLongExtra("installTimesId", 0);
+            if (CommonUtils.isNotNullOrEmpty(sendTimesList)) {
+                for (CreateOrderResponse.ReservingListBean bean : sendTimesList) {
+                    if (sendTimesId == bean.id) {
+                        tvSendTimeView.setText("送货:" + bean.date + "[" + bean.week + "]");
+                    }
+                }
             }
 
-            if (StringUtils.isNotNull(installTime)) {
-                tvInstallTimeView.setText("安装：" + installTime);
+            if (CommonUtils.isNotNullOrEmpty(installTimesList)) {
+                for (CreateOrderResponse.ReservingListBean bean : installTimesList) {
+                    if (installTimesId == bean.id) {
+                        tvInstallTimeView.setText("送货:" + bean.date + "[" + bean.week + "]");
+                    }
+                }
             }
         }
 
