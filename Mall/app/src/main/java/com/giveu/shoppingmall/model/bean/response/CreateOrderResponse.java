@@ -39,7 +39,7 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
     public List<CardListBean> cardList;
     public List<FsListBean> fsList;
     public List<InitListBean> initList;
-    public List<ReservingListBean> installList;
+    public List<DateListBean> installList;
     public List<ReservingListBean> reservingList;
 
 
@@ -184,6 +184,11 @@ public class CreateOrderResponse extends BaseBean<CreateOrderResponse> {
         public long id;
         public String week;
 
+    }
+
+    public static class DateListBean implements Serializable{
+        public long id;
+        public List<ReservingListBean> dateList;
     }
 
 }
