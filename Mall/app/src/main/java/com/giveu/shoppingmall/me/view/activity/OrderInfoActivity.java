@@ -295,7 +295,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //支付方式
         orderPayType = response.payType;
         if (response.payType == 0) {
-            isWalletPay = true;
+            if ("0".equals(response.selDownPaymentRate)) {
+                isWalletPay = true;
+            } else {
+                isWalletPay = false;
+            }
         } else {
             isWalletPay = false;
         }
@@ -329,7 +333,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //大家电
         if (StringUtils.isNotNull(response.deliverGoods) && StringUtils.isNotNull(response.installGoods)) {
-            rlDeliverAndInstall.setVisibility(View.VISIBLE);
+            rlDeliverAndInstall.setVisibility(View.GONE);
             tvDeliver.setText("送货：" + response.deliverGoods);
             tvInstall.setText("安装：" + response.installGoods);
         } else {

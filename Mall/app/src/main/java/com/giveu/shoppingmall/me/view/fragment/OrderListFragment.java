@@ -86,10 +86,11 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     }
 
     @Override
-    protected void setListener() {}
+    protected void setListener() {
+    }
 
     private synchronized void initFragmentView() {
-        if (!isFragmentViewInit){
+        if (!isFragmentViewInit) {
             fragmentView = View.inflate(mBaseContext, R.layout.fragment_order_list, null);
             emptyFrameLayout.removeAllViews();
             emptyFrameLayout.addView(fragmentView);
@@ -329,10 +330,13 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     public void showOrderDetail(OrderDetailResponse response) {
         if (response != null && response.status == 1) {
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
+        } else if (response != null && response.status == 2) {
+            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.downPayment));
         } else {
             if (orderState == OrderState.ALLRESPONSE) {
                 //刷新待支付
                 EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+                EventBusUtils.poseEvent(new RefreshEvent(OrderState.DOWNPAYMENT));
             } else {
                 removeData(response.orderNo);
             }
