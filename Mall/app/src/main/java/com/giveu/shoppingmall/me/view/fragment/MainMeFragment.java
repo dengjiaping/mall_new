@@ -279,7 +279,7 @@ public class MainMeFragment extends BaseFragment {
         });
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_finished})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -345,9 +345,9 @@ public class MainMeFragment extends BaseFragment {
                 }
                 break;
 
-            case R.id.ll_finished:
+            case R.id.ll_down_payment:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, OrderState.Finished_RESPONSE);
+                    MyOrderActivity.startIt(mBaseContext, OrderState.DOWN_PAYMENT);
                 }
                 break;
 

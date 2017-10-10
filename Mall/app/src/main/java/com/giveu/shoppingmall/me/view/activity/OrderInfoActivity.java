@@ -341,7 +341,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvService0.setText(response.addValueService.get(0).serviceName);
             serviceName = response.addValueService.get(0).serviceName;
             tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
-            if (response.addValueService.get(0).isSelected == 0) {
+            if (response.addValueService.get(0).isSelected == 1) {
                 cbService0.setChecked(true);
             } else {
                 llService.setVisibility(View.GONE);

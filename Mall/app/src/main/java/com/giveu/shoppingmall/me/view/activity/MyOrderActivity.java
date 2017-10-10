@@ -35,7 +35,7 @@ public class MyOrderActivity extends BaseActivity {
     private int currentTab;//当前tablayout需显示的tab
 
     private OrderFragmentAdapter adapter;
-    private String[] tabsText = {"全部", "待付款", "待收货", "已完成", "已关闭"};
+    private String[] tabsText = {"全部", "待付款", "待首付", "待收货", "已完成", "已关闭"};
     private OrderListFragment allFragment;
     private OrderListFragment waitingPayFragment;
     private OrderListFragment downPaymentFragment;
@@ -88,12 +88,12 @@ public class MyOrderActivity extends BaseActivity {
         waitingPayFragment.setArguments(waitingPayBundle);
         fragments.add(waitingPayFragment);
 
-        /*//待首付
+        //待首付
         downPaymentFragment = new OrderListFragment();
         Bundle downPaymentBundle = new Bundle();
         downPaymentBundle.putInt(OrderState.ORDER_TYPE, OrderState.DOWNPAYMENT);
         downPaymentFragment.setArguments(downPaymentBundle);
-        fragments.add(downPaymentFragment);*/
+        fragments.add(downPaymentFragment);
 
         //待收货
         waitingReceiveFragment = new OrderListFragment();
@@ -117,7 +117,7 @@ public class MyOrderActivity extends BaseActivity {
         fragments.add(closedFragment);
 
         adapter = new OrderFragmentAdapter(getSupportFragmentManager(), fragments, tabsText);
-        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabTextColors(getResources().getColor(R.color.black), getResources().getColor(R.color.color_00bbc0));
