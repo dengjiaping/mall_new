@@ -202,11 +202,12 @@ public class ConfirmOrderActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startIt(Context context, int downPaymentRate, long idProduct, int quantity, String skuCode) {
+    public static void startIt(Context context, int downPaymentRate, long idProduct, int quantity, String skuCode, int paymentType) {
         Intent intent = new Intent(context, ConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
         intent.putExtra("idProduct", idProduct);
         intent.putExtra("quantity", quantity);
+        intent.putExtra("paymentType", paymentType);
         intent.putExtra("skuCode", skuCode);
         context.startActivity(intent);
     }
@@ -396,7 +397,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             tvSendTimeView.setVisibility(View.VISIBLE);
             sendTimesList = list;
             sendTimesId = list.get(0).id;
-            tvSendTimeView.setText("送货:"+list.get(0).date+"["+list.get(0).week+"]");
+            tvSendTimeView.setText("送货:" + list.get(0).date + "[" + list.get(0).week + "]");
         }
     }
 
@@ -411,7 +412,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             tvInstallTimeView.setVisibility(View.VISIBLE);
             installTimesList = list;
             installTimesId = list.get(0).id;
-            tvInstallTimeView.setText("送货:"+list.get(0).date+"["+list.get(0).week+"]");
+            tvInstallTimeView.setText("送货:" + list.get(0).date + "[" + list.get(0).week + "]");
         }
     }
 

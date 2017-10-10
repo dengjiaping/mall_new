@@ -9,14 +9,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
 import com.giveu.shoppingmall.widget.flowlayout.TagAdapter;
@@ -34,7 +38,14 @@ public class CreditCommodityDialog extends CustomDialog {
     private ImageView ivDismiss;
     private TextView tvConfirm;
     private TextView tvPrice;
+    private TextView tvPayPrice;
     private TextView tvDetail;
+    private LinearLayout llAliPay;
+    private RelativeLayout rlTotal;
+    private LinearLayout llMonthlyPay;
+    private RelativeLayout rlPaymentType;
+    private TextView tvPaymentType;
+    private TextView tvDescription;
     private TextView tvTotalPrice;
     private TextView tvCommodityAmounts;
     private TextView tvCommodityName;
@@ -48,6 +59,10 @@ public class CreditCommodityDialog extends CustomDialog {
     private int commodityAmounts;//商品数量
     private TagAdapter<DownPayMonthPayResponse> monthPayAdapter;
     private TagFlowLayout tfPayment;
+
+    private PaymentTypeDialog paymentTypeDialog;
+    private int paymentType;
+
     private double totalPrice;//商品总价格 = 单价 x 数量
     private long idProduct;
 
@@ -70,12 +85,19 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onClick(View v) {
                 if (paymentNum != -1 && downPayRate != -1) {
-                    listener.confirm(downPayRate, idProduct);
+                    listener.confirm(downPayRate, idProduct, paymentType);
                 }
             }
         });
         ivCommodity = (ImageView) contentView.findViewById(R.id.iv_commodity);
         tvPrice = (TextView) contentView.findViewById(R.id.tv_price);
+        tvPayPrice = (TextView) contentView.findViewById(R.id.tv_pay_price);
+        rlTotal = (RelativeLayout) contentView.findViewById(R.id.rl_total);
+        llAliPay = (LinearLayout) contentView.findViewById(R.id.ll_ali_pay);
+        llMonthlyPay = (LinearLayout) contentView.findViewById(R.id.ll_monthly_pay);
+        tvPaymentType = (TextView) contentView.findViewById(R.id.tv_payment_type);
+        tvDescription = (TextView) contentView.findViewById(R.id.tv_description);
+        rlPaymentType = (RelativeLayout) contentView.findViewById(R.id.rl_payment_type);
         tvDetail = (TextView) contentView.findViewById(R.id.tv_detail);
         tvTotalPrice = (TextView) contentView.findViewById(R.id.tv_total_price);
         tvCommodityName = (TextView) contentView.findViewById(R.id.tv_commodit_name);
@@ -88,6 +110,21 @@ public class CreditCommodityDialog extends CustomDialog {
                 if (onDownPayChangeListener != null) {
                     onDownPayChangeListener.showAppMonthlySupply(downPayRate, idProduct, commodityAmounts);
                 }
+            }
+        });
+
+        paymentTypeDialog = new PaymentTypeDialog(mAttachActivity);
+        paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
+            @Override
+            public void onChooseType(int type, String paymentTypeStr) {
+                paymentType = type;
+                initPayType();
+            }
+        });
+        rlPaymentType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paymentTypeDialog.showDialog(paymentType);
             }
         });
         ArrayList<String> percentList = new ArrayList<>();
@@ -114,6 +151,30 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     /**
+     * 初始化支付方式
+     */
+    private void initPayType() {
+        if (paymentType == Const.WALLET) {
+            tvPaymentType.setText("即有钱包");
+            tvDescription.setVisibility(View.VISIBLE);
+            llContainer.setVisibility(View.VISIBLE);
+            llAliPay.setVisibility(View.GONE);
+            llMonthlyPay.setVisibility(View.VISIBLE);
+            rlTotal.setVisibility(View.VISIBLE);
+        } else {
+            tvPaymentType.setText("支付宝");
+            tvDescription.setVisibility(View.INVISIBLE);
+            llContainer.setVisibility(View.INVISIBLE);
+            CommonUtils.setTextWithSpanSizeAndColor(tvPayPrice, "¥ ", StringUtils.format2(totalPrice + ""), "",
+                    16, 11, R.color.title_color, R.color.black);
+            llAliPay.setVisibility(View.VISIBLE);
+            llMonthlyPay.setVisibility(View.GONE);
+            rlTotal.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    /**
      * 初始化数据
      *
      * @param commodityAmounts
@@ -123,6 +184,15 @@ public class CreditCommodityDialog extends CustomDialog {
      * @param data
      */
     public void initData(int commodityAmounts, String smallIconStr, String commodityName, String commodityPrice, ArrayList<DownPayMonthPayResponse> data) {
+        //额度不足时默认选择支付宝
+        double availablePoslimit = StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit());
+        if (availablePoslimit > commodityAmounts * StringUtils.string2Double(commodityPrice)) {
+            paymentType = Const.WALLET;
+        } else {
+            paymentType = Const.ALI;
+        }
+        initPayType();
+        //默认是没有选中的，那么选第一个位置即零首付
         if (downPayRate == -1) {
             downPayRate = 0;
         }
@@ -135,7 +205,7 @@ public class CreditCommodityDialog extends CustomDialog {
                 DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
                 paymentNum = downPayMonthPayResponse.paymentNum;
                 idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
-                initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "")  + "");
+                initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
             } else {
                 //已选过期数和现在服务器返回的数据是否还有这个期数的标识
                 boolean hasSamePaymentNum = false;
@@ -155,7 +225,7 @@ public class CreditCommodityDialog extends CustomDialog {
                     DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
                     paymentNum = downPayMonthPayResponse.paymentNum;
                     idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
-                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "")  + "");
+                    initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
                 }
 
             }
@@ -319,7 +389,7 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     public interface OnConfirmListener {
-        void confirm(int downPayRate, long idProduct);
+        void confirm(int downPayRate, long idProduct, int paymentType);
 
         void cancle();
     }
