@@ -143,6 +143,7 @@ public class CreditCommodityDialog extends CustomDialog {
      */
     public void setConfirmEnable(boolean enable) {
         tvConfirm.setEnabled(enable);
+        tvDetail.setEnabled(enable);
         if (enable) {
             tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_00bbc0));
         } else {
@@ -231,6 +232,9 @@ public class CreditCommodityDialog extends CustomDialog {
             }
             monthPayAdapter.setDatas(data);
             setConfirmEnable(true);
+        }else {
+            monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
+            initdownPayMonthPay("","");
         }
     }
 
