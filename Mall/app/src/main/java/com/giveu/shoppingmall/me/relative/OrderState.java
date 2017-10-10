@@ -25,7 +25,7 @@ public interface OrderState {
     int WAITINGPAY = 1;
 
     //待首付
-//    String DOWN_PAYMENT = "2";
+    String DOWN_PAYMENT = "2";
     int DOWNPAYMENT = 2;
 
     //待发货（还没有待发货的tab）
@@ -33,15 +33,15 @@ public interface OrderState {
     int WAITINGDELIVERY = 3;
 
     //待收货
-    String WAITING_RECEIVE = "2";
+    String WAITING_RECEIVE = "3";
     int WAITINGRECEIVE = 4;
 
     //已完成
-    String Finished_RESPONSE = "3";
+    String Finished_RESPONSE = "4";
     int FINISHED = 5;
 
     //已关闭
-    String CLOSED_RESPONSE = "4";
+    String CLOSED_RESPONSE = "5";
     int CLOSED = 6;
 
     //充值中
