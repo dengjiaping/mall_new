@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
+import com.giveu.shoppingmall.me.view.activity.OfftheShelfActivity;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
@@ -156,7 +157,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         chooseCityDialog.setOnConfirmListener(new ChooseCityDialog.OnConfirmListener() {
             @Override
             public void onConfirm(String province, String city, String region, String street) {
-             //   chooseCityDialog.dismiss();
+                //   chooseCityDialog.dismiss();
                 provinceStr = province;
                 cityStr = city;
                 regionStr = region;
@@ -372,7 +373,19 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     @Override
-    public void showSkuIntroduction(final SkuIntroductionResponse skuResponse) {
+    public void showSkuIntroduction(boolean success, final SkuIntroductionResponse skuResponse) {
+        //获取数据失败
+        if (!success) {
+            //商品已下架，关闭当前页，跳转至下架页面，sc100200为商品下架code
+            if ("sc100200".equals(skuResponse.code)) {
+                if (mBaseContext != null) {
+                    mBaseContext.finish();
+                    OfftheShelfActivity.startIt(mBaseContext);
+                }
+            }
+            return;
+        }
+
         initAndLoadData();
         if (skuResponse.skuInfo != null) {
             //图片放大

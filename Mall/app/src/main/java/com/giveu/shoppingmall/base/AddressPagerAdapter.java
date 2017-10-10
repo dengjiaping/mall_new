@@ -41,6 +41,7 @@ public class AddressPagerAdapter extends PagerAdapter {
 
     /**
      * 是否需要选择街道
+     *
      * @param needSteet
      */
     public void setNeedSteet(boolean needSteet) {
@@ -255,7 +256,7 @@ public class AddressPagerAdapter extends PagerAdapter {
         View view = (View) object;
         int position = (int) view.getTag();
         //viewpager的局部刷新，想了解原理看请源码或资料
-        if (position > mViewPager.getCurrentItem()) {
+        if (position != 0 && position > mViewPager.getCurrentItem()) {
             //需要重绘
             return POSITION_NONE;
         } else {
