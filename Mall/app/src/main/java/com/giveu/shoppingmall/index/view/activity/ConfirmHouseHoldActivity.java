@@ -50,7 +50,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
     RelativeLayout rlInstallTimeLayout;
 
     private List<CreateOrderResponse.ReservingListBean> sendTimesList;
-    private List<CreateOrderResponse.ReservingListBean> installTimesList;
+    private List<CreateOrderResponse.DateListBean> installTimesList;
 
 
     @Override
@@ -58,7 +58,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
         setContentView(R.layout.activity_house_hold_layout);
 
         sendTimesList = (List<CreateOrderResponse.ReservingListBean>) getIntent().getSerializableExtra("sendTime");
-        installTimesList = (List<CreateOrderResponse.ReservingListBean>) getIntent().getSerializableExtra("installTime");
+        installTimesList = (List<CreateOrderResponse.DateListBean>) getIntent().getSerializableExtra("installTime");
         sendTimesId = getIntent().getLongExtra("sendTimesId", 0);
         installTimesId = getIntent().getLongExtra("installTimesId", 0);
 
@@ -71,6 +71,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
             for (CreateOrderResponse.ReservingListBean bean : sendTimesList) {
                 if (sendTimesId == bean.id) {
                     sendTimeView.setText(bean.date + "[" + bean.week + "]");
+                    break;
                 }
             }
 
@@ -84,6 +85,29 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
                         public void onClick(View v) {
                             sendTimesId = item.id;
                             sendTimeView.setText(item.date + "[" + item.week + "]");
+
+                            for (CreateOrderResponse.DateListBean bean : installTimesList) {
+                                if (sendTimesId == bean.id && CommonUtils.isNotNullOrEmpty(bean.dateList)) {
+
+                                    if (installTimeDlg != null) {
+                                        installTimeDlg.refreshData(bean.dateList);
+                                    }
+
+                                    boolean isFind = false;
+                                    for (CreateOrderResponse.ReservingListBean bean1 : bean.dateList) {
+                                        if (bean1.id == installTimesId) {
+                                            isFind = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!isFind) {
+                                        installTimeView.setText(bean.dateList.get(0).date + "[" + bean.dateList.get(0).week + "]");
+                                        installTimesId = bean.dateList.get(0).id;
+                                    }
+                                    break;
+                                }
+                            }
                             sendTimeDlg.dismiss();
                         }
                     });
@@ -94,12 +118,21 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
 
         if (installTimesList != null) {
             installTimeView.setText("请选择");
-            for (CreateOrderResponse.ReservingListBean bean : installTimesList) {
-                if (installTimesId == bean.id) {
-                    installTimeView.setText(bean.date + "[" + bean.week + "]");
+            List<CreateOrderResponse.ReservingListBean> installList = new ArrayList<>();
+            for (CreateOrderResponse.DateListBean bean : installTimesList) {
+                if (sendTimesId == bean.id && CommonUtils.isNotNullOrEmpty(bean.dateList)) {
+                    installList.addAll(bean.dateList);
+                    for (CreateOrderResponse.ReservingListBean bean1 : installList) {
+                        if (installTimesId == bean1.id) {
+                            installTimeView.setText(bean1.date + "[" + bean1.week + "]");
+                            break;
+                        }
+                    }
+                    break;
                 }
             }
-            installTimeDlg = new ChooseDialog<CreateOrderResponse.ReservingListBean>(this, installTimesList) {
+
+            installTimeDlg = new ChooseDialog<CreateOrderResponse.ReservingListBean>(this, installList) {
                 @Override
                 public void convertView(ViewHolder holder, final CreateOrderResponse.ReservingListBean item, int position, long checkIndex) {
                     holder.setText(R.id.dialog_choose_item_text, item.date + "[" + item.week + "]");
@@ -129,7 +162,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startItForResult(Context context, int requestCode, List<CreateOrderResponse.ReservingListBean> sendTimesList, List<CreateOrderResponse.ReservingListBean> installTimesList, long sendTimesId, long installTimesId) {
+    public static void startItForResult(Context context, int requestCode, List<CreateOrderResponse.ReservingListBean> sendTimesList, List<CreateOrderResponse.DateListBean> installTimesList, long sendTimesId, long installTimesId) {
         Intent intent = new Intent(context, ConfirmHouseHoldActivity.class);
         if (CommonUtils.isNotNullOrEmpty(sendTimesList)) {
             intent.putExtra("sendTime", (Serializable) sendTimesList);

@@ -10,6 +10,7 @@ import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
+import com.giveu.shoppingmall.utils.CommonUtils;
 
 import java.util.List;
 
@@ -64,10 +65,22 @@ public abstract class ChooseDialog<T> {
         });
     }
 
-    public void dismiss(){
+    public void dismiss() {
         mDialog.dismiss();
     }
 
     public abstract void convertView(ViewHolder holder, T item, int position, long checkIndex);
+
+    public void refreshData(List<T> datas) {
+        if (CommonUtils.isNotNullOrEmpty(datas)) {
+            this.datas.clear();
+            this.datas.addAll(datas);
+            mAdpter.notifyDataSetChanged();
+        }
+    }
+
+    public void refreshData(){
+        mAdpter.notifyDataSetChanged();
+    }
 
 }
