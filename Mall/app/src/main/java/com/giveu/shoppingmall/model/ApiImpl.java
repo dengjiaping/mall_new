@@ -596,8 +596,8 @@ public class ApiImpl {
     }
 
     //商品库存检查
-    public static void queryCommodityStock(Activity context, String province, String city, String region, String skuCode, int type, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "skuCode", "type"}, new Object[]{province, city, region, skuCode, type});
+    public static void queryCommodityStock(Activity context, String province, String city, String region, String street, String skuCode, int type, String lat, String lng, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "street", "skuCode", "type", "lat", "lng"}, new Object[]{province, city, region, street, skuCode, type, lat, lng});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_stock, BaseBean.class, context, responseListener);
     }
 
