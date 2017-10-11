@@ -163,7 +163,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 regionStr = region;
                 llChooseAddress.setMiddleText(province + " " + city + " " + region + " " + street);
                 //选择完地址后查询该商品在该地区是否有货
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
             }
         });
         buyDialog.setBuyDisable();
@@ -175,7 +175,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 buyDialog.setBuyDisable();
                 //选完属性后再次查询商品的相关信息，并检查库存
                 getCommodityInfo();
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
             }
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
@@ -285,6 +285,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     }
 
     private void initAndLoadData() {
+        //已经初始化过了，不再初始化
         if (svSwitch != null) {
             return;
         }
@@ -325,7 +326,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             regionStr = LoginHelper.getInstance().getReceiveRegion();
             llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
             //检查库存
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
         } else {
             //获取收货地址，并取收货地址的第一个地址
             if (LoginHelper.getInstance().hasQualifications()) {
@@ -444,8 +445,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
 
     @Override
-    public void showStockState(int state) {
+    public void showStockState(boolean isSuccess, int state) {
         initAndLoadData();
+        //查询失败，默认显示福田区，并且是有货的
+        if(!isSuccess){
+            llChooseAddress.setMiddleText("广东 深圳市 福田区");
+        }
         switch (state) {
             case 0:
                 dvStock.setMiddleText("有货");
@@ -481,7 +486,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             this.cityStr = city;
             this.regionStr = region;
             llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
         } else {
             //没有收货地址直接获取定位位置
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -524,12 +529,14 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             provinceStr = "广东";
             cityStr = "深圳市";
             regionStr = "福田区";
+            llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
             //GPS获取省市区后查询该商品是否有货
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
         }
     }
 
     public void startLocation() {
+        llChooseAddress.setMiddleText("正在定位...");
         if (locationUtils == null) {
             locationUtils = new LocationUtils(BaseApplication.getInstance());
             locationUtils.setOnLocationListener(new LocationListener() {
@@ -539,7 +546,9 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                     cityStr = location.getCity();
                     regionStr = location.getDistrict();
                     locationUtils.stopLocation();
-                    chooseCityDialog.setOriginalAddress(provinceStr, cityStr, regionStr, "");
+                    llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,1);
+//                    chooseCityDialog.setOriginalAddress(provinceStr, cityStr, regionStr, "");
                 }
 
                 @Override
@@ -550,7 +559,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                     cityStr = "深圳市";
                     regionStr = "福田区";
                     //GPS获取省市区后查询该商品是否有货
-                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode);
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
                     locationUtils.stopLocation();
                 }
             });

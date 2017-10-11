@@ -109,7 +109,7 @@ public class RechargePresenter extends BasePresenter<IRechargeView> {
             @Override
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
-                    getView().confirmOrderFail();
+                    getView().confirmOrderFail(errorBean.message);
                 }
             }
         });

@@ -745,7 +745,12 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
     }
 
     @Override
-    public void confirmOrderFail() {
-        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付", salePrice + "元", salePrice + "元");
+    public void confirmOrderFail(String message) {
+        if(StringUtils.isNotNull(message)){
+            message = "\n错误原因："+message;
+        }else {
+            message = "";
+        }
+        RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付" + message, salePrice + "元", salePrice + "元");
     }
 }

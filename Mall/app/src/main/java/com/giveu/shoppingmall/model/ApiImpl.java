@@ -596,8 +596,8 @@ public class ApiImpl {
     }
 
     //商品库存检查
-    public static void queryCommodityStock(Activity context, String province, String city, String region, String skuCode, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
-        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "skuCode"}, new Object[]{province, city, region, skuCode});
+    public static void queryCommodityStock(Activity context, String province, String city, String region, String skuCode, int type, BaseRequestAgent.ResponseListener<BaseBean> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"province", "city", "region", "skuCode", "type"}, new Object[]{province, city, region, skuCode, type});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.sc_goods_sku_stock, BaseBean.class, context, responseListener);
     }
 
@@ -630,6 +630,7 @@ public class ApiImpl {
 
     /**
      * 商品sku搜索首页专用方法
+     *
      * @param code 待搜索的code
      */
     public static void getGoodsSearchForIndex(Activity context, String channel, String idPerson, String orderSort, int pageNum, int pageSize, String code, BaseRequestAgent.ResponseListener<GoodsSearchResponse> responseListener) {

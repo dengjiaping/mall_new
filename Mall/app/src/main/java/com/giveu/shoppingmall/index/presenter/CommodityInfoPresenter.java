@@ -70,14 +70,14 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
         });
     }
 
-    public void queryCommodityStock(String province, String city, final String region, String skuCode) {
-        ApiImpl.queryCommodityStock(null, province, city, region, skuCode, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void queryCommodityStock(String province, String city, final String region, String skuCode, int type) {
+        ApiImpl.queryCommodityStock(null, province, city, region, skuCode, type, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
                     try {
                         int stock = new JSONObject(response.originResultString).getInt("data");
-                        getView().showStockState(stock);
+                        getView().showStockState(true, stock);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -86,7 +86,11 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                if (getView() != null) {
+                    if (errorBean != null && "sc100205".equals(errorBean.code)) {
+                        getView().showStockState(false, 0);
+                    }
+                }
             }
         });
     }
