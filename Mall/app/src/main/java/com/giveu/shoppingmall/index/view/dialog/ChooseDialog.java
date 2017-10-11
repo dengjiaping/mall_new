@@ -25,7 +25,8 @@ public abstract class ChooseDialog<T> {
     private List<T> datas;
     public long checkIndex;
     private LvCommonAdapter mAdpter;
-    private TextView tvBack;
+    private TextView tvCancel;
+    private TextView tvConfirm;
 
     public ChooseDialog(Activity mActivity, List datas) {
         this.mActivity = mActivity;
@@ -56,8 +57,16 @@ public abstract class ChooseDialog<T> {
             }
         });
 
-        tvBack = (TextView) contentView.findViewById(R.id.dialog_choose_title);
-        tvBack.setOnClickListener(new View.OnClickListener() {
+        tvCancel = (TextView) contentView.findViewById(R.id.dialog_choose_cancel);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+
+        tvConfirm = (TextView) contentView.findViewById(R.id.dialog_choose_confirm);
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
@@ -79,7 +88,7 @@ public abstract class ChooseDialog<T> {
         }
     }
 
-    public void refreshData(){
+    public void refreshData() {
         mAdpter.notifyDataSetChanged();
     }
 

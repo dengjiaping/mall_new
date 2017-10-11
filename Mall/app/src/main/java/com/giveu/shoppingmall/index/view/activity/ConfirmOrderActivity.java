@@ -32,6 +32,7 @@ import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
 import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.view.dialog.ChooseDialog;
+import com.giveu.shoppingmall.index.view.dialog.QuotaNoticeDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.index.widget.StableEditText;
 import com.giveu.shoppingmall.me.relative.OrderState;
@@ -151,7 +152,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     private ChooseCardsDialog chooseCardsDialog;    //优惠券对话框
     private PaymentTypeDialog paymentTypeDialog; //支付方式选择对话框
     private DealPwdDialog pwdDialog; //支付密码输入对话框
-    private ConfirmDialog confirmDialog; //退出确认对话框
+    private ConfirmDialog backConfirmDialog; //退出确认对话框
+    private QuotaNoticeDialog quotaNoticeDialog; //额度
 
     //首付列表
     private List<CreateOrderResponse.InitListBean> paymentRateList = null;
@@ -178,18 +180,21 @@ public class ConfirmOrderActivity extends BaseActivity {
     private int downPaymentRate = 0;//首付Id
     private String cardPrice = "0"; //优惠券金额
     private String totalPrice = "0"; //总支付金额
+    private String annuityPrice = "0";//月供金额
+    private String paymentPrice = "0";//首付金额
+    private int paymentNum = 0;//分期期数
+    private long idProduct; //分期Id
     private long sendTimesId = -1;//配送家电Id
     private long installTimesId = -1; //安装家电Id
 
     private String channel; //用户身份
     private String skuCode; //商品SkuCode
-    private long idProduct; //分期Id
     private int quantity; //商品数量
     private String idPerson = LoginHelper.getInstance().getIdPerson();
     private String customerName = null; //客户姓名
-    private String customerPhone = null; //客户电弧
+    private String customerPhone = null; //客户电话
     private String orderNo;
-    private String paymentNum;
+    private String paymentMoney; //最终支付金额
 
     private boolean isConfirm = false;//订单是否处于确认状态，如果是则不可修改
     private boolean isInitSuccess = false;//界面初始化成功的标志
@@ -219,7 +224,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isInitSuccess) {
                     //界面初始化失败，返回不弹出确认框
-                    confirmDialog.show();
+                    backConfirmDialog.show();
                 } else {
                     finish();
                 }
@@ -230,6 +235,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         idProduct = getIntent().getLongExtra("idProduct", 0);
         quantity = getIntent().getIntExtra("quantity", 0);
         skuCode = getIntent().getStringExtra("skuCode");
+        payType = getIntent().getIntExtra("paymentType", 0);
         channel = Const.CHANNEL;
         idPerson = LoginHelper.getInstance().getIdPerson();
 
@@ -249,20 +255,29 @@ public class ConfirmOrderActivity extends BaseActivity {
         initBackNoticeDialog();
         //初始化买家留言编辑框
         initMsgEditText();
+        //初始化额度不足提示对话框
+        initQuotaDialog();
 
         showLoading();
     }
 
-    /**
-     * 初始化消费者分期合同UI
-     */
-    private void initAgrementUI() {
-        cbAgreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tvOK.setEnabled(isChecked);
-            }
-        });
+    private void initQuotaDialog() {
+        quotaNoticeDialog = new QuotaNoticeDialog(this);
+        quotaNoticeDialog.setTitleText("您的钱包余额不足");
+        quotaNoticeDialog.setConfirmText("我知道了");
+        String price = LoginHelper.getInstance().getAvailablePoslimit();
+        quotaNoticeDialog.setContentText(formatQuotaNotice(price));
+    }
+
+    private CharSequence formatQuotaNotice(String price) {
+        price = StringUtils.format2(price);
+        String text = "您的钱包可用消费余额¥" + price + "\n" + "可调整首付比例，支付本次订单";
+        SpannableString spanText = new SpannableString(text);
+        int pos1 = text.indexOf("¥");
+        int pos2 = text.indexOf(".");
+        spanText.setSpan(new AbsoluteSizeSpan(18, true), pos1 + 1, pos2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanText.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_color)), pos1, pos2 + 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spanText;
     }
 
 
@@ -280,14 +295,17 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
 
-        String availableRecharge = LoginHelper.getInstance().getAvailableRechargeLimit();
-        if ("0.00".equals(availableRecharge)) {
+        String availableRecharge = LoginHelper.getInstance().getAvailablePoslimit();
+        if ("0.00".equals(StringUtils.format2(availableRecharge))) {
             //如果额度为0,隐藏钱包支付,默认选择支付宝支付
             paymentTypeDialog.disableWalletPay();
-            tvPayTypeView.setText("支付宝");
             payType = 2;
-        } else {
+        }
+
+        if (payType == 0) {
             tvPayTypeView.setText("即有钱包");
+        } else if (payType == 2) {
+            tvPayTypeView.setText("支付宝");
         }
 
         onChangePayType();
@@ -322,20 +340,20 @@ public class ConfirmOrderActivity extends BaseActivity {
      * 初始化退出提示对话框
      */
     private void initBackNoticeDialog() {
-        confirmDialog = new ConfirmDialog(this);
-        confirmDialog.setContent(StringUtils.getSizeAndColorSpannable("确定离开吗？好货不等人哦~", R.color.color_767876, 14));
-        confirmDialog.setCancleStr(StringUtils.getSizeAndColorSpannable("去意已决", R.color.color_9b9b9b, 14));
-        confirmDialog.setConfirmStr(StringUtils.getSizeAndColorSpannable("我再看看", R.color.title_color, 14));
-        confirmDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
+        backConfirmDialog = new ConfirmDialog(this);
+        backConfirmDialog.setContent(StringUtils.getSizeAndColorSpannable("确定离开吗？好货不等人哦~", R.color.color_767876, 14));
+        backConfirmDialog.setCancleStr(StringUtils.getSizeAndColorSpannable("去意已决", R.color.color_9b9b9b, 14));
+        backConfirmDialog.setConfirmStr(StringUtils.getSizeAndColorSpannable("我再看看", R.color.title_color, 14));
+        backConfirmDialog.setOnChooseListener(new ConfirmDialog.OnChooseListener() {
             @Override
             public void confirm() {
-                confirmDialog.dismiss();
+                backConfirmDialog.dismiss();
             }
 
             @Override
             public void cancel() {
                 finish();
-                confirmDialog.dismiss();
+                backConfirmDialog.dismiss();
             }
         });
     }
@@ -347,8 +365,9 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onSuccess(DownPayMonthPayResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     paymentList = response.data;
-                    createOrderSc();
+                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
                 }
+                createOrderSc();
             }
 
             @Override
@@ -358,6 +377,9 @@ public class ConfirmOrderActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 更新分期数据
+     */
     private void updatePaymentList() {
         ApiImpl.getAppDownPayAndMonthPay(this, channel, idPerson, downPaymentRate, skuCode, quantity, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
             @Override
@@ -512,7 +534,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                             tvPaymentRateView.setText(text);
                             downPaymentRate = item.id;
                             paymentRateDlg.dismiss();
-//                            updateAnnuity();
                             updatePaymentList();
                         }
                     });
@@ -521,9 +542,22 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    // 检查首付金额是否在额度范围内
+    private boolean checkPaymentRate(String price) {
+        String availableRecharge = LoginHelper.getInstance().getAvailablePoslimit();
+        double available = StringUtils.string2Double(availableRecharge);
+        double paymentRatePrice = StringUtils.string2Double(price);
+        if (available < paymentRatePrice && quotaNoticeDialog != null) {
+            quotaNoticeDialog.show();
+            return false;
+        }
+        return true;
+    }
+
     private CharSequence formatPaymentRateText(CreateOrderResponse.InitListBean bean) {
         String text = bean.name;
         SpannableString spanText = null;
+        paymentPrice = bean.price;
         if (bean.id != 0) {
             text = text + "（¥" + StringUtils.format2(bean.price) + "）";
             spanText = new SpannableString(text);
@@ -546,14 +580,16 @@ public class ConfirmOrderActivity extends BaseActivity {
             boolean isFind = false;
             for (DownPayMonthPayResponse bean : paymentList) {
                 if (StringUtils.string2Long(bean.idProduct) == idProduct) {
-                    text = bean.paymentNum + "个月";
+                    paymentNum = bean.paymentNum;
+                    text = paymentNum + "个月";
                     isFind = true;
                 }
             }
 
-            if (!isFind){
+            if (!isFind) {
                 idProduct = StringUtils.string2Long(paymentList.get(0).idProduct);
-                text = paymentList.get(0).paymentNum+"个月";
+                paymentNum = paymentList.get(0).paymentNum;
+                text = paymentNum + "个月";
             }
 
             tvPaymentView.setText(text);
@@ -569,6 +605,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                                 paymentDlg.dismiss();
                                 tvPaymentView.setText(item.paymentNum + "个月");
                                 idProduct = StringUtils.string2Long(item.idProduct);
+                                paymentNum = item.paymentNum;
                                 updateAnnuity();
                             }
                         });
@@ -605,7 +642,8 @@ public class ConfirmOrderActivity extends BaseActivity {
      */
     private void updateAnnuityUI(MonthSupplyResponse response) {
         if (CommonUtils.isNotNullOrEmpty(response.data.paymentList)) {
-            CommonUtils.setTextWithSpanSizeAndColor(tvAnnuityView, "¥", StringUtils.format2(response.data.paymentList.get(0).monthPay), "",
+            annuityPrice = response.data.paymentList.get(0).monthPay;
+            CommonUtils.setTextWithSpanSizeAndColor(tvAnnuityView, "¥", StringUtils.format2(annuityPrice), "",
                     15, 11, R.color.title_color, R.color.title_color);
 
             if (annuityDialog == null) {
@@ -764,7 +802,7 @@ public class ConfirmOrderActivity extends BaseActivity {
      * payType为0时为钱包支付，此时应显示分期信息、增值服务和消费者分期合同,不显示优惠券；
      */
     private void onChangePayType() {
-        if (payType == 0) {
+        if (payType == 0 && CommonUtils.isNotNullOrEmpty(paymentList)) {
             llIncrementService.setVisibility(View.VISIBLE);
             paymentLayout.setVisibility(View.VISIBLE);
             llAgreementLayout.setVisibility(View.VISIBLE);
@@ -901,6 +939,13 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
+        //如果是分期产品,检查额度支付是否满足分期
+        double price = paymentNum * StringUtils.string2Double(annuityPrice);
+        if (CommonUtils.isNotNullOrEmpty(paymentList) && !checkPaymentRate(StringUtils.format2(price + ""))) {
+            canPay = true;
+            return;
+        }
+
         //切换支付方式时，下列变量会随之改变,为了避免下单失败后重试数据异常，所以用一些临时变量代替
         long realCardId = cardId;
         int realDownPaymentRate = downPaymentRate;
@@ -931,7 +976,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                             TransactionPwdActivity.startIt(mBaseContext, LoginHelper.getInstance().getIdPerson());
                         }
                         orderNo = response.data.orderNo;
-                        paymentNum = response.data.payMoney;
+                        paymentMoney = response.data.payMoney;
                         isConfirm = true;
                         //订单确认后tag内容为”allowDisabled“控件不可点击，防止订单被修改
                         enableViewByTag(outerLayout, getString(R.string.view_allow_disabled), false);
@@ -960,8 +1005,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                         //密码校验成功
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
-                            //校验手机验证码,payType为钱包时传入true,否则传入false
-                            VerifyActivity.startItForShopping(mBaseContext, orderNo, payType == 0, paymentNum);
+                            //校验手机验证码,零首付用钱包
+                            VerifyActivity.startItForShopping(mBaseContext, orderNo, StringUtils.format2(paymentPrice).equals("0.00"), paymentMoney);
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);
@@ -1040,7 +1085,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (isInitSuccess) {
                 //界面初始化失败，返回不弹出确认框
-                confirmDialog.show();
+                backConfirmDialog.show();
                 return true;
             }
         }
