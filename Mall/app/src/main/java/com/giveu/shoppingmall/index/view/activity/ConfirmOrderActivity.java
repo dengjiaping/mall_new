@@ -258,7 +258,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         //初始化额度不足提示对话框
         initQuotaDialog();
 
-        showLoading();
     }
 
     private void initQuotaDialog() {
@@ -371,7 +370,13 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                CommonLoadingView.showErrorToast(errorBean);
+                if (rlEmptyView.getVisibility() != View.VISIBLE) {
+                    rlEmptyView.setVisibility(View.VISIBLE);
+                }
+                if (tvEmptyTextView.getVisibility() != View.VISIBLE) {
+                    tvEmptyTextView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -907,7 +912,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                     updateUI(response);
                     isInitSuccess = true;
                 }
-                hideLoding();
             }
 
             @Override
@@ -919,7 +923,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                 if (tvEmptyTextView.getVisibility() != View.VISIBLE) {
                     tvEmptyTextView.setVisibility(View.VISIBLE);
                 }
-                hideLoding();
             }
 
         });
