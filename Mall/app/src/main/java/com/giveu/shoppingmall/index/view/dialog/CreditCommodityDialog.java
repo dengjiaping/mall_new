@@ -185,14 +185,6 @@ public class CreditCommodityDialog extends CustomDialog {
      * @param data
      */
     public void initData(int commodityAmounts, String smallIconStr, String commodityName, String commodityPrice, ArrayList<DownPayMonthPayResponse> data) {
-        //额度不足时默认选择支付宝
-        double availablePoslimit = StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit());
-        if (availablePoslimit > commodityAmounts * StringUtils.string2Double(commodityPrice)) {
-            paymentType = Const.WALLET;
-        } else {
-            paymentType = Const.ALI;
-        }
-        initPayType();
         //默认是没有选中的，那么选第一个位置即零首付
         if (downPayRate == -1) {
             downPayRate = 0;
@@ -236,6 +228,21 @@ public class CreditCommodityDialog extends CustomDialog {
             monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
             initdownPayMonthPay("","");
         }
+    }
+
+    @Override
+    public void show() {
+        //额度不足时默认选择支付宝
+        double availablePoslimit = StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit());
+        if (availablePoslimit > 0) {
+            paymentType = Const.WALLET;
+            paymentTypeDialog.enableWalletPay();
+        } else {
+            paymentType = Const.ALI;
+            paymentTypeDialog.disableWalletPay();
+        }
+        initPayType();
+        super.show();
     }
 
     /**

@@ -10,6 +10,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.giveu.shoppingmall.utils.MD5;
@@ -115,6 +116,7 @@ public class MyJsonRequest extends JsonRequest<BaseBean> {
         }
         headerMap.put("deviceId", SharePrefUtil.getUUId());
         headerMap.put("platform", Const.PLATFORM);
+        headerMap.put("version", CommonUtils.getVersionName() + ":" + CommonUtils.getVersionCode());
         LogUtil.w(Const.LOG_TAG_HTTP, "地址：" + requestUrl + " 头部参数：" + new Gson().toJson(headerMap));
         return headerMap;
     }

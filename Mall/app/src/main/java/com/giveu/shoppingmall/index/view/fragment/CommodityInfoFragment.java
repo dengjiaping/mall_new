@@ -180,7 +180,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm(int amounts) {
+            public void confirm(int amounts,int paymentType) {
                 commodityAmounts = amounts;
                 if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                     //如果是分期产品，那么需要选择分期数，首付等
@@ -190,7 +190,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.setConfirmEnable(false);
                         presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
                     } else {
-                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode, 0);
+                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode, paymentType);
                     }
                 }
 
