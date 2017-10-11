@@ -165,7 +165,7 @@ public class CreditCommodityDialog extends CustomDialog {
         } else {
             tvPaymentType.setText("支付宝");
             tvDescription.setVisibility(View.INVISIBLE);
-            llContainer.setVisibility(View.INVISIBLE);
+            llContainer.setVisibility(View.GONE);
             CommonUtils.setTextWithSpanSizeAndColor(tvPayPrice, "¥ ", StringUtils.format2(totalPrice + ""), "",
                     16, 11, R.color.title_color, R.color.black);
             llAliPay.setVisibility(View.VISIBLE);
