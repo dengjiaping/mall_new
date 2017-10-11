@@ -397,7 +397,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                CommonLoadingView.showErrorToast(errorBean);
             }
         });
     }
@@ -638,7 +638,7 @@ public class ConfirmOrderActivity extends BaseActivity {
 
             @Override
             public void onError(BaseBean errorBean) {
-
+                CommonLoadingView.showErrorToast(errorBean);
             }
         });
     }
@@ -961,7 +961,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         //如果是分期产品,检查额度支付是否大于总价格与首付的差
         double price = StringUtils.string2Double(totalPrice) - StringUtils.string2Double(paymentPrice);
         price = Math.max(price, 0);
-        if (CommonUtils.isNotNullOrEmpty(paymentList) && !checkPaymentRate(StringUtils.format2(price + ""))) {
+        if (payType == 0 && CommonUtils.isNotNullOrEmpty(paymentList)
+                && !checkPaymentRate(StringUtils.format2(price + ""))) {
             canPay = true;
             return;
         }
