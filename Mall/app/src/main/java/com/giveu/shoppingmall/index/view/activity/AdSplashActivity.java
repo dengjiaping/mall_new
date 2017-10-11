@@ -75,7 +75,7 @@ public class AdSplashActivity extends BaseActivity {
     public void setData() {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
         if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
-            ImageUtils.loadImage(adSplashImage.imgUrl, ivSplash);
+            ImageUtils.loadImageAd(adSplashImage.imgUrl, ivSplash);
         }
     }
 
@@ -89,7 +89,7 @@ public class AdSplashActivity extends BaseActivity {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
         if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrlLink)) {
             turnToMainActivity();
-            CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink, "广告");
+            CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink,adSplashImage.title);
         }
     }
 

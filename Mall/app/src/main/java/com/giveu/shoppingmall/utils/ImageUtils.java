@@ -316,7 +316,12 @@ public class ImageUtils {
     public static void loadImage(String url, ImageView intoImageView) {
         loadImage(url, R.drawable.ic_default_pic, intoImageView);
     }
-
+    /**
+     * 使用默认占位图
+     */
+    public static void loadImageAd(String url, ImageView intoImageView) {
+        loadImage(url, R.color.grey_a5a5a5, intoImageView);
+    }
     public static void loadImageWithCornerRadius(String url, ImageView intoImageView, int cornerRadius) {
         loadImageWithCorner(url, R.drawable.ic_default_pic, intoImageView, cornerRadius);
     }
