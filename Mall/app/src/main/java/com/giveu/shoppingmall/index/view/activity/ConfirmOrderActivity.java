@@ -59,8 +59,6 @@ import com.giveu.shoppingmall.widget.NoScrollListView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import butterknife.BindView;

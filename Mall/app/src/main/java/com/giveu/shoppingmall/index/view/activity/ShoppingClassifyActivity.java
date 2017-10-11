@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,8 +44,9 @@ public class ShoppingClassifyActivity extends BaseActivity {
     @BindView(R.id.shopping_classify_right_recycler)
     RecyclerView rRecyclerView;
 
-    private List<ShopTypesResponse> list1;//一级类目
-    private List<ShoppingBean> list2;//二级类目
+    private ArrayList<ShopTypesResponse> list1;//一级类目
+    private ArrayList<ShoppingBean> list2;//二级类目
+    private static LongSparseArray<ArrayList<ShoppingBean>> cacheArray;
 
     private RvCommonAdapter titleAdapter;
     private ShopClassifyContentAdapter mAdapter;
@@ -157,6 +159,12 @@ public class ShoppingClassifyActivity extends BaseActivity {
     }
 
     private void getChildrenShopTypes(final long shopTypeId) {
+        if (cacheArray != null && cacheArray.get(shopTypeId) != null) {
+            list2.clear();
+            list2.addAll(cacheArray.get(shopTypeId));
+            mAdapter.notifyDataSetChanged();
+            return;
+        }
         ApiImpl.getChildrenShopTypes(mBaseContext, shopTypeId, new BaseRequestAgent.ResponseListener<ShopTypesBean>() {
                     @Override
                     public void onSuccess(ShopTypesBean response) {
@@ -170,8 +178,12 @@ public class ShoppingClassifyActivity extends BaseActivity {
                                         list2.add(new ShoppingBean(1, child));
                                     }
                                 }
-                                mAdapter.notifyDataSetChanged();
                             }
+                            if (cacheArray == null) {
+                                cacheArray = new LongSparseArray<>();
+                            }
+                            cacheArray.put(shopTypeId, (ArrayList<ShoppingBean>) list2.clone());
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
 
@@ -194,4 +206,9 @@ public class ShoppingClassifyActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cacheArray = null;
+    }
 }
