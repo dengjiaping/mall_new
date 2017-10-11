@@ -348,6 +348,7 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
     public void confirmPaySuccess(ConfirmPayResponse data) {
         if (isWalletPay) {
             if (data != null) {
+                BaseApplication.getInstance().finishAllExceptMainActivity();
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
