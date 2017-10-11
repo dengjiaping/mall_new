@@ -310,6 +310,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
                         android:drawablePadding="5dp"
+                        android:tag="@string/view_allow_disabled"
                         android:drawableRight="@drawable/ic_right"
                         android:gravity="center_vertical"
                         android:textColor="@color/title_color"
@@ -370,7 +371,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_right" />
+                    android:src="@drawable/ic_right"
+                    android:tag="@string/view_allow_disabled"/>
 
             </LinearLayout>
 

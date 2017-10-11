@@ -59,6 +59,8 @@ import com.giveu.shoppingmall.widget.NoScrollListView;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -365,7 +367,6 @@ public class ConfirmOrderActivity extends BaseActivity {
             public void onSuccess(DownPayMonthPayResponse response) {
                 if (CommonUtils.isNotNullOrEmpty(response.data)) {
                     paymentList = response.data;
-                    idProduct = StringUtils.string2Long(response.data.get(0).idProduct);
                 }
                 createOrderSc();
             }
@@ -413,6 +414,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         updateIncrementServiceUI(result.data.avsList);
         //更新月供金额
         updateAnnuity();
+        /* 大家电配送功能暂时不开发
         //更新配送时间
         if (result.data.reserving) {
             updateReservingUI(result.data.reservingList);
@@ -421,6 +423,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (result.data.install) {
             updateInstallUI(result.data.installList);
         }
+        */
     }
 
     /**
@@ -518,6 +521,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             for (CreateOrderResponse.InitListBean bean : list) {
                 if (bean.id == downPaymentRate) {
                     text = formatPaymentRateText(bean);
+                    setTotalPrice(paymentPrice);
                     break;
                 }
             }
@@ -532,6 +536,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         public void onClick(View v) {
                             CharSequence text = formatPaymentRateText(item);
                             tvPaymentRateView.setText(text);
+                            setTotalPrice(paymentPrice);
                             downPaymentRate = item.id;
                             paymentRateDlg.dismiss();
                             updatePaymentList();
@@ -735,6 +740,15 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    private void setTotalPrice(String price) {
+        double tPrice = StringUtils.string2Double(totalPrice);
+        double cPrice = StringUtils.string2Double(price);
+        double result = Math.max(tPrice - cPrice, 0);
+        CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥ ", StringUtils.format2(result + ""), "",
+                16, 11, R.color.title_color, R.color.black);
+    }
+
+
     private void setTotalPrice() {
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(cardPrice);
@@ -802,12 +816,15 @@ public class ConfirmOrderActivity extends BaseActivity {
      * payType为0时为钱包支付，此时应显示分期信息、增值服务和消费者分期合同,不显示优惠券；
      */
     private void onChangePayType() {
-        if (payType == 0 && CommonUtils.isNotNullOrEmpty(paymentList)) {
-            llIncrementService.setVisibility(View.VISIBLE);
-            paymentLayout.setVisibility(View.VISIBLE);
+        if (payType == 0) {
+            if (CommonUtils.isNotNullOrEmpty(paymentList)) {
+                llIncrementService.setVisibility(View.VISIBLE);
+                paymentLayout.setVisibility(View.VISIBLE);
+            }
             llAgreementLayout.setVisibility(View.VISIBLE);
             tvOK.setEnabled(cbAgreement.isChecked());
             rlCardsViewLayout.setVisibility(View.GONE);
+            setTotalPrice(paymentPrice);
         } else {
             llIncrementService.setVisibility(View.GONE);
             paymentLayout.setVisibility(View.GONE);
@@ -815,13 +832,14 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (CommonUtils.isNotNullOrEmpty(cardList)) {
                 rlCardsViewLayout.setVisibility(View.VISIBLE);
             }
+            setTotalPrice();
             tvOK.setEnabled(true);
         }
     }
 
     @OnClick({R.id.confirm_order_pay_type, R.id.confirm_order_card_text,
             R.id.confirm_order_first_pay, R.id.confirm_order_month,
-            R.id.confirm_order_household, R.id.confirm_order_annuity,
+            R.id.confirm_order_support_household, R.id.confirm_order_annuity,
             R.id.tv_ok, R.id.rl_receiving_address, R.id.confirm_order_empty})
     @Override
     public void onClick(View view) {
@@ -845,7 +863,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     paymentDlg.show(idProduct);
                 }
                 break;
-            case R.id.confirm_order_household:
+            case R.id.confirm_order_support_household:
                 ConfirmHouseHoldActivity.startItForResult(this, 0, sendTimesList, installTimesList, sendTimesId, installTimesId);
                 break;
             case R.id.rl_receiving_address:
@@ -939,8 +957,9 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
-        //如果是分期产品,检查额度支付是否满足分期
-        double price = paymentNum * StringUtils.string2Double(annuityPrice);
+        //如果是分期产品,检查额度支付是否大于总价格与首付的差
+        double price = StringUtils.string2Double(totalPrice) - StringUtils.string2Double(paymentPrice);
+        price = Math.max(price, 0);
         if (CommonUtils.isNotNullOrEmpty(paymentList) && !checkPaymentRate(StringUtils.format2(price + ""))) {
             canPay = true;
             return;
@@ -1102,6 +1121,13 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
         if (view.getTag() != null && tag.equals(view.getTag().toString())) {
             view.setEnabled(enable);
+            if (view instanceof TextView) {
+                //去掉Textview的右箭头图标
+                ((TextView) view).setCompoundDrawables(null, null, null, null);
+            } else if (view instanceof ImageView) {
+                //去掉ImageView的右箭头图标
+                view.setVisibility(View.GONE);
+            }
         }
     }
 }

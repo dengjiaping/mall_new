@@ -39,5 +39,6 @@
         android:id="@+id/dialog_choose_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:dividerHeight="1px"
         app:maxHeight="300dp"/>
 </LinearLayout>
