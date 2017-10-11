@@ -349,6 +349,8 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
         if (isWalletPay) {
             if (data != null) {
                 BaseApplication.getInstance().finishAllExceptMainActivity();
+                //钱包支付后刷新额度
+                BaseApplication.getInstance().fetchUserInfo();
                 OrderPayResultActivity.startIt(mBaseContext, data, orderNo, true);
             }
         } else {
