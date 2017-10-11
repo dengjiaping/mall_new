@@ -1027,7 +1027,12 @@ public class ConfirmOrderActivity extends BaseActivity {
                         if (response.data.status) {
                             pwdDialog.dissmissDialog();
                             //校验手机验证码,零首付用钱包
-                            VerifyActivity.startItForShopping(mBaseContext, orderNo, StringUtils.format2(paymentPrice).equals("0.00"), paymentMoney);
+
+                            boolean isWallet = false;
+                            if (payType == 0 && StringUtils.format2(paymentPrice).equals("0.00")) {
+                                isWallet = true;
+                            }
+                            VerifyActivity.startItForShopping(mBaseContext, orderNo, isWallet, paymentMoney);
                         } else {
                             //密码错误提示
                             pwdDialog.showPwdError(response.data.remainTimes);
