@@ -25,6 +25,7 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.base.BasePresenter;
 import com.giveu.shoppingmall.index.adapter.CommodityFragmentAdapter;
 import com.giveu.shoppingmall.index.presenter.CommodityPresenter;
+import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.agent.ICommodityView;
 import com.giveu.shoppingmall.index.view.fragment.CommodityInfoFragment;
 import com.giveu.shoppingmall.index.view.fragment.WebCommodityFragment;
@@ -296,7 +297,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     /**
      * 是否可点击购买
      *
-     * @param enable {@link CommodityInfoFragment#showStockState(int)} ()}
+     * @param enable {@link ICommodityInfoView#showStockState(boolean, int)} ()}
      */
     public void setBuyEnable(boolean enable) {
         tvBuy.setEnabled(enable);
@@ -308,7 +309,7 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
     }
 
     /**
-     * 根据状态显示是否有货，是否可点击{@link CommodityInfoFragment#showStockState(int) 检查完库存后调用，
+     * 根据状态显示是否有货，是否可点击{@link ICommodityInfoView#showStockState(boolean, int) 检查完库存后调用，
      * 无货时立即购买按钮不可点击}
      *
      * @param state

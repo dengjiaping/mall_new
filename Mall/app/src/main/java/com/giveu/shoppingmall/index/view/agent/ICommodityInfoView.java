@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public interface ICommodityInfoView extends IView {
     void showSkuIntroduction(boolean success,SkuIntroductionResponse skuResponse);
 
-    void showStockState(int state);
+    void showStockState(boolean isSuccess, int state);
 
     void getAddressList(boolean hasAddress, String province, String city, String region);
 
