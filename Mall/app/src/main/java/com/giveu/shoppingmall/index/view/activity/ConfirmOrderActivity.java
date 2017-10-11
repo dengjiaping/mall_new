@@ -416,7 +416,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         //更新增值服务
         updateIncrementServiceUI(result.data.avsList);
         //更新月供金额
-        updateAnnuity();
+//        updateAnnuity();
         /* 大家电配送功能暂时不开发
         //更新配送时间
         if (result.data.reserving) {
