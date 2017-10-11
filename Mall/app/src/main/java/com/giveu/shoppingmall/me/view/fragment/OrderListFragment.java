@@ -329,8 +329,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     @Override
     public void showOrderDetail(OrderDetailResponse response) {
         if (response != null && response.status == 1) {
+            //零首付订单
+            if (response.payType == 0) {
+                adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.downPayment));
+                return;
+            }
+            //非分期订单
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
         } else if (response != null && response.status == 2) {
+            //非零首付分期订单
             adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.downPayment));
         } else {
             if (orderState == OrderState.ALLRESPONSE) {
