@@ -197,13 +197,7 @@ public class AddressPagerAdapter extends PagerAdapter {
                 //通知adapter，数据源已发生改变，需要刷新界面
                 notifyDataSetChanged();
             }
-            //延时滑动，以便有简短的事件可以看到选中的项
-            mViewPager.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mViewPager.setCurrentItem(position);
-                }
-            }, 100);
+            mViewPager.setCurrentItem(position);
         } else {
             notifyDataSetChanged();
             //地址选择完成
