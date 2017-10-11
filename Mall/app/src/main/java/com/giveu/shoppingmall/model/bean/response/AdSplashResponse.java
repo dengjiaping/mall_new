@@ -19,11 +19,7 @@ public class AdSplashResponse extends BaseBean<AdSplashResponse> {
     public boolean enable;
     public String imgUrl;
     public String imgUrlLink;
+    public String title;
     public int second;
 
-    public AdSplashResponse(String imgUrl, String imgUrlLink,int second) {
-        this.imgUrl = imgUrl;
-        this.imgUrlLink = imgUrlLink;
-        this.second = second;
-    }
 }
