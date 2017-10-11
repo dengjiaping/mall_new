@@ -295,7 +295,11 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //支付方式
         orderPayType = response.payType;
         if (response.payType == 0) {
-            isWalletPay = true;
+            if ("0".equals(response.selDownPaymentRate)) {
+                isWalletPay = true;
+            } else {
+                isWalletPay = false;
+            }
         } else {
             isWalletPay = false;
         }
@@ -305,7 +309,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //首付
         if (StringUtils.isNotNull(response.downPayment)) {
             if (StringUtils.isNotNull(response.selDownPaymentRate)) {
-                tvDownPayment.setText(response.selDownPaymentRate + "%(¥" + StringUtils.format2(response.downPayment) + ")");
+                tvDownPayment.setText(response.selDownPaymentRate + "%(¥ " + StringUtils.format2(response.downPayment) + ")");
+//                CommonUtils.setTextWithSpanSizeAndColor(tvDownPayment, response.selDownPaymentRate + "%(¥ ", StringUtils.format2(response.monthPayment), ")", 11, 15, R.color.color_00bbc0, R.color.color_00bbc0);
             } else {
                 rlDownPayment.setVisibility(View.GONE);
             }
@@ -328,7 +333,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         }
         //大家电
         if (StringUtils.isNotNull(response.deliverGoods) && StringUtils.isNotNull(response.installGoods)) {
-            rlDeliverAndInstall.setVisibility(View.VISIBLE);
+            rlDeliverAndInstall.setVisibility(View.GONE);
             tvDeliver.setText("送货：" + response.deliverGoods);
             tvInstall.setText("安装：" + response.installGoods);
         } else {
@@ -340,10 +345,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             tvService0.setText(response.addValueService.get(0).serviceName);
             serviceName = response.addValueService.get(0).serviceName;
             tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
-            if (response.addValueService.get(0).isSelected == 0) {
+            if (response.addValueService.get(0).isSelected == 1) {
                 cbService0.setChecked(true);
             } else {
-                cbService0.setChecked(false);
+                llService.setVisibility(View.GONE);
             }
         } else {
             llService.setVisibility(View.GONE);
@@ -430,12 +435,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
         dealPwdDialog.dissmissDialog();
-        if (isWalletPay) {
-//            VerifyActivity.startItForRecharge(mBaseContext, mobile, 0, orderNo, 0, payment);
-        } else {
-
             VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
-        }
     }
 
     //验证交易密码失败

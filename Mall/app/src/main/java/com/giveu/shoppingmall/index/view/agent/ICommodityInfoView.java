@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 
 public interface ICommodityInfoView extends IView {
-    void showSkuIntroduction(SkuIntroductionResponse skuResponse);
+    void showSkuIntroduction(boolean success,SkuIntroductionResponse skuResponse);
 
     void showStockState(int state);
 

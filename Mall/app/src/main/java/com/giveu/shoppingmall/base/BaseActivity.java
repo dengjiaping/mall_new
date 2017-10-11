@@ -252,6 +252,9 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         if (mSavedInstanceState == null) {
             //判断是否需要输入手势密码
             dealLockPattern();
+        }else {
+            //回收后重置锁屏时间，避免锁屏
+            BaseApplication.getInstance().setLastestStopMillis(System.currentTimeMillis());
         }
     }
 

@@ -29,4 +29,6 @@
     <string name="create_gesture_reset">重新设置</string>
     <string name="customer_phone">4001868888</string>
 
+    <string name="view_allow_disabled">allowDisabled</string>
+
 </resources>

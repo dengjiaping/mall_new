@@ -19,5 +19,7 @@ public class Const {
     public static final String RECEIVE = "receive";//领取优惠券领取按钮
     public static final String CHANNEL = "SC";
     public static final String PLATFORM = "Android";
+    public static final int WALLET = 0;
+    public static final int ALI = 2;
 
 }

@@ -153,6 +153,10 @@ public class PaymentTypeDialog {
         llWallet.setVisibility(View.GONE);
     }
 
+    public void enableWalletPay() {
+        llWallet.setVisibility(View.VISIBLE);
+    }
+
     public void disableWechatPay(){
         llWeChat.setVisibility(View.GONE);
     }

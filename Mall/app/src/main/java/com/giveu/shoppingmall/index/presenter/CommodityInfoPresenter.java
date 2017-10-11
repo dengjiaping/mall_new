@@ -28,7 +28,7 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             @Override
             public void onSuccess(SkuIntroductionResponse response) {
                 if (getView() != null && response.data != null) {
-                    getView().showSkuIntroduction(response.data);
+                    getView().showSkuIntroduction(true, response.data);
                 }
 
             }
@@ -37,6 +37,11 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             public void onError(BaseBean errorBean) {
                 if (getView() != null) {
                     CommonLoadingView.showErrorToast(errorBean);
+                    if (errorBean != null) {
+                        SkuIntroductionResponse response = new SkuIntroductionResponse();
+                        response.code = errorBean.code;
+                        getView().showSkuIntroduction(false, response);
+                    }
                 }
             }
         });

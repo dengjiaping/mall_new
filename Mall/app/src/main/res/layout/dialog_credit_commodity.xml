@@ -9,10 +9,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
         android:layout_weight="1"
-        android:scrollbars="none"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,13 +35,14 @@
                 android:background="@color/color_f8f8f8" />
 
             <RelativeLayout
+                android:id="@+id/rl_payment_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingLeft="@dimen/default_layout_screen_gap">
 
                 <TextView
-                    android:id="@+id/tv_wallet"
+                    android:id="@+id/tv_payment_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -50,9 +51,10 @@
                     android:textSize="@dimen/ts_14" />
 
                 <TextView
+                    android:id="@+id/tv_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_wallet"
+                    android:layout_below="@id/tv_payment_type"
                     android:paddingBottom="14dp"
                     android:text="30秒极速开通，享最高20000元额度"
                     android:textColor="#595A5B"
@@ -64,8 +66,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/default_layout_screen_gap"
-                    android:src="@drawable/ic_detail_grey"
-                    android:visibility="gone" />
+                    android:src="@drawable/ic_detail_grey" />
             </RelativeLayout>
 
             <LinearLayout
@@ -74,17 +75,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/default_layout_screen_gap" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/color_f8f8f8" />
+
+
             <RelativeLayout
+                android:id="@+id/rl_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingBottom="14dp"
                 android:paddingRight="@dimen/default_layout_screen_gap"
                 android:paddingTop="9dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_f8f8f8" />
 
                 <TextView
                     android:id="@+id/tv_total_price"
@@ -133,6 +138,31 @@
         android:paddingLeft="@dimen/default_layout_screen_gap">
 
         <LinearLayout
+            android:id="@+id/ll_ali_pay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="支付金额："
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/ts_16" />
+
+            <TextView
+                android:id="@+id/tv_pay_price"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_monthly_pay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

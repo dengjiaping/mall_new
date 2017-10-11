@@ -397,7 +397,7 @@
                             android:background="@color/white"
                             android:orientation="vertical"
                             android:paddingLeft="15dp"
-                            android:paddingRight="15dp">
+                            android:paddingRight="10dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -427,7 +427,6 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="25dp"
                                     android:gravity="center"
-                                    android:text="手机延保："
                                     android:textColor="@color/color_4a4a4a"
                                     android:textSize="@dimen/ts_14" />
 
@@ -435,15 +434,15 @@
                                     android:id="@+id/tv_service0_cost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:layout_marginLeft="130dp"
+                                    android:layout_marginLeft="190dp"
                                     android:gravity="center"
-                                    android:text="¥99/月"
                                     android:textColor="@color/color_00bbc0"
                                     android:textSize="@dimen/ts_14" />
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
+                                    android:padding="5dp"
                                     android:layout_alignParentRight="true"
                                     android:gravity="center">
 

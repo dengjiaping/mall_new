@@ -5,7 +5,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:id="@+id/confirm_order_outer_layout"
@@ -21,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:minHeight="80dp"
-                android:tag="disabled">
+                android:tag="@string/view_allow_disabled">
 
                 <RelativeLayout
                     android:id="@+id/confirm_order_address_layout"
@@ -201,9 +204,9 @@
                     android:drawablePadding="5dp"
                     android:drawableRight="@drawable/ic_right"
                     android:gravity="center_vertical"
+                    android:tag="@string/view_allow_disabled"
                     android:textColor="@color/color_3d3d3d"
-                    android:textSize="15sp"
-                    android:tag="disabled"/>
+                    android:textSize="15sp" />
             </RelativeLayout>
 
             <View
@@ -216,7 +219,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -241,10 +244,10 @@
                         android:drawablePadding="5dp"
                         android:drawableRight="@drawable/ic_right"
                         android:gravity="center_vertical"
+                        android:tag="@string/view_allow_disabled"
                         android:text="零首付"
                         android:textColor="@color/title_color"
-                        android:textSize="15sp"
-                        android:tag="disabled"/>
+                        android:textSize="15sp" />
                 </RelativeLayout>
 
                 <View
@@ -275,10 +278,10 @@
                         android:drawablePadding="5dp"
                         android:drawableRight="@drawable/ic_right"
                         android:gravity="center_vertical"
+                        android:tag="@string/view_allow_disabled"
                         android:text="24个月"
                         android:textColor="@color/title_color"
-                        android:textSize="15sp"
-                        android:tag="disabled"/>
+                        android:textSize="15sp" />
                 </RelativeLayout>
 
                 <View
@@ -312,19 +315,77 @@
                         android:textColor="@color/title_color"
                         android:textSize="15sp" />
                 </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="15px"
-                    android:background="#eeeeee" />
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line_bg" />
+
+            <LinearLayout
+                android:id="@+id/confirm_order_support_household"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/default_layout_screen_gap"
+                android:paddingRight="@dimen/default_layout_screen_gap"
+                android:visibility="gone"
+                android:tag="@string/view_allow_disabled">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="大家电"
+                    android:textColor="@color/color_4a4a4a"
+                    android:textSize="@dimen/ts_15" />
+
+                <LinearLayout
+                    android:id="@+id/confirm_order_household"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/confirm_order_send_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_4a4a4a"
+                        android:textSize="@dimen/ts_15"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/confirm_order_install_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_4a4a4a"
+                        android:textSize="@dimen/ts_15"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_right" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/confirm_order_increment_service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15px"
+                    android:background="#eeeeee" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -351,7 +412,8 @@
                 android:id="@+id/confirm_order_card_layout"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -371,67 +433,16 @@
                     android:drawablePadding="5dp"
                     android:drawableRight="@drawable/ic_right"
                     android:gravity="center_vertical"
+                    android:tag="@string/view_allow_disabled"
                     android:text="不使用优惠券"
                     android:textColor="@color/title_color"
-                    android:textSize="15sp"
-                    android:tag="disabled"/>
+                    android:textSize="15sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/line_bg" />
             </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/confirm_order_support_household"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/default_layout_screen_gap"
-                android:paddingRight="@dimen/default_layout_screen_gap"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="大家电："
-                    android:textColor="@color/color_4a4a4a"
-                    android:textSize="@dimen/ts_15" />
-
-                <LinearLayout
-                    android:id="@+id/confirm_order_household"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/confirm_order_send_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="送货：8月31日 [周四]"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-
-                    <TextView
-                        android:id="@+id/confirm_order_install_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="安装：9月1日 [周五]"
-                        android:textColor="@color/color_4a4a4a"
-                        android:textSize="@dimen/ts_15" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="13dp"
-                    android:layout_height="13dp"
-                    android:src="@drawable/ic_right" />
-            </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
@@ -450,9 +461,9 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
+                android:tag="@string/view_allow_disabled"
                 android:textColor="@color/color_4a4a4a"
-                android:textSize="15sp"
-                android:tag="disabled"/>
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -476,11 +487,11 @@
                     android:layout_marginLeft="@dimen/default_layout_screen_gap"
                     android:layout_marginRight="5dp"
                     android:button="@drawable/selector_checkbox_register"
-                    android:checked="false"
+                    android:checked="true"
+                    android:tag="@string/view_allow_disabled"
                     android:text=""
                     android:textColor="@color/color_4a4a4a"
-                    android:textSize="@dimen/ts_12"
-                    android:tag="disabled"/>
+                    android:textSize="@dimen/ts_12" />
 
                 <TextView
                     android:id="@+id/confirm_order_agreement"
@@ -522,11 +533,11 @@
             android:layout_width="115dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_ok_button"
+            android:enabled="false"
             android:gravity="center"
             android:text="去支付"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts_18"
-            android:enabled="false"/>
+            android:textSize="@dimen/ts_18" />
     </LinearLayout>
 
     <RelativeLayout
@@ -549,4 +560,6 @@
             android:textColor="@color/color_666666"
             android:visibility="gone" />
     </RelativeLayout>
+
+
 </RelativeLayout>

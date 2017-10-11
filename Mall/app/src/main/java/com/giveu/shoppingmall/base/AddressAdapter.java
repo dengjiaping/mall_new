@@ -49,19 +49,24 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //处理当前的点击事件，即勾选地址
-                holder.ivChoose.setVisibility(View.VISIBLE);
-                items.get(position).isChoose = true;
-                for (Item item : items) {
-                    if (!item.cityName.equals(items.get(position).cityName) && item.isChoose) {
-                        item.isChoose = false;
-                        break;
+                try {
+                    //处理当前的点击事件，即勾选地址
+                    holder.ivChoose.setVisibility(View.VISIBLE);
+                    items.get(position).isChoose = true;
+                    for (Item item : items) {
+                        if (!item.cityName.equals(items.get(position).cityName) && item.isChoose) {
+                            item.isChoose = false;
+                            break;
+                        }
                     }
+                    notifyDataSetChanged();
+                    if (listener != null) {
+                        listener.onItemClick(items.get(position).cityName, position);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                notifyDataSetChanged();
-                if (listener != null) {
-                    listener.onItemClick(items.get(position).cityName, position);
-                }
+
             }
         });
 

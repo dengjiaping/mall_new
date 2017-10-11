@@ -157,12 +157,14 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 viewHolder.setOnClickListener(R.id.tv_button_right, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (StringUtils.isNotNull(item.timeLeft)) {
+                       /* if (StringUtils.isNotNull(item.timeLeft)) {
                             Double finalPayment = StringUtils.string2Double(item.downPayment);
                             onPay(item.orderNo, item.payType, finalPayment);
                         } else {
                             ToastUtils.showLongToast("订单已失效");
-                        }
+                        }*/
+                        //当在订单列表点击支付时，需调接口判断该订单是否有效
+                        presenter.getOrderDetail(item.orderNo);
                     }
                 });
                 break;
@@ -292,7 +294,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
-                        if ("0".equals(payType)) {
+                        if (finalPayment == 0 && "0".equals(payType)) {
                             presenter.onVerifyPayPwd(payPwd, order, true, finalPayment + "");
                         } else {
                             presenter.onVerifyPayPwd(payPwd, order, false, finalPayment + "");

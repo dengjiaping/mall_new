@@ -9,14 +9,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
+import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
@@ -47,6 +51,10 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private ImageView ivReduce;
     private ImageView ivPlus;
     private TextView tvCommodityAmounts;
+    private RelativeLayout rlPaymentType;
+    private LinearLayout llPaymentType;
+    private TextView tvPaymentType;
+    private TextView tvDescription;
     private LinearLayout llCredit;
     private TextView tvCommodityName;
     private ImageView ivCommodity;
@@ -55,6 +63,9 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private LinkedHashMap<String, SkuIntroductionResponse.SpecValuesBean> attrHashMap = new LinkedHashMap<>();//存储选中的属性
     private ArrayList<ArrayList<SkuIntroductionResponse.SpecValuesBean>> allAttrMap = new ArrayList<>();//所有属性
     private HashMap<String, TagFlowLayout> tagFHashMap = new HashMap<>();
+    private PaymentTypeDialog paymentTypeDialog;
+    private int paymentType;
+
 
     public BuyCommodityDialog(Activity context) {
         super(context, R.layout.dialog_buy_commodity, R.style.customerDialog, Gravity.BOTTOM, true);
@@ -78,9 +89,13 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         llChooseCredit = (LinearLayout) contentView.findViewById(R.id.ll_choose_credit);
         tvCommodityName = (TextView) contentView.findViewById(R.id.tv_commodit_name);
         llCredit = (LinearLayout) contentView.findViewById(R.id.ll_credit);
+        llPaymentType = (LinearLayout) contentView.findViewById(R.id.ll_payment_type);
         ivReduce = (ImageView) contentView.findViewById(R.id.iv_reduce);
         tvAmounts = (TextView) contentView.findViewById(R.id.tv_amounts);
         tvCommodityAmounts = (TextView) contentView.findViewById(R.id.tv_commodity_amount);
+        tvPaymentType = (TextView) contentView.findViewById(R.id.tv_payment_type);
+        tvDescription = (TextView) contentView.findViewById(R.id.tv_description);
+        rlPaymentType = (RelativeLayout) contentView.findViewById(R.id.rl_payment_type);
         ivPlus = (ImageView) contentView.findViewById(R.id.iv_plus);
         llCredit = (LinearLayout) contentView.findViewById(R.id.ll_credit);
         llContainer = (LinearLayout) contentView.findViewById(R.id.ll_container);
@@ -94,6 +109,48 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         tvConfirm.setOnClickListener(this);
         ivPlus.setOnClickListener(this);
         ivReduce.setOnClickListener(this);
+        paymentTypeDialog = new PaymentTypeDialog(mAttachActivity);
+        paymentTypeDialog.setOnChoosePayTypeListener(new PaymentTypeDialog.OnChoosePayTypeListener() {
+            @Override
+            public void onChooseType(int type, String paymentTypeStr) {
+                paymentType = type;
+                initPayType();
+            }
+        });
+        rlPaymentType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paymentTypeDialog.showDialog(paymentType);
+            }
+        });
+    }
+
+    @Override
+    public void show() {
+        //额度不足时默认选择支付宝
+        double availablePoslimit = StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit());
+        if (availablePoslimit > 0) {
+            paymentType = Const.WALLET;
+            paymentTypeDialog.enableWalletPay();
+        } else {
+            paymentType = Const.ALI;
+            paymentTypeDialog.disableWalletPay();
+        }
+        initPayType();
+        super.show();
+    }
+
+    /**
+     * 初始化支付方式
+     */
+    private void initPayType() {
+        if (paymentType == Const.WALLET) {
+            tvPaymentType.setText("即有钱包");
+            tvDescription.setVisibility(View.VISIBLE);
+        } else {
+            tvPaymentType.setText("支付宝");
+            tvDescription.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -120,6 +177,10 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥",
                     StringUtils.format2(response.skuInfo.monthAmount), " 起",
                     13, 9, R.color.color_00bbc0, R.color.color_4a4a4a);
+            llPaymentType.setVisibility(View.GONE);
+        } else {
+            //一次性产品显示支付方式
+            llPaymentType.setVisibility(View.VISIBLE);
         }
         //显示商品信息，图片，名称，价格
         updateInfo(response.skuInfo.srcIp + ImageUtils.ImageSize.img_size_200_200 + response.skuInfo.src, response.skuInfo.name, response.skuInfo.salePrice);
@@ -399,7 +460,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
                     if (StringUtils.isNotNull(getSkuCode())) {
                         String amountsStr = tvAmounts.getText().toString();
                         int amounts = StringUtils.string2Int(amountsStr);
-                        listener.confirm(amounts);
+                        listener.confirm(amounts,paymentType);
                         dismiss();
                     } else {
                         ToastUtils.showShortToast("请完成属性选择");
@@ -426,7 +487,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     }
 
     public interface OnConfirmListener {
-        void confirm(int amounts);
+        void confirm(int amounts,int paymentType);
 
         void cancle();
     }

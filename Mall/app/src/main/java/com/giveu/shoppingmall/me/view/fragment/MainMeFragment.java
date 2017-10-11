@@ -89,10 +89,10 @@ public class MainMeFragment extends BaseFragment {
     LinearLayout llMyCollection;
     @BindView(R.id.tv_waiting_pay)
     TextView tvWaitingPay;
-    @BindView(R.id.tv_finished)
-    TextView tvFinished;
     @BindView(R.id.tv_waiting_receive)
     TextView tvWaitingReceive;
+    @BindView(R.id.tv_down_payment)
+    TextView tvDownPayment;
     @BindView(R.id.ptrsv)
     PullToRefreshScrollView ptrsv;
     ViewStub vsMe;
@@ -173,17 +173,17 @@ public class MainMeFragment extends BaseFragment {
             viewDivider.setVisibility(View.VISIBLE);
             llPayStatus.setVisibility(View.VISIBLE);
             //订单数量显示个数处理逻辑
-            if (LoginHelper.getInstance().getOrderFinishedNum() > 0) {
-                tvFinished.setVisibility(View.VISIBLE);
-                tvFinished.setText(LoginHelper.getInstance().getOrderFinishedNum() + "");
-            } else {
-                tvFinished.setVisibility(View.GONE);
-            }
             if (LoginHelper.getInstance().getOrderPayNum() > 0) {
                 tvWaitingPay.setVisibility(View.VISIBLE);
                 tvWaitingPay.setText(LoginHelper.getInstance().getOrderPayNum() + "");
             } else {
                 tvWaitingPay.setVisibility(View.GONE);
+            }
+            if (LoginHelper.getInstance().getOrderDownPaymentNum() > 0) {
+                tvDownPayment.setVisibility(View.VISIBLE);
+                tvDownPayment.setText(LoginHelper.getInstance().getOrderDownPaymentNum() + "");
+            } else {
+                tvDownPayment.setVisibility(View.GONE);
             }
             if (LoginHelper.getInstance().getOrderReceiveNum() > 0) {
                 tvWaitingReceive.setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class MainMeFragment extends BaseFragment {
         } else {
             //未登录状态
             tvWaitingPay.setVisibility(View.GONE);
-            tvFinished.setVisibility(View.GONE);
+            tvDownPayment.setVisibility(View.GONE);
             tvWaitingReceive.setVisibility(View.GONE);
             tvStatus.setVisibility(View.GONE);
             tvWithdrawals.setText("查看信用钱包额度");
@@ -279,7 +279,7 @@ public class MainMeFragment extends BaseFragment {
         });
     }
 
-    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_finished})
+    @OnClick({R.id.iv_avatar, R.id.tv_status, R.id.tv_login, R.id.ll_bill, R.id.ll_help, R.id.ll_account_manage, R.id.ll_my_coupon, R.id.ll_quota, R.id.ll_my_collection, R.id.ll_my_order, R.id.ll_waiting_pay, R.id.ll_waiting_receive, R.id.ll_down_payment})
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -345,9 +345,9 @@ public class MainMeFragment extends BaseFragment {
                 }
                 break;
 
-            case R.id.ll_finished:
+            case R.id.ll_down_payment:
                 if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    MyOrderActivity.startIt(mBaseContext, OrderState.Finished_RESPONSE);
+                    MyOrderActivity.startIt(mBaseContext, OrderState.DOWN_PAYMENT);
                 }
                 break;
 
