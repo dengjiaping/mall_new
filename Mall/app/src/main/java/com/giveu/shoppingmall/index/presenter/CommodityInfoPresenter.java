@@ -70,8 +70,8 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
         });
     }
 
-    public void queryCommodityStock(String province, String city, final String region, String skuCode, int type) {
-        ApiImpl.queryCommodityStock(null, province, city, region, skuCode, type, new BaseRequestAgent.ResponseListener<BaseBean>() {
+    public void queryCommodityStock(String province, String city, String region, String street, String skuCode, int type, String lat, String lng) {
+        ApiImpl.queryCommodityStock(null, province, city, region, street, skuCode, type, lat, lng, new BaseRequestAgent.ResponseListener<BaseBean>() {
             @Override
             public void onSuccess(BaseBean response) {
                 if (getView() != null) {
