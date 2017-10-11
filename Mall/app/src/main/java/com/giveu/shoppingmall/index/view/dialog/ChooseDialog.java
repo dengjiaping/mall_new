@@ -35,7 +35,8 @@ public abstract class ChooseDialog<T> {
         this.datas = datas;
 
         initView(contentView);
-        mDialog.setCancelable(false);
+        mDialog.setCancelable(true);
+        mDialog.setCanceledOnTouchOutside(true);
     }
 
     public void show() {
