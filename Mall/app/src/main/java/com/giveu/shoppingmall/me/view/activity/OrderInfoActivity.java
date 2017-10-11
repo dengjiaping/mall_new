@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.CheckBox;
@@ -192,7 +193,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
      * 如果用户购买的是大家电，展示家电配送和安装时间
      */
     @Override
-    public void showOrderDetail(OrderDetailResponse response) {
+    public void showOrderDetail(final OrderDetailResponse response) {
         //区分京东商品和话费流量商品
         showUIByOrderType(response.orderType);
         orderType = response.orderType;
@@ -215,10 +216,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
                     llTimeLeft.setBackgroundColor(getResources().getColor(R.color.color_d8d8d8));
                     tvTimeLeft.setText("订单已失效，请重新下单");
                     tvPay.setClickable(false);
-                    //刷新全部、待付款、已关闭
+                    //刷新全部、待付款、待首付、已关闭
                     EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
-                    EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
                     EventBusUtils.poseEvent(new RefreshEvent(OrderState.CLOSED));
+                    if (response.status == OrderState.DOWNPAYMENT) {
+                        EventBusUtils.poseEvent(new RefreshEvent(OrderState.DOWNPAYMENT));
+                    }
+                    if (response.status == OrderState.WAITINGPAY) {
+                        EventBusUtils.poseEvent(new RefreshEvent(OrderState.WAITINGPAY));
+                    }
                 }
             });
         }
@@ -309,8 +315,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //首付
         if (StringUtils.isNotNull(response.downPayment)) {
             if (StringUtils.isNotNull(response.selDownPaymentRate)) {
-                tvDownPayment.setText(response.selDownPaymentRate + "%(¥ " + StringUtils.format2(response.downPayment) + ")");
-//                CommonUtils.setTextWithSpanSizeAndColor(tvDownPayment, response.selDownPaymentRate + "%(¥ ", StringUtils.format2(response.monthPayment), ")", 11, 15, R.color.color_00bbc0, R.color.color_00bbc0);
+                SpannableString downPayment = new SpannableString(response.selDownPaymentRate + "%（¥ " + StringUtils.format2(response.downPayment) + "）");
+                int allLength = downPayment.length();
+                int length = StringUtils.format2(response.downPayment).length();
+                downPayment.setSpan(new AbsoluteSizeSpan(15, true), 0, allLength - length - 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                downPayment.setSpan(new AbsoluteSizeSpan(11, true), allLength - length - 3, allLength - length - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                downPayment.setSpan(new AbsoluteSizeSpan(15, true), allLength - length - 1, allLength - 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                downPayment.setSpan(new AbsoluteSizeSpan(11, true), allLength - 4, allLength - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                downPayment.setSpan(new AbsoluteSizeSpan(15, true), allLength - 1, allLength, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                tvDownPayment.setText(downPayment);
             } else {
                 rlDownPayment.setVisibility(View.GONE);
             }
@@ -344,7 +357,10 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             llService.setVisibility(View.VISIBLE);
             tvService0.setText(response.addValueService.get(0).serviceName);
             serviceName = response.addValueService.get(0).serviceName;
-            tvService0Cost.setText("¥" + response.addValueService.get(0).servicePrice + "/月");
+            SpannableString servicePrice = new SpannableString("¥ " + StringUtils.string2Int(response.addValueService.get(0).servicePrice) + "/月");
+            servicePrice.setSpan(new AbsoluteSizeSpan(11, true), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            servicePrice.setSpan(new AbsoluteSizeSpan(15, true), 1, servicePrice.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            tvService0Cost.setText(servicePrice);
             if (response.addValueService.get(0).isSelected == 1) {
                 cbService0.setChecked(true);
             } else {
@@ -435,7 +451,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     public void verifyPayPwdSuccess(String orderNo, boolean isWalletPay, String payment) {
         CommonUtils.closeSoftKeyBoard(mBaseContext);
         dealPwdDialog.dissmissDialog();
-            VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
+        VerifyActivity.startItForShopping(mBaseContext, orderNo, isWalletPay, payment);
     }
 
     //验证交易密码失败

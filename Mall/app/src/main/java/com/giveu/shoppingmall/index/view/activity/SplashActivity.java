@@ -13,9 +13,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.mynet.BaseBean;
+import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
@@ -33,7 +36,7 @@ import butterknife.BindView;
 
 
 public class SplashActivity extends BasePermissionActivity {
-    final int SPLASH_TIME = 1000;
+    final int SPLASH_TIME = 700;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
     @BindView(R.id.tv_skip)
@@ -52,7 +55,7 @@ public class SplashActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.layout_splash);
         ivSplash.setImageResource(R.drawable.splash);
-//        ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
+       // ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
         baseLayout.setTitleBarAndStatusBar(false, false);
         tvSkip.setVisibility(View.GONE);
         tvVersion.setText("V" + CommonUtils.getVersionName());
@@ -141,7 +144,7 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     protected void startViewPagerOrActivity() {
-      //  getAdSplashImage();
+        getAdSplashImage();
         if (hasEnterOtherActivity) {
             return;
         }
@@ -203,28 +206,22 @@ public class SplashActivity extends BasePermissionActivity {
     }
 
     private void getAdSplashImage() {
-        AdSplashResponse adSplashResponse = new AdSplashResponse("https://my-server-879.b0.upaiyun.com/giveu_mall/img/start_page_ad/app_start.png","https:www.baidu.com",3);
-        SharePrefUtil.setAdSplashImage(adSplashResponse);
-        String url = adSplashResponse.imgUrl;
-        if (StringUtils.isNotNull(url)) {
-            ImageUtils.loadImage(url, new ImageView(mBaseContext));
-        }
-//        ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
-//            @Override
-//            public void onSuccess(AdSplashResponse response) {
-//                if (response.data != null) {
-//                    SharePrefUtil.setAdSplashImage(response.data);
-//                    String url = response.data.imgUrl;
-//                    if (StringUtils.isNotNull(url)) {
-//                        ImageUtils.loadImage(url, new ImageView(mBaseContext));
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onError(BaseBean errorBean) {
-//            }
-//        });
+        ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
+            @Override
+            public void onSuccess(AdSplashResponse response) {
+                if (response.data != null) {
+                    SharePrefUtil.setAdSplashImage(response.data);
+                    String url = response.data.imgUrl;
+                    if (StringUtils.isNotNull(url)) {
+                        ImageUtils.loadImage(url, new ImageView(mBaseContext));
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+            }
+        });
 
     }
 }
