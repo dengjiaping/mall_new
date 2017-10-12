@@ -244,7 +244,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_choose_attr:
-                buyDialog.showDialog(isCredit);
+                buyDialog.showDialog();
                 break;
 
             case R.id.ll_choose_address:
@@ -369,7 +369,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     public void showBuyDialog() {
         if (buyDialog != null) {
-            buyDialog.showDialog(isCredit);
+            buyDialog.showDialog();
         }
     }
 
@@ -389,6 +389,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         initAndLoadData();
         if (skuResponse.skuInfo != null) {
+            activity.initBuyView(skuResponse.skuInfo.isCredit());
             //图片放大
             final ArrayList<String> imageList = new ArrayList<>();
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuSpecs)) {
@@ -413,7 +414,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
             dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
             //给购买对话框初始化数据
-            buyDialog.setData(isCredit, skuCode, skuResponse);
+            buyDialog.setData(skuResponse.skuInfo.isCredit(), skuCode, skuResponse);
             //服务承诺对应的数据
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuInfo.serviceSafeguards)) {
                 ArrayList<String> serverList = new ArrayList<>();

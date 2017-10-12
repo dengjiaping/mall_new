@@ -18,13 +18,15 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
-import android.widget.Toast;
+import android.view.View;
 
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
+import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.AppUpdateDialog;
+import com.giveu.shoppingmall.widget.dialog.CustomDialogUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -83,6 +85,9 @@ public class DownloadApkUtils {
      * @return
      */
     private boolean canInstall(final ApkUgradeResponse response) {
+        if (response == null) {
+            return false;
+        }
         File file = new File(apkSavePath);
         if (file.exists() && file.isFile() && SharePrefUtil.getDownloadApkFlag() && MD5Utils.checkMD5(file, response.fileMd5)) {
             return true;
@@ -192,6 +197,7 @@ public class DownloadApkUtils {
         httpUtils.download(response.url, apkSavePath, new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
+                SharePrefUtil.setDownloadApkFlag(true);
                 //下载完成后进行处理
                 if (canInstall(response)) {
                     downloadDeal(response);
@@ -240,16 +246,29 @@ public class DownloadApkUtils {
         httpUtils.download(url, apkSavePath, new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
+                //apk未通过完整性校验，不能安装
                 if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null) {
                     downloadProgressDialog.dismiss();
                 }
-
-                Toast.makeText(mActivity, "下载成功", Toast.LENGTH_SHORT).show();
+                if (canInstall(apkUgradeResponse)) {
+                    ToastUtils.showShortToast("下载成功");
+                } else {
+                    if (mNotification != null) {
+                        mNotificationManager.cancel(0);
+                    }
+                    showDownloadFailedDialog();
+                }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-                ToastUtils.showShortToast("下载失败");
+                if (mActivity != null && !mActivity.isFinishing() && downloadProgressDialog != null) {
+                    downloadProgressDialog.dismiss();
+                }
+                if (mNotification != null) {
+                    mNotificationManager.cancel(0);
+                }
+                showDownloadFailedDialog();
             }
 
             @Override
@@ -260,7 +279,9 @@ public class DownloadApkUtils {
                 }
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);//为了向下兼容，这里采用了v7包下的NotificationCompat来构造
-                builder.setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher)).setContentTitle(mActivity.getResources().getString(R.string.app_name));
+                builder.setSmallIcon(R.mipmap.ic_launcher).
+                        setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.ic_launcher))
+                        .setContentTitle(mActivity.getResources().getString(R.string.app_name));
                 if (current > 0 && current < total) {
                     //下载进行中
                     builder.setProgress((int) total, (int) current, false);
@@ -274,20 +295,46 @@ public class DownloadApkUtils {
                 builder.setContentText("正在更新中...");
 
                 if (current >= total) {
-                    //下载完成
                     SharePrefUtil.setDownloadApkFlag(true);
-                    builder.setContentText("更新完成");
+                    //apk通过完整性校验后进行安装
+                    if (canInstall(apkUgradeResponse)) {
+                        //下载完成
+                        builder.setContentText("更新完成");
+                        Intent installApkIntent = getInstallApkIntent(apkSavePath);
+                        mActivity.startActivity(installApkIntent);
 
-                    Intent installApkIntent = getInstallApkIntent(apkSavePath);
-                    mActivity.startActivity(installApkIntent);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(mActivity, 0, installApkIntent, 0);
+                        builder.setContentIntent(pendingIntent);
+                    } else {
+                        builder.setContentText("下载失败");
+                    }
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(mActivity, 0, installApkIntent, 0);
-                    builder.setContentIntent(pendingIntent);
                 }
                 mNotification = builder.build();
                 mNotificationManager.notify(0, mNotification);
             }
         });
+    }
+
+    private void showDownloadFailedDialog() {
+        if (mActivity == null) {
+            return;
+        }
+        CustomDialogUtil customDialogUtil = new CustomDialogUtil(mActivity);
+        CustomDialog customDialog = customDialogUtil.getDialogModeOneHint("下载过程中出错了，请保持网络畅通", "取消", "重新下载", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTipDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadAndInstall(apkUgradeResponse.url);
+            }
+        });
+        customDialog.setCancelable(false);
+        customDialog.setCanceledOnTouchOutside(false);
+        customDialog.show();
     }
 
     private Intent getInstallApkIntent(String apkPath) {

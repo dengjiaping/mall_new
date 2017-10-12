@@ -103,6 +103,20 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
         ivCollect.setTag(false);//设置tag标识是否已收藏
         tvCommodityDetail.setAlpha(0);
         //是否分期产品，分期产品显示月供
+        initBuyView(isCredit);
+        tabLayout.addTab(tabLayout.newTab().setText("商品"));
+        tabLayout.addTab(tabLayout.newTab().setText("详情"));
+        //接口返回是否有货前购买按钮都不能点击
+        setBuyEnable(false);
+        initFragment();
+//        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
+    }
+
+    /**
+     * 分期与一次性产品显示不同的view
+     * @param isCredit
+     */
+    public void initBuyView(boolean isCredit){
         if (isCredit) {
             llCollect.getLayoutParams().width = DensityUtils.dip2px(57);
             llCredit.setVisibility(View.VISIBLE);
@@ -112,12 +126,6 @@ public class CommodityDetailActivity extends BasePermissionActivity implements I
             llCredit.setVisibility(View.GONE);
             viewDivider.setVisibility(View.GONE);
         }
-        tabLayout.addTab(tabLayout.newTab().setText("商品"));
-        tabLayout.addTab(tabLayout.newTab().setText("详情"));
-        //接口返回是否有货前购买按钮都不能点击
-        setBuyEnable(false);
-        initFragment();
-//        presenter.getCommodityDetail(Const.CHANNEL, skuCode);
     }
 
 
