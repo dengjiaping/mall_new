@@ -167,10 +167,6 @@ public class AddAddressActivity extends BasePermissionActivity {
                             case EDIT:
                                 //修改地址，如果地址选择器没有选，才使用带过来的数据
                                 if (item != null) {
-                                    city = StringUtils.isNull(city) ? item.city : city;
-                                    province = StringUtils.isNull(province) ? item.province : province;
-                                    region = StringUtils.isNull(region) ? item.region : region;
-                                    street = StringUtils.isNull(street) ? item.street : street;
                                     ApiImpl.updateAddress(mBaseContext, building, "5", city, name, item.id, LoginHelper.getInstance().getIdPerson(), isDefault, phone.replace(" ",""), province, region, street, new BaseRequestAgent.ResponseListener<BaseBean>() {
                                         @Override
                                         public void onSuccess(BaseBean response) {
