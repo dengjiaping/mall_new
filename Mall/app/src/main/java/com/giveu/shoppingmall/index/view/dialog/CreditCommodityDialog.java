@@ -151,6 +151,10 @@ public class CreditCommodityDialog extends CustomDialog {
         }
     }
 
+    public int getDownPayRate() {
+        return downPayRate == -1 ? 0 : downPayRate;
+    }
+
     /**
      * 初始化支付方式
      */
@@ -194,8 +198,8 @@ public class CreditCommodityDialog extends CustomDialog {
         if (CommonUtils.isNotNullOrEmpty(data)) {
             //之前没选过期数
             if (paymentNum == -1) {
-                monthPayAdapter.setSelectedList(0);
-                DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
+                monthPayAdapter.setSelectedList(data.size() - 1);
+                DownPayMonthPayResponse downPayMonthPayResponse = data.get(data.size() - 1);
                 paymentNum = downPayMonthPayResponse.paymentNum;
                 idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
                 initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
@@ -214,8 +218,8 @@ public class CreditCommodityDialog extends CustomDialog {
                 }
                 //之前选的期数并且现在返回的期数还有这个期数，那么默认还是之前的期数，否则默认选择第一个期数
                 if (!hasSamePaymentNum) {
-                    monthPayAdapter.setSelectedList(0);
-                    DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
+                    monthPayAdapter.setSelectedList(data.size() - 1);
+                    DownPayMonthPayResponse downPayMonthPayResponse = data.get(data.size() - 1);
                     paymentNum = downPayMonthPayResponse.paymentNum;
                     idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
                     initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
@@ -224,9 +228,9 @@ public class CreditCommodityDialog extends CustomDialog {
             }
             monthPayAdapter.setDatas(data);
             setConfirmEnable(true);
-        }else {
+        } else {
             monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
-            initdownPayMonthPay("","");
+            initdownPayMonthPay("", "");
         }
     }
 

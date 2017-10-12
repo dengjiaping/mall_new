@@ -188,7 +188,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, null);
                         creditDialog.show();
                         creditDialog.setConfirmEnable(false);
-                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
+                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), creditDialog.getDownPayRate(), skuCode, commodityAmounts);
                     } else {
                         ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode, paymentType);
                     }
@@ -389,7 +389,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         initAndLoadData();
         if (skuResponse.skuInfo != null) {
-            activity.initBuyView(skuResponse.skuInfo.isCredit());
+            isCredit = skuResponse.skuInfo.isCredit();
+            activity.initBuyView(isCredit);
             //图片放大
             final ArrayList<String> imageList = new ArrayList<>();
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuSpecs)) {
@@ -414,7 +415,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             }
             dvSupply.setMiddleText(skuResponse.skuInfo.supplier);
             //给购买对话框初始化数据
-            buyDialog.setData(skuResponse.skuInfo.isCredit(), skuCode, skuResponse);
+            buyDialog.setData(isCredit, skuCode, skuResponse);
             //服务承诺对应的数据
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuInfo.serviceSafeguards)) {
                 ArrayList<String> serverList = new ArrayList<>();

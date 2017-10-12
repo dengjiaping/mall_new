@@ -372,7 +372,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
                 ShoppingSearchActivity.startIt(mBaseContext);
                 break;
             case R.id.fab_up_slide:
-                ptrlv.getRefreshableView().smoothScrollToPosition(0);
+                ptrlv.getRefreshableView().setSelection(0);
                 break;
             case R.id.ll_emptyView:
                 pageIndex = 1;
