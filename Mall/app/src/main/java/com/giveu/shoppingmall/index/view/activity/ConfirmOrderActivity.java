@@ -825,7 +825,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                 paymentLayout.setVisibility(View.VISIBLE);
             }
             llAgreementLayout.setVisibility(View.VISIBLE);
-            tvOK.setEnabled(cbAgreement.isChecked());
             rlCardsViewLayout.setVisibility(View.GONE);
             setTotalPrice(paymentPrice);
         } else {
@@ -836,7 +835,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                 rlCardsViewLayout.setVisibility(View.VISIBLE);
             }
             setTotalPrice();
-            tvOK.setEnabled(true);
         }
     }
 
@@ -958,6 +956,12 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
+        if(payType == 0 && !cbAgreement.isChecked()){
+            ToastUtils.showShortToast("请阅读并同意消费分期合同");
+            canPay = true;
+            return;
+        }
+
         //如果是分期产品,检查额度支付是否大于总价格与首付的差
         double price = StringUtils.string2Double(totalPrice) - StringUtils.string2Double(paymentPrice);
         price = Math.max(price, 0);
@@ -1048,12 +1052,6 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         });
 
-        cbAgreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tvOK.setEnabled(isChecked);
-            }
-        });
     }
 
     @Override
