@@ -535,7 +535,7 @@
             android:layout_width="115dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_ok_button"
-            android:enabled="false"
+            android:enabled="true"
             android:gravity="center"
             android:text="去支付"
             android:textColor="@color/white"
