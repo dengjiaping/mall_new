@@ -17,9 +17,11 @@ import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.event.OrderDialogEvent;
+import com.giveu.shoppingmall.event.RefreshEvent;
 import com.giveu.shoppingmall.index.view.activity.OrderPayResultActivity;
 import com.giveu.shoppingmall.index.view.activity.PayChannelActivity;
 import com.giveu.shoppingmall.me.presenter.VerifyPresenter;
+import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.agent.IVerifyView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.ConfirmOrderResponse;
@@ -355,6 +357,9 @@ public class VerifyActivity extends BaseActivity implements IVerifyView {
             }
         } else {
             PayChannelActivity.startIt(mBaseContext, orderNo, paymentNum, data.alipay, data.payId);
+        }
+        if (!"0".equals(data.iniypay)) {
+            EventBusUtils.poseEvent(new RefreshEvent(OrderState.ALLRESPONSE));
         }
         finish();
     }
