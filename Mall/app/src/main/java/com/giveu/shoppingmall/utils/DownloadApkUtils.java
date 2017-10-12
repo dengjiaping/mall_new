@@ -59,18 +59,41 @@ public class DownloadApkUtils {
         if (activity == null || response == null) {
             return;
         }
-
         mActivity = activity;
+        //初始化apk安装目录
+        initApkInstallPath();
+        apkUgradeResponse = response;
+        //处理安装还是下载过程
+        downloadDeal(response);
+    }
+
+    /**
+     * 初始化apk安装目录
+     */
+    private void initApkInstallPath() {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseApplication.getInstance().getPackageName();
         final File file = new File(dirPath, "jiyouqianbao.apk");
         apkSavePath = file.getAbsolutePath();
+    }
 
-        apkUgradeResponse = response;
+    private boolean canInstall() {
+        return true;
+    }
+
+    /**
+     * apk完整时给予安装提示，否则重新下载
+     *
+     * @param response
+     */
+    public void downloadDeal(final ApkUgradeResponse response) {
+        if (mActivity == null) {
+            return;
+        }
+        if (tipAlertDialog == null) {
+            tipAlertDialog = new AppUpdateDialog(mActivity);
+        }
         isForce = response.isForceUpdate();
-
-        tipAlertDialog = new AppUpdateDialog(mActivity);
-        //如果已下载完成则弹安装Dialog
-        if (file.isFile() && file.exists() && SharePrefUtil.getDownloadApkFlag()) {
+        if (canInstall()) {
             tipAlertDialog.initDialogContent(true, response.desc);
             tipAlertDialog.setOnChooseListener(new AppUpdateDialog.OnChooseListener() {
                 @Override
@@ -98,6 +121,7 @@ public class DownloadApkUtils {
                     dismissTipDialog();
 
                     try {
+                        File file = new File(apkSavePath);
                         file.delete();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -136,6 +160,40 @@ public class DownloadApkUtils {
                 mActivity.finish();
             }
         }
+    }
+
+    /**
+     * 后台默默下载
+     *
+     * @param response
+     */
+    public void downloadApkSilence(Activity activity, final ApkUgradeResponse response) {
+        if (response == null) {
+            return;
+        }
+        apkUgradeResponse = response;
+        mActivity = activity;
+        //初始化下载目录
+        initApkInstallPath();
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.download(response.url, apkSavePath, new RequestCallBack<File>() {
+            @Override
+            public void onSuccess(ResponseInfo<File> responseInfo) {
+                //下载完成后进行处理
+                if (canInstall()) {
+                    downloadDeal(response);
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                super.onLoading(total, current, isUploading);
+            }
+        });
     }
 
     //下载并安装方法
