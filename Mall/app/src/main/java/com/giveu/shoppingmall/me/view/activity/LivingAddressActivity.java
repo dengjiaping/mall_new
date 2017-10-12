@@ -195,7 +195,7 @@ public class LivingAddressActivity extends BaseActivity implements ILivingAddres
                 tvAddress.setText(province + city + region + street);
                 tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
                 canClick(false);
-                chooseCityDialog.dismiss();
+//                chooseCityDialog.dismiss();
             }
         });
         etName.checkFormat(EditView.Style.NAME);

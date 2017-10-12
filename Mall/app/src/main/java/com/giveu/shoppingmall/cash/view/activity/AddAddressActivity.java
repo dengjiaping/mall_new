@@ -226,7 +226,7 @@ public class AddAddressActivity extends BasePermissionActivity {
                 tvAddress.setText(province + city + region + street);
                 tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
                 canClick(false);
-                chooseCityDialog.dismiss();
+//                chooseCityDialog.dismiss();
             }
         });
         etReceivingName.checkFormat(EditView.Style.NAME);
