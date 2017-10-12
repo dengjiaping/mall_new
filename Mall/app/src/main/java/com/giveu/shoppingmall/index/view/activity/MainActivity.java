@@ -45,6 +45,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DownloadApkUtils;
 import com.giveu.shoppingmall.utils.FingerPrintHelper;
 import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.NetWorkUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
@@ -552,8 +553,13 @@ public class MainActivity extends BasePermissionActivity {
                     long lastShowTime = SharePrefUtil.getLastUpdateApkDialogTime();
                     if (System.currentTimeMillis() - lastShowTime > 24 * 60 * 60 * 1000) {//每隔24小时进应用提示一次
                         SharePrefUtil.setLastUpdateApkDialogTime(System.currentTimeMillis());
+                        //WIFI环境自动下载apk
+                        if (NetWorkUtils.getCurrentNetworkType() == NetWorkUtils.NETWORK_STATE_WIFI) {
+                            downloadApkUtils.downloadApkSilence(mBaseContext,response.data);
+                        } else {
+                            downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
+                        }
 
-                        downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
                     }
                     SharePrefUtil.setNeedUpdateApp(true);
                 } else if (response.data.isForceUpdate()) {

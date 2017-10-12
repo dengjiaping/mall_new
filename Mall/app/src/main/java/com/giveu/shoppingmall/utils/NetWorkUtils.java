@@ -21,8 +21,9 @@ public class NetWorkUtils {
     // private static final int NETWORK_TYPE_MOBILE = -100;
     private static final int NETWORK_TYPE_WIFI = -101;
 
-    private static final int NETWORK_CLASS_WIFI = -101;
+    public static final int NETWORK_CLASS_WIFI = -101;
     private static final int NETWORK_CLASS_UNAVAILABLE = -1;
+    public static final int NETWORK_STATE_WIFI = 1;
     /**
      * Unknown network class.
      */

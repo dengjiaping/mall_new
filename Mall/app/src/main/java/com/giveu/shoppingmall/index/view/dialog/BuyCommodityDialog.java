@@ -65,6 +65,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     private HashMap<String, TagFlowLayout> tagFHashMap = new HashMap<>();
     private PaymentTypeDialog paymentTypeDialog;
     private int paymentType;
+    private boolean isCredit;
 
 
     public BuyCommodityDialog(Activity context) {
@@ -172,6 +173,9 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         if (CommonUtils.isNullOrEmpty(skuSpecs)) {
             return;
         }
+        this.isCredit = isCredit;
+        //显示分期按钮还是一次性商品按钮
+        initCreditView();
         //分期产品显示月供
         if (isCredit) {
             CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥",
@@ -430,9 +434,13 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
     /**
      * 是否分期产品
      *
-     * @param isCredit
      */
-    public void showDialog(boolean isCredit) {
+    public void showDialog() {
+        initCreditView();
+        show();
+    }
+
+    private void initCreditView(){
         if (isCredit) {
             //分期购买应显示的内容
             llCredit.setVisibility(View.VISIBLE);
@@ -442,7 +450,6 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
             llCredit.setVisibility(View.GONE);
             tvConfirm.setVisibility(View.VISIBLE);
         }
-        show();
     }
 
     private OnConfirmListener listener;

@@ -55,8 +55,17 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
         public List<String> serviceSafeguards;
         public List<String> srcs;
 
+        //是否分期
+        public boolean isCredit() {
+            if (1 == isInstallments) {
+                return true;
+            }
+            return false;
+        }
+
 
     }
+
     public static class ServiceSafeguardsBean {
         /**
          * detail : 商品供货由京东提供，保证正品货源
@@ -68,6 +77,7 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
         public String name;
         public String src;
     }
+
     public static class SkuSpecsBean {
         /**
          * specValues : [{"skuCodes":["K00002719"],"skuIds":[40],"specValue":"全网通（4GB 32GB）"}]
@@ -81,6 +91,7 @@ public class SkuIntroductionResponse extends BaseBean<SkuIntroductionResponse> {
 
 
     }
+
     public static class SpecValuesBean {
         /**
          * skuCodes : ["K00002719"]
