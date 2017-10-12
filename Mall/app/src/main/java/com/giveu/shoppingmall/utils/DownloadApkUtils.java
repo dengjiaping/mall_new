@@ -76,12 +76,27 @@ public class DownloadApkUtils {
         apkSavePath = file.getAbsolutePath();
     }
 
-    private boolean canInstall() {
-        return true;
+    /**
+     * 校验文件是否存在和是否完整
+     *
+     * @param response
+     * @return
+     */
+    private boolean canInstall(final ApkUgradeResponse response) {
+        File file = new File(apkSavePath);
+        if (file.exists() && file.isFile() && SharePrefUtil.getDownloadApkFlag() && MD5Utils.checkMD5(file, response.fileMd5)) {
+            return true;
+        } else {
+            try {
+                file.delete();
+            } catch (Exception e) {
+            }
+            return false;
+        }
     }
 
     /**
-     * apk完整时给予安装提示，否则重新下载
+     * apk完整时给予安装提示，否则进行下载
      *
      * @param response
      */
@@ -93,7 +108,7 @@ public class DownloadApkUtils {
             tipAlertDialog = new AppUpdateDialog(mActivity);
         }
         isForce = response.isForceUpdate();
-        if (canInstall()) {
+        if (canInstall(response)) {
             tipAlertDialog.initDialogContent(true, response.desc);
             tipAlertDialog.setOnChooseListener(new AppUpdateDialog.OnChooseListener() {
                 @Override
@@ -119,13 +134,6 @@ public class DownloadApkUtils {
                 @Override
                 public void confirm() {
                     dismissTipDialog();
-
-                    try {
-                        File file = new File(apkSavePath);
-                        file.delete();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     //自动更新apk
                     downloadAndInstall(response.url);
                 }
@@ -171,16 +179,21 @@ public class DownloadApkUtils {
         if (response == null) {
             return;
         }
-        apkUgradeResponse = response;
-        mActivity = activity;
         //初始化下载目录
         initApkInstallPath();
+        apkUgradeResponse = response;
+        mActivity = activity;
+        //如果之前已经下载这个安装包了并且是可安装，那么提示安装，否则重新下载
+        if (canInstall(response)) {
+            downloadDeal(response);
+            return;
+        }
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.download(response.url, apkSavePath, new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
                 //下载完成后进行处理
-                if (canInstall()) {
+                if (canInstall(response)) {
                     downloadDeal(response);
                 }
             }

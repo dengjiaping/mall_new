@@ -23,6 +23,7 @@ public class NetWorkUtils {
 
     public static final int NETWORK_CLASS_WIFI = -101;
     private static final int NETWORK_CLASS_UNAVAILABLE = -1;
+    public static final int NETWORK_STATE_WIFI = 1;
     /**
      * Unknown network class.
      */

@@ -12,6 +12,7 @@ public class ApkUgradeResponse extends BaseBean<ApkUgradeResponse> {
     public String versionStatus;//安卓升级0无更新1普通2强制
     public long version;
     public String desc;//描述
+    public String fileMd5;
 
 
     public boolean isNeedUpdate() {

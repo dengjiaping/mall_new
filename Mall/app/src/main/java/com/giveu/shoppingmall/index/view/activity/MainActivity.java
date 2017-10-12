@@ -554,7 +554,7 @@ public class MainActivity extends BasePermissionActivity {
                     if (System.currentTimeMillis() - lastShowTime > 24 * 60 * 60 * 1000) {//每隔24小时进应用提示一次
                         SharePrefUtil.setLastUpdateApkDialogTime(System.currentTimeMillis());
                         //WIFI环境自动下载apk
-                        if (NetWorkUtils.getCurrentNetworkType() == NetWorkUtils.NETWORK_CLASS_WIFI) {
+                        if (NetWorkUtils.getCurrentNetworkType() == NetWorkUtils.NETWORK_STATE_WIFI) {
                             downloadApkUtils.downloadApkSilence(mBaseContext,response.data);
                         } else {
                             downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
