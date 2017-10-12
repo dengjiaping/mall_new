@@ -37,7 +37,8 @@ public class MD5Utils {
 
     /**
      * 检查文件与指定的MD5值是否匹配
-     * @param file 指定的文件
+     *
+     * @param file      指定的文件
      * @param targetMD5 目标MD5字符串
      * @return
      */
@@ -93,6 +94,17 @@ public class MD5Utils {
         char c1 = hexDigits[bt & 0xf];
         stringbuffer.append(c0);
         stringbuffer.append(c1);
+    }
+
+    /*
+     * 发布版本的时候可以通过该测试方法生成版本apk的MD5值
+     * filePath的值通常不变，每次需要手动修改fileName值
+     */
+    public static void main(String[] args) throws IOException {
+        String filePath = "./app/build/outputs/apk/";
+        String fileName = "mall_20171011_official_offline.apk";
+        File file = new File(filePath + fileName);
+        System.out.print(fileName + "的MD5值为:\n" + getFileMD5String(file));
     }
 
 }
