@@ -7,6 +7,7 @@ import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.widget.emptyview.CommonLoadingView;
@@ -113,6 +114,22 @@ public class CommodityInfoPresenter extends BasePresenter<ICommodityInfoView> {
             }
         });
 
+    }
+
+    public void getGoodsInfo(String channel) {
+        ApiImpl.getGoodsInit(getView().getAct(), channel, new BaseRequestAgent.ResponseListener<GoodsInfoResponse>() {
+            @Override
+            public void onSuccess(GoodsInfoResponse response) {
+                if (getView() != null) {
+                    getView().initGoodsInfo(response.data);
+                }
+            }
+
+            @Override
+            public void onError(BaseBean errorBean) {
+
+            }
+        });
     }
 
     public void getAppMonthlySupply(String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, String skuCode, int quantity) {

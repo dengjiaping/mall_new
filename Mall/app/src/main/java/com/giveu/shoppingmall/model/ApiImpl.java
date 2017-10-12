@@ -9,9 +9,6 @@ import com.android.volley.mynet.FileUpload;
 import com.android.volley.mynet.RequestAgent;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
-import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
-import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
-import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.AddressListResponse;
 import com.giveu.shoppingmall.model.bean.response.AgreementApplyResponse;
 import com.giveu.shoppingmall.model.bean.response.ApkUgradeResponse;
@@ -33,13 +30,16 @@ import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
 import com.giveu.shoppingmall.model.bean.response.EnchashmentCreditResponse;
 import com.giveu.shoppingmall.model.bean.response.FeedBackResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.GoodsSearchResponse;
 import com.giveu.shoppingmall.model.bean.response.IdentifyCardResponse;
 import com.giveu.shoppingmall.model.bean.response.IndexResponse;
 import com.giveu.shoppingmall.model.bean.response.InstalmentDetailResponse;
+import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderTraceResponse;
@@ -47,6 +47,7 @@ import com.giveu.shoppingmall.model.bean.response.PayPwdResponse;
 import com.giveu.shoppingmall.model.bean.response.PayQueryResponse;
 import com.giveu.shoppingmall.model.bean.response.PayResultResponse;
 import com.giveu.shoppingmall.model.bean.response.ProductResponse;
+import com.giveu.shoppingmall.model.bean.response.Province;
 import com.giveu.shoppingmall.model.bean.response.RandCodeResponse;
 import com.giveu.shoppingmall.model.bean.response.RechargeResponse;
 import com.giveu.shoppingmall.model.bean.response.RegisterResponse;
@@ -672,6 +673,12 @@ public class ApiImpl {
     public static void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, int quantity, BaseRequestAgent.ResponseListener<DownPayMonthPayResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "skuCode", "quantity"}, new Object[]{channel, idPerson, downPaymentRate, skuCode, quantity});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_getAppDownPayAndMonthPay, DownPayMonthPayResponse.class, context, responseListener);
+    }
+
+    //获取首付
+    public static void getGoodsInit(Activity context, String channel, BaseRequestAgent.ResponseListener<GoodsInfoResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel"}, new Object[]{channel});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_getGoodsInit, GoodsInfoResponse.class, context, responseListener);
     }
 
     //查询月供
