@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--地址相关内容-->
+        <ViewStub
+            android:id="@+id/confirm_order_address_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/viewstub_confirm_order_address" />
+        <!--商品内容和支付方式-->
+        <ViewStub
+            android:id="@+id/confirm_order_sku_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/viewstub_confirm_order_sku" />
+        <!--分期信息、增值服务和大家电-->
+        <ViewStub
+            android:id="@+id/confirm_order_payment_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/viewstub_confirm_order_payment" />
+        <!--优惠券、买家留言和分期合同-->
+        <ViewStub
+            android:id="@+id/confirm_order_message_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/viewstub_confirm_order_message" />
+    </LinearLayout>
+</ScrollView>

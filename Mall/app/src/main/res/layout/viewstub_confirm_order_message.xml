@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/confirm_order_card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/ts_16"
+            android:gravity="center_vertical"
+            android:text="优惠券"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:id="@+id/confirm_order_card_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/ts_16"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/ic_right"
+            android:gravity="center_vertical"
+            android:tag="@string/view_allow_disabled"
+            android:text="不使用优惠券"
+            android:textColor="@color/title_color"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_bg" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <com.giveu.shoppingmall.index.widget.StableEditText
+        android:id="@+id/confirm_order_msg_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="left|top"
+        android:lineSpacingMultiplier="1.5"
+        android:minHeight="100dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:tag="@string/view_allow_disabled"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
+    <LinearLayout
+        android:id="@+id/confirm_order_agreement_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginBottom="220dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+        <CheckBox
+            android:id="@+id/confirm_order_agreement_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginRight="5dp"
+            android:button="@drawable/selector_checkbox_register"
+            android:checked="true"
+            android:tag="@string/view_allow_disabled"
+            android:text=""
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_12" />
+
+        <TextView
+            android:id="@+id/confirm_order_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="已阅读并同意消费分期合同"
+            android:textColor="@color/color_4a4a4a"
+            android:textSize="@dimen/ts_14" />
+    </LinearLayout>
+</LinearLayout>

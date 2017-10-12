@@ -21,7 +21,7 @@ public class ConfirmOrderPresenter extends BasePresenter<IConfirmOrderView> {
         super(view);
     }
 
-    public void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, int quantity, BaseRequestAgent.ResponseListener<DownPayMonthPayResponse> responseListener) {
+    public void getAppDownPayAndMonthPay(Activity context, String channel, String idPerson, int downPaymentRate, String skuCode, int quantity) {
         ApiImpl.getAppDownPayAndMonthPay(context, channel, idPerson, downPaymentRate, skuCode, quantity, new BaseRequestAgent.ResponseListener<DownPayMonthPayResponse>() {
             @Override
             public void onSuccess(DownPayMonthPayResponse response) {
@@ -35,7 +35,7 @@ public class ConfirmOrderPresenter extends BasePresenter<IConfirmOrderView> {
         });
     }
 
-    public void getCreateOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, SkuInfo skuInfo, BaseRequestAgent.ResponseListener<CreateOrderResponse> responseListener) {
+    public void getCreateOrderSc(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, SkuInfo skuInfo) {
         ApiImpl.createOrderSc(context, channel, idPerson, downPaymentRate, idProduct, skuInfo, new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
             @Override
             public void onSuccess(CreateOrderResponse response) {
@@ -49,7 +49,7 @@ public class ConfirmOrderPresenter extends BasePresenter<IConfirmOrderView> {
         });
     }
 
-    public void getAppMonthlySupply(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, int quantity, String skuCode, BaseRequestAgent.ResponseListener<MonthSupplyResponse> responseListener) {
+    public void getAppMonthlySupply(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, int quantity, String skuCode) {
         ApiImpl.getAppMonthlySupply(context, channel, idPerson, downPaymentRate, idProduct, insuranceFee, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
             @Override
             public void onSuccess(MonthSupplyResponse response) {

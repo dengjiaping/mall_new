@@ -203,12 +203,12 @@ public class ConfirmOrderActivity extends BaseActivity {
     private boolean canPay = true;//是否可以下单支付
 
     public static void startIt(Context context) {
-        Intent intent = new Intent(context, ConfirmOrderActivity.class);
+        Intent intent = new Intent(context, TempConfirmOrderActivity.class);
         context.startActivity(intent);
     }
 
     public static void startIt(Context context, int downPaymentRate, long idProduct, int quantity, String skuCode, int paymentType) {
-        Intent intent = new Intent(context, ConfirmOrderActivity.class);
+        Intent intent = new Intent(context, TempConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
         intent.putExtra("idProduct", idProduct);
         intent.putExtra("quantity", quantity);

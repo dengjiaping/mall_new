@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_receiving_address"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:minHeight="80dp"
+    android:tag="@string/view_allow_disabled">
+
+    <RelativeLayout
+        android:id="@+id/confirm_order_address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/confirm_order_address_name"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="@dimen/default_layout_screen_gap"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/iv_left"
+            android:drawableLeft="@drawable/icon_address"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:id="@+id/confirm_order_address_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/confirm_order_address_name"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_15" />
+
+        <TextView
+            android:id="@+id/confirm_order_address_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/confirm_order_address_name"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="@dimen/default_layout_screen_gap"
+            android:paddingBottom="8dp"
+            android:textColor="@color/color_9b9b9b"
+            android:textSize="@dimen/ts_15" />
+
+    </RelativeLayout>
+
+    <com.giveu.shoppingmall.index.widget.MiddleRadioButton
+        android:id="@+id/confirm_order_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:button="@null"
+        android:clickable="false"
+        android:drawableLeft="@drawable/ic_address"
+        android:drawablePadding="5dp"
+        android:text="添加收货地址"
+        android:textColor="@color/title_color"
+        android:visibility="visible" />
+
+</FrameLayout>
