@@ -119,7 +119,7 @@ public class LoadingDialog extends ProgressDialog {
         ImageView spinnerImageView = (ImageView) view.findViewById(R.id.spinnerImageView);
         // 给布局添加动画
         // spinnerImageView.setBackgroundResource(R.anim.alertdialog_animation);
-        spinnerImageView.setBackgroundResource(spinner);
+        spinnerImageView.setBackgroundResource(R.drawable.spinner);
         // 获取动画
         final AnimationDrawable animation = (AnimationDrawable) spinnerImageView.getBackground();
         // 设置动画执行多次

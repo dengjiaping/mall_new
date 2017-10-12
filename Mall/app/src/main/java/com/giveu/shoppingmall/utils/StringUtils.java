@@ -230,7 +230,7 @@ public class StringUtils {
         }
         if (nickname.length() < 2 || nickname.length() > 18) {
             if (showToast) {
-                ToastUtils.showShortToast("请输入不少于2位的中文姓名");
+                ToastUtils.showShortToast("请输入2-18位的中文姓名");
             }
             return false;
         }
