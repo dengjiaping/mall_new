@@ -27,6 +27,7 @@ import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
 import com.giveu.shoppingmall.index.view.dialog.CreditCommodityDialog;
 import com.giveu.shoppingmall.me.view.activity.OfftheShelfActivity;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -188,7 +189,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.initData(commodityAmounts, smallIconStr, commodityName, commodityPrice, null);
                         creditDialog.show();
                         creditDialog.setConfirmEnable(false);
-                        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
+                        //如果刚进来这个页面时获取首付比例失败了，再次获取，获取成功后会自动获取分期数，否则直接获取分期数
+                        if (!creditDialog.hasInitSuccess()) {
+                            presenter.getGoodsInfo(Const.CHANNEL);
+                        }else {
+                            presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), creditDialog.getDownPayRate(), skuCode, commodityAmounts);
+                        }
                     } else {
                         ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode, paymentType);
                     }
@@ -244,7 +250,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_choose_attr:
-                buyDialog.showDialog(isCredit);
+                buyDialog.showDialog();
                 break;
 
             case R.id.ll_choose_address:
@@ -347,6 +353,10 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
      * 获取商品信息
      */
     public void getCommodityInfo() {
+        //分期产品获取首付比例
+        if (isCredit) {
+            presenter.getGoodsInfo(Const.CHANNEL);
+        }
         presenter.getSkuIntroduce(LoginHelper.getInstance().getIdPerson(), Const.CHANNEL, skuCode);
     }
 
@@ -369,7 +379,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
     public void showBuyDialog() {
         if (buyDialog != null) {
-            buyDialog.showDialog(isCredit);
+            buyDialog.showDialog();
         }
     }
 
@@ -389,6 +399,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         initAndLoadData();
         if (skuResponse.skuInfo != null) {
+            isCredit = skuResponse.skuInfo.isCredit();
+            activity.initBuyView(isCredit);
             //图片放大
             final ArrayList<String> imageList = new ArrayList<>();
             if (CommonUtils.isNotNullOrEmpty(skuResponse.skuSpecs)) {
@@ -520,6 +532,17 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             annuityDialog.refreshData(response, true);
             annuityDialog.show();
         }
+    }
+
+    @Override
+    public void initGoodsInfo(ArrayList<GoodsInfoResponse> data) {
+        if (CommonUtils.isNullOrEmpty(data)) {
+            return;
+        }
+        initAndLoadData();
+        creditDialog.initDownPaymentRate(data);
+        //获取首付比例后获取分期数
+        presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), creditDialog.getDownPayRate(), skuCode, commodityAmounts);
     }
 
     public void rejectGpsPermission() {

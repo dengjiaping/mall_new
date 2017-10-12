@@ -330,15 +330,15 @@ public class OrderListFragment extends BaseFragment implements IOrderInfoView<Or
     public void showOrderDetail(OrderDetailResponse response) {
         if (response != null && response.status == 1) {
             //零首付订单
-            if (response.payType == 0) {
-                adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.downPayment));
+            if (response.payType == 0 && "0".equals(response.selDownPaymentRate)) {
+                adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice), true);
                 return;
             }
             //非分期订单
-            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice));
+            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice), false);
         } else if (response != null && response.status == 2) {
             //非零首付分期订单
-            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.downPayment));
+            adapter.onPay(response.orderNo, response.payType + "", StringUtils.string2Double(response.totalPrice), false);
         } else {
             if (orderState == OrderState.ALLRESPONSE) {
                 //刷新待支付

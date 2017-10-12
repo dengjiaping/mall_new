@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.index.view.agent;
 
 import com.giveu.shoppingmall.base.IView;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsInfoResponse;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.SkuIntroductionResponse;
 
@@ -21,4 +22,6 @@ public interface ICommodityInfoView extends IView {
     void showDownPayMonthPay(boolean success, ArrayList<DownPayMonthPayResponse> data);
 
     void showAppMonthlySupply(MonthSupplyResponse monthSupplyResponse);
+
+    void initGoodsInfo(ArrayList<GoodsInfoResponse> data);
 }

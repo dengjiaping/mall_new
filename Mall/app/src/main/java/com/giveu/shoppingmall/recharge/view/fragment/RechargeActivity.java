@@ -634,7 +634,7 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
             @Override
             public void onConfirm(int paymentType) {
                 //是否超过500额度充值上限
-                if (paymentType == 0 && StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
+                if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
                     ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
                 } else {
                     RechargeActivity.this.paymentType = paymentType;

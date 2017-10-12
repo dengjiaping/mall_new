@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.model.bean.response.DownPayMonthPayResponse;
+import com.giveu.shoppingmall.model.bean.response.GoodsInfoResponse;
 import com.giveu.shoppingmall.recharge.view.dialog.PaymentTypeDialog;
 import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
@@ -52,13 +53,14 @@ public class CreditCommodityDialog extends CustomDialog {
     private TextView tvMonthSupply;
     private TextView tvDownPayment;
     private ImageView ivCommodity;
-    private TagAdapter<String> downPayAdapter;
+    private TagAdapter<GoodsInfoResponse> downPayAdapter;
     private TagFlowLayout downPayLayout;
     private int downPayRate = -1;//首付比例
     private int paymentNum = -1;//分期数
     private int commodityAmounts;//商品数量
     private TagAdapter<DownPayMonthPayResponse> monthPayAdapter;
     private TagFlowLayout tfPayment;
+    private boolean hasInitDownPaymentRate;
 
     private PaymentTypeDialog paymentTypeDialog;
     private int paymentType;
@@ -127,11 +129,21 @@ public class CreditCommodityDialog extends CustomDialog {
                 paymentTypeDialog.showDialog(paymentType);
             }
         });
-        ArrayList<String> percentList = new ArrayList<>();
-        percentList.add("零首付");
-        percentList.add("5%");
-        percentList.add("10%");
-        percentList.add("50%");
+
+    }
+
+    /**
+     * 是否有初始化首付比例
+     *
+     * @return
+     */
+    public boolean hasInitSuccess() {
+        return hasInitDownPaymentRate;
+    }
+
+    public void initDownPaymentRate(ArrayList<GoodsInfoResponse> percentList) {
+        llContainer.removeAllViews();
+        hasInitDownPaymentRate = true;
         addDownPayView("首付", percentList);
         addPaymentNumView("分期数", new ArrayList<DownPayMonthPayResponse>());
     }
@@ -149,6 +161,10 @@ public class CreditCommodityDialog extends CustomDialog {
         } else {
             tvConfirm.setBackgroundColor(ContextCompat.getColor(mAttachActivity, R.color.color_d8d8d8));
         }
+    }
+
+    public int getDownPayRate() {
+        return downPayRate == -1 ? 0 : downPayRate;
     }
 
     /**
@@ -194,8 +210,8 @@ public class CreditCommodityDialog extends CustomDialog {
         if (CommonUtils.isNotNullOrEmpty(data)) {
             //之前没选过期数
             if (paymentNum == -1) {
-                monthPayAdapter.setSelectedList(0);
-                DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
+                monthPayAdapter.setSelectedList(data.size() - 1);
+                DownPayMonthPayResponse downPayMonthPayResponse = data.get(data.size() - 1);
                 paymentNum = downPayMonthPayResponse.paymentNum;
                 idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
                 initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
@@ -214,8 +230,8 @@ public class CreditCommodityDialog extends CustomDialog {
                 }
                 //之前选的期数并且现在返回的期数还有这个期数，那么默认还是之前的期数，否则默认选择第一个期数
                 if (!hasSamePaymentNum) {
-                    monthPayAdapter.setSelectedList(0);
-                    DownPayMonthPayResponse downPayMonthPayResponse = data.get(0);
+                    monthPayAdapter.setSelectedList(data.size() - 1);
+                    DownPayMonthPayResponse downPayMonthPayResponse = data.get(data.size() - 1);
                     paymentNum = downPayMonthPayResponse.paymentNum;
                     idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
                     initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
@@ -224,9 +240,9 @@ public class CreditCommodityDialog extends CustomDialog {
             }
             monthPayAdapter.setDatas(data);
             setConfirmEnable(true);
-        }else {
+        } else {
             monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
-            initdownPayMonthPay("","");
+            initdownPayMonthPay("0", "");
         }
     }
 
@@ -278,21 +294,28 @@ public class CreditCommodityDialog extends CustomDialog {
      * @param paramsStr
      * @param paramsList
      */
-    private void addDownPayView(String paramsStr, final ArrayList<String> paramsList) {
+    private void addDownPayView(String paramsStr, final ArrayList<GoodsInfoResponse> paramsList) {
         View speView = View.inflate(getContext(), R.layout.sv_specification_item, null);
         TextView tvParam;
         downPayLayout = (TagFlowLayout) speView.findViewById(R.id.tf_specification);
         tvParam = (TextView) speView.findViewById(R.id.tv_param);
         tvParam.setText(paramsStr);
-        downPayAdapter = new TagAdapter<String>(paramsList) {
+        downPayAdapter = new TagAdapter<GoodsInfoResponse>(paramsList) {
             @Override
-            public View getView(FlowLayout parent, int position, String s) {
+            public View getView(FlowLayout parent, int position, GoodsInfoResponse item) {
                 TextView tvTag = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.flowlayout_params_item, downPayLayout, false);
-                tvTag.setText(s);
+                tvTag.setText(item.name);
                 return tvTag;
             }
         };
-        downPayAdapter.setSelectedList(0);
+        for (int i = 0; i < paramsList.size(); i++) {
+            GoodsInfoResponse goodsInfoResponse = paramsList.get(i);
+            if (goodsInfoResponse.isSelect == 1) {
+                downPayAdapter.setSelectedList(i);
+                downPayRate = goodsInfoResponse.id;
+                break;
+            }
+        }
         downPayLayout.setAdapter(downPayAdapter);
         downPayLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
@@ -308,22 +331,11 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
                 for (Integer integer : selectPosSet) {
-                    //首付比例赋值
-                    switch (integer) {
-                        case 0:
-                            downPayRate = 0;
-                            break;
-                        case 1:
-                            downPayRate = 5;
-                            break;
-                        case 2:
-                            downPayRate = 10;
-                            break;
-                        case 3:
-                            downPayRate = 50;
-                            break;
+                    if (integer < downPayAdapter.getDatas().size()) {
+                        //首付比例赋值
+                        downPayRate = downPayAdapter.getDatas().get(integer).id;
+                        tvDownPayment.setText("首付 " + StringUtils.format2((downPayRate * totalPrice / 100) + "") + "元");
                     }
-                    tvDownPayment.setText("首付 " + StringUtils.format2((downPayRate * totalPrice / 100) + "") + "元");
                 }
             }
         });

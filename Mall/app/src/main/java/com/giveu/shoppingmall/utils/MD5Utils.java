@@ -102,7 +102,7 @@ public class MD5Utils {
      */
     public static void main(String[] args) throws IOException {
         String filePath = "./app/build/outputs/apk/";
-        String fileName = "mall_20171011_official_offline.apk";
+        String fileName = "mall_20171012_official_offline.apk";
         File file = new File(filePath + fileName);
         System.out.print(fileName + "的MD5值为:\n" + getFileMD5String(file));
     }

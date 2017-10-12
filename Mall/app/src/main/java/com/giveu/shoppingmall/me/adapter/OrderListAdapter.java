@@ -279,7 +279,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
     }
 
     //点击去支付、去首付后的流程处理
-    public void onPay(final String order, final String payType, final double finalPayment) {
+    public void onPay(final String order, final String payType, final double finalPayment, final boolean isWallet) {
         //是否登录且激活钱包
         if (LoginHelper.getInstance().hasLoginAndActivation((Activity) mContext)) {
             //是否设置了交易密码
@@ -294,11 +294,7 @@ public class OrderListAdapter extends LvCommonAdapter<OrderListResponse.SkuInfoB
                 dealPwdDialog.setOnCheckPwdListener(new DealPwdDialog.OnCheckPwdListener() {
                     @Override
                     public void checkPwd(String payPwd) {
-                        if (finalPayment == 0 && "0".equals(payType)) {
-                            presenter.onVerifyPayPwd(payPwd, order, true, finalPayment + "");
-                        } else {
-                            presenter.onVerifyPayPwd(payPwd, order, false, finalPayment + "");
-                        }
+                        presenter.onVerifyPayPwd(payPwd, order, isWallet, finalPayment + "");
                     }
                 });
                 dealPwdDialog.showDialog();
