@@ -48,7 +48,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         });
 
         ImageView image = holder.getView(R.id.item_left_image);
-        ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.ic_defalut_pic_corner, image);
+        ImageUtils.loadImage(srcIp + "/" + item.src, R.drawable.default_img_240_240, image);
 
         holder.setText(R.id.item_right_name, StringUtils.ToAllFullWidthString(item.name));
         holder.setText(R.id.item_right_desc, StringUtils.ToAllFullWidthString(item.keywords));

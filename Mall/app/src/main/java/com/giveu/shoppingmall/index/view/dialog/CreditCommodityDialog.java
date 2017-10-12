@@ -382,7 +382,7 @@ public class CreditCommodityDialog extends CustomDialog {
      * @param commodityAmounts
      */
     public void updateInfo(String url, String commodityName, String price, int commodityAmounts) {
-        ImageUtils.loadImageWithCorner(url, R.drawable.ic_defalut_pic_corner, R.drawable.ic_defalut_pic_corner
+        ImageUtils.loadImageWithCorner(url, R.drawable.default_img_240_240, R.drawable.default_img_240_240
                 , ivCommodity, DensityUtils.dip2px(8));
         tvCommodityName.setText(commodityName);
         tvCommodityAmounts.setText("x " + commodityAmounts + "");

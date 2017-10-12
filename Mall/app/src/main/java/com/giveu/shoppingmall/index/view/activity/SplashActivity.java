@@ -213,7 +213,7 @@ public class SplashActivity extends BasePermissionActivity {
                     SharePrefUtil.setAdSplashImage(response.data);
                     String url = response.data.imgUrl;
                     if (StringUtils.isNotNull(url)) {
-                        ImageUtils.loadImage(url, new ImageView(mBaseContext));
+                        ImageUtils.loadImageAd(url, new ImageView(mBaseContext));
                     }
                 }
             }

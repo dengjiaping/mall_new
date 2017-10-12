@@ -40,7 +40,7 @@ public class ShoppingAdapter extends LvCommonAdapter<GoodsSearchResponse.GoodsBe
         } else {
             holder.getConvertView().setVisibility(View.VISIBLE);
         }
-        ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.ic_default_pic,R.drawable.ic_default_pic, ivCommodity, DensityUtils.dip2px(4));
+        ImageUtils.loadImageWithCorner(srcIp + item.src, R.drawable.default_img_240_240,R.drawable.default_img_240_240, ivCommodity, DensityUtils.dip2px(4));
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

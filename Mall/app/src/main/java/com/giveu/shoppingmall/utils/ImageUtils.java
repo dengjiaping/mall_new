@@ -314,6 +314,12 @@ public class ImageUtils {
      * 使用默认占位图
      */
     public static void loadImage(String url, ImageView intoImageView) {
+        loadImage(url, R.drawable.default_img_240_240, intoImageView);
+    }
+    /**
+     * 使用默认灰色占位图
+     */
+    public static void loadImageGray(String url, ImageView intoImageView) {
         loadImage(url, R.drawable.ic_default_pic, intoImageView);
     }
     /**

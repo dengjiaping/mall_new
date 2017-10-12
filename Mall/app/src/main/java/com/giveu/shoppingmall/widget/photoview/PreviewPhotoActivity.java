@@ -120,9 +120,9 @@ public class PreviewPhotoActivity extends BaseActivity {
                 ivPhoto.setBackgroundColor(ContextCompat.getColor(mBaseContext, R.color.black));
             }
             if (isNetWorkUrl(photoList.get(position))) {
-                ImageUtils.loadImage(photoList.get(position), ivPhoto);
+                ImageUtils.loadImageGray(photoList.get(position), ivPhoto);
             } else {
-                ImageUtils.loadImage("file://" + photoList.get(position), ivPhoto);
+                ImageUtils.loadImageGray("file://" + photoList.get(position), ivPhoto);
             }
             container.addView(ivPhoto);
             return ivPhoto;

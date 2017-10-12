@@ -419,7 +419,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
      * @param price
      */
     public void updateInfo(String url, String commodityName, String price) {
-        ImageUtils.loadImageWithCorner(url, R.drawable.ic_defalut_pic_corner, R.drawable.ic_defalut_pic_corner
+        ImageUtils.loadImageWithCorner(url, R.drawable.default_img_240_240, R.drawable.default_img_240_240
                 , ivCommodity, DensityUtils.dip2px(8));
         tvCommodityName.setText(StringUtils.ToAllFullWidthString(commodityName));
         CommonUtils.setTextWithSpanSizeAndColor(tvPrice, "¥", StringUtils.format2(price), "",

@@ -126,6 +126,10 @@ public class AddAddressActivity extends BasePermissionActivity {
             tvAddress.setTextColor(ContextCompat.getColor(mBaseContext, R.color.color_282828));
             cbDefault.setChecked("1".equals(item.isDefault));
             etReceivingName.setSelection(StringUtils.getTextFromView(etReceivingName).length());
+            city = item.city;
+            province = item.province;
+            region = item.region;
+            street = item.street;
         }
         baseLayout.setRightTextAndListener("保存", new View.OnClickListener() {
             @Override
