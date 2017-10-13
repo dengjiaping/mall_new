@@ -500,4 +500,9 @@
         <item name="android:layout_marginRight">@dimen/default_layout_screen_gap</item>
         <item name="android:src">@drawable/ic_right</item>
     </style>
+    
+    <style name="tabLayout_style">
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

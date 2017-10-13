@@ -370,7 +370,7 @@
             android:label="Web网页" />
         <activity
             android:name=".me.view.activity.MessageActivity"
-            android:label="消息列表" />
+            android:label="消息中心" />
         <activity
             android:name=".me.view.activity.MyCouponActivity"
             android:label="我的优惠券" />

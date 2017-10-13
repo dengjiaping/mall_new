@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/default_layoutxml_bg"
-    android:orientation="vertical"
-    android:paddingLeft="11dp"
-    android:paddingRight="11dp">
+    android:orientation="vertical">
 
-    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
+<!--    <com.giveu.shoppingmall.widget.pulltorefresh.PullToRefreshListView
         android:id="@+id/lv_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,5 +21,23 @@
         android:gravity="center"
         android:text="您还没有任何消息"
         android:textSize="@dimen/ts_14"
-        android:visibility="gone" />
-</RelativeLayout>
+        android:visibility="gone" />-->
+
+    <android.support.design.widget.TabLayout
+        android:background="@color/white"
+        android:id="@+id/tabLayout"
+        app:tabTextColor="@color/color_9b9b9b"
+        app:tabSelectedTextColor="@color/color_00bbc0"
+        app:tabIndicatorColor="@color/color_00bbc0"
+        app:tabIndicatorHeight="2dp"
+        app:tabTextAppearance="@style/tabLayout_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <com.giveu.shoppingmall.widget.NoScrollViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewpager"/>
+
+</LinearLayout>

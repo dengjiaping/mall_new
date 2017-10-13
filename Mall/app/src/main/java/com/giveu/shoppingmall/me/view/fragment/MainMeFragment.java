@@ -26,6 +26,7 @@ import com.giveu.shoppingmall.me.relative.OrderState;
 import com.giveu.shoppingmall.me.view.activity.AccountManagementActivity;
 import com.giveu.shoppingmall.me.view.activity.CollectionActivity;
 import com.giveu.shoppingmall.me.view.activity.ContactUsActivity;
+import com.giveu.shoppingmall.me.view.activity.MessageActivity;
 import com.giveu.shoppingmall.me.view.activity.MyCouponActivity;
 import com.giveu.shoppingmall.me.view.activity.MyOrderActivity;
 import com.giveu.shoppingmall.me.view.activity.QuotaActivity;
@@ -109,12 +110,12 @@ public class MainMeFragment extends BaseFragment {
         baseLayout.hideBack();
         baseLayout.setBlueWhiteStyle();
         baseLayout.setTopBarBackgroundColor(R.color.color_00c9cd);
-//        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                MessageActivity.startIt(mBaseContext);
-//            }
-//        });
+        baseLayout.setRightImageAndListener(R.drawable.ic_message, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessageActivity.startIt(mBaseContext);
+            }
+        });
         registerEventBus();
         vsMe = (ViewStub) view.findViewById(R.id.vs_me);
         vsMe.setVisibility(View.VISIBLE);
