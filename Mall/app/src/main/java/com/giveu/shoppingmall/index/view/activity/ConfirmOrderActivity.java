@@ -238,7 +238,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         payType = getIntent().getIntExtra("paymentType", 0);
         channel = Const.CHANNEL;
         idPerson = LoginHelper.getInstance().getIdPerson();
-
+        customerName = LoginHelper.getInstance().getName();
+        customerPhone = LoginHelper.getInstance().getPhone();
         initPayTypeUI();
 
         pwdDialog = new DealPwdDialog(mBaseContext);
@@ -764,12 +765,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (bean != null) {
             addressJoBean = bean;
 
-            if (customerName == null || customerPhone == null) {
-                //第一次初始化的时候保存客户姓名和电话，之后手动修改地址就不改变
-                customerName = addressJoBean.custName;
-                customerPhone = addressJoBean.phone;
-            }
-
             if (StringUtils.isNotNull(addressJoBean.custName)) {
                 tvAddressName.setText(addressJoBean.custName);
             }
@@ -956,7 +951,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             return;
         }
 
-        if(payType == 0 && !cbAgreement.isChecked()){
+        if (payType == 0 && !cbAgreement.isChecked()) {
             ToastUtils.showShortToast("请阅读并同意消费分期合同");
             canPay = true;
             return;
