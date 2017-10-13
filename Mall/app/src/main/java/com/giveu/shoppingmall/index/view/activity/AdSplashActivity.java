@@ -60,7 +60,7 @@ public class AdSplashActivity extends BaseActivity {
 
     private void turnToMainActivity() {
         stopCount();
-        MainActivity.startIt(mBaseContext);
+        MainActivity.startItDealLock(0, mBaseContext, SplashActivity.class.getName(), false);
         finish();
     }
 

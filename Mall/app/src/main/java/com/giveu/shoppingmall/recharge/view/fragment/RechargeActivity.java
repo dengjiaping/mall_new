@@ -635,7 +635,9 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
             public void onConfirm(int paymentType) {
                 //是否超过500额度充值上限
                 if (StringUtils.string2Double(LoginHelper.getInstance().getAvailableRechargeLimit()) < StringUtils.string2Double(salePrice)) {
-                    ToastUtils.showLongToast("您已超出每月500元充值上限，请下个月进行充值");
+                    String hintStr = "尊敬的用户，您已超出每月500.00元充值上限，请下个月进行充值，谢谢！";
+                    warnningDialog.setContent(hintStr);
+                    warnningDialog.show();
                 } else {
                     RechargeActivity.this.paymentType = paymentType;
                     if (paymentType == 0) {
@@ -746,9 +748,9 @@ public class RechargeActivity extends BasePermissionActivity implements IRecharg
 
     @Override
     public void confirmOrderFail(String message) {
-        if(StringUtils.isNotNull(message)){
-            message = "\n错误原因："+message;
-        }else {
+        if (StringUtils.isNotNull(message)) {
+            message = "\n错误原因：" + message;
+        } else {
             message = "";
         }
         RechargeStatusActivity.startIt(mBaseContext, "fail", "很抱歉，本次支付失败，请重新发起支付" + message, salePrice + "元", salePrice + "元");
