@@ -11,6 +11,7 @@ import com.android.volley.mynet.ApiUrl;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseActivity;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
@@ -64,12 +65,14 @@ public class ContactUsActivity extends BaseActivity {
                 break;
             case R.id.ll_common_problem:
                 //常见问题
-               // CommonProblemActivity.startIt(mBaseContext);
+                // CommonProblemActivity.startIt(mBaseContext);
                 CustomWebViewActivity.startIt(mBaseContext, ApiUrl.WebUrl.commonProblem, "常见问题");
                 break;
             case R.id.ll_problem_feedback:
                 //异常问题反馈
-                ProblemFeedbackActivity.startIt(mBaseContext);
+                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
+                    ProblemFeedbackActivity.startIt(mBaseContext);
+                }
                 break;
         }
     }

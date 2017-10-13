@@ -312,8 +312,11 @@ public class WalletActivationSecondActivity extends BasePermissionActivity {
                     dialog.show();
                 } else {
                     isGPSConfirm = false;
-                    if (!PermissionHelper.getInstance(mBaseContext).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionHelper.getInstance(mBaseContext).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
+                        //大于6.0,并且有位置权限
                         setPermissionHelper(true, new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+                    }else{
+                        ToastUtils.showShortToast("请检查是否已开启网络和定位权限");
                     }
                 }
             }

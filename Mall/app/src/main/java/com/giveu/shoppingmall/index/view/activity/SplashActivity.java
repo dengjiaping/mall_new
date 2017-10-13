@@ -2,6 +2,7 @@ package com.giveu.shoppingmall.index.view.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,11 +22,12 @@ import com.giveu.shoppingmall.base.BasePermissionActivity;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
-import com.giveu.shoppingmall.utils.ImageUtils;
+import com.giveu.shoppingmall.utils.FileUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 import com.giveu.shoppingmall.widget.dialog.ConfirmDialog;
 import com.giveu.shoppingmall.widget.dialog.PermissionDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.HashMap;
@@ -55,7 +57,7 @@ public class SplashActivity extends BasePermissionActivity {
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.layout_splash);
         ivSplash.setImageResource(R.drawable.splash);
-       // ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
+        // ImageUtils.loadImage(ImageUtils.ImageLoaderType.drawable, R.drawable.splash + "", ivSplash);
         baseLayout.setTitleBarAndStatusBar(false, false);
         tvSkip.setVisibility(View.GONE);
         tvVersion.setText("V" + CommonUtils.getVersionName());
@@ -205,15 +207,52 @@ public class SplashActivity extends BasePermissionActivity {
         super.onDestroy();
     }
 
+    public boolean isJpg(String path) {
+        File e = new File(path);
+        String[] arr = e.list();
+        for (String c : arr) {
+            if (c.endsWith(".jpg")) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+
     private void getAdSplashImage() {
+        //创建广告图片目录
+        FileUtils.getDirFile(FileUtils.AD_IMG_PATH);
+
         ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
             @Override
             public void onSuccess(AdSplashResponse response) {
                 if (response.data != null) {
                     SharePrefUtil.setAdSplashImage(response.data);
-                    String url = response.data.imgUrl;
+                    //    response.data.adId = 10001;
+                    //       final String url = "https://my-server-879.b0.upaiyun.com/giveu_mall/img/start_page_ad/app_start-2.jpg";
+                    final String url = response.data.imgUrl;
                     if (StringUtils.isNotNull(url)) {
-                        ImageUtils.loadImageAd(url, new ImageView(mBaseContext));
+
+                        if (SharePrefUtil.getAdSplashImage() != null && SharePrefUtil.getAdSplashImage().adId == response.data.adId && isJpg(FileUtils.AD_IMG_PATH)) {
+                            //新广告id与上一次广告id相同，不重新保存广告
+                            return;
+                        }
+                        final String photoPath = FileUtils.AD_IMG_PATH + "/" + System.currentTimeMillis() + FileUtils.AD_IMG_NAME;
+                        SharePrefUtil.setAdSplashPath(photoPath);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Bitmap mBitmaps = ImageLoader.getInstance().loadImageSync(url);
+                                if (mBitmaps != null) {
+                                    FileUtils.deleteAllFile(FileUtils.getDirFile(FileUtils.AD_IMG_PATH));
+                                    FileUtils.getDirFile(FileUtils.AD_IMG_PATH);
+                                    FileUtils.saveBitmapWithPath(mBitmaps, photoPath);
+                                } else {
+                                    getAdSplashImage();
+                                }
+                            }
+                        }).start();
                     }
                 }
             }

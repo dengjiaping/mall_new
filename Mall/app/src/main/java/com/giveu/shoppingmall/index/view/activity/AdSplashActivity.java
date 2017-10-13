@@ -16,6 +16,8 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -38,7 +40,7 @@ public class AdSplashActivity extends BaseActivity {
         @Override
         public void run() {
             count--;
-            CommonUtils.setTextWithSpan(tvSkip, "跳过", " "+count, R.color.white, R.color.color_ff2a2a);
+            CommonUtils.setTextWithSpan(tvSkip, "跳过", " " + count, R.color.white, R.color.color_ff2a2a);
             if (count == 0) {
                 turnToMainActivity();
             } else {
@@ -71,12 +73,24 @@ public class AdSplashActivity extends BaseActivity {
         startCount();
     }
 
+    //判断文件是否存在
+    public boolean fileIsExists(String strFile) {
+        try {
+            File f = new File(strFile);
+            if (!f.exists()) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void setData() {
-        AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
-        if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
-            ImageUtils.loadImageAd(adSplashImage.imgUrl, ivSplash);
-        }
+        ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, SharePrefUtil.getAdSplashPath(), ivSplash);
     }
 
     @OnClick(R.id.tv_skip)
@@ -89,7 +103,7 @@ public class AdSplashActivity extends BaseActivity {
         AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
         if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrlLink)) {
             turnToMainActivity();
-            CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink,adSplashImage.title);
+            CustomWebViewActivity.startIt(mBaseContext, adSplashImage.imgUrlLink, adSplashImage.title);
         }
     }
 

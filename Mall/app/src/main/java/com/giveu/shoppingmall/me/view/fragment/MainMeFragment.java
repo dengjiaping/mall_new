@@ -240,7 +240,7 @@ public class MainMeFragment extends BaseFragment {
     protected void setListener() {
     }
 
-    private void initListener(){
+    private void initListener() {
         ptrsv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
@@ -305,9 +305,7 @@ public class MainMeFragment extends BaseFragment {
                 break;
 
             case R.id.ll_help:
-                if (LoginHelper.getInstance().hasLoginAndGotoLogin(mBaseContext)) {
-                    ContactUsActivity.startIt(mBaseContext);
-                }
+                ContactUsActivity.startIt(mBaseContext);
                 break;
 
             case R.id.ll_account_manage:

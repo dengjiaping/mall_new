@@ -19,6 +19,7 @@ public interface SharePrefKeys {
     String UUID = "UUID";
     String SP_WELCOM = "SP_WELCOM_" + CommonUtils.getVersionCode();
     String AD_SPLASH_IMAGE = "AD_SPLASH_IMAGE";
+    String AD_SPLASH_PATH = "AD_SPLASH_PATH";
     String DOWNLOAD_APK_FLAG = "DOWNLOAD_APK_FLAG" + CommonUtils.getVersionCode();
     String LAST_APK_UPDATE_DIALOG_SHOW_TIME = "LAST_APK_UPDATE_DIALOG_SHOW_TIME" + CommonUtils.getVersionCode();
     String LOCK_PATTERN_PWD = "LOCK_PATTERN_PWD";
