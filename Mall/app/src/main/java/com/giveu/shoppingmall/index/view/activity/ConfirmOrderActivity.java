@@ -416,6 +416,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         updatePaymentListUI();
         //更新增值服务
         updateIncrementServiceUI(result.data.avsList);
+
         //更新月供金额
 //        updateAnnuity();
         /* 大家电配送功能暂时不开发
@@ -516,6 +517,10 @@ public class ConfirmOrderActivity extends BaseActivity {
      * @param list 首付列表
      */
     private void updatePaymentRateUI(final List<CreateOrderResponse.InitListBean> list) {
+        if (CommonUtils.isNullOrEmpty(list) && paymentTypeDialog != null) {
+            paymentTypeDialog.disableWalletPay();
+        }
+        
         if (list != null && list.size() > 0) {
             paymentRateList = list;
             if (paymentLayout.getVisibility() != View.VISIBLE && payType == 0) {
