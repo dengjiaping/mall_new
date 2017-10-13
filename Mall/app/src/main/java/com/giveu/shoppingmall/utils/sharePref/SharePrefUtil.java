@@ -104,7 +104,13 @@ public class SharePrefUtil extends AbsSharePref {
     public static AdSplashResponse getAdSplashImage() {
         return (AdSplashResponse) getInstance().getObj(SharePrefKeys.AD_SPLASH_IMAGE);
     }
+    public static void setAdSplashPath(String path) {
+        getInstance().putString(SharePrefKeys.AD_SPLASH_PATH, path);
+    }
 
+    public static String getAdSplashPath() {
+        return  getInstance().getString(SharePrefKeys.AD_SPLASH_PATH);
+    }
     //下载完成标记本地存储
     public static void setDownloadApkFlag(boolean flag) {
         getInstance().putBoolean(SharePrefKeys.DOWNLOAD_APK_FLAG, flag);
