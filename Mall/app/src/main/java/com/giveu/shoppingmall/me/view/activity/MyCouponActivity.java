@@ -111,7 +111,7 @@ public class MyCouponActivity extends BaseActivity {
                 if (o1.equals(o2)) {
                     return 1;
                 } else {
-                    return 0;
+                    return -1;
                 }
             }
         });
@@ -120,7 +120,7 @@ public class MyCouponActivity extends BaseActivity {
         }
         for (Map.Entry<String, CouponListResponse> entry : map.entrySet()) {
             CouponListResponse response = entry.getValue();
-            if (("2".equals(response.status) || "3".equals(response.status)) && index != -1) {
+            if (("2".equals(response.status) || "3".equals(response.status)) && index == -1) {
                 CouponListResponse dividerResponse = new CouponListResponse();
                 dividerResponse.isDivider = true;
                 couponList.add(dividerResponse);
