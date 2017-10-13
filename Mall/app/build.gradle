@@ -188,4 +188,5 @@ dependencies {
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
     //6.0动态获取权限
     compile project(':permission')
+    compile 'com.github.bumptech.glide:glide:4.0.0'
 }
