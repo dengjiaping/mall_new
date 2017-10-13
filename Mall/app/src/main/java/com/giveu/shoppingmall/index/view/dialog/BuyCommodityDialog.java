@@ -20,7 +20,6 @@ import com.giveu.shoppingmall.utils.CommonUtils;
 import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.DensityUtils;
 import com.giveu.shoppingmall.utils.ImageUtils;
-import com.giveu.shoppingmall.utils.LoginHelper;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.ToastUtils;
 import com.giveu.shoppingmall.widget.flowlayout.FlowLayout;
@@ -128,7 +127,7 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
 
     @Override
     public void show() {
-        //额度不足时默认选择支付宝
+/*        //额度不足时默认选择支付宝
         double availablePoslimit = StringUtils.string2Double(LoginHelper.getInstance().getAvailablePoslimit());
         if (availablePoslimit > 0) {
             paymentType = Const.WALLET;
@@ -136,7 +135,10 @@ public class BuyCommodityDialog extends CustomDialog implements View.OnClickList
         } else {
             paymentType = Const.ALI;
             paymentTypeDialog.disableWalletPay();
-        }
+        }*/
+        //这一期只能使用支付宝支付
+        paymentType = Const.ALI;
+        paymentTypeDialog.disableWalletPay();
         initPayType();
         super.show();
     }
