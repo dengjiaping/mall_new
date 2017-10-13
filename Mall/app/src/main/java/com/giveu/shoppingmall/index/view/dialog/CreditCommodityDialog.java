@@ -129,7 +129,8 @@ public class CreditCommodityDialog extends CustomDialog {
                 paymentTypeDialog.showDialog(paymentType);
             }
         });
-
+        addDownPayView("首付", new ArrayList<GoodsInfoResponse>());
+        addPaymentNumView("分期数", new ArrayList<DownPayMonthPayResponse>());
     }
 
     /**
@@ -242,7 +243,7 @@ public class CreditCommodityDialog extends CustomDialog {
             setConfirmEnable(true);
         } else {
             monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
-            initdownPayMonthPay("0", "");
+            initdownPayMonthPay("0", "0");
         }
     }
 
