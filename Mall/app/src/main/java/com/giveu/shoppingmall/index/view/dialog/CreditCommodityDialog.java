@@ -85,7 +85,7 @@ public class CreditCommodityDialog extends CustomDialog {
             @Override
             public void onClick(View v) {
                 if (paymentNum != -1 && downPayRate != -1) {
-                    listener.confirm(downPayRate, idProduct, paymentType);
+                    listener.confirm(downPayRate, idProduct, paymentType, paymentNum);
                 }
             }
         });
@@ -224,9 +224,9 @@ public class CreditCommodityDialog extends CustomDialog {
             }
             monthPayAdapter.setDatas(data);
             setConfirmEnable(true);
-        }else {
+        } else {
             monthPayAdapter.setDatas(new ArrayList<DownPayMonthPayResponse>());
-            initdownPayMonthPay("","");
+            initdownPayMonthPay("", "");
         }
     }
 
@@ -400,7 +400,7 @@ public class CreditCommodityDialog extends CustomDialog {
     }
 
     public interface OnConfirmListener {
-        void confirm(int downPayRate, long idProduct, int paymentType);
+        void confirm(int downPayRate, long idProduct, int paymentType, int paymentNum);
 
         void cancle();
     }

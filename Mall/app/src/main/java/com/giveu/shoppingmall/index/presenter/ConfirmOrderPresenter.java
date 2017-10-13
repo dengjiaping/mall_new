@@ -39,7 +39,7 @@ public class ConfirmOrderPresenter extends BasePresenter<IConfirmOrderView> {
         ApiImpl.createOrderSc(context, channel, idPerson, downPaymentRate, idProduct, skuInfo, new BaseRequestAgent.ResponseListener<CreateOrderResponse>() {
             @Override
             public void onSuccess(CreateOrderResponse response) {
-                getView().getCreateOrderScSuccess(response);
+                getView().getCreateOrderScSuccess(response.data);
             }
 
             @Override
@@ -53,7 +53,7 @@ public class ConfirmOrderPresenter extends BasePresenter<IConfirmOrderView> {
         ApiImpl.getAppMonthlySupply(context, channel, idPerson, downPaymentRate, idProduct, insuranceFee, quantity, skuCode, new BaseRequestAgent.ResponseListener<MonthSupplyResponse>() {
             @Override
             public void onSuccess(MonthSupplyResponse response) {
-                getView().getAppMonthlySupplySuccess(response);
+                getView().getAppMonthlySupplySuccess(response.data);
             }
 
             @Override

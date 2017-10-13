@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_bg" />
+
     <LinearLayout
         android:id="@+id/confirm_order_support_installment"
         android:layout_width="match_parent"

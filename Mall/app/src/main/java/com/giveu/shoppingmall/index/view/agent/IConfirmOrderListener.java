@@ -19,11 +19,12 @@ public interface IConfirmOrderListener {
      * 首付比例发生变化
      *
      * @param downPaymentRate 首付比例
+     * @param price 首付价格
      */
-    void onDownPaymentRateChanged(int downPaymentRate);
+    void onDownPaymentRateChanged(int downPaymentRate, String price);
 
     /**
-     * 支付总价发生变化
+     * 支付总价发生变化,由首付变化引起
      *
      * @param totalPrice 支付总价
      */

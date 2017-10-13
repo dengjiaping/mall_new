@@ -3,6 +3,8 @@ package com.giveu.shoppingmall.index.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +16,9 @@ import com.giveu.shoppingmall.index.view.fragment.ConfirmOrderFragment;
 import com.giveu.shoppingmall.index.widget.StableEditText;
 import com.giveu.shoppingmall.model.bean.response.CreateOrderResponse;
 import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
+import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.LoginHelper;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import butterknife.BindView;
 
@@ -42,8 +47,15 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     private String skuCode;//商品skuCode
     private long idProduct; //分期id
     private int payType; //付款方式
+    private int paymentNum;
+    private String customerName = null; //客户姓名
+    private String customerPhone = null;//客户电话
+    private CreateOrderResponse.ReceiverJoBean receiverJoBean = null; //客户收货地址
 
     private ConfirmOrderFragment fragment = null;
+    private String paymentPrice = "0";
+    private String totalPrice = "0";
+    private String cardPrice = "0";
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -55,15 +67,17 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
             quantity = getIntent().getIntExtra("quantity", 0);
             skuCode = getIntent().getStringExtra("skuCode");
             payType = getIntent().getIntExtra("paymentType", 0);
+            paymentNum = getIntent().getIntExtra("paymentNum", 0);
         }
+
+        customerName = LoginHelper.getInstance().getName();
+        customerPhone = LoginHelper.getInstance().getPhone();
+        showLoading();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fragment = ConfirmOrderFragment.newInstance(skuCode, downPaymentRate, quantity, payType, idProduct);
-        getSupportFragmentManager().beginTransaction().replace(R.id.confirm_order_content, fragment).commitNow();
-        fragment.initDataDelay();
     }
 
     @Override
@@ -76,32 +90,38 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     @Override
     public void setData() {
-
+        fragment = ConfirmOrderFragment.newInstance(skuCode, downPaymentRate, quantity, payType, idProduct, paymentNum);
+        getSupportFragmentManager().beginTransaction().replace(R.id.confirm_order_content, fragment).commitNow();
+        fragment.initDataDelay();
     }
 
-    public static void startIt(Context context, int downPaymentRate, long idProduct, int quantity, String skuCode, int paymentType) {
-        Intent intent = new Intent(context, ConfirmOrderActivity.class);
+    public static void startIt(Context context, int downPaymentRate, long idProduct, int paymentNum, int quantity, String skuCode, int paymentType) {
+        Intent intent = new Intent(context, TempConfirmOrderActivity.class);
         intent.putExtra("downPaymentRate", downPaymentRate);
         intent.putExtra("idProduct", idProduct);
         intent.putExtra("quantity", quantity);
         intent.putExtra("paymentType", paymentType);
         intent.putExtra("skuCode", skuCode);
+        intent.putExtra("paymentNum", paymentNum);
         context.startActivity(intent);
     }
 
     @Override
     public void onPayTypeChanged(int payType) {
-
+        this.payType = payType;
     }
 
     @Override
-    public void onDownPaymentRateChanged(int downPaymentRate) {
-
+    public void onDownPaymentRateChanged(int downPaymentRate, String price) {
+        this.downPaymentRate = downPaymentRate;
+        this.paymentPrice = price;
+        setTotalPrice(price);
     }
 
     @Override
     public void onTotalPriceChanged(String totalPrice) {
-
+        this.totalPrice = totalPrice;
+        setTotalPrice();
     }
 
     @Override
@@ -111,7 +131,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     @Override
     public void onCustomerAddressChanged(CreateOrderResponse.ReceiverJoBean receiverJoBean) {
-
+        this.receiverJoBean = receiverJoBean;
     }
 
     @Override
@@ -136,6 +156,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     @Override
     public void onInitSuccess() {
+        hideLoding();
         if (rlEmptyView.getVisibility() != View.GONE) {
             rlEmptyView.setVisibility(View.GONE);
         }
@@ -143,6 +164,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     @Override
     public void onInitFailed() {
+        hideLoding();
         if (rlEmptyView.getVisibility() != View.VISIBLE) {
             rlEmptyView.setVisibility(View.VISIBLE);
             tvEmptyTextView.setVisibility(View.VISIBLE);
@@ -152,7 +174,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     private View.OnClickListener reTryListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (fragment != null){
+            if (fragment != null) {
                 fragment.initDataDelay();
             }
         }
@@ -174,5 +196,23 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     private void ConfirmOrderSc() {
 
+    }
+
+    private void setTotalPrice(String price) {
+        double tPrice = StringUtils.string2Double(totalPrice);
+        double cPrice = StringUtils.string2Double(price);
+        double result = Math.max(tPrice - cPrice, 0);
+        CommonUtils.setTextWithSpanSizeAndColor(tvTotalPrice, "¥ ", StringUtils.format2(result + ""), "",
+                16, 11, R.color.title_color, R.color.black);
+    }
+
+
+    private void setTotalPrice() {
+        setTotalPrice(cardPrice);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

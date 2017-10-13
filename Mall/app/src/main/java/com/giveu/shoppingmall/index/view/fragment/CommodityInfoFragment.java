@@ -21,6 +21,7 @@ import com.giveu.shoppingmall.index.adapter.BannerImageLoader;
 import com.giveu.shoppingmall.index.presenter.CommodityInfoPresenter;
 import com.giveu.shoppingmall.index.view.activity.CommodityDetailActivity;
 import com.giveu.shoppingmall.index.view.activity.ConfirmOrderActivity;
+import com.giveu.shoppingmall.index.view.activity.TempConfirmOrderActivity;
 import com.giveu.shoppingmall.index.view.agent.ICommodityInfoView;
 import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
 import com.giveu.shoppingmall.index.view.dialog.BuyCommodityDialog;
@@ -163,7 +164,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 regionStr = region;
                 llChooseAddress.setMiddleText(province + " " + city + " " + region + " " + street);
                 //选择完地址后查询该商品在该地区是否有货
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
             }
         });
         buyDialog.setBuyDisable();
@@ -175,12 +176,12 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                 buyDialog.setBuyDisable();
                 //选完属性后再次查询商品的相关信息，并检查库存
                 getCommodityInfo();
-                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+                presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
             }
         });
         buyDialog.setOnConfirmListener(new BuyCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm(int amounts,int paymentType) {
+            public void confirm(int amounts, int paymentType) {
                 commodityAmounts = amounts;
                 if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                     //如果是分期产品，那么需要选择分期数，首付等
@@ -190,7 +191,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                         creditDialog.setConfirmEnable(false);
                         presenter.getAppDownPayAndMonthPay(Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), 0, skuCode, commodityAmounts);
                     } else {
-                        ConfirmOrderActivity.startIt(mBaseContext, 0, 0, commodityAmounts, skuCode, paymentType);
+                        TempConfirmOrderActivity.startIt(mBaseContext, 0, 0, 0, commodityAmounts, skuCode, paymentType);
                     }
                 }
 
@@ -221,8 +222,8 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
 
         creditDialog.setOnConfirmListener(new CreditCommodityDialog.OnConfirmListener() {
             @Override
-            public void confirm(int downPayRate, long idProduct, int paymentType) {
-                ConfirmOrderActivity.startIt(mBaseContext, downPayRate, idProduct, commodityAmounts, skuCode, paymentType);
+            public void confirm(int downPayRate, long idProduct, int paymentType, int paymentNum) {
+                TempConfirmOrderActivity.startIt(mBaseContext, downPayRate, idProduct, paymentNum, commodityAmounts, skuCode, paymentType);
                 creditDialog.dismiss();
             }
 
@@ -326,7 +327,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             regionStr = LoginHelper.getInstance().getReceiveRegion();
             llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
             //检查库存
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
         } else {
             //获取收货地址，并取收货地址的第一个地址
             if (LoginHelper.getInstance().hasQualifications()) {
@@ -448,7 +449,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
     public void showStockState(boolean isSuccess, int state) {
         initAndLoadData();
         //查询失败，默认显示福田区，并且是有货的
-        if(!isSuccess){
+        if (!isSuccess) {
             llChooseAddress.setMiddleText("广东 深圳市 福田区");
         }
         switch (state) {
@@ -486,7 +487,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             this.cityStr = city;
             this.regionStr = region;
             llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
         } else {
             //没有收货地址直接获取定位位置
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -531,7 +532,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
             regionStr = "福田区";
             llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
             //GPS获取省市区后查询该商品是否有货
-            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+            presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
         }
     }
 
@@ -547,7 +548,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                     regionStr = location.getDistrict();
                     locationUtils.stopLocation();
                     llChooseAddress.setMiddleText(provinceStr + " " + cityStr + " " + regionStr);
-                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,1);
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 1);
 //                    chooseCityDialog.setOriginalAddress(provinceStr, cityStr, regionStr, "");
                 }
 
@@ -559,7 +560,7 @@ public class CommodityInfoFragment extends BaseFragment implements ICommodityInf
                     cityStr = "深圳市";
                     regionStr = "福田区";
                     //GPS获取省市区后查询该商品是否有货
-                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode,0);
+                    presenter.queryCommodityStock(provinceStr, cityStr, regionStr, skuCode, 0);
                     locationUtils.stopLocation();
                 }
             });
