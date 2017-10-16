@@ -8,9 +8,9 @@
         android:id="@+id/shopping_list_radiogroup"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/white"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <RadioButton
             android:id="@+id/shopping_list_radio_all"
@@ -20,12 +20,8 @@
             android:button="@null"
             android:gravity="center"
             android:text="综合"
+            android:textSize="@dimen/ts_15"
             android:textColor="@drawable/selector_radio_text_color" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:background="@color/gray" />
 
         <RadioButton
             android:id="@+id/shopping_list_radio_sale"
@@ -35,12 +31,8 @@
             android:button="@null"
             android:gravity="center"
             android:text="销量"
+            android:textSize="@dimen/ts_15"
             android:textColor="@drawable/selector_radio_text_color" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:background="@color/gray" />
 
         <com.giveu.shoppingmall.index.widget.MiddleRadioButton
             android:id="@+id/shopping_list_radio_price"
@@ -53,6 +45,7 @@
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:text="价格"
+            android:textSize="@dimen/ts_15"
             android:textColor="@drawable/selector_radio_text_color" />
     </RadioGroup>
 

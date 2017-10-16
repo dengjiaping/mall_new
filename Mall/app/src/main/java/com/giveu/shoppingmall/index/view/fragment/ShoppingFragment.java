@@ -196,7 +196,7 @@ public class ShoppingFragment extends BaseFragment implements IShoppingView {
 //                CustomWebViewActivity.startIt(mBaseContext, "http://wx.dafycredit.cn/dafy-qq-store-detail/#/details/productArg?skuCode=K00002702", "");
                 break;
             case 1:
-                ShoppingListActivity.startIt(mBaseContext, decorationsBean.code);
+                ShoppingListActivity.startIt(mBaseContext, decorationsBean.code, decorationsBean.name);
                 break;
             case 2:
                 CommodityDetailActivity.startIt(mBaseContext, false, decorationsBean.code, 0, false);

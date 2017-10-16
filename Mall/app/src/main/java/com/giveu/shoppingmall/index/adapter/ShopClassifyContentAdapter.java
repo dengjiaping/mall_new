@@ -63,7 +63,8 @@ public class ShopClassifyContentAdapter extends RecyclerView.Adapter<ShopClassif
             contentHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShoppingListActivity.startIt((Activity) mContext, datas.get(position).getTypesBean().id);
+                    ShoppingListActivity.startIt((Activity) mContext, datas.get(position).getTypesBean().id,
+                            datas.get(position).getTypesBean().name);
                 }
             });
         }

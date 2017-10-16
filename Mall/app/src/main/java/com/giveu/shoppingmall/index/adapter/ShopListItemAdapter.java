@@ -41,9 +41,7 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         holder.setOnClickListener(R.id.item_layout, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //K00002691可以分期   K00002713可以一次
                 CommodityDetailActivity.startIt((Activity) mContext, item.hasShowMonthAmount(), item.skuCode, 0, false);
-//                ConfirmOrderActivity.startIt(mContext, 20, 1, "K00003030");
             }
         });
 
@@ -54,17 +52,13 @@ public class ShopListItemAdapter extends LvCommonAdapter<GoodsSearchResponse.Goo
         holder.setText(R.id.item_right_desc, StringUtils.ToAllFullWidthString(item.keywords));
 
         TextView tvMonthAmount = holder.getView(R.id.item_right_month_mount);
-        TextView tvPrice = holder.getView(R.id.item_right_price);
-        if (1 == item.isInstallments) {
-            //true分期显示月供
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供:¥", item.monthAmount, "起", 14, 10, R.color.red, R.color.color_999999);
-            holder.setText(R.id.item_right_price, "¥" + StringUtils.format2(item.salePrice));
-            tvPrice.setVisibility(View.VISIBLE);
+        if (1 == item.isInstallments && StringUtils.isNotNull(item.monthAmount)) {
+            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "月供: ¥", item.monthAmount, "起", 17, 13, R.color.red, R.color.color_999999);
+            tvMonthAmount.setVisibility(View.VISIBLE);
         } else {
-            //false就不显示月供,实际上隐藏售价view，月供view变成售价
-            CommonUtils.setTextWithSpanSizeAndColor(tvMonthAmount, "¥", item.salePrice, "", 14, 10, R.color.red, R.color.color_999999);
-            tvPrice.setVisibility(View.INVISIBLE);
+            tvMonthAmount.setVisibility(View.GONE);
         }
+        holder.setText(R.id.item_right_price, "售价: ¥" + StringUtils.format2(item.salePrice));
 
         //最后一个Item隐藏分割线
         holder.setVisible(R.id.item_right_bg_line, position != (lists.size() - 1));

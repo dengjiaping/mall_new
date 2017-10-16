@@ -53,6 +53,8 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener, 
      */
     private boolean showRightText = false;
 
+    private String title = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener, 
         showCenterEdit = args.getBoolean("showCenterEdit", false);
         showRightText = args.getBoolean("showRightText", false);
         showRightImage = args.getBoolean("showRightImage", false);
+
+        title = args.getString("title");
 
         ButterKnife.bind(this, view);
         initViews();
@@ -81,6 +85,10 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener, 
 
         if (showRightText) {
             rightText.setVisibility(View.VISIBLE);
+        }
+
+        if (StringUtils.isNotNull(title)) {
+            centerText.setText(title);
         }
 
     }

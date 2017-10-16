@@ -21,6 +21,7 @@ public class ShoppingListActivity extends BaseActivity {
     private long shopTypeId;
     private String code;
     private boolean isFragmentInit = false;
+    private String keyword = null;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -30,8 +31,11 @@ public class ShoppingListActivity extends BaseActivity {
         baseLayout.setTopBarBackgroundColor(R.color.white);
         shopTypeId = getIntent().getLongExtra("shopTypeId", 0);
         code = getIntent().getStringExtra("code");
-        titleFragment = TitleBarFragment.newInstance(null);
+        keyword = getIntent().getStringExtra("keyword");
 
+        Bundle bundle = new Bundle();
+        bundle.putString("title", keyword);
+        titleFragment = TitleBarFragment.newInstance(bundle);
         contentFragment = ShoppingListFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_shopping_list_content, contentFragment)
@@ -63,16 +67,18 @@ public class ShoppingListActivity extends BaseActivity {
 
 
     //从主页过来,需要传入code
-    public static void startIt(Context context, String code) {
+    public static void startIt(Context context, String code, String keyword) {
         Intent intent = new Intent(context, ShoppingListActivity.class);
         intent.putExtra("code", code);
+        intent.putExtra("keyword", keyword);
         context.startActivity(intent);
     }
 
     //从商品类目页传过来的,需要传入shopTypeId
-    public static void startIt(Context context, long shopTypeId) {
+    public static void startIt(Context context, long shopTypeId, String keyword) {
         Intent intent = new Intent(context, ShoppingListActivity.class);
         intent.putExtra("shopTypeId", shopTypeId);
+        intent.putExtra("keyword", keyword);
         context.startActivity(intent);
     }
 }

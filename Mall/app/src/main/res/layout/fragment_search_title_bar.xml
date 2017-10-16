@@ -9,6 +9,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_centerVertical="true">
+
         <ImageView
             android:id="@+id/fragment_left_image"
             android:layout_width="18dp"
@@ -23,17 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_centerVertical="true"
+        android:layout_marginRight="17dp"
         android:layout_toRightOf="@id/fragment_left_image_layout"
         android:background="@drawable/shape_title_background"
         android:button="@null"
-        android:layout_marginRight="17dp"
         android:drawableLeft="@drawable/shopping_search"
-        android:text="搜索商品"
+        android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
-        android:drawablePadding="10dp"
-        android:textSize="@dimen/ts_13"
+        android:text="搜索商品"
         android:textColor="@color/color_cecece"
+        android:textSize="@dimen/ts_13"
         android:visibility="visible" />
 
     <com.giveu.shoppingmall.index.widget.ClearEditText
@@ -74,9 +75,4 @@
         android:src="@drawable/classify_msg"
         android:visibility="gone" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="#eeeeee" />
 </RelativeLayout>
