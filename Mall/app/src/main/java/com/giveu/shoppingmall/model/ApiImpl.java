@@ -83,8 +83,8 @@ public class ApiImpl {
 
 
     //广告页
-    public static void AdSplashImage(String type, BaseRequestAgent.ResponseListener<AdSplashResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"platform", "type"}, new String[]{"Android", type});
+    public static void AdSplashImage(BaseRequestAgent.ResponseListener<AdSplashResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"platform", "type"}, new String[]{"Android", "1"});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.adviertisement_getad, AdSplashResponse.class, responseListener);
     }
 

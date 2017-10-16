@@ -349,7 +349,11 @@ public class ImageUtils {
      * 加载本地图片
      */
     public static void loadImage(String imageLoaderType, final String localImagePath, ImageView imageView) {
-        loadImage(imageLoaderType + localImagePath, R.drawable.ic_default_pic, imageView);
+        loadImage(imageLoaderType, localImagePath, R.drawable.ic_default_pic, imageView);
+    }
+
+    public static void loadImage(String imageLoaderType, final String localImagePath, int placeholderDrawableId, ImageView imageView) {
+        loadImage(imageLoaderType + localImagePath, placeholderDrawableId, imageView);
     }
 
     public interface ImageLoaderType {

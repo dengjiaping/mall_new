@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.index.presenter.SplashAdPresenter;
 import com.giveu.shoppingmall.model.ApiImpl;
 import com.giveu.shoppingmall.model.bean.response.AdSplashResponse;
 import com.giveu.shoppingmall.utils.CommonUtils;
@@ -146,7 +148,6 @@ public class SplashActivity extends BasePermissionActivity {
 
 
     protected void startViewPagerOrActivity() {
-        getAdSplashImage();
         if (hasEnterOtherActivity) {
             return;
         }
@@ -164,8 +165,7 @@ public class SplashActivity extends BasePermissionActivity {
             }
 
         } else {
-            AdSplashResponse adSplashImage = SharePrefUtil.getAdSplashImage();
-            if (adSplashImage != null && StringUtils.isNotNull(adSplashImage.imgUrl)) {
+            if (SplashAdPresenter.isAdImageFileAtSdcard()) {
                 //有广告
                 AdSplashActivity.startIt(mBaseContext);
             } else {
@@ -207,78 +207,8 @@ public class SplashActivity extends BasePermissionActivity {
         super.onDestroy();
     }
 
-    public boolean isJpg(String path) {
-        File e = new File(path);
-        String[] arr = e.list();
-        for (String c : arr) {
-            if (c.endsWith(".jpg")) {
-                return true;
-            }
 
-        }
-        return false;
-    }
 
-    //判断文件是否存在
-    public boolean fileIsExists(String strFile) {
-        try {
-            File f = new File(strFile);
-            if (!f.exists()) {
-                return false;
-            }
 
-        } catch (Exception e) {
-            return false;
-        }
 
-        return true;
-    }
-
-    private void getAdSplashImage() {
-        //创建广告图片目录
-        FileUtils.getDirFile(FileUtils.AD_IMG_PATH);
-
-        ApiImpl.AdSplashImage("1", new BaseRequestAgent.ResponseListener<AdSplashResponse>() {
-            @Override
-            public void onSuccess(AdSplashResponse response) {
-                if (response.data != null) {
-                    SharePrefUtil.setAdSplashImage(response.data);
-                    //    response.data.adId = 10001;
-                    //  final String url = "https://my-server-879b0upaiyucom/giveu_mall/img/start_page_ad/app_start-2";
-                    final String url = response.data.imgUrl;
-                    //获取图片类型
-                    String imgType = "";
-                    if (-1 != url.lastIndexOf(".")) {
-                        imgType = url.substring(url.lastIndexOf("."), url.length());
-                    }
-                    if (StringUtils.isNotNull(url)) {
-                        if (SharePrefUtil.getAdSplashImage() != null && SharePrefUtil.getAdSplashImage().adId == response.data.adId && fileIsExists(SharePrefUtil.getAdSplashPath())) {
-                            //新广告id与上一次广告id相同，不重新保存广告
-                            return;
-                        }
-                        final String photoPath = FileUtils.AD_IMG_PATH + "/" + System.currentTimeMillis() + FileUtils.AD_IMG_NAME + imgType;
-                        SharePrefUtil.setAdSplashPath(photoPath);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Bitmap mBitmaps = ImageLoader.getInstance().loadImageSync(url);
-                                if (mBitmaps != null) {
-                                    FileUtils.deleteAllFile(FileUtils.getDirFile(FileUtils.AD_IMG_PATH));
-                                    FileUtils.getDirFile(FileUtils.AD_IMG_PATH);
-                                    FileUtils.saveBitmapWithPath(mBitmaps, photoPath);
-                                } else {
-                                    FileUtils.deleteAllFile(FileUtils.getDirFile(FileUtils.AD_IMG_PATH));
-                                }
-                            }
-                        }).start();
-                    }
-                }
-            }
-
-            @Override
-            public void onError(BaseBean errorBean) {
-            }
-        });
-
-    }
 }
