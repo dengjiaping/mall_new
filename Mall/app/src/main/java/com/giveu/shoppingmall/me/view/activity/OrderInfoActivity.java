@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.mynet.ApiUrl;
@@ -140,6 +141,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
     LinearLayout llContract;
     @BindView(R.id.ll_consignee_info)
     LinearLayout llConsigneeInfo;
+    @BindView(R.id.sc_comments)
+    ScrollView scComments;
 
 
     private ConfirmDialog dialog;
@@ -387,12 +390,15 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
 
         //买家留言（文字前景色不一样）
         if (StringUtils.isNotNull(response.userComments)) {
+            scComments.setVisibility(View.VISIBLE);
             SpannableString userComments = new SpannableString("买家留言：" + response.userComments);
             ForegroundColorSpan blueSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_00bbc0));
             ForegroundColorSpan blackSpan = new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a));
             userComments.setSpan(blackSpan, 0, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);//从起始下标到终了下标，包括起始下标
             userComments.setSpan(blueSpan, 5, userComments.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             tvUserComments.setText(userComments);
+        } else {
+            scComments.setVisibility(View.GONE);
         }
         //支付金额
         if (response.status == 1) {
