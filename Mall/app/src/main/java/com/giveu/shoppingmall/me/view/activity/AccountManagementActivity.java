@@ -125,8 +125,7 @@ public class AccountManagementActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_delivery_address:
                 //地址管理
-                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
-                    //是否激活钱包
+                if (LoginHelper.getInstance().hasLogin()) {
                     AddressManageActivity.startIt(mBaseContext);
                 }
                 break;
