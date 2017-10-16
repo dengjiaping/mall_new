@@ -326,6 +326,7 @@ public class CreditCommodityDialog extends CustomDialog {
                 if (onDownPayChangeListener != null) {
                     onDownPayChangeListener.onChange(downPayRate);
                 }
+                setConfirmEnable(false);
                 return false;
             }
         });
