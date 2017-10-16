@@ -11,6 +11,7 @@ import com.giveu.shoppingmall.base.CustomDialog;
 import com.giveu.shoppingmall.base.lvadapter.LvCommonAdapter;
 import com.giveu.shoppingmall.base.lvadapter.ViewHolder;
 import com.giveu.shoppingmall.utils.CommonUtils;
+import com.giveu.shoppingmall.utils.StringUtils;
 
 import java.util.List;
 
@@ -25,8 +26,7 @@ public abstract class ChooseDialog<T> {
     private List<T> datas;
     public long checkIndex;
     private LvCommonAdapter mAdpter;
-    private TextView tvCancel;
-    private TextView tvConfirm;
+    private TextView tvTitle;
 
     public ChooseDialog(Activity mActivity, List datas) {
         this.mActivity = mActivity;
@@ -58,21 +58,22 @@ public abstract class ChooseDialog<T> {
             }
         });
 
-        tvCancel = (TextView) contentView.findViewById(R.id.dialog_choose_cancel);
-        tvCancel.setOnClickListener(new View.OnClickListener() {
+        tvTitle = (TextView) contentView.findViewById(R.id.dialog_choose_title);
+        tvTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
             }
         });
+    }
 
-        tvConfirm = (TextView) contentView.findViewById(R.id.dialog_choose_confirm);
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
+    public void setTitle(String title) {
+        if (StringUtils.isNull(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+        }
     }
 
     public void dismiss() {

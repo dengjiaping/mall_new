@@ -165,7 +165,7 @@ public class SplashActivity extends BasePermissionActivity {
             }
 
         } else {
-            if (SplashAdPresenter.isAdImageFileAtSdcard()) {
+            if (SplashAdPresenter.isAdImageFileAtSdcard() && SharePrefUtil.getAdSplashImage() != null) {
                 //有广告
                 AdSplashActivity.startIt(mBaseContext);
             } else {
