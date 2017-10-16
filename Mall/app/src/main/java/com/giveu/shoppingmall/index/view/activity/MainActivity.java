@@ -352,6 +352,10 @@ public class MainActivity extends BasePermissionActivity implements IView{
                 break;
 
             case R.id.ll_me:
+
+                //登录未激活，弹窗提示激活，但不影响界面调整和其他逻辑
+                LoginHelper.getInstance().hasLoginAndActivation(mBaseContext);
+
                 currentItem = 2;
                 mViewPager.setCurrentItem(2, false);
                 selectIconAndTextColor(3);
@@ -575,7 +579,7 @@ public class MainActivity extends BasePermissionActivity implements IView{
                         SharePrefUtil.setLastUpdateApkDialogTime(System.currentTimeMillis());
                         //WIFI环境自动下载apk
                         if (NetWorkUtils.getCurrentNetworkType() == NetWorkUtils.NETWORK_STATE_WIFI) {
-                            downloadApkUtils.downloadApkSilence(mBaseContext,response.data);
+                            downloadApkUtils.downloadApkSilence(mBaseContext, response.data);
                         } else {
                             downloadApkUtils.showUpdateApkDialog(mBaseContext, response.data);
                         }
