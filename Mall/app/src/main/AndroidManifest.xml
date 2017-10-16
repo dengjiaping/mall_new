@@ -469,6 +469,14 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="GuanWang" />
+
+        <!--分享-->
+        <meta-data
+            android:name="Mob-AppKey"
+            android:value="1edcd219251a0" />
+        <meta-data
+            android:name="Mob-AppSecret"
+            android:value="2a5da1730ef51c81ba501fb87a41a6f8" />
     </application>
 
 </manifest>

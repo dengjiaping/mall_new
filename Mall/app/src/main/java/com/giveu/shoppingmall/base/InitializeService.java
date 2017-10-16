@@ -13,6 +13,7 @@ import com.giveu.shoppingmall.utils.Const;
 import com.giveu.shoppingmall.utils.LogUtil;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
+import com.mob.MobSDK;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -20,8 +21,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.sharesdk.framework.ShareSDK;
 
 /**
  * Created by 513419 on 2017/8/23.
@@ -128,7 +127,7 @@ public class InitializeService extends IntentService {
     }
 
     private void initShareSDK() {
-        ShareSDK.initSDK(this);
+        MobSDK.init(this);
     }
 
     private void initLog() {
