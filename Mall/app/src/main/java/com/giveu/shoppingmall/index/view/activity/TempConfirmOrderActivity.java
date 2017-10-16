@@ -225,6 +225,9 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     }
 
     private void setTotalPrice(String price) {
+        if (payType != 0) {
+            price = cardPrice;
+        }
         double tPrice = StringUtils.string2Double(totalPrice);
         double cPrice = StringUtils.string2Double(price);
         double result = Math.max(tPrice - cPrice, 0);
