@@ -32,6 +32,9 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
                             if (getView() != null) {
                                 ArrayList<RepaymentBean> currentMonthList = new ArrayList<>();//当期账单列表
                                 ArrayList<RepaymentBean> nextMonthList = new ArrayList<>();//下期账单列表
+                                if (response.data.important == null) {
+                                    response.data.important = new RepaymentResponse.HeaderBean();
+                                }
                                 //先处理分期产品再处理零花钱最后是红包
                                 if (response.data.product != null && CommonUtils.isNotNullOrEmpty(response.data.product.billList)) {
                                     for (RepaymentResponse.BillListBean billListBean : response.data.product.billList) {
@@ -44,8 +47,11 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
                                         titileBean.isWithholding = billListBean.isWithholding;
                                         if (billListBean.isCurrent) {
                                             currentMonthList.add(titileBean);//当期应还添加标题bean
+                                            response.data.important.repayDate = billListBean.repayBillDate;
                                         } else {
                                             nextMonthList.add(titileBean);//下期应还添加标题bean
+                                            response.data.important.nextRepayAmount = billListBean.repayAmount;
+                                            response.data.important.nextRepayDate = billListBean.repayBillDate;
                                         }
                                         for (RepaymentResponse.ContractListBean contractListBean : billListBean.contractList) {
                                             RepaymentBean contentBean = new RepaymentBean();
