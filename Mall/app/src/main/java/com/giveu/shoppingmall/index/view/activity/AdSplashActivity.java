@@ -31,8 +31,7 @@ public class AdSplashActivity extends BaseActivity {
     @BindView(R.id.tv_skip)
     TextView tvSkip;
 
-    final int MAXCOUNT = 5;
-    int count = MAXCOUNT;
+    int count = 3;
     Handler handler = new Handler();
     Runnable runnable = new Runnable() {
         @Override
@@ -75,7 +74,7 @@ public class AdSplashActivity extends BaseActivity {
 
     @Override
     public void setData() {
-        ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, SharePrefUtil.getAdSplashPath(), ivSplash);
+        ImageUtils.loadImage(ImageUtils.ImageLoaderType.file, SharePrefUtil.getAdSplashImageSdcardPath(), R.color.grey_a5a5a5, ivSplash);
     }
 
     @OnClick(R.id.tv_skip)

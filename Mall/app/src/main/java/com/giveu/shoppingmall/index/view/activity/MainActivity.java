@@ -27,9 +27,12 @@ import com.android.volley.mynet.BaseRequestAgent;
 import com.giveu.shoppingmall.R;
 import com.giveu.shoppingmall.base.BaseApplication;
 import com.giveu.shoppingmall.base.BasePermissionActivity;
+import com.giveu.shoppingmall.base.BasePresenter;
+import com.giveu.shoppingmall.base.IView;
 import com.giveu.shoppingmall.cash.view.fragment.MainCashFragment;
 import com.giveu.shoppingmall.event.LoginSuccessEvent;
 import com.giveu.shoppingmall.event.LotteryEvent;
+import com.giveu.shoppingmall.index.presenter.SplashAdPresenter;
 import com.giveu.shoppingmall.index.view.dialog.LotteryDialog;
 import com.giveu.shoppingmall.index.view.fragment.ShoppingFragment;
 import com.giveu.shoppingmall.me.view.activity.CreateGestureActivity;
@@ -68,7 +71,7 @@ import static java.lang.System.currentTimeMillis;
 
 //import com.fastaccess.permission.base.PermissionHelper;
 
-public class MainActivity extends BasePermissionActivity {
+public class MainActivity extends BasePermissionActivity implements IView{
     public MainCashFragment mainCashFragment;
     private ShoppingFragment shoppingFragment;
     //    public MainRepayFragment mainRepayFragment;
@@ -110,6 +113,15 @@ public class MainActivity extends BasePermissionActivity {
     private boolean needRefreshLottery;
     private boolean needSkip2H5;
     private int currentItem;
+    SplashAdPresenter splashAdPresenter = null;
+
+    @Override
+    protected BasePresenter[] initPresenters() {
+        if (splashAdPresenter == null){
+            splashAdPresenter = new SplashAdPresenter(this);
+        }
+        return new BasePresenter[]{splashAdPresenter};
+    }
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -382,9 +394,17 @@ public class MainActivity extends BasePermissionActivity {
                 initListener();
                 doApkUpgrade();
                 fetchUserInfo();
+                fetchSplashAd();
                 return false;
             }
         });
+    }
+
+	/**
+     * 每次创建mainActivity, 获取一次adSplash广告数据
+     */
+    private void fetchSplashAd() {
+        splashAdPresenter.getAdSplashImage();
     }
 
     private void addFragment() {

@@ -30,7 +30,6 @@ public class FileUtils {
     //缓存图片目录，用后可调用deleteAllFile()方法删除目录
     public static final String TEMP_IMAGE = cache_root + "/giveU/TEMP_IMAGE";
     public static final String AD_IMG_PATH = cache_root + "/giveU/AD_IMG";//广告页图片目录
-    public static final String AD_IMG_NAME = "_AdImg";//广告页图片文件名
     private static float cacheCanDeleteSize;
 
 
@@ -177,7 +176,14 @@ public class FileUtils {
         return getDirFile(cache_canDelete_image);
     }
 
-
+    /**
+     * 返回广告闪屏图片缓存文件夹
+     *
+     * @return
+     */
+    public static File getSplashAdImageDirFile() {
+        return getDirFile(AD_IMG_PATH);
+    }
     /**
      * sd缓存的根目录
      *

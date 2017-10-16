@@ -1,5 +1,7 @@
 package com.giveu.shoppingmall.model.bean.response;
 
+import android.text.TextUtils;
+
 import com.android.volley.mynet.BaseBean;
 
 /**
@@ -15,11 +17,18 @@ public class AdSplashResponse extends BaseBean<AdSplashResponse> {
      * second : 3
      */
 
-    public int adId;
+    public long adId;
     public boolean enable;
     public String imgUrl;
     public String imgUrlLink;
     public String title;
     public int second;
+
+    public boolean enableAd() {
+        if (enable && !TextUtils.isEmpty(imgUrl)){
+            return true;
+        }
+        return false;
+    }
 
 }
