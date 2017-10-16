@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.mynet.ApiUrl;
@@ -144,6 +145,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     //顶层布局，用于Disable一些控件,防止订单确认后仍可点击
     @BindView(R.id.confirm_order_outer_layout)
     LinearLayout outerLayout;
+    @BindView(R.id.confirm_order_layout)
+    ScrollView mScrollView;
 
     //地址信息
     private CreateOrderResponse.ReceiverJoBean addressJoBean;
@@ -556,6 +559,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     });
                 }
             };
+            paymentRateDlg.setTitle("首付列表");
         }
     }
 
@@ -575,17 +579,17 @@ public class ConfirmOrderActivity extends BaseActivity {
         String text = bean.name;
         SpannableString spanText = null;
         paymentPrice = bean.price;
-        if (bean.id != 0) {
-            text = text + " (¥" + StringUtils.format2(bean.price) + ")";
-            spanText = new SpannableString(text);
-            int pos1 = text.indexOf("¥");
-            int pos2 = text.indexOf(".");
-            int pos3 = text.indexOf(")");
-            spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return spanText;
+        if (bean.id == 0) {
+            text = "0%";
         }
-        return text;
+        text = text + "（¥" + StringUtils.format2(bean.price) + "）";
+        spanText = new SpannableString(text);
+        int pos1 = text.indexOf("¥");
+        int pos2 = text.indexOf(".");
+        int pos3 = text.indexOf("）");
+        spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spanText;
     }
 
     /**
@@ -628,6 +632,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         });
                     }
                 };
+                paymentDlg.setTitle("分期列表");
             } else {
                 paymentDlg.refreshData();
             }
@@ -960,7 +965,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
 
         if (payType == 0 && !cbAgreement.isChecked()) {
-            ToastUtils.showShortToast("请阅读并同意消费分期合同");
+            ToastUtils.showShortToast("请勾选消费分期合同");
+            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             canPay = true;
             return;
         }

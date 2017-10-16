@@ -113,6 +113,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
                     });
                 }
             };
+            sendTimeDlg.setTitle("送货时间");
             rlSendTimeLayout.setVisibility(View.VISIBLE);
         }
 
@@ -147,6 +148,7 @@ public class ConfirmHouseHoldActivity extends BaseActivity {
                     });
                 }
             };
+            installTimeDlg.setTitle("安装时间");
             rlInstallTimeLayout.setVisibility(View.VISIBLE);
         }
 

@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/dialog_choose_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/color_f2f3f8">
-        <TextView
-            android:id="@+id/dialog_choose_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="15dp"
-            android:text="取消"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/ts_15" />
-        <TextView
-            android:id="@+id/dialog_choose_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="right|center_vertical"
-            android:paddingRight="15dp"
-            android:text="完成"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/ts_15" />
-    </RelativeLayout>
+        android:background="@color/color_f2f3f8"
+        android:gravity="center"
+        android:textColor="@color/color_666666"
+        android:textSize="@dimen/ts_15" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -40,5 +25,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:dividerHeight="1px"
-        app:maxHeight="300dp"/>
+        app:maxHeight="300dp" />
 </LinearLayout>

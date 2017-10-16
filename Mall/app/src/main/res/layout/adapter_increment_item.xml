@@ -30,10 +30,11 @@
 
     <ImageView
         android:id="@+id/increment_url"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_service_detail"
-        android:layout_marginRight="2dp"/>
+        android:layout_marginRight="2dp"
+        android:padding="10dp"/>
 </RelativeLayout>
