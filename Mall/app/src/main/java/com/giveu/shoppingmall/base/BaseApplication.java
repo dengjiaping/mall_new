@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 /**
  */
@@ -82,14 +84,14 @@ public class BaseApplication extends MultiDexApplication {
                 }
             }
 
-            if (isInMainProcess){
+            if (isInMainProcess) {
                 //只在主进程里面初始化
                 LogUtil.w("init pid is " + pid);
                 InitializeService.startIt(this);
                 initPush();
                 initImageLoader();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -167,9 +169,9 @@ public class BaseApplication extends MultiDexApplication {
 
 
     private void initPush() {
-//        JPushInterface.init(this);
-//        JPushInterface.setDebugMode(true);
-//        LogUtil.e("registerId: "+JPushInterface.getRegistrationID(this));
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(true);
+        LogUtil.e("registerId: " + JPushInterface.getRegistrationID(this));
     }
 
 

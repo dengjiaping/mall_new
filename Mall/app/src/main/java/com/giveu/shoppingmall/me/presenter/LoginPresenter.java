@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
@@ -34,7 +35,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> {
     }
 
     public void login(String userName, String password) {
-        ApiImpl.login(getView().getAct(), userName, password, new BaseRequestAgent.ResponseListener<LoginResponse>() {
+        ApiImpl.login(getView().getAct(), userName, password, JPushInterface.getRegistrationID(getView().getAct()), new BaseRequestAgent.ResponseListener<LoginResponse>() {
             @Override
             public void onSuccess(LoginResponse response) {
                 if (getView() != null) {

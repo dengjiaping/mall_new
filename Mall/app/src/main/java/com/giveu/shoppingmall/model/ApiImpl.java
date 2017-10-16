@@ -191,8 +191,8 @@ public class ApiImpl {
     }
 
     //用户登录
-    public static void login(Activity context, String userName, String password, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
-        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password", "platform"}, new String[]{SharePrefUtil.getUUId(), userName, password, "Android"});
+    public static void login(Activity context, String userName, String password, String pushId, BaseRequestAgent.ResponseListener<LoginResponse> responseListener) {
+        Map<String, Object> requestParams2 = BaseRequestAgent.getRequestParamsObject(new String[]{"deviceId", "userName", "password", "platform", "pushId"}, new String[]{SharePrefUtil.getUUId(), userName, password, "Android", pushId});
         RequestAgent.getInstance().sendPostRequest(requestParams2, ApiUrl.personCenter_account_login, LoginResponse.class, context, responseListener);
     }
 
