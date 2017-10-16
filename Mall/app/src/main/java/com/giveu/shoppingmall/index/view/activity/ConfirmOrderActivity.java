@@ -99,7 +99,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     TextView tvInstallTimeView;
     //添加收货地址
     @BindView(R.id.rl_receiving_address)
-    FrameLayout flAddresslayout;
+    RelativeLayout flAddresslayout;
     @BindView(R.id.confirm_order_add_address)
     MiddleRadioButton mAddressBtn;
     @BindView(R.id.confirm_order_address_layout)
