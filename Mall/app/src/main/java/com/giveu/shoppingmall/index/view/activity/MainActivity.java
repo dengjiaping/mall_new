@@ -340,6 +340,10 @@ public class MainActivity extends BasePermissionActivity {
                 break;
 
             case R.id.ll_me:
+
+                //登录未激活，弹窗提示激活，但不影响界面调整和其他逻辑
+                LoginHelper.getInstance().hasLoginAndActivation(mBaseContext);
+
                 currentItem = 2;
                 mViewPager.setCurrentItem(2, false);
                 selectIconAndTextColor(3);
