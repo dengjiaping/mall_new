@@ -17,13 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout="@layout/viewstub_confirm_order_sku" />
-    <!--分期信息、增值服务和大家电-->
+    <!--分期信息-->
     <ViewStub
         android:id="@+id/confirm_order_payment_stub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout="@layout/viewstub_confirm_order_payment" />
-    <!--优惠券-->
+    <!--优惠券、增值服务和大家电-->
     <ViewStub
         android:id="@+id/confirm_order_cards_stub"
         android:layout_width="match_parent"

@@ -128,8 +128,10 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
         this.payType = payType;
         if (payType == 0) {
             llAgreementLayout.setVisibility(View.VISIBLE);
+            setTotalPrice(paymentPrice);
         } else {
             llAgreementLayout.setVisibility(View.GONE);
+            setTotalPrice();
         }
     }
 
@@ -157,7 +159,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     }
 
     @Override
-    public void onCourtesyCardIdChanged(long cardId,String cardPrice) {
+    public void onCourtesyCardIdChanged(long cardId, String cardPrice) {
         this.cardPrice = cardPrice;
         this.cardId = cardId;
         setTotalPrice();

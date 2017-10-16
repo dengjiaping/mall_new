@@ -234,6 +234,20 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         paymentRateList = createOrderResponse.initList;
         incrementServiceList = createOrderResponse.avsList;
         cardList = createOrderResponse.cardList;
+        if (CommonUtils.isNullOrEmpty(cardList)) {
+            cardList = new ArrayList<>();
+            CreateOrderResponse.CardListBean bean1 = new CreateOrderResponse.CardListBean();
+            bean1.id = 74722;
+            bean1.price = "10.00";
+            bean1.name = "10元测试优惠券";
+            cardList.add(bean1);
+
+            CreateOrderResponse.CardListBean bean2 = new CreateOrderResponse.CardListBean();
+            bean2.id = 0;
+            bean2.price = "0";
+            bean2.name = "不使用测试优惠券";
+            cardList.add(bean2);
+        }
         if (CommonUtils.isNotNullOrEmpty(paymentRateList)) {    //首付信息不为空，表明是分期商品,查询分期成功才初始化
             isBlockPaymentRate = true;
             presenter.getAppDownPayAndMonthPay(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(),
@@ -355,17 +369,17 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
 
         if (payType == 0) {
             if (CommonUtils.isNotNullOrEmpty(paymentRateList)) {
-                paymentHolder.llIncrementService.setVisibility(View.VISIBLE);
+                cardsHolder.llIncrementService.setVisibility(View.VISIBLE);
                 paymentHolder.paymentLayout.setVisibility(View.VISIBLE);
             }
-//            rlCardsViewLayout.setVisibility(View.GONE);
+            cardsHolder.rlCardsViewLayout.setVisibility(View.GONE);
 
         } else {
-            paymentHolder.llIncrementService.setVisibility(View.GONE);
+            cardsHolder.llIncrementService.setVisibility(View.GONE);
             paymentHolder.paymentLayout.setVisibility(View.GONE);
-//            if (CommonUtils.isNotNullOrEmpty(cardList)) {
-//                rlCardsViewLayout.setVisibility(View.VISIBLE);
-//            }
+            if (CommonUtils.isNotNullOrEmpty(cardList)) {
+                cardsHolder.rlCardsViewLayout.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -534,8 +548,8 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
      */
     private void updateIncrementServiceUI() {
         if (CommonUtils.isNotNullOrEmpty(incrementServiceList)) {
-            if (paymentHolder.llIncrementService.getVisibility() != View.VISIBLE && payType == 0) {
-                paymentHolder.llIncrementService.setVisibility(View.VISIBLE);
+            if (cardsHolder.llIncrementService.getVisibility() != View.VISIBLE && payType == 0) {
+                cardsHolder.llIncrementService.setVisibility(View.VISIBLE);
             }
 
             if (incrementServiceAdapter == null) {
@@ -570,7 +584,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
                                 14, 11, R.color.title_color, R.color.title_color);
                     }
                 };
-                paymentHolder.inCrementListView.setAdapter(incrementServiceAdapter);
+                cardsHolder.inCrementListView.setAdapter(incrementServiceAdapter);
             } else {
                 incrementServiceAdapter.notifyDataSetChanged();
             }
@@ -863,11 +877,6 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         //月供
         @BindView(R.id.confirm_order_annuity)
         TextView tvAnnuityView;
-        //增值服务
-        @BindView(R.id.confirm_order_increment_service)
-        LinearLayout llIncrementService;
-        @BindView(R.id.confirm_order_increment_service_list)
-        NoScrollListView inCrementListView;
 
         PaymentViewHolder(View view) {
             ButterKnife.bind(this, view);
@@ -875,6 +884,12 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
     }
 
     static class CardsViewHolder {
+        //增值服务
+        @BindView(R.id.confirm_order_increment_service)
+        LinearLayout llIncrementService;
+        @BindView(R.id.confirm_order_increment_service_list)
+        NoScrollListView inCrementListView;
+
         //优惠券
         @BindView(R.id.confirm_order_card_text)
         TextView tvCardsView;
