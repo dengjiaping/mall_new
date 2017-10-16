@@ -48,10 +48,12 @@ public class RepaymentPresenter extends BasePresenter<IRepaymentView> {
                                         if (billListBean.isCurrent) {
                                             currentMonthList.add(titileBean);//当期应还添加标题bean
                                             response.data.important.repayDate = billListBean.repayBillDate;
+                                            response.data.important.isOverduce = billListBean.isOverduce;
                                         } else {
                                             nextMonthList.add(titileBean);//下期应还添加标题bean
                                             response.data.important.nextRepayAmount = billListBean.repayAmount;
                                             response.data.important.nextRepayDate = billListBean.repayBillDate;
+                                            response.data.important.nextIsOverduce = billListBean.isOverduce;
                                         }
                                         for (RepaymentResponse.ContractListBean contractListBean : billListBean.contractList) {
                                             RepaymentBean contentBean = new RepaymentBean();
