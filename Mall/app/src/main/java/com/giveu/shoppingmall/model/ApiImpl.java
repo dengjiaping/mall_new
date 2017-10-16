@@ -39,6 +39,7 @@ import com.giveu.shoppingmall.model.bean.response.InsuranceFee;
 import com.giveu.shoppingmall.model.bean.response.ListInstalmentResponse;
 import com.giveu.shoppingmall.model.bean.response.LivingAddressBean;
 import com.giveu.shoppingmall.model.bean.response.LoginResponse;
+import com.giveu.shoppingmall.model.bean.response.MessageListResponse;
 import com.giveu.shoppingmall.model.bean.response.MonthSupplyResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderDetailResponse;
 import com.giveu.shoppingmall.model.bean.response.OrderListResponse;
@@ -685,6 +686,12 @@ public class ApiImpl {
     public static void getAppMonthlySupply(Activity context, String channel, String idPerson, int downPaymentRate, long idProduct, int insuranceFee, int quantity, String skuCode, BaseRequestAgent.ResponseListener<MonthSupplyResponse> responseListener) {
         Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"channel", "idPerson", "downPaymentRate", "idProduct", "insuranceFee", "skuCode", "quantity"}, new Object[]{channel, idPerson, downPaymentRate, idProduct, insuranceFee, skuCode, quantity});
         RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.order_appMonthlySupply, MonthSupplyResponse.class, context, responseListener);
+    }
+
+    //获取消息列表
+    public static void getMsgList(Activity context, String pageNum, String pageSize, String userId, BaseRequestAgent.ResponseListener<MessageListResponse> responseListener) {
+        Map<String, Object> requestParam2 = BaseRequestAgent.getRequestParamsObject(new String[]{"pageNum", "pageSize", "userId"}, new Object[]{pageNum, pageSize, userId});
+        RequestAgent.getInstance().sendPostRequest(requestParam2, ApiUrl.msg_list, MessageListResponse.class, context, responseListener);
     }
 
 }

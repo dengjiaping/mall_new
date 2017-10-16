@@ -32,7 +32,7 @@ public class TitleBarFragment extends Fragment implements View.OnClickListener, 
     @BindView(R.id.fragment_left_image_layout)
     RelativeLayout rlLeftImageLayout;
     @BindView(R.id.fragment_center_text)
-    MiddleRadioButton centerText;
+    TextView centerText;
     @BindView(R.id.fragment_center_edit)
     ClearEditText centerEdit;
     @BindView(R.id.fragment_right_text)
