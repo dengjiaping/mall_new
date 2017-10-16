@@ -83,7 +83,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
                     holder.setVisible(R.id.item_right_line, true);
                 } else {
                     holder.setBackgroundColor(R.id.item_layout, Color.TRANSPARENT);
-                    holder.setTextColor(R.id.item_label, Color.parseColor("#191919"));
+                    holder.setTextColor(R.id.item_label, Color.parseColor("#4a4a4a"));
                     holder.setVisible(R.id.item_right_line, false);
                 }
 
@@ -104,7 +104,7 @@ public class ShoppingClassifyActivity extends BaseActivity {
         rRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.right = Utils.dp2Px(20);
+                outRect.right = Utils.dp2Px(21);
             }
         });
         lRecyclerView.setLayoutManager(new LinearLayoutManager(this));

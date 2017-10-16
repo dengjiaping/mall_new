@@ -10,6 +10,7 @@
         android:layout_height="30dp"
         android:gravity="center_vertical|left"
         android:maxLines="1"
-        android:textColor="#232626"
-        android:textSize="15sp" />
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="@dimen/ts_13"
+        android:layout_marginTop="10dp"/>
 </RelativeLayout>

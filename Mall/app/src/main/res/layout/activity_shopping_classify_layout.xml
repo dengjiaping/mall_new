@@ -16,7 +16,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shopping_classify_left_recycler"
-            android:layout_width="80dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
@@ -26,6 +26,6 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:overScrollMode="never"
-            android:paddingLeft="@dimen/ts_20"/>
+            android:paddingLeft="@dimen/ts_21"/>
     </LinearLayout>
 </LinearLayout>
