@@ -16,8 +16,6 @@ import com.giveu.shoppingmall.utils.ImageUtils;
 import com.giveu.shoppingmall.utils.StringUtils;
 import com.giveu.shoppingmall.utils.sharePref.SharePrefUtil;
 
-import java.io.File;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -73,20 +71,7 @@ public class AdSplashActivity extends BaseActivity {
         startCount();
     }
 
-    //判断文件是否存在
-    public boolean fileIsExists(String strFile) {
-        try {
-            File f = new File(strFile);
-            if (!f.exists()) {
-                return false;
-            }
 
-        } catch (Exception e) {
-            return false;
-        }
-
-        return true;
-    }
 
     @Override
     public void setData() {
