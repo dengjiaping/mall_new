@@ -315,12 +315,12 @@ public class MainMeFragment extends BaseFragment {
                 break;
             case R.id.ll_my_collection:
                 //我的收藏
-                if (LoginHelper.getInstance().hasLogin()) {
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                     CollectionActivity.startIt(mBaseContext);
                 }
                 break;
             case R.id.ll_my_coupon:
-                if (LoginHelper.getInstance().hasLogin()) {
+                if (LoginHelper.getInstance().hasLoginAndActivation(mBaseContext)) {
                     MyCouponActivity.startIt(mBaseContext);
                 }
                 break;
