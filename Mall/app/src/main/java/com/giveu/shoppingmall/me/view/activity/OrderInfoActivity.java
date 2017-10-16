@@ -315,7 +315,7 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
         //首付
         if (StringUtils.isNotNull(response.downPayment)) {
             if (StringUtils.isNotNull(response.selDownPaymentRate)) {
-                SpannableString downPayment = new SpannableString(response.selDownPaymentRate + "%（¥ " + StringUtils.format2(response.downPayment) + "）");
+                SpannableString downPayment = new SpannableString(response.selDownPaymentRate + "% (¥ " + StringUtils.format2(response.downPayment) + ")");
                 int allLength = downPayment.length();
                 int length = StringUtils.format2(response.downPayment).length();
                 downPayment.setSpan(new AbsoluteSizeSpan(15, true), 0, allLength - length - 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -357,7 +357,8 @@ public class OrderInfoActivity extends BaseActivity implements IOrderInfoView<Or
             llService.setVisibility(View.VISIBLE);
             tvService0.setText(response.addValueService.get(0).serviceName);
             serviceName = response.addValueService.get(0).serviceName;
-            SpannableString servicePrice = new SpannableString("¥ " + response.addValueService.get(0).servicePrice + "/月");
+            String price = response.addValueService.get(0).servicePrice.substring(0, response.addValueService.get(0).servicePrice.indexOf("."));
+            SpannableString servicePrice = new SpannableString("¥ " + price + "/月");
             servicePrice.setSpan(new AbsoluteSizeSpan(11, true), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             servicePrice.setSpan(new AbsoluteSizeSpan(15, true), 1, servicePrice.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             tvService0Cost.setText(servicePrice);
