@@ -48,8 +48,9 @@ public interface IConfirmOrderListener {
      * 优惠券Id发生变化
      *
      * @param cardId
+     * @param cardPrice
      */
-    void onCourtesyCardIdChanged(long cardId);
+    void onCourtesyCardIdChanged(long cardId,String cardPrice);
 
     /**
      * 增值服务发生变化

@@ -5,7 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,6 +47,13 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     TextView tvTotalPrice;
     @BindView(R.id.tv_ok)
     TextView tvOK;
+    //消费者分期合同
+    @BindView(R.id.confirm_order_agreement_layout)
+    LinearLayout llAgreementLayout;
+    @BindView(R.id.confirm_order_agreement)
+    TextView tvAgreement;
+    @BindView(R.id.confirm_order_agreement_checkbox)
+    CheckBox cbAgreement;
 
     private int downPaymentRate; //首付比例
     private int quantity; //商品数量
@@ -56,6 +69,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     private String paymentPrice = "0";
     private String totalPrice = "0";
     private String cardPrice = "0";
+    private long cardId = 0; //优惠券Id
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -72,6 +86,9 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
         customerName = LoginHelper.getInstance().getName();
         customerPhone = LoginHelper.getInstance().getPhone();
+
+        initMsgEditText();
+
         showLoading();
     }
 
@@ -109,6 +126,11 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     @Override
     public void onPayTypeChanged(int payType) {
         this.payType = payType;
+        if (payType == 0) {
+            llAgreementLayout.setVisibility(View.VISIBLE);
+        } else {
+            llAgreementLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -126,7 +148,7 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     @Override
     public void onDownPaymentChanged(long idProduct) {
-
+        this.idProduct = idProduct;
     }
 
     @Override
@@ -135,8 +157,10 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
     }
 
     @Override
-    public void onCourtesyCardIdChanged(long cardId) {
-
+    public void onCourtesyCardIdChanged(long cardId,String cardPrice) {
+        this.cardPrice = cardPrice;
+        this.cardId = cardId;
+        setTotalPrice();
     }
 
     @Override
@@ -209,6 +233,31 @@ public class TempConfirmOrderActivity extends BaseActivity implements IConfirmOr
 
     private void setTotalPrice() {
         setTotalPrice(cardPrice);
+    }
+
+    /**
+     * 初始化买家留言编辑框
+     */
+    private void initMsgEditText() {
+        //第一次进入界面EditText未获取焦点,设置显示内容
+        final String stableText = "买家留言（选填）：";
+        String hintText = "对本次交易的说明";
+        SpannableString desc = new SpannableString(stableText + hintText);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 0, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_color)), 4, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_4a4a4a)), 8, 9, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        desc.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_cccccc)), 9, desc.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        msgEditText.setText(desc);
+        //限制输入字符长度为100
+        msgEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100 + stableText.length())});
+        //第一次点击EditText获取焦点，重置显示内容
+        msgEditText.setOnFirstFocusedListener(new StableEditText.OnFirstFocusedListener() {
+            @Override
+            public void firstFocused() {
+                msgEditText.setSpannerStableText(stableText, 4, 8, getResources().getColor(R.color.title_color));
+            }
+        });
     }
 
     @Override

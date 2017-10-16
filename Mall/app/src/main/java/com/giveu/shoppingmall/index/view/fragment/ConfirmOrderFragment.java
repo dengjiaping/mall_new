@@ -29,6 +29,7 @@ import com.giveu.shoppingmall.index.presenter.ConfirmOrderPresenter;
 import com.giveu.shoppingmall.index.view.agent.IConfirmOrderListener;
 import com.giveu.shoppingmall.index.view.agent.IConfirmOrderView;
 import com.giveu.shoppingmall.index.view.dialog.AnnuityDialog;
+import com.giveu.shoppingmall.index.view.dialog.ChooseCardsDialog;
 import com.giveu.shoppingmall.index.view.dialog.ChooseDialog;
 import com.giveu.shoppingmall.index.widget.MiddleRadioButton;
 import com.giveu.shoppingmall.me.view.activity.CustomWebViewActivity;
@@ -76,11 +77,13 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
     private AddressViewHolder addressHolder = null;
     private SkuViewHolder skuHolder = null;
     private PaymentViewHolder paymentHolder = null;
+    private CardsViewHolder cardsHolder = null;
 
     private CreateOrderResponse createOrderResponse = null; //订单初始化数据
     private MonthSupplyResponse monthSupplyResponse = null; //月供初始化数据
     private List<CreateOrderResponse.InitListBean> paymentRateList = null;//首付列表
     private List<CreateOrderResponse.AvsListBean> incrementServiceList; //增值服务
+    private List<CreateOrderResponse.CardListBean> cardList;
     private int tempDownPaymentRate = 0; //临时首付比例
     private long tempIdProduct = 0; //临时分期Id
     private List<DownPayMonthPayResponse> paymentList;
@@ -98,10 +101,12 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
     private ChooseDialog<CreateOrderResponse.InitListBean> paymentRateDlg; //首付选择对话框
     private ChooseDialog<DownPayMonthPayResponse> paymentDlg; //分期选择对话框
     private AnnuityDialog annuityDialog; //月供预览对话框
+    private ChooseCardsDialog cardDlg;    //优惠券对话框
 
     private String paymentPrice = "0"; //首付价格
     private String totalPrice = "0"; //商品总价格
     private String annuityPrice = "0"; //月供价格
+    private String cardPrice = "0"; //优惠券价格
     private int paymentNum; //分期期数
     private int tempPaymentNum;
     private int insuranceFee = 1; //是否购买人身意外保险 0不购买1购买
@@ -122,7 +127,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
     private boolean isBlockIncreaseService = false;
     private LvCommonAdapter<CreateOrderResponse.AvsListBean> incrementServiceAdapter;
     private long serviceId = 0;
-
+    private long cardId;
 
     public static ConfirmOrderFragment newInstance(String skuCode, int downPaymentRate, int quantity, int payType, long idProduct, int paymentNum) {
         Bundle args = new Bundle();
@@ -180,7 +185,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         vsAddress.inflate();
         vsSku.inflate();
         vsPayment.inflate();
-        vsCards.invalidate();
+        vsCards.inflate();
         //initView()是不初始化其他view的，占空布局渲染后才初始化，如果在其他位置还有ButterKnife.bind
         //由于占空布局未渲染，会报空指针异常
         ButterKnife.bind(this, content);
@@ -188,8 +193,10 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         addressHolder = new AddressViewHolder(content);
         skuHolder = new SkuViewHolder(content);
         paymentHolder = new PaymentViewHolder(content);
+        cardsHolder = new CardsViewHolder(content);
 
         initPayType();
+
         setViewListener();
     }
 
@@ -199,6 +206,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         paymentHolder.tvPaymentRateView.setOnClickListener(paymentRateDlgListener);
         paymentHolder.tvPaymentView.setOnClickListener(paymentDlgListener);
         paymentHolder.tvAnnuityView.setOnClickListener(annuityDlgListener);
+        cardsHolder.tvCardsView.setOnClickListener(cardsDlgListener);
     }
 
     @Override
@@ -225,7 +233,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         createOrderResponse = response;
         paymentRateList = createOrderResponse.initList;
         incrementServiceList = createOrderResponse.avsList;
-
+        cardList = createOrderResponse.cardList;
         if (CommonUtils.isNotNullOrEmpty(paymentRateList)) {    //首付信息不为空，表明是分期商品,查询分期成功才初始化
             isBlockPaymentRate = true;
             presenter.getAppDownPayAndMonthPay(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(),
@@ -275,6 +283,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         if (isBlockPaymentRate) {
             downPaymentRate = tempDownPaymentRate;
             updatePaymentRateUI();
+
             if (paymentList == null) {
                 paymentList = new ArrayList<>();
             } else {
@@ -282,6 +291,7 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
             }
             paymentList.addAll(tempPaymentList);
             idProduct = tempIdProduct;
+            listener.onDownPaymentChanged(idProduct);
             paymentNum = tempPaymentNum;
             updatePaymentUI();
             isBlockPaymentRate = false;
@@ -289,13 +299,12 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
 
         if (isBlockPayment) {
             paymentNum = tempPaymentNum;
+            idProduct = tempIdProduct;
             updatePaymentUI();
             isBlockPayment = false;
         }
 
         if (isBlockIncreaseService) {
-
-            updateIncrementServiceUI();
             isBlockIncreaseService = false;
         }
 
@@ -307,6 +316,10 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         if (firstInit) {
             listener.onInitFailed();
         } else {
+            if (isBlockIncreaseService) {
+                updateIncrementServiceUI();
+                isBlockIncreaseService = false;
+            }
 
         }
     }
@@ -342,16 +355,14 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
 
         if (payType == 0) {
             if (CommonUtils.isNotNullOrEmpty(paymentRateList)) {
-//                llIncrementService.setVisibility(View.VISIBLE);
+                paymentHolder.llIncrementService.setVisibility(View.VISIBLE);
                 paymentHolder.paymentLayout.setVisibility(View.VISIBLE);
             }
-//            llAgreementLayout.setVisibility(View.VISIBLE);
 //            rlCardsViewLayout.setVisibility(View.GONE);
 
         } else {
-//            llIncrementService.setVisibility(View.GONE);
+            paymentHolder.llIncrementService.setVisibility(View.GONE);
             paymentHolder.paymentLayout.setVisibility(View.GONE);
-//            llAgreementLayout.setVisibility(View.INVISIBLE);
 //            if (CommonUtils.isNotNullOrEmpty(cardList)) {
 //                rlCardsViewLayout.setVisibility(View.VISIBLE);
 //            }
@@ -374,6 +385,8 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
 //        }
         //更新增值服务
         updateIncrementServiceUI();
+        //更新优惠券
+        updateCardUI();
         /* 大家电配送功能暂时不开发
         //更新配送时间
         if (result.data.reserving) {
@@ -387,6 +400,42 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
     }
 
     /**
+     * 更新优惠券相关UI
+     */
+    private void updateCardUI() {
+        if (CommonUtils.isNotNullOrEmpty(cardList)) {
+            //默认选择优惠额度最大的优惠券
+            double maxCardPrice = 0;
+            String maxCardName = "";
+            for (CreateOrderResponse.CardListBean cardBean : cardList) {
+                double curCardPrice = StringUtils.string2Double(cardBean.price);
+                if (curCardPrice > maxCardPrice) {
+                    maxCardPrice = curCardPrice;
+                    cardId = cardBean.id;
+                    maxCardName = cardBean.name;
+                }
+            }
+            //更新优惠券显示
+            cardsHolder.tvCardsView.setText(maxCardName);
+            //更新实际付款金额
+            cardPrice = StringUtils.format2(maxCardPrice + "");
+            listener.onCourtesyCardIdChanged(cardId, cardPrice);
+            if (cardDlg == null) {
+                initCardsDialog();
+            }
+
+            if (cardsHolder.rlCardsViewLayout.getVisibility() != View.VISIBLE && payType != 0) {
+                //钱包支付暂不支持优惠券
+                cardsHolder.rlCardsViewLayout.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (cardsHolder.rlCardsViewLayout.getVisibility() != View.GONE) {
+                cardsHolder.rlCardsViewLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
      * 更新首付相关UI
      */
     private void updatePaymentRateUI() {
@@ -397,7 +446,6 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         for (CreateOrderResponse.InitListBean bean : paymentRateList) {
             if (bean.id == downPaymentRate) {
                 text = formatPaymentRateText(bean);
-                // TODO: 2017/10/13 首付价格发生变化
                 listener.onDownPaymentRateChanged(downPaymentRate, bean.price);
                 break;
             }
@@ -485,55 +533,48 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
      * 更新增值服务相关UI
      */
     private void updateIncrementServiceUI() {
-        if (paymentHolder.llIncrementService.getVisibility() != View.VISIBLE && payType == 0) {
-            paymentHolder.llIncrementService.setVisibility(View.VISIBLE);
-        }
+        if (CommonUtils.isNotNullOrEmpty(incrementServiceList)) {
+            if (paymentHolder.llIncrementService.getVisibility() != View.VISIBLE && payType == 0) {
+                paymentHolder.llIncrementService.setVisibility(View.VISIBLE);
+            }
 
-        if (incrementServiceAdapter == null) {
-            incrementServiceAdapter = new LvCommonAdapter<CreateOrderResponse.AvsListBean>(mBaseContext, R.layout.adapter_increment_item, incrementServiceList) {
-                @Override
-                protected void convert(ViewHolder viewHolder, final CreateOrderResponse.AvsListBean item, final int position) {
-                    viewHolder.setText(R.id.increment_name, item.serviceName)
-                            .setText(R.id.increment_price, item.servicePrice)
-                            .setOnClickListener(R.id.increment_url, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    CustomWebViewActivity.startIt(mBaseContext, item.serviceUrl, item.serviceName);
-                                }
-                            })
-                            .setOnClickListener(R.id.increment_name, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (position == 0 && v instanceof CompoundButton) {
-                                        tempInsuranceFee = ((CompoundButton) v).isChecked() ? 0 : 1;
-                                        presenter.getAppMonthlySupply(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPaymentRate, idProduct, tempInsuranceFee, quantity, skuCode);
+            if (incrementServiceAdapter == null) {
+                incrementServiceAdapter = new LvCommonAdapter<CreateOrderResponse.AvsListBean>(mBaseContext, R.layout.adapter_increment_item, incrementServiceList) {
+                    @Override
+                    protected void convert(ViewHolder viewHolder, final CreateOrderResponse.AvsListBean item, final int position) {
+                        viewHolder.setText(R.id.increment_name, item.serviceName)
+                                .setText(R.id.increment_price, item.servicePrice)
+                                .setOnClickListener(R.id.increment_url, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        CustomWebViewActivity.startIt(mBaseContext, item.serviceUrl, item.serviceName);
                                     }
-                                }
-                            })
-//                            .setOnCheckChangedListener(R.id.increment_name, new CompoundButton.OnCheckedChangeListener() {
-//                                @Override
-//                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                                    if (position == 0) { //目前只有人身意外险
-//                                        tempInsuranceFee = isChecked ? 1 : 0;
-//                                        serviceId = item.serviceId;
-//                                        presenter.getAppMonthlySupply(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPaymentRate, idProduct, tempInsuranceFee, quantity, skuCode);
-//                                    }
-//                                }
-//                            })
-                            .setChecked(R.id.increment_name, insuranceFee == 1);
-                    if (position == 0) {
-                        serviceId = item.serviceId;
+                                })
+                                .setOnCheckChangedListener(R.id.increment_name, new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        if (position == 0) { //目前只有人身意外险
+                                            tempInsuranceFee = isChecked ? 1 : 0;
+                                            serviceId = item.serviceId;
+                                            isBlockIncreaseService = true;
+                                            presenter.getAppMonthlySupply(mBaseContext, Const.CHANNEL, LoginHelper.getInstance().getIdPerson(), downPaymentRate, idProduct, tempInsuranceFee, quantity, skuCode);
+                                        }
+                                    }
+                                })
+                                .setChecked(R.id.increment_name, insuranceFee == 1);
+                        if (position == 0) {
+                            serviceId = item.serviceId;
+                        }
+                        TextView priceViw = viewHolder.getView(R.id.increment_price);
+                        CommonUtils.setTextWithSpanSizeAndColor(priceViw, "¥", StringUtils.format2(item.servicePrice), "/月",
+                                14, 11, R.color.title_color, R.color.title_color);
                     }
-                    TextView priceViw = viewHolder.getView(R.id.increment_price);
-                    CommonUtils.setTextWithSpanSizeAndColor(priceViw, "¥", StringUtils.format2(item.servicePrice), "/月",
-                            14, 11, R.color.title_color, R.color.title_color);
-                }
-            };
-            paymentHolder.inCrementListView.setAdapter(incrementServiceAdapter);
-        } else {
-            incrementServiceAdapter.notifyDataSetChanged();
+                };
+                paymentHolder.inCrementListView.setAdapter(incrementServiceAdapter);
+            } else {
+                incrementServiceAdapter.notifyDataSetChanged();
+            }
         }
-
     }
 
     private void updateSkuUI() {
@@ -662,6 +703,26 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         }
     };
 
+    private View.OnClickListener cardsDlgListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (cardDlg != null && CommonUtils.isNotNullOrEmpty(cardList)) {
+                cardDlg.show(cardId);
+            }
+        }
+    };
+
+    private void initCardsDialog() {
+        cardDlg = new ChooseCardsDialog(mBaseContext, cardList, new ChooseCardsDialog.OnChooseTypeListener() {
+            @Override
+            public void onChooseType(long id, String price, String name) {
+                cardsHolder.tvCardsView.setText(name);
+                cardPrice = price;
+                cardId = id;
+                listener.onCourtesyCardIdChanged(id, cardPrice);
+            }
+        });
+    }
 
     private void initPayTypeDialog() {
         paymentTypeDialog = new PaymentTypeDialog(mBaseContext);
@@ -809,6 +870,18 @@ public class ConfirmOrderFragment extends BaseFragment implements IConfirmOrderV
         NoScrollListView inCrementListView;
 
         PaymentViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    static class CardsViewHolder {
+        //优惠券
+        @BindView(R.id.confirm_order_card_text)
+        TextView tvCardsView;
+        @BindView(R.id.confirm_order_card_layout)
+        RelativeLayout rlCardsViewLayout;
+
+        CardsViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
