@@ -501,9 +501,12 @@ public class ConfirmOrderActivity extends BaseActivity {
                         if (position == 0) {
                             serviceId = item.serviceId;
                         }
+                        String price = item.servicePrice.substring(0, item.servicePrice.indexOf("."));
                         TextView priceViw = viewHolder.getView(R.id.increment_price);
-                        CommonUtils.setTextWithSpanSizeAndColor(priceViw, "¥", StringUtils.format2(item.servicePrice), "/月",
-                                14, 11, R.color.title_color, R.color.title_color);
+                        SpannableString servicePrice = new SpannableString("¥ " + price + "/月");
+                        servicePrice.setSpan(new AbsoluteSizeSpan(11, true), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        servicePrice.setSpan(new AbsoluteSizeSpan(15, true), 1, servicePrice.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        priceViw.setText(servicePrice);
                     }
                 };
                 inCrementListView.setAdapter(incrementServiceAdapter);
@@ -520,7 +523,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         if (CommonUtils.isNullOrEmpty(list) && paymentTypeDialog != null) {
             paymentTypeDialog.disableWalletPay();
         }
-        
+
         if (list != null && list.size() > 0) {
             paymentRateList = list;
             if (paymentLayout.getVisibility() != View.VISIBLE && payType == 0) {
@@ -573,11 +576,11 @@ public class ConfirmOrderActivity extends BaseActivity {
         SpannableString spanText = null;
         paymentPrice = bean.price;
         if (bean.id != 0) {
-            text = text + "（¥" + StringUtils.format2(bean.price) + "）";
+            text = text + " (¥" + StringUtils.format2(bean.price) + ")";
             spanText = new SpannableString(text);
             int pos1 = text.indexOf("¥");
             int pos2 = text.indexOf(".");
-            int pos3 = text.indexOf("）");
+            int pos3 = text.indexOf(")");
             spanText.setSpan(new AbsoluteSizeSpan(11, true), pos1, pos1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spanText.setSpan(new AbsoluteSizeSpan(11, true), pos2, pos3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spanText;

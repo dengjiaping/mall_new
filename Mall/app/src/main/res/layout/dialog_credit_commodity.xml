@@ -76,6 +76,11 @@
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/default_layout_screen_gap" />
 
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_f8f8f8" />
 
             <RelativeLayout
                 android:id="@+id/rl_total"
@@ -85,11 +90,6 @@
                 android:paddingBottom="14dp"
                 android:paddingRight="@dimen/default_layout_screen_gap"
                 android:paddingTop="9dp">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/color_f8f8f8" />
 
                 <TextView
                     android:id="@+id/tv_total_price"
