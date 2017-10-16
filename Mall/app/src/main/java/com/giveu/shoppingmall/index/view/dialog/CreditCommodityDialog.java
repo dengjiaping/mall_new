@@ -225,6 +225,7 @@ public class CreditCommodityDialog extends CustomDialog {
                     if (paymentNum == downPayMonthPayResponse.paymentNum) {
                         hasSamePaymentNum = true;
                         monthPayAdapter.setSelectedList(i);
+                        idProduct = StringUtils.string2Long(downPayMonthPayResponse.idProduct);
                         initdownPayMonthPay((downPayRate * totalPrice / 100) + "", StringUtils.string2Double(downPayMonthPayResponse.annuity + "") + "");
                         break;
                     }

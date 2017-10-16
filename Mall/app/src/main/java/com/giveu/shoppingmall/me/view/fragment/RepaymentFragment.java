@@ -245,9 +245,30 @@ public class RepaymentFragment extends BaseFragment implements IInstalmentDetail
         if (headerBean != null) {
             cycleTotalAmount = headerBean.cycleTotalAmount;
             othersTotalAmount = headerBean.othersTotalAmount;
-            headerHolder.tvTotal.setText("¥" + StringUtils.format2(headerBean.repayAmount));
-            if (StringUtils.isNotNull(headerBean.endDate)) {
-                headerHolder.tvDate.setText("最后还款日：" + headerBean.endDate);
+            //当期应还
+            if (isCurrentMonth) {
+                //根据boolean值决定是否显示已逾期图片
+                if (headerBean.isOverduce) {
+                    headerHolder.ivOverDue.setVisibility(View.VISIBLE);
+                } else {
+                    headerHolder.ivOverDue.setVisibility(View.GONE);
+                }
+                headerHolder.tvTotal.setText("¥" + StringUtils.format2(headerBean.repayAmount));
+            } else {
+                //根据boolean值决定是否显示已逾期图片
+                if (headerBean.nextIsOverduce) {
+                    headerHolder.ivOverDue.setVisibility(View.VISIBLE);
+                } else {
+                    headerHolder.ivOverDue.setVisibility(View.GONE);
+                }
+                headerHolder.tvTotal.setText("¥" + StringUtils.format2(headerBean.nextRepayAmount));
+            }
+            if (StringUtils.isNotNull(headerBean.repayDate) || StringUtils.isNotNull(headerBean.nextRepayDate)) {
+                if (isCurrentMonth) {
+                    headerHolder.tvDate.setText("最后还款日：" + headerBean.repayDate);
+                } else {
+                    headerHolder.tvDate.setText("最后还款日：" + headerBean.nextRepayDate);
+                }
             } else {
                 headerHolder.tvDate.setText("最后还款日：--");
             }

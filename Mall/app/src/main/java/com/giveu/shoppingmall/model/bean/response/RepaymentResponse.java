@@ -18,10 +18,13 @@ public class RepaymentResponse extends BaseBean<RepaymentResponse> {
         public double cycleTotalAmount;//零花钱总欠款
         public String endDate;
         public boolean isOverduce;
+        public boolean nextIsOverduce;
         public String maxRepayAmount;//还款金额上限
         public double othersTotalAmount;//分期产品总欠款(非当期与下期和)
-        public String repayAmount;//该期应还
-        public String repayDate;//账单还款日
+        public String repayAmount;//当期应还
+        public String repayDate;//当期账单还款日
+        public String nextRepayAmount;//下期应还
+        public String nextRepayDate;//下期账单还款日
     }
 
 
