@@ -219,6 +219,20 @@ public class SplashActivity extends BasePermissionActivity {
         return false;
     }
 
+    //判断文件是否存在
+    public boolean fileIsExists(String strFile) {
+        try {
+            File f = new File(strFile);
+            if (!f.exists()) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 
     private void getAdSplashImage() {
         //创建广告图片目录
@@ -230,15 +244,19 @@ public class SplashActivity extends BasePermissionActivity {
                 if (response.data != null) {
                     SharePrefUtil.setAdSplashImage(response.data);
                     //    response.data.adId = 10001;
-                    //       final String url = "https://my-server-879.b0.upaiyun.com/giveu_mall/img/start_page_ad/app_start-2.jpg";
+                    //  final String url = "https://my-server-879b0upaiyucom/giveu_mall/img/start_page_ad/app_start-2";
                     final String url = response.data.imgUrl;
+                    //获取图片类型
+                    String imgType = "";
+                    if (-1 != url.lastIndexOf(".")) {
+                        imgType = url.substring(url.lastIndexOf("."), url.length());
+                    }
                     if (StringUtils.isNotNull(url)) {
-
-                        if (SharePrefUtil.getAdSplashImage() != null && SharePrefUtil.getAdSplashImage().adId == response.data.adId && isJpg(FileUtils.AD_IMG_PATH)) {
+                        if (SharePrefUtil.getAdSplashImage() != null && SharePrefUtil.getAdSplashImage().adId == response.data.adId && fileIsExists(SharePrefUtil.getAdSplashPath())) {
                             //新广告id与上一次广告id相同，不重新保存广告
                             return;
                         }
-                        final String photoPath = FileUtils.AD_IMG_PATH + "/" + System.currentTimeMillis() + FileUtils.AD_IMG_NAME;
+                        final String photoPath = FileUtils.AD_IMG_PATH + "/" + System.currentTimeMillis() + FileUtils.AD_IMG_NAME + imgType;
                         SharePrefUtil.setAdSplashPath(photoPath);
                         new Thread(new Runnable() {
                             @Override
@@ -249,7 +267,7 @@ public class SplashActivity extends BasePermissionActivity {
                                     FileUtils.getDirFile(FileUtils.AD_IMG_PATH);
                                     FileUtils.saveBitmapWithPath(mBitmaps, photoPath);
                                 } else {
-                                    getAdSplashImage();
+                                    FileUtils.deleteAllFile(FileUtils.getDirFile(FileUtils.AD_IMG_PATH));
                                 }
                             }
                         }).start();
