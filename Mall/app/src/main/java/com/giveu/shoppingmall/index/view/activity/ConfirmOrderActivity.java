@@ -307,8 +307,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         } else if (payType == 2) {
             tvPayTypeView.setText("支付宝");
         }
-
-        onChangePayType();
     }
 
     /**
@@ -416,8 +414,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         updatePaymentListUI();
         //更新增值服务
         updateIncrementServiceUI(result.data.avsList);
-        //更新月供金额
-//        updateAnnuity();
+        //更新支付总价格
+        onChangePayType();
         /* 大家电配送功能暂时不开发
         //更新配送时间
         if (result.data.reserving) {
