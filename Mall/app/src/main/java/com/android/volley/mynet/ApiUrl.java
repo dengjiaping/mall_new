@@ -205,5 +205,7 @@ public interface ApiUrl {
     String sc_goods_shopTypes_init = BASE_URL + "sc/goods/shopTypes/init";
     //查询月供
     String order_appMonthlySupply = BASE_URL + "order/appMonthlySupply";
+    //消息列表
+    String msg_list = BASE_URL + "msg/list";
 }
 
